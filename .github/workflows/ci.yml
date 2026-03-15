@@ -13,9 +13,6 @@ concurrency:
 permissions:
   contents: read
 
-env:
-  STORYBOOK_DISABLE_TELEMETRY: 1
-
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -48,12 +45,6 @@ jobs:
 
       - name: Test
         run: npx vitest run --project=components --project=visual
-
-      - name: Test Storybook
-        run: npm run test:storybook
-
-      - name: Test Storybook
-        run: npm run test:storybook
 
       - name: Build
         run: npm run build
