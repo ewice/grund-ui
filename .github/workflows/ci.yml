@@ -13,6 +13,9 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  STORYBOOK_DISABLE_TELEMETRY: 1
+
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -44,10 +47,10 @@ jobs:
         run: npx playwright install-deps chromium
 
       - name: Test
-        run: npm run test:run
+        run: npx vitest run --project=components --project=visual
 
-      - name: Visual regression
-        run: npm run test:visual
+      - name: Test Storybook
+        run: npm run test:storybook
 
       - name: Build
         run: npm run build
