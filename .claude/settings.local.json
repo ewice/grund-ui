@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npm install:*)",
+      "Bash(npx storybook@latest init --type web_components_vite --skip-install --yes)",
+      "Bash(npx vitest:*)"
+    ]
+  }
+}
