@@ -2,7 +2,7 @@ import { LitElement, html, type PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 import { AccordionController } from './accordion.controller';
-import { accordionContext, type AccordionContextValue } from '../../context/accordion.context';
+import { accordionContext, type AccordionContextValue } from './accordion.context';
 import { accordionStyles } from './accordion.styles';
 
 /**

@@ -6,7 +6,7 @@ import {
   accordionItemContext,
   type AccordionContextValue,
   type AccordionItemContextValue,
-} from '../../context/accordion.context';
+} from './accordion.context';
 import { generateId } from '../../utils/id';
 import { accordionItemStyles } from './accordion.styles';
 

@@ -6,7 +6,7 @@ import {
   accordionItemContext,
   type AccordionContextValue,
   type AccordionItemContextValue,
-} from '../../context/accordion.context';
+} from './accordion.context';
 import { Keys } from '../../utils/keyboard';
 import { RovingFocusController } from '../../controllers/roving-focus.controller';
 import { accordionTriggerStyles } from './accordion.styles';

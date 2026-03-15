@@ -4,7 +4,7 @@ import { consume } from '@lit/context';
 import {
   accordionItemContext,
   type AccordionItemContextValue,
-} from '../../context/accordion.context';
+} from './accordion.context';
 import { accordionPanelStyles } from './accordion.styles';
 
 /**
