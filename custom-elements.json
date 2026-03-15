@@ -1,0 +1,532 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion-header.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Semantic heading wrapper for an accordion item's trigger.\nRenders the appropriate `<h1>`–`<h6>` element based on the `level` property.",
+          "name": "GrundAccordionHeader",
+          "slots": [
+            {
+              "description": "The trigger element (typically `<grund-accordion-trigger>`)",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "level",
+              "type": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6"
+              },
+              "default": "3",
+              "description": "Heading level rendered in the DOM (1–6). Defaults to 3.",
+              "attribute": "level"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "level",
+              "type": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6"
+              },
+              "default": "3",
+              "description": "Heading level rendered in the DOM (1–6). Defaults to 3.",
+              "fieldName": "level"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion-header",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordionHeader",
+          "declaration": {
+            "name": "GrundAccordionHeader",
+            "module": "src/components/accordion/accordion-header.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion-header",
+          "declaration": {
+            "name": "GrundAccordionHeader",
+            "module": "src/components/accordion/accordion-header.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A single item within an accordion. Groups a header/trigger with its panel\nand provides per-item context (value, disabled, expanded, IDs) to children.",
+          "name": "GrundAccordionItem",
+          "slots": [
+            {
+              "description": "The accordion header and panel",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Unique value identifying this item. Auto-generated if not provided.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables this item, preventing it from being expanded or collapsed.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Reflects the current expanded state as an HTML attribute for CSS selectors.",
+              "attribute": "expanded",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "triggerId",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "panelId",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "accordionCtx",
+              "type": {
+                "text": "AccordionContextValue | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "itemCtx",
+              "type": {
+                "text": "AccordionItemContextValue"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_buildItemCtx",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "AccordionItemContextValue"
+                }
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Unique value identifying this item. Auto-generated if not provided.",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables this item, preventing it from being expanded or collapsed.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Reflects the current expanded state as an HTML attribute for CSS selectors.",
+              "fieldName": "expanded"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion-item",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordionItem",
+          "declaration": {
+            "name": "GrundAccordionItem",
+            "module": "src/components/accordion/accordion-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion-item",
+          "declaration": {
+            "name": "GrundAccordionItem",
+            "module": "src/components/accordion/accordion-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The collapsible content region of an accordion item.\nManages `hidden`, `role=\"region\"`, and `aria-labelledby`.",
+          "name": "GrundAccordionPanel",
+          "slots": [
+            {
+              "description": "The panel content",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "itemCtx",
+              "type": {
+                "text": "AccordionItemContextValue | undefined"
+              },
+              "privacy": "private"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordionPanel",
+          "declaration": {
+            "name": "GrundAccordionPanel",
+            "module": "src/components/accordion/accordion-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion-panel",
+          "declaration": {
+            "name": "GrundAccordionPanel",
+            "module": "src/components/accordion/accordion-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion-trigger.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The interactive button that expands or collapses an accordion item.\nHandles click and keyboard events and exposes `aria-expanded` / `aria-controls`.",
+          "name": "GrundAccordionTrigger",
+          "slots": [
+            {
+              "description": "The trigger label content",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "accordionCtx",
+              "type": {
+                "text": "AccordionContextValue | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_itemCtx",
+              "type": {
+                "text": "AccordionItemContextValue | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "rovingFocus",
+              "privacy": "private",
+              "default": "new RovingFocusController(this, { containerSelector: 'grund-accordion', itemSelector: 'grund-accordion-trigger', getFocusTarget: (el) => (el as GrundAccordionTrigger).shadowRoot?.querySelector('button') ?? null, isDisabled: (el) => (el as GrundAccordionTrigger)._itemCtx?.disabled ?? false, })"
+            },
+            {
+              "kind": "method",
+              "name": "handleClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion-trigger",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordionTrigger",
+          "declaration": {
+            "name": "GrundAccordionTrigger",
+            "module": "src/components/accordion/accordion-trigger.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion-trigger",
+          "declaration": {
+            "name": "GrundAccordionTrigger",
+            "module": "src/components/accordion/accordion-trigger.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Root accordion container. Manages expand/collapse state and provides\ncontext to all descendant accordion elements.",
+          "name": "GrundAccordion",
+          "members": [
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'single' | 'multiple'"
+              },
+              "default": "'single'",
+              "description": "Controls whether one or multiple items can be open simultaneously.",
+              "attribute": "type"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables all items in the accordion.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "collapsible",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "In single mode, allows the open item to be closed by clicking it again.",
+              "attribute": "collapsible"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | string[] | undefined"
+              },
+              "description": "The value(s) of the initially expanded item(s).\nUse a string for single mode, or an array for multiple mode.\nChanging this after initial render resets the expanded state.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "privacy": "private",
+              "default": "new AccordionController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "accordionCtx",
+              "type": {
+                "text": "AccordionContextValue"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_buildCtx",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "AccordionContextValue"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-accordion-change",
+              "type": {
+                "text": "CustomEvent<{value: string | string[], expanded: boolean}>"
+              },
+              "description": "Fired when an item is expanded or collapsed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "type",
+              "type": {
+                "text": "'single' | 'multiple'"
+              },
+              "default": "'single'",
+              "description": "Controls whether one or multiple items can be open simultaneously.",
+              "fieldName": "type"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables all items in the accordion.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "collapsible",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "In single mode, allows the open item to be closed by clicking it again.",
+              "fieldName": "collapsible"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string | string[] | undefined"
+              },
+              "description": "The value(s) of the initially expanded item(s).\nUse a string for single mode, or an array for multiple mode.\nChanging this after initial render resets the expanded state.",
+              "fieldName": "value"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordion",
+          "declaration": {
+            "name": "GrundAccordion",
+            "module": "src/components/accordion/accordion.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion",
+          "declaration": {
+            "name": "GrundAccordion",
+            "module": "src/components/accordion/accordion.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordion",
+          "declaration": {
+            "name": "GrundAccordion",
+            "module": "./accordion.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundAccordionItem",
+          "declaration": {
+            "name": "GrundAccordionItem",
+            "module": "./accordion-item.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundAccordionHeader",
+          "declaration": {
+            "name": "GrundAccordionHeader",
+            "module": "./accordion-header.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundAccordionTrigger",
+          "declaration": {
+            "name": "GrundAccordionTrigger",
+            "module": "./accordion-trigger.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundAccordionPanel",
+          "declaration": {
+            "name": "GrundAccordionPanel",
+            "module": "./accordion-panel.js"
+          }
+        }
+      ]
+    }
+  ]
+}
