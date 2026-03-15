@@ -18,7 +18,21 @@ export default defineConfig({
         extends: './vite.config.ts',
         test: {
           name: 'components',
-          include: ['src/**/*.test.ts', 'src/**/*.visual.test.ts'],
+          include: ['src/**/*.test.ts'],
+          exclude: ['src/**/*.visual.test.ts'],
+          browser: {
+            enabled: true,
+            headless: true,
+            provider: playwright({}),
+            instances: [{ browser: 'chromium' }],
+          },
+        },
+      },
+      {
+        extends: './vite.config.ts',
+        test: {
+          name: 'visual',
+          include: ['src/**/*.visual.test.ts'],
           browser: {
             enabled: true,
             headless: true,
@@ -26,19 +40,11 @@ export default defineConfig({
             instances: [{ browser: 'chromium' }],
             expect: {
               toMatchScreenshot: {
-                // Allow up to 1% pixel difference to avoid flaky tests from
-                // sub-pixel rendering differences across machines
-                comparatorOptions: {
-                  allowedMismatchedPixelRatio: 0.01,
-                },
-                // All baselines live in a single top-level directory, grouped
-                // by component. Makes PR reviews and bulk updates much easier.
-                // Output: __screenshots__/{component}/{name}-{browser}.png
+                comparatorOptions: { allowedMismatchedPixelRatio: 0.01 },
                 resolveScreenshotPath({ root, testFileName, arg, browserName, ext }) {
-                  // testFileName is the bare filename (e.g. "accordion.visual.test.ts")
-                  // Strip test suffixes to get the component name: "accordion"
                   const component = testFileName.replace(/\.(visual\.)?test\.ts$/, '');
-                  return path.join(root, '__screenshots__', component, `${arg}-${browserName}${ext}`);
+                  const os = process.platform;
+                  return path.join(root, '__screenshots__', component, os, `${arg}-${browserName}${ext}`);
                 },
               },
             },

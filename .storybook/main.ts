@@ -12,6 +12,12 @@ const config: StorybookConfig = {
     name: '@storybook/web-components-vite',
     options: {},
   },
+  viteFinal(config) {
+    if (process.env['CI']) {
+      config.base = '/grund-ui/';
+    }
+    return config;
+  },
 };
 
 export default config;
