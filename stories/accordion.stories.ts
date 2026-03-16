@@ -8,17 +8,23 @@ const meta: Meta = {
   title: 'Components/Accordion',
   tags: ['autodocs'],
   argTypes: {
-    type: {
-      control: 'select',
-      options: ['single', 'multiple'],
-    },
+    multiple: { control: 'boolean' },
     collapsible: { control: 'boolean' },
     disabled: { control: 'boolean' },
+    orientation: {
+      control: 'select',
+      options: ['vertical', 'horizontal'],
+    },
+    keepMounted: { control: 'boolean' },
+    hiddenUntilFound: { control: 'boolean' },
   },
   args: {
-    type: 'single',
+    multiple: false,
     collapsible: false,
     disabled: false,
+    orientation: 'vertical',
+    keepMounted: false,
+    hiddenUntilFound: false,
   },
 };
 
@@ -28,7 +34,14 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: (args) => html`
-    <grund-accordion type=${args.type} ?collapsible=${args.collapsible} ?disabled=${args.disabled}>
+    <grund-accordion
+      ?multiple=${args.multiple}
+      ?collapsible=${args.collapsible}
+      ?disabled=${args.disabled}
+      orientation=${args.orientation}
+      ?keep-mounted=${args.keepMounted}
+      ?hidden-until-found=${args.hiddenUntilFound}
+    >
       <grund-accordion-item value="item-1">
         <grund-accordion-header>
           <grund-accordion-trigger>What is Grund UI?</grund-accordion-trigger>
@@ -62,7 +75,7 @@ export const Default: Story = {
 };
 
 export const Multiple: Story = {
-  args: { type: 'multiple' },
+  args: { multiple: true },
   render: Default.render,
 };
 

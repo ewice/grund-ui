@@ -3,6 +3,7 @@ import { fixture } from '@open-wc/testing-helpers/pure';
 import { html } from 'lit';
 import './index.js';
 import type { GrundAccordion } from './accordion';
+import type { GrundAccordionPanel } from './accordion-panel';
 import { flush } from '../../test-utils/index';
 
 async function createAccordion() {
@@ -37,12 +38,15 @@ function getTriggerButton(accordion: Element, index: number): HTMLButtonElement 
   return triggers[index]?.shadowRoot?.querySelector('button') ?? null;
 }
 
+function getPanelInner(panel: Element | null): HTMLDivElement | null {
+  return panel?.shadowRoot?.querySelector('[part="panel"]') ?? null;
+}
+
 describe('grund-accordion', () => {
   describe('rendering', () => {
     it('renders all items', async () => {
       const el = await createAccordion();
-      const items = el.querySelectorAll('grund-accordion-item');
-      expect(items.length).toBe(3);
+      expect(el.querySelectorAll('grund-accordion-item').length).toBe(3);
     });
 
     it('renders triggers as buttons', async () => {
@@ -64,8 +68,9 @@ describe('grund-accordion', () => {
         </grund-accordion>
       `);
       await flush(el);
+
       const header = el.querySelector('grund-accordion-header');
-      const h2 = header?.shadowRoot?.querySelector('h2');
+      const h2 = header?.shadowRoot?.querySelector('grund-heading')?.shadowRoot?.querySelector('h2');
       expect(h2).toBeTruthy();
     });
   });
@@ -73,11 +78,11 @@ describe('grund-accordion', () => {
   describe('expand/collapse', () => {
     it('expands an item when its trigger is clicked', async () => {
       const el = await createAccordion();
-      const button = getTriggerButton(el, 0);
-      button?.click();
+      getTriggerButton(el, 0)?.click();
       await flush(el);
+
       const item = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
-      expect(item?.hasAttribute('expanded')).toBe(true);
+      expect(item.hasAttribute('expanded')).toBe(true);
     });
 
     it('collapses the previous item in single mode', async () => {
@@ -86,36 +91,38 @@ describe('grund-accordion', () => {
       await flush(el);
       getTriggerButton(el, 1)?.click();
       await flush(el);
+
       const item1 = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
       const item2 = el.querySelector('grund-accordion-item[value="item-2"]') as HTMLElement;
-      expect(item1?.hasAttribute('expanded')).toBe(false);
-      expect(item2?.hasAttribute('expanded')).toBe(true);
+      expect(item1.hasAttribute('expanded')).toBe(false);
+      expect(item2.hasAttribute('expanded')).toBe(true);
     });
 
     it('does not expand a disabled item', async () => {
       const el = await createAccordion();
       getTriggerButton(el, 2)?.click();
       await flush(el);
+
       const item = el.querySelector('grund-accordion-item[value="item-3"]') as HTMLElement;
-      expect(item?.hasAttribute('expanded')).toBe(false);
+      expect(item.hasAttribute('expanded')).toBe(false);
     });
 
     it('keeps the item expanded when non-collapsible trigger is clicked again', async () => {
-      const el = await createAccordion(); // default: collapsible=false
+      const el = await createAccordion();
       getTriggerButton(el, 0)?.click();
       await flush(el);
-      // Click again — should NOT collapse
       getTriggerButton(el, 0)?.click();
       await flush(el);
+
       const item = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
-      expect(item?.hasAttribute('expanded')).toBe(true);
+      expect(item.hasAttribute('expanded')).toBe(true);
     });
   });
 
   describe('multiple mode', () => {
     it('allows multiple items to be expanded', async () => {
       const el = await fixture<GrundAccordion>(html`
-        <grund-accordion type="multiple">
+        <grund-accordion multiple>
           <grund-accordion-item value="item-1">
             <grund-accordion-header>
               <grund-accordion-trigger>Item 1</grund-accordion-trigger>
@@ -131,10 +138,12 @@ describe('grund-accordion', () => {
         </grund-accordion>
       `);
       await flush(el);
+
       getTriggerButton(el, 0)?.click();
       await flush(el);
       getTriggerButton(el, 1)?.click();
       await flush(el);
+
       const items = el.querySelectorAll('grund-accordion-item');
       expect(items[0]?.hasAttribute('expanded')).toBe(true);
       expect(items[1]?.hasAttribute('expanded')).toBe(true);
@@ -146,24 +155,39 @@ describe('grund-accordion', () => {
       const el = await createAccordion();
       const button = getTriggerButton(el, 0);
       expect(button?.getAttribute('aria-expanded')).toBe('false');
+
       button?.click();
       await flush(el);
+
       expect(button?.getAttribute('aria-expanded')).toBe('true');
     });
 
-    it('links trigger and panel with aria-controls/aria-labelledby', async () => {
-      const el = await createAccordion();
+    it('links trigger and panel via ARIA attributes when the panel is mounted', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion keep-mounted>
+          <grund-accordion-item value="item-1">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 1</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
       const button = getTriggerButton(el, 0);
       const panel = el.querySelector('grund-accordion-panel');
-      const panelDiv = panel?.shadowRoot?.querySelector('[role="region"]');
-      const panelId = button?.getAttribute('aria-controls');
-      expect(panelId).toBeTruthy();
-      expect(panelDiv?.id).toBe(panelId);
-      expect(panelDiv?.getAttribute('aria-labelledby')).toBe(button?.id);
+      const panelDiv = getPanelInner(panel);
+
+      expect(button?.hasAttribute('aria-controls')).toBe(true);
+      expect(panelDiv?.hasAttribute('aria-labelledby')).toBe(true);
     });
 
-    it('sets role="region" on panel', async () => {
+    it('sets role="region" on an open panel', async () => {
       const el = await createAccordion();
+      getTriggerButton(el, 0)?.click();
+      await flush(el);
+
       const panel = el.querySelector('grund-accordion-panel');
       const region = panel?.shadowRoot?.querySelector('[role="region"]');
       expect(region).toBeTruthy();
@@ -176,9 +200,9 @@ describe('grund-accordion', () => {
       const button0 = getTriggerButton(el, 0);
       const button1 = getTriggerButton(el, 1);
       button0?.focus();
-      button0?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+      button0?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
       await flush(el);
-      // Focus goes into a shadow root; check both document.activeElement and its shadow
+
       const focused = document.activeElement;
       const shadowFocused = focused?.shadowRoot?.activeElement ?? focused;
       expect(shadowFocused === button1 || focused === button1).toBe(true);
@@ -189,8 +213,9 @@ describe('grund-accordion', () => {
       const button0 = getTriggerButton(el, 0);
       const button1 = getTriggerButton(el, 1);
       button1?.focus();
-      button1?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+      button1?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, composed: true }));
       await flush(el);
+
       const focused = document.activeElement;
       const shadowFocused = focused?.shadowRoot?.activeElement ?? focused;
       expect(shadowFocused === button0 || focused === button0).toBe(true);
@@ -201,8 +226,9 @@ describe('grund-accordion', () => {
       const button0 = getTriggerButton(el, 0);
       const button1 = getTriggerButton(el, 1);
       button1?.focus();
-      button1?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+      button1?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true, composed: true }));
       await flush(el);
+
       const focused = document.activeElement;
       const shadowFocused = focused?.shadowRoot?.activeElement ?? focused;
       expect(shadowFocused === button0 || focused === button0).toBe(true);
@@ -211,31 +237,78 @@ describe('grund-accordion', () => {
     it('moves focus to last enabled trigger on End', async () => {
       const el = await createAccordion();
       const button0 = getTriggerButton(el, 0);
-      // item-3 is disabled, so last enabled trigger is item-2 (index 1)
       const button1 = getTriggerButton(el, 1);
       button0?.focus();
-      button0?.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+      button0?.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true, composed: true }));
       await flush(el);
+
       const focused = document.activeElement;
       const shadowFocused = focused?.shadowRoot?.activeElement ?? focused;
       expect(shadowFocused === button1 || focused === button1).toBe(true);
     });
+
+    it('sets tabindex="0" on the first enabled trigger and "-1" on the rest', async () => {
+      const el = await createAccordion();
+      const button0 = getTriggerButton(el, 0);
+      const button1 = getTriggerButton(el, 1);
+      const button2 = getTriggerButton(el, 2);
+      expect(button0?.tabIndex).toBe(0);
+      expect(button1?.tabIndex).toBe(-1);
+      expect(button2?.tabIndex).toBe(-1);
+    });
+
+    it('sets tabindex="0" on the first non-disabled trigger when the first item is disabled', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion>
+          <grund-accordion-item value="item-1" disabled>
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 1</grund-accordion-panel>
+          </grund-accordion-item>
+          <grund-accordion-item value="item-2">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 2</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 2</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      const button0 = getTriggerButton(el, 0);
+      const button1 = getTriggerButton(el, 1);
+      expect(button0?.tabIndex).toBe(-1);
+      expect(button1?.tabIndex).toBe(0);
+    });
+
+    it('moves tabindex to the new trigger when navigating with ArrowDown', async () => {
+      const el = await createAccordion();
+      const button0 = getTriggerButton(el, 0);
+      const button1 = getTriggerButton(el, 1);
+      button0?.focus();
+      button0?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+      await flush(el);
+
+      expect(button0?.tabIndex).toBe(-1);
+      expect(button1?.tabIndex).toBe(0);
+    });
   });
 
   describe('events', () => {
-    it('dispatches grund-accordion-change event', async () => {
+    it('dispatches grund-change', async () => {
       const el = await createAccordion();
       const handler = vi.fn();
-      el.addEventListener('grund-accordion-change', handler);
+      el.addEventListener('grund-change', handler);
+
       getTriggerButton(el, 0)?.click();
       await flush(el);
+
       expect(handler).toHaveBeenCalledOnce();
-      const detail = handler.mock.calls[0][0].detail;
-      expect(detail.value).toBe('item-1');
-      expect(detail.expanded).toBe(true);
+      expect(handler.mock.calls[0][0].detail).toEqual({ value: 'item-1', expanded: true });
     });
 
-    it('dispatches grund-accordion-change with expanded=false when collapsing', async () => {
+    it('dispatches grund-change with expanded=false when collapsing', async () => {
       const el = await fixture<GrundAccordion>(html`
         <grund-accordion collapsible>
           <grund-accordion-item value="item-1">
@@ -249,67 +322,134 @@ describe('grund-accordion', () => {
       await flush(el);
 
       const handler = vi.fn();
-      el.addEventListener('grund-accordion-change', handler);
+      el.addEventListener('grund-change', handler);
 
-      // First click to expand
       getTriggerButton(el, 0)?.click();
       await flush(el);
-      // Second click to collapse
       getTriggerButton(el, 0)?.click();
       await flush(el);
 
       expect(handler).toHaveBeenCalledTimes(2);
-      const secondDetail = handler.mock.calls[1][0].detail;
-      expect(secondDetail.expanded).toBe(false);
+      expect(handler.mock.calls[1][0].detail).toEqual({ value: 'item-1', expanded: false });
     });
 
-    it('does not dispatch event when a disabled item trigger is clicked', async () => {
+    it('does not dispatch grund-change when a disabled item trigger is clicked', async () => {
       const el = await createAccordion();
       const handler = vi.fn();
-      el.addEventListener('grund-accordion-change', handler);
+      el.addEventListener('grund-change', handler);
+
       getTriggerButton(el, 2)?.click();
       await flush(el);
+
       expect(handler).not.toHaveBeenCalled();
+    });
+
+    it('dispatches grund-value-change with the next value array', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion multiple>
+          <grund-accordion-item value="item-1">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 1</grund-accordion-panel>
+          </grund-accordion-item>
+          <grund-accordion-item value="item-2">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 2</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 2</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      const handler = vi.fn();
+      el.addEventListener('grund-value-change', handler);
+
+      getTriggerButton(el, 0)?.click();
+      await flush(el);
+      getTriggerButton(el, 1)?.click();
+      await flush(el);
+
+      expect(handler).toHaveBeenCalledTimes(2);
+      expect(handler.mock.calls[1][0].detail).toEqual({
+        value: ['item-1', 'item-2'],
+        itemValue: 'item-2',
+        open: true,
+      });
+    });
+
+    it('dispatches grund-open-change from the item', async () => {
+      const el = await createAccordion();
+      const item = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
+      const handler = vi.fn();
+      item.addEventListener('grund-open-change', handler);
+
+      getTriggerButton(el, 0)?.click();
+      await flush(el);
+
+      expect(handler).toHaveBeenCalledOnce();
+      expect(handler.mock.calls[0][0].detail).toEqual({
+        open: true,
+        value: 'item-1',
+        index: 0,
+      });
     });
   });
 
   describe('dynamic properties', () => {
     it('switches from single to multiple mode at runtime', async () => {
       const el = await createAccordion();
-      // Open first item in single mode
       getTriggerButton(el, 0)?.click();
       await flush(el);
-      // Switch to multiple mode
-      el.type = 'multiple';
+
+      el.multiple = true;
       await flush(el);
-      // Now both items can be open
       getTriggerButton(el, 1)?.click();
       await flush(el);
+
       const item1 = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
       const item2 = el.querySelector('grund-accordion-item[value="item-2"]') as HTMLElement;
-      expect(item1?.hasAttribute('expanded')).toBe(true);
-      expect(item2?.hasAttribute('expanded')).toBe(true);
+      expect(item1.hasAttribute('expanded')).toBe(true);
+      expect(item2.hasAttribute('expanded')).toBe(true);
     });
 
     it('enables collapsing when collapsible changes to true at runtime', async () => {
-      const el = await createAccordion(); // collapsible=false by default
+      const el = await createAccordion();
       getTriggerButton(el, 0)?.click();
       await flush(el);
-      // Enable collapsible at runtime
+
       el.collapsible = true;
       await flush(el);
-      // Should now be collapsible
       getTriggerButton(el, 0)?.click();
       await flush(el);
+
       const item = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
-      expect(item?.hasAttribute('expanded')).toBe(false);
+      expect(item.hasAttribute('expanded')).toBe(false);
+    });
+  });
+
+  describe('registration', () => {
+    it('unregisters an item when it is removed from the DOM', async () => {
+      const el = await createAccordion();
+      const item1 = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
+      getTriggerButton(el, 0)?.click();
+      await flush(el);
+
+      expect(item1.hasAttribute('expanded')).toBe(true);
+
+      item1.remove();
+      await flush(el);
+
+      const button1 = getTriggerButton(el, 0);
+      expect(button1?.tabIndex).toBe(0);
     });
   });
 
   describe('initial value', () => {
     it('expands the item matching the value attribute on first render', async () => {
       const el = await fixture<GrundAccordion>(html`
-        <grund-accordion value="item-2">
+        <grund-accordion default-value="item-2">
           <grund-accordion-item value="item-1">
             <grund-accordion-header>
               <grund-accordion-trigger>Item 1</grund-accordion-trigger>
@@ -325,13 +465,14 @@ describe('grund-accordion', () => {
         </grund-accordion>
       `);
       await flush(el);
+
       const item2 = el.querySelector('grund-accordion-item[value="item-2"]') as HTMLElement;
-      expect(item2?.hasAttribute('expanded')).toBe(true);
+      expect(item2.hasAttribute('expanded')).toBe(true);
     });
 
-    it('expands multiple items when value is an array in multiple mode', async () => {
+    it('expands multiple items when defaultValue is an array in multiple mode', async () => {
       const el = await fixture<GrundAccordion>(html`
-        <grund-accordion type="multiple" .value=${['item-1', 'item-2']}>
+        <grund-accordion multiple .defaultValue=${['item-1', 'item-2']}>
           <grund-accordion-item value="item-1">
             <grund-accordion-header>
               <grund-accordion-trigger>Item 1</grund-accordion-trigger>
@@ -347,10 +488,236 @@ describe('grund-accordion', () => {
         </grund-accordion>
       `);
       await flush(el);
+
       const item1 = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
       const item2 = el.querySelector('grund-accordion-item[value="item-2"]') as HTMLElement;
-      expect(item1?.hasAttribute('expanded')).toBe(true);
-      expect(item2?.hasAttribute('expanded')).toBe(true);
+      expect(item1.hasAttribute('expanded')).toBe(true);
+      expect(item2.hasAttribute('expanded')).toBe(true);
+    });
+  });
+
+  describe('controlled mode', () => {
+    it('does not update internal state when value is set', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion .value=${'item-1'}>
+          <grund-accordion-item value="item-1">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 1</grund-accordion-panel>
+          </grund-accordion-item>
+          <grund-accordion-item value="item-2">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 2</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 2</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      const item1 = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
+      expect(item1.hasAttribute('expanded')).toBe(true);
+
+      getTriggerButton(el, 1)?.click();
+      await flush(el);
+
+      expect(item1.hasAttribute('expanded')).toBe(true);
+    });
+
+    it('fires grund-change with the requested state in controlled mode', async () => {
+      const handler = vi.fn();
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion .value=${'item-1'} @grund-change=${handler}>
+          <grund-accordion-item value="item-1">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 1</grund-accordion-panel>
+          </grund-accordion-item>
+          <grund-accordion-item value="item-2">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 2</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 2</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      getTriggerButton(el, 1)?.click();
+      await flush(el);
+
+      expect(handler).toHaveBeenCalledOnce();
+      expect(handler.mock.calls[0][0].detail).toEqual({ value: 'item-2', expanded: true });
+    });
+  });
+
+  describe('base ui compatibility', () => {
+    it('supports horizontal roving focus through the orientation prop', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion orientation="horizontal">
+          <grund-accordion-item value="item-1">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 1</grund-accordion-panel>
+          </grund-accordion-item>
+          <grund-accordion-item value="item-2">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 2</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 2</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      const button0 = getTriggerButton(el, 0);
+      const button1 = getTriggerButton(el, 1);
+      button0?.focus();
+      button0?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, composed: true }));
+      await flush(el);
+
+      const focused = document.activeElement;
+      const shadowFocused = focused?.shadowRoot?.activeElement ?? focused;
+      expect(shadowFocused === button1 || focused === button1).toBe(true);
+    });
+
+    it('does not wrap focus when loopFocus is false', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion .loopFocus=${false}>
+          <grund-accordion-item value="item-1">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 1</grund-accordion-panel>
+          </grund-accordion-item>
+          <grund-accordion-item value="item-2">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 2</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 2</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      const button1 = getTriggerButton(el, 1);
+      button1?.focus();
+      button1?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+      await flush(el);
+
+      expect(button1?.tabIndex).toBe(0);
+    });
+
+    it('unmounts closed panels by default and remounts them when opened', async () => {
+      const el = await createAccordion();
+      const panel = el.querySelector('grund-accordion-panel');
+      expect(getPanelInner(panel)).toBeNull();
+
+      getTriggerButton(el, 0)?.click();
+      await flush(el);
+
+      expect(getPanelInner(panel)).toBeTruthy();
+    });
+
+    it('keeps closed panels mounted when keep-mounted is set on the root', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion keep-mounted>
+          <grund-accordion-item value="item-1">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 1</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      const panel = el.querySelector('grund-accordion-panel');
+      expect(panel?.getAttribute('data-state')).toBe('closed');
+      expect(getPanelInner(panel)).toBeTruthy();
+    });
+
+    it('uses hidden="until-found" when hidden-until-found is enabled', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion hidden-until-found>
+          <grund-accordion-item value="item-1">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Searchable content</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      const panel = el.querySelector('grund-accordion-panel');
+      expect(getPanelInner(panel)?.getAttribute('hidden')).toBe('until-found');
+    });
+
+    it('opens an item when beforematch fires for a hidden-until-found panel', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion hidden-until-found>
+          <grund-accordion-item value="item-1">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Searchable content</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      const panel = el.querySelector('grund-accordion-panel') as GrundAccordionPanel;
+      getPanelInner(panel)?.dispatchEvent(new Event('beforematch'));
+      await flush(el);
+
+      const item = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
+      expect(item.hasAttribute('expanded')).toBe(true);
+    });
+
+    it('does not open a disabled root accordion when beforematch fires', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion hidden-until-found disabled>
+          <grund-accordion-item value="item-1">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Searchable content</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      const panel = el.querySelector('grund-accordion-panel') as GrundAccordionPanel;
+      getPanelInner(panel)?.dispatchEvent(new Event('beforematch'));
+      await flush(el);
+
+      const item = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
+      expect(item.hasAttribute('expanded')).toBe(false);
+    });
+
+    it('applies Base UI-style data attributes across the parts', async () => {
+      const el = await createAccordion();
+      getTriggerButton(el, 0)?.click();
+      await flush(el);
+
+      const item = el.querySelector('grund-accordion-item[value="item-1"]');
+      const header = el.querySelector('grund-accordion-header');
+      const trigger = el.querySelector('grund-accordion-trigger');
+      const panel = el.querySelector('grund-accordion-panel');
+
+      expect(el.getAttribute('data-orientation')).toBe('vertical');
+      expect(item?.hasAttribute('data-open')).toBe(true);
+      expect(item?.getAttribute('data-index')).toBe('0');
+      expect(header?.hasAttribute('data-open')).toBe(true);
+      expect(header?.getAttribute('data-index')).toBe('0');
+      expect(trigger?.hasAttribute('data-panel-open')).toBe(true);
+      expect(panel?.hasAttribute('data-open')).toBe(true);
+      expect(panel?.getAttribute('data-orientation')).toBe('vertical');
+      expect(panel?.getAttribute('data-index')).toBe('0');
     });
   });
 });

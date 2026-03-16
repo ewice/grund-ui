@@ -1,10 +1,12 @@
 import { css } from 'lit';
 
+
 export const accordionStyles = css`
   :host {
     display: block;
   }
 `;
+
 
 export const accordionItemStyles = css`
   :host {
@@ -12,16 +14,13 @@ export const accordionItemStyles = css`
   }
 `;
 
+
 export const accordionHeaderStyles = css`
   :host {
     display: block;
   }
-
-  [part='heading'] {
-    margin: 0;
-    padding: 0;
-  }
 `;
+
 
 export const accordionTriggerStyles = css`
   :host {
@@ -40,17 +39,19 @@ export const accordionTriggerStyles = css`
     outline: revert;
   }
 
-  :host([disabled]) [part='trigger'] {
+  :host([disabled]) [part='trigger'],
+  :host([data-disabled]) [part='trigger'] {
     cursor: default;
   }
 `;
+
 
 export const accordionPanelStyles = css`
   :host {
     display: block;
   }
 
-  :host([hidden]) {
+  :host([data-state='closed']:not([data-hidden-until-found])) [part='panel'] {
     display: none;
   }
 `;

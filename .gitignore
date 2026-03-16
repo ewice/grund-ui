@@ -6,3 +6,5 @@ storybook-static/
 
 *storybook.log
 .vitest-attachments/
+docs/
+.claude/

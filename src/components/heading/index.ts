@@ -1,0 +1,1 @@
+export { GrundHeading } from './heading';

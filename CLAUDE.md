@@ -12,6 +12,14 @@ Three layers, strictly separated:
 
 Parent-child communication uses **Lit Context** internally and **custom events** externally (`grund-{component}-{action}`).
 
+## Component Communication Patterns
+
+- **Component discovery:** Registration via context (`registerItem`/`unregisterItem`). Never use `querySelectorAll` to find child components.
+- **Show/hide:** `data-state="open"` / `data-state="closed"` via `OpenStateController`. Never use the `hidden` attribute.
+- **Event naming:** `grund-{action}` (e.g., `grund-change`, `grund-toggle`) with `bubbles: true, composed: false`.
+- **ARIA linking:** `AriaLinkController` for `ariaControlsElements` / `ariaLabelledByElements`.
+- **Keyboard navigation:** `RovingFocusController` on the container element with `getItems` callback.
+
 ## Component Design Rules
 
 - Element prefix: `grund-`
@@ -20,6 +28,7 @@ Parent-child communication uses **Lit Context** internally and **custom events**
 - Shadow DOM on every element, zero visual styles
 - IDs generated with `crypto.randomUUID().slice(0, 8)` — never module-level counters
 - Use `ElementInternals` for form-associated components (Switch, Checkbox, etc.)
+- Context subscriptions (`@consume`) are `private` — if sibling elements or controllers need a derived value (e.g. `disabled`), expose it as a public getter rather than making the context object public
 
 ## Lit Patterns
 
