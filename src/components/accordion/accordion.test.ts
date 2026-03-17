@@ -2,15 +2,9 @@ import { describe, it, expect, vi } from 'vitest';
 import { fixture } from '@open-wc/testing-helpers/pure';
 import { html } from 'lit';
 import './index.js';
-import { AccordionRegistry } from './accordion.registry';
 import type { GrundAccordion } from './accordion';
 import type { GrundAccordionPanel } from './accordion-panel';
 import { flush } from '../../test-utils/index';
-
-type TestAccordionItem = HTMLElement & {
-  value: string;
-  disabled: boolean;
-};
 
 async function createAccordion() {
   const el = await fixture<GrundAccordion>(html`
@@ -48,49 +42,7 @@ function getPanelInner(panel: Element | null): HTMLDivElement | null {
   return panel?.shadowRoot?.querySelector('[part="panel"]') ?? null;
 }
 
-function createRegistryItem(value: string, disabled = false): TestAccordionItem {
-  const item = document.createElement('div') as TestAccordionItem;
-  item.value = value;
-  item.disabled = disabled;
-  return item;
-}
-
 describe('grund-accordion', () => {
-  describe('registry', () => {
-    it('sorts items by DOM order and recomputes indices', () => {
-      const registry = new AccordionRegistry();
-      const host = document.createElement('div');
-      const first = createRegistryItem('item-1');
-      const second = createRegistryItem('item-2', true);
-
-      host.append(first, second);
-      registry.registerItem(second);
-      registry.registerItem(first);
-      registry.syncOrder();
-
-      expect(registry.itemOrder).toEqual(['item-1', 'item-2']);
-      expect(registry.getItemState(first)).toMatchObject({ index: 0, disabled: false });
-      expect(registry.getItemState(second)).toMatchObject({ index: 1, disabled: true });
-      expect(Array.from(registry.disabledValues)).toEqual(['item-2']);
-    });
-
-    it('attaches trigger and panel refs after the item is registered', () => {
-      const registry = new AccordionRegistry();
-      const item = createRegistryItem('item-1');
-      const trigger = document.createElement('button');
-      const panel = document.createElement('div');
-
-      registry.registerItem(item);
-      registry.attachTrigger(item, trigger);
-      registry.attachPanel(item, panel);
-
-      expect(registry.getItemState(item)).toMatchObject({
-        trigger,
-        panel,
-      });
-    });
-  });
-
   describe('rendering', () => {
     it('renders all items', async () => {
       const el = await createAccordion();
@@ -239,6 +191,49 @@ describe('grund-accordion', () => {
       const panel = el.querySelector('grund-accordion-panel');
       const region = panel?.shadowRoot?.querySelector('[role="region"]');
       expect(region).toBeTruthy();
+    });
+  });
+
+  describe('integration registry behavior', () => {
+    it('updates derived item order when mounted items are reordered', async () => {
+      const el = await createAccordion();
+      const first = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
+      const second = el.querySelector('grund-accordion-item[value="item-2"]') as HTMLElement;
+
+      el.insertBefore(second, first);
+      await flush(el);
+
+      expect(second.dataset.index).toBe('0');
+      expect(first.dataset.index).toBe('1');
+    });
+
+    it('registers trigger and panel children that mount after the item', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion keep-mounted>
+          <grund-accordion-item value="item-1"></grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      const item = el.querySelector('grund-accordion-item')!;
+      const header = document.createElement('grund-accordion-header');
+      const trigger = document.createElement('grund-accordion-trigger');
+      trigger.textContent = 'Item 1';
+      header.append(trigger);
+      item.append(header);
+      await flush(el);
+
+      const panel = document.createElement('grund-accordion-panel');
+      panel.textContent = 'Content 1';
+      item.append(panel);
+      await flush(el);
+
+      const button = trigger.shadowRoot?.querySelector('button');
+      const panelDiv = getPanelInner(panel);
+
+      expect(button?.getAttribute('aria-expanded')).toBe('false');
+      expect(button?.hasAttribute('aria-controls')).toBe(true);
+      expect(panelDiv?.hasAttribute('aria-labelledby')).toBe(true);
     });
   });
 
