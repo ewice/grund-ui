@@ -1,34 +1,41 @@
 import { createContext } from '@lit/context';
+import type {
+  GrundAccordionItemLike,
+  GrundAccordionItemSnapshot,
+  GrundAccordionOrientation,
+} from './types';
 
 
 /** State and actions provided by `<grund-accordion>` to all descendant elements. */
 export interface AccordionContextValue {
-  /** Whether one or multiple items can be open at a time. */
-  type: 'single' | 'multiple';
   /** The visual orientation used for roving focus. */
-  orientation: 'vertical' | 'horizontal';
+  orientation: GrundAccordionOrientation;
   /** Whether roving focus wraps around the list boundaries. */
   loopFocus: boolean;
   /** Whether all items in the accordion are disabled. */
   disabled: boolean;
-  /** Whether the open item can be collapsed by clicking it again (single mode only). */
-  collapsible: boolean;
   /** Whether closed panels stay mounted in the DOM. */
   keepMounted: boolean;
   /** Whether closed panels use `hidden="until-found"` for page search. */
   hiddenUntilFound: boolean;
-  /** The set of currently expanded item values. */
-  expandedItems: ReadonlySet<string>;
-  /** Toggles the expanded state of the item with the given value. */
-  toggle: (value: string) => void;
-  /** Opens the item with the given value if it is currently closed. */
-  openItem: (value: string) => void;
+  /** Requests that the item with the given value toggles its expanded state. */
+  requestToggle: (value: string) => void;
+  /** Requests that the item with the given value opens. */
+  requestOpen: (value: string) => void;
   /** Registers an item element with the accordion. */
-  registerItem: (item: Element) => void;
+  registerItem: (item: GrundAccordionItemLike) => void;
   /** Unregisters an item element from the accordion. */
-  unregisterItem: (item: Element) => void;
-  /** Returns the current DOM index of an item. */
-  getItemIndex: (item: Element) => number;
+  unregisterItem: (item: GrundAccordionItemLike) => void;
+  /** Attaches the trigger element for an item. */
+  attachTrigger: (item: GrundAccordionItemLike, trigger: Element | null) => void;
+  /** Detaches the trigger element for an item. */
+  detachTrigger: (item: GrundAccordionItemLike) => void;
+  /** Attaches the panel element for an item. */
+  attachPanel: (item: GrundAccordionItemLike, panel: Element | null) => void;
+  /** Detaches the panel element for an item. */
+  detachPanel: (item: GrundAccordionItemLike) => void;
+  /** Returns a readonly snapshot of derived item state. */
+  getItemState: (item: GrundAccordionItemLike) => GrundAccordionItemSnapshot | undefined;
 }
 
 
@@ -47,7 +54,7 @@ export interface AccordionItemContextValue {
   /** Whether this item is currently expanded. */
   expanded: boolean;
   /** The accordion orientation inherited from the root. */
-  orientation: 'vertical' | 'horizontal';
+  orientation: GrundAccordionOrientation;
   /** Whether closed panels stay mounted in the DOM. */
   keepMounted: boolean;
   /** Whether closed panels use `hidden="until-found"` for page search. */
