@@ -516,6 +516,36 @@ describe('grund-accordion', () => {
       const button1 = getTriggerButton(el, 0);
       expect(button1?.tabIndex).toBe(0);
     });
+
+    it('does not retain a duplicate item in the local structural path when registration fails', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion>
+          <grund-accordion-item value="item-1">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 1</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      const duplicate = document.createElement('grund-accordion-item');
+      duplicate.value = 'item-1';
+      duplicate.innerHTML = `
+        <grund-accordion-header>
+          <grund-accordion-trigger>Duplicate</grund-accordion-trigger>
+        </grund-accordion-header>
+        <grund-accordion-panel>Duplicate content</grund-accordion-panel>
+      `;
+
+      el.append(duplicate);
+      await expect(flush(el)).rejects.toThrow(/Duplicate accordion item value "item-1"/);
+
+      const registeredItems = (el as unknown as { registeredItems: Element[] }).registeredItems;
+      expect(registeredItems).toHaveLength(1);
+      expect(registeredItems[0]).not.toBe(duplicate);
+    });
   });
 
   describe('initial value', () => {

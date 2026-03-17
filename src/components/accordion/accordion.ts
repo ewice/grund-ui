@@ -158,8 +158,8 @@ export class GrundAccordion extends LitElement {
   }
 
   private registerItem = (item: GrundAccordionItemLike) => {
-    this.registeredItems.push(item as AccordionRegisteredItem);
     this.registry.registerItem(item);
+    this.registeredItems.push(item as AccordionRegisteredItem);
     this.requestUpdate();
   };
 
