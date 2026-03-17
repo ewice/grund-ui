@@ -27,22 +27,13 @@ export class AccordionRegistry {
   public registerItem(item: GrundAccordionItemLike): void {
     const existing = this.recordByItem.get(item);
     if (existing) {
-      this.syncRecord(existing);
       this.syncOrder();
       return;
     }
 
-    const record: AccordionItemRecord = {
-      item,
-      value: item.value,
-      disabled: item.disabled ?? false,
-      index: -1,
-      trigger: null,
-      panel: null,
-    };
+    const record = this.createRecord(item);
+    this.records = this.reconcileRecords([...this.records, record]);
     this.recordByItem.set(item, record);
-    this.records.push(record);
-    this.syncOrder();
   }
 
   public unregisterItem(item: GrundAccordionItemLike): void {
@@ -52,8 +43,7 @@ export class AccordionRegistry {
     }
 
     this.recordByItem.delete(item);
-    this.records = this.records.filter((current) => current !== record);
-    this.syncOrder();
+    this.records = this.reconcileRecords(this.records.filter((current) => current !== record));
   }
 
   public attachTrigger(item: GrundAccordionItemLike, trigger: Element | null): void {
@@ -83,18 +73,7 @@ export class AccordionRegistry {
   }
 
   public syncOrder(): void {
-    const previousOrder = new Map(this.records.map((record, index) => [record, index]));
-    this.records.sort((left, right) => {
-      const position = left.item.compareDocumentPosition(right.item);
-      if (position & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
-      if (position & Node.DOCUMENT_POSITION_PRECEDING) return 1;
-      return (previousOrder.get(left) ?? 0) - (previousOrder.get(right) ?? 0);
-    });
-
-    this.records.forEach((record, index) => {
-      this.syncRecord(record);
-      record.index = index;
-    });
+    this.records = this.reconcileRecords(this.records);
   }
 
   public get itemOrder(): string[] {
@@ -116,6 +95,42 @@ export class AccordionRegistry {
     }
 
     return this.snapshot(record);
+  }
+
+  private createRecord(item: GrundAccordionItemLike): AccordionItemRecord {
+    return {
+      item,
+      value: item.value,
+      disabled: item.disabled ?? false,
+      index: -1,
+      trigger: null,
+      panel: null,
+    };
+  }
+
+  private reconcileRecords(records: AccordionItemRecord[]): AccordionItemRecord[] {
+    const previousOrder = new Map(records.map((record, index) => [record, index]));
+    const orderedRecords = [...records].sort((left, right) => {
+      const position = left.item.compareDocumentPosition(right.item);
+      if (position & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+      if (position & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+      return (previousOrder.get(left) ?? 0) - (previousOrder.get(right) ?? 0);
+    });
+
+    const seenValues = new Set<string>();
+    for (const record of orderedRecords) {
+      const value = record.item.value;
+      if (seenValues.has(value)) {
+        throw new Error(`Duplicate accordion item value "${value}" is not allowed.`);
+      }
+      seenValues.add(value);
+    }
+
+    orderedRecords.forEach((record, index) => {
+      this.syncRecord(record);
+      record.index = index;
+    });
+    return orderedRecords;
   }
 
   private syncRecord(record: AccordionItemRecord): void {
