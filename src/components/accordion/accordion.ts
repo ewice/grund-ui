@@ -1,16 +1,50 @@
 import { LitElement, html, type PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { provide } from '@lit/context';
-import { AccordionController } from './accordion.controller';
-import { accordionContext, type AccordionContextValue } from './accordion.context';
+import {
+  type AccordionActionType,
+  normalizeAccordionValues,
+  resolveAccordionAction,
+} from '../../utils/accordion/engine';
 import { RovingFocusController } from '../../controllers/roving-focus.controller';
-import type { GrundAccordionItem } from './accordion-item';
+import {
+  accordionContext,
+  type AccordionContextValue,
+} from './accordion.context';
+import { AccordionRegistry } from './accordion.registry';
+import type {
+  GrundAccordionChangeDetail,
+  GrundAccordionValueChangeDetail,
+  GrundAccordionOrientation,
+  GrundAccordionItemLike,
+} from './types';
 import type { GrundAccordionTrigger } from './accordion-trigger';
 import { accordionStyles } from './accordion.styles';
 
+declare module './accordion.context' {
+  interface AccordionContextValue {
+    expandedItems: ReadonlySet<string>;
+    toggle: (value: string) => void;
+    openItem: (value: string) => void;
+    getItemIndex: (item: GrundAccordionItemLike) => number;
+  }
+}
+
+interface AccordionContextBridge extends AccordionContextValue {
+  expandedItems: ReadonlySet<string>;
+  toggle: (value: string) => void;
+  openItem: (value: string) => void;
+  getItemIndex: (item: GrundAccordionItemLike) => number;
+}
+
+type AccordionRegisteredItem = GrundAccordionItemLike & {
+  registeredTrigger: GrundAccordionTrigger | null;
+};
+
+
 /**
  * Root accordion container. Manages expand/collapse state and provides
- * context to all descendant accordion elements.
+ * context to all descendant elements.
  *
  * @element grund-accordion
  * @fires {CustomEvent<{value: string, expanded: boolean}>} grund-change - Fired when an item is expanded or collapsed
@@ -20,59 +54,48 @@ import { accordionStyles } from './accordion.styles';
 export class GrundAccordion extends LitElement {
   public static override styles = accordionStyles;
 
-  /** Controls whether one or multiple items can be open simultaneously. */
-  @property({ type: String }) public type: 'single' | 'multiple' = 'single';
-
-  /** Base UI-style alias for `type="multiple"`. */
-  @property({ type: Boolean, reflect: true }) public multiple = false;
+  /** Permits multiple items to be open simultaneously. */
+  @property({ type: Boolean, reflect: true })
+  public multiple = false;
 
   /** Disables all items in the accordion. */
-  @property({ type: Boolean }) public disabled = false;
-
-  /** In single mode, allows the open item to be closed by clicking it again. */
-  @property({ type: Boolean }) public collapsible = false;
+  @property({ type: Boolean })
+  public disabled = false;
 
   /** Controls which arrow keys move focus between triggers. */
   @property({ type: String, reflect: true })
-  public orientation: 'vertical' | 'horizontal' = 'vertical';
+  public orientation: GrundAccordionOrientation = 'vertical';
 
   /** Whether roving focus wraps when the end of the list is reached. */
-  @property({ type: Boolean, attribute: 'loop-focus' }) public loopFocus = true;
+  @property({ type: Boolean, attribute: 'loop-focus' })
+  public loopFocus = true;
 
   /** Whether closed panels remain mounted by default. */
-  @property({ type: Boolean, attribute: 'keep-mounted' }) public keepMounted = false;
+  @property({ type: Boolean, attribute: 'keep-mounted' })
+  public keepMounted = false;
 
   /** Whether closed panels use `hidden="until-found"` so page search can reveal them. */
-  @property({ type: Boolean, attribute: 'hidden-until-found' }) public hiddenUntilFound = false;
+  @property({ type: Boolean, attribute: 'hidden-until-found' })
+  public hiddenUntilFound = false;
 
-  /**
-   * The value of the initially expanded item (uncontrolled mode).
-   * Use `.defaultValue` property binding for array values in multiple mode.
-   */
-  @property({ attribute: 'default-value' }) public defaultValue?: string | string[];
+  /** The initially expanded item value(s) in uncontrolled mode. */
+  @property({ attribute: 'default-value' })
+  public defaultValue?: string | string[];
 
-  /**
-   * Controlled mode: the currently expanded item value(s).
-   * When set (not `undefined`), the component enters controlled mode.
-   * Property-only - no attribute reflection.
-   */
-  @property({ attribute: false }) public value?: string | string[];
+  /** The currently expanded item value(s) in controlled mode. */
+  @property({ attribute: false })
+  public value?: string | string[];
 
-  private registeredItems: Element[] = [];
+  private registry = new AccordionRegistry();
 
-  private isItemDisabled = (value: string): boolean => {
-    if (this.disabled) return true;
+  private registeredItems: AccordionRegisteredItem[] = [];
 
-    const item = this.registeredItems.find(
-      (element) => (element as GrundAccordionItem).value === value,
-    );
+  private expandedValues = new Set<string>();
 
-    return (item as GrundAccordionItem | undefined)?.disabled ?? false;
-  };
+  private defaultValueSeeded = false;
 
-  private controller = new AccordionController(this, {
-    isDisabled: this.isItemDisabled,
-  });
+  @provide({ context: accordionContext })
+  protected accordionCtx: AccordionContextBridge = this.buildCtx();
 
   private rovingFocus = new RovingFocusController<GrundAccordionTrigger>(this, {
     getItems: () => this.registeredTriggers,
@@ -85,80 +108,79 @@ export class GrundAccordion extends LitElement {
   /** Derives the ordered trigger list from registered items. */
   private get registeredTriggers(): GrundAccordionTrigger[] {
     return this.registeredItems
-      .map((item) => (item as GrundAccordionItem).registeredTrigger)
+      .map((item) => item.registeredTrigger)
       .filter((trigger): trigger is GrundAccordionTrigger => trigger != null);
   }
 
-  private get selectionType(): 'single' | 'multiple' {
-    return this.multiple ? 'multiple' : this.type;
+  private get itemOrder(): string[] {
+    return this.registry.itemOrder;
   }
 
-  @provide({ context: accordionContext })
-  protected accordionCtx: AccordionContextValue = this.buildCtx();
+  private get disabledValues(): ReadonlySet<string> {
+    if (!this.disabled) {
+      return this.registry.disabledValues;
+    }
 
-  private registerItem = (item: Element) => {
-    this.registeredItems.push(item);
-    this.requestUpdate();
-  };
+    return new Set(this.itemOrder);
+  }
 
-  private unregisterItem = (item: Element) => {
-    this.registeredItems = this.registeredItems.filter((registered) => registered !== item);
-    this.requestUpdate();
-  };
-
-  private getItemIndex = (item: Element) => this.registeredItems.indexOf(item);
-
-  private sortByDom = (a: Element, b: Element) => {
-    const position = a.compareDocumentPosition(b);
+  private sortByDom = (left: GrundAccordionItemLike, right: GrundAccordionItemLike) => {
+    const position = left.compareDocumentPosition(right);
     if (position & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
     if (position & Node.DOCUMENT_POSITION_PRECEDING) return 1;
     return 0;
   };
 
-  private buildCtx(): AccordionContextValue {
+  private buildCtx(): AccordionContextBridge {
     return {
-      type: this.selectionType,
       orientation: this.orientation,
       loopFocus: this.loopFocus,
       disabled: this.disabled,
-      collapsible: this.collapsible,
       keepMounted: this.keepMounted,
       hiddenUntilFound: this.hiddenUntilFound,
-      expandedItems: this.controller.expandedValues,
-      registerItem: this.registerItem,
-      unregisterItem: this.unregisterItem,
-      getItemIndex: this.getItemIndex,
+      requestToggle: (value: string) => this.requestToggle(value),
+      requestOpen: (value: string) => this.requestOpen(value),
+      registerItem: (item: GrundAccordionItemLike) => this.registerItem(item),
+      unregisterItem: (item: GrundAccordionItemLike) => this.unregisterItem(item),
+      attachTrigger: (item: GrundAccordionItemLike, trigger: Element | null) =>
+        this.registry.attachTrigger(item, trigger),
+      detachTrigger: (item: GrundAccordionItemLike) => this.registry.detachTrigger(item),
+      attachPanel: (item: GrundAccordionItemLike, panel: Element | null) =>
+        this.registry.attachPanel(item, panel),
+      detachPanel: (item: GrundAccordionItemLike) => this.registry.detachPanel(item),
+      getItemState: (item: GrundAccordionItemLike) => this.registry.getItemState(item),
+      expandedItems: this.expandedValues,
       toggle: (value: string) => this.requestToggle(value),
       openItem: (value: string) => this.requestOpen(value),
+      getItemIndex: (item: GrundAccordionItemLike) => this.registry.getItemState(item)?.index ?? -1,
     };
   }
 
-  private defaultValueSeeded = false;
+  private registerItem = (item: GrundAccordionItemLike) => {
+    this.registeredItems.push(item as AccordionRegisteredItem);
+    this.registry.registerItem(item);
+    this.requestUpdate();
+  };
 
-  public override willUpdate(changedProperties: PropertyValues) {
-    if (changedProperties.has('multiple')) {
-      const nextType = this.multiple ? 'multiple' : 'single';
-      if (this.type !== nextType) {
-        this.type = nextType;
-      }
-    } else if (changedProperties.has('type')) {
-      const nextMultiple = this.type === 'multiple';
-      if (this.multiple !== nextMultiple) {
-        this.multiple = nextMultiple;
-      }
-    }
+  private unregisterItem = (item: GrundAccordionItemLike) => {
+    this.registeredItems = this.registeredItems.filter((registered) => registered !== item);
+    this.registry.unregisterItem(item);
+    this.requestUpdate();
+  };
 
+  public override willUpdate(_changedProperties: PropertyValues) {
     this.registeredItems.sort(this.sortByDom);
-    this.controller.updateOptions({
-      type: this.selectionType,
-      collapsible: this.collapsible,
-    });
+    this.registry.syncOrder();
 
     if (this.value !== undefined) {
-      this.controller.setExpanded(new Set(this.normalizeValues(this.value)));
+      this.expandedValues = new Set(this.normalizeInputValues(this.value));
     } else if (!this.defaultValueSeeded && this.defaultValue !== undefined) {
-      this.controller.setExpanded(new Set(this.normalizeValues(this.defaultValue)));
+      this.expandedValues = new Set(this.normalizeInputValues(this.defaultValue));
       this.defaultValueSeeded = true;
+    } else {
+      this.expandedValues = new Set(
+        normalizeAccordionValues([...this.expandedValues], { multiple: this.multiple }),
+      );
     }
 
     this.dataset.orientation = this.orientation;
@@ -170,34 +192,47 @@ export class GrundAccordion extends LitElement {
     return html`<div @keydown=${this.rovingFocus.handleKeyDown}><slot></slot></div>`;
   }
 
-  private normalizeValues(value: string | string[]): string[] {
+  private normalizeInputValues(value: string | string[]): string[] {
     const values = Array.isArray(value) ? value : [value];
-    return this.selectionType === 'multiple' ? values : values.slice(0, 1);
+    return normalizeAccordionValues(values, { multiple: this.multiple });
   }
 
-  private requestToggle(value: string): void {
-    const result = this.value !== undefined
-      ? this.controller.previewToggle(value)
-      : this.controller.toggle(value);
+  private applyAction(action: AccordionActionType, value: string): void {
+    if (this.disabled) {
+      return;
+    }
 
-    if (!result) return;
+    const result = resolveAccordionAction({
+      action: { type: action, value },
+      expandedValues: [...this.expandedValues],
+      itemOrder: this.itemOrder,
+      disabledValues: this.disabledValues,
+      multiple: this.multiple,
+    });
+
+    if (!result.changed) {
+      return;
+    }
+
+    if (this.value === undefined) {
+      this.expandedValues = new Set(result.nextValues);
+      this.requestUpdate();
+    }
+
     this.dispatchToggleEvents(result.value, result.expanded);
   }
 
+  private requestToggle(value: string): void {
+    this.applyAction('toggle', value);
+  }
+
   private requestOpen(value: string): void {
-    if (this.controller.isExpanded(value)) return;
-
-    const result = this.value !== undefined
-      ? this.controller.previewToggle(value)
-      : this.controller.toggle(value);
-
-    if (!result || !result.expanded) return;
-    this.dispatchToggleEvents(result.value, true);
+    this.applyAction('open', value);
   }
 
   private dispatchToggleEvents(value: string, expanded: boolean): void {
     this.dispatchEvent(
-      new CustomEvent('grund-change', {
+      new CustomEvent<GrundAccordionChangeDetail>('grund-change', {
         detail: { value, expanded },
         bubbles: true,
         composed: false,
@@ -205,7 +240,7 @@ export class GrundAccordion extends LitElement {
     );
 
     this.dispatchEvent(
-      new CustomEvent('grund-value-change', {
+      new CustomEvent<GrundAccordionValueChangeDetail>('grund-value-change', {
         detail: {
           value: this.nextExpandedValues(value, expanded),
           itemValue: value,
@@ -218,10 +253,10 @@ export class GrundAccordion extends LitElement {
   }
 
   private nextExpandedValues(value: string, expanded: boolean): string[] {
-    const nextValues = new Set(this.controller.expandedValues);
+    const nextValues = new Set(this.expandedValues);
 
     if (expanded) {
-      if (this.selectionType === 'single') {
+      if (!this.multiple) {
         nextValues.clear();
       }
       nextValues.add(value);
@@ -229,9 +264,7 @@ export class GrundAccordion extends LitElement {
       nextValues.delete(value);
     }
 
-    const orderedValues = this.registeredItems
-      .map((item) => (item as GrundAccordionItem).value)
-      .filter((itemValue) => nextValues.has(itemValue));
+    const orderedValues = this.itemOrder.filter((itemValue) => nextValues.has(itemValue));
 
     for (const itemValue of nextValues) {
       if (!orderedValues.includes(itemValue)) {
@@ -241,6 +274,7 @@ export class GrundAccordion extends LitElement {
 
     return orderedValues;
   }
+
 }
 
 declare global {

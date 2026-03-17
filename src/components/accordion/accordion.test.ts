@@ -107,7 +107,7 @@ describe('grund-accordion', () => {
       expect(item.hasAttribute('expanded')).toBe(false);
     });
 
-    it('keeps the item expanded when non-collapsible trigger is clicked again', async () => {
+    it('collapses the item when its trigger is clicked again', async () => {
       const el = await createAccordion();
       getTriggerButton(el, 0)?.click();
       await flush(el);
@@ -115,7 +115,7 @@ describe('grund-accordion', () => {
       await flush(el);
 
       const item = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
-      expect(item.hasAttribute('expanded')).toBe(true);
+      expect(item.hasAttribute('expanded')).toBe(false);
     });
   });
 
@@ -353,7 +353,7 @@ describe('grund-accordion', () => {
 
     it('dispatches grund-change with expanded=false when collapsing', async () => {
       const el = await fixture<GrundAccordion>(html`
-        <grund-accordion collapsible>
+        <grund-accordion>
           <grund-accordion-item value="item-1">
             <grund-accordion-header>
               <grund-accordion-trigger>Item 1</grund-accordion-trigger>
@@ -457,19 +457,6 @@ describe('grund-accordion', () => {
       expect(item2.hasAttribute('expanded')).toBe(true);
     });
 
-    it('enables collapsing when collapsible changes to true at runtime', async () => {
-      const el = await createAccordion();
-      getTriggerButton(el, 0)?.click();
-      await flush(el);
-
-      el.collapsible = true;
-      await flush(el);
-      getTriggerButton(el, 0)?.click();
-      await flush(el);
-
-      const item = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
-      expect(item.hasAttribute('expanded')).toBe(false);
-    });
   });
 
   describe('registration', () => {
