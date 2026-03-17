@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 import {
   type AccordionActionType,
+  type AccordionActionResult,
   normalizeAccordionValues,
   resolveAccordionAction,
 } from '../../utils/accordion/engine';
@@ -219,7 +220,7 @@ export class GrundAccordion extends LitElement {
       this.requestUpdate();
     }
 
-    this.dispatchToggleEvents(result.value, result.expanded);
+    this.dispatchToggleEvents(result);
   }
 
   private requestToggle(value: string): void {
@@ -230,10 +231,10 @@ export class GrundAccordion extends LitElement {
     this.applyAction('open', value);
   }
 
-  private dispatchToggleEvents(value: string, expanded: boolean): void {
+  private dispatchToggleEvents(result: AccordionActionResult): void {
     this.dispatchEvent(
       new CustomEvent<GrundAccordionChangeDetail>('grund-change', {
-        detail: { value, expanded },
+        detail: { value: result.value, expanded: result.expanded },
         bubbles: true,
         composed: false,
       }),
@@ -242,37 +243,14 @@ export class GrundAccordion extends LitElement {
     this.dispatchEvent(
       new CustomEvent<GrundAccordionValueChangeDetail>('grund-value-change', {
         detail: {
-          value: this.nextExpandedValues(value, expanded),
-          itemValue: value,
-          open: expanded,
+          value: result.nextValues,
+          itemValue: result.value,
+          open: result.expanded,
         },
         bubbles: true,
         composed: false,
       }),
     );
-  }
-
-  private nextExpandedValues(value: string, expanded: boolean): string[] {
-    const nextValues = new Set(this.expandedValues);
-
-    if (expanded) {
-      if (!this.multiple) {
-        nextValues.clear();
-      }
-      nextValues.add(value);
-    } else {
-      nextValues.delete(value);
-    }
-
-    const orderedValues = this.itemOrder.filter((itemValue) => nextValues.has(itemValue));
-
-    for (const itemValue of nextValues) {
-      if (!orderedValues.includes(itemValue)) {
-        orderedValues.push(itemValue);
-      }
-    }
-
-    return orderedValues;
   }
 
 }

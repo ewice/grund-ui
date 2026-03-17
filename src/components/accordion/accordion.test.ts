@@ -422,6 +422,48 @@ describe('grund-accordion', () => {
       });
     });
 
+    it('keeps grund-value-change aligned with the engine result when DOM order changes during grund-change', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion multiple>
+          <grund-accordion-item value="item-1">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 1</grund-accordion-panel>
+          </grund-accordion-item>
+          <grund-accordion-item value="item-2">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 2</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 2</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      const item1 = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
+      const item2 = el.querySelector('grund-accordion-item[value="item-2"]') as HTMLElement;
+      getTriggerButton(el, 0)?.click();
+      await flush(el);
+
+      const handler = vi.fn(() => {
+        el.append(item1);
+        el.prepend(item2);
+      });
+
+      el.addEventListener('grund-change', handler, { once: true });
+
+      const valueChange = vi.fn();
+      el.addEventListener('grund-value-change', valueChange);
+
+      getTriggerButton(el, 1)?.click();
+      await flush(el);
+
+      expect(handler).toHaveBeenCalledOnce();
+      expect(valueChange).toHaveBeenCalledOnce();
+      expect(valueChange.mock.calls[0][0].detail.value).toEqual(['item-1', 'item-2']);
+    });
+
     it('dispatches grund-open-change from the item', async () => {
       const el = await createAccordion();
       const item = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
