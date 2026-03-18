@@ -26,7 +26,7 @@ const DEFAULT_SNAPSHOT: AccordionHostSnapshot = {
 };
 
 export class AccordionRootController implements ReactiveController {
-  public readonly contextValue: AccordionContextValue;
+  public contextValue: AccordionContextValue;
 
   private readonly host: AccordionRootControllerHost;
 
@@ -61,13 +61,7 @@ export class AccordionRootController implements ReactiveController {
         normalizeAccordionValues([...this.expandedValues], { multiple: input.multiple }),
       );
     }
-
-    this.contextValue.orientation = input.orientation;
-    this.contextValue.loopFocus = input.loopFocus;
-    this.contextValue.disabled = input.disabled;
-    this.contextValue.keepMounted = input.keepMounted;
-    this.contextValue.hiddenUntilFound = input.hiddenUntilFound;
-    this.contextValue.expandedItems = this.expandedValues;
+    this.contextValue = this.createContextValue();
   }
 
   public renameExpandedValue(previousValue: string, nextValue: string): void {
@@ -120,10 +114,12 @@ export class AccordionRootController implements ReactiveController {
 
   private registerItem(item: GrundAccordionItemLike): void {
     this.registry.registerItem(item);
+    this.requestHostUpdate();
   }
 
   private unregisterItem(item: GrundAccordionItemLike): void {
     this.registry.unregisterItem(item);
+    this.requestHostUpdate();
   }
 
   private attachTrigger(item: GrundAccordionItemLike, trigger: Element | null): void {
