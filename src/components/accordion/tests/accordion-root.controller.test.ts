@@ -81,6 +81,12 @@ describe('AccordionRootController', () => {
 
     controller.renameExpandedValue('item-1', 'item-2');
 
+    controller.syncFromHost(
+      createSnapshot({
+        defaultValue: 'item-3',
+      }),
+    );
+
     expect([...controller.contextValue.expandedItems]).toEqual(['item-2']);
   });
 });
