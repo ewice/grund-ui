@@ -29,20 +29,18 @@ export class AccordionRootController implements ReactiveController {
   public contextValue: AccordionContextValue;
 
   private readonly host: AccordionRootControllerHost;
-
+  private readonly registry = new AccordionRegistry();
   private expandedValues = new Set<string>();
-
   private latestHostSnapshot: AccordionHostSnapshot = DEFAULT_SNAPSHOT;
-
   private defaultValueSeeded = false;
 
-  private readonly registry = new AccordionRegistry();
-
-  public constructor(host: AccordionRootControllerHost) {
+  constructor(host: AccordionRootControllerHost) {
     this.host = host;
     this.host.addController(this);
     this.contextValue = this.createContextValue();
   }
+
+  public hostDisconnected(): void {}
 
   public get triggers(): GrundAccordionTrigger[] {
     return this.registry.getOrderedTriggers();
@@ -123,11 +121,23 @@ export class AccordionRootController implements ReactiveController {
   }
 
   private attachTrigger(item: GrundAccordionItemLike, trigger: Element | null): void {
+    const currentTrigger = this.registry.getItemState(item)?.trigger ?? null;
+    if (currentTrigger === trigger) {
+      return;
+    }
+
     this.registry.attachTrigger(item, trigger);
+    this.requestHostUpdate();
   }
 
   private attachPanel(item: GrundAccordionItemLike, panel: Element | null): void {
+    const currentPanel = this.registry.getItemState(item)?.panel ?? null;
+    if (currentPanel === panel) {
+      return;
+    }
+
     this.registry.attachPanel(item, panel);
+    this.requestHostUpdate();
   }
 
   private getItemState(item: GrundAccordionItemLike): GrundAccordionItemSnapshot | undefined {

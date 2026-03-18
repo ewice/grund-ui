@@ -6,7 +6,7 @@ import {
   accordionItemContext,
   type AccordionContextValue,
   type AccordionItemContextValue,
-} from './accordion.context';
+} from './context';
 import { generateId } from '../../utils/id';
 import { accordionItemStyles } from './accordion.styles';
 
@@ -21,41 +21,28 @@ import { accordionItemStyles } from './accordion.styles';
 export class GrundAccordionItem extends LitElement {
   public static override styles = accordionItemStyles;
 
-  /** Unique value identifying this item. */
-  @property() public value: string = generateId('accordion-item');
-
   /** Disables this item, preventing it from being expanded or collapsed. */
-  @property({ type: Boolean, reflect: true }) public disabled = false;
+  @property({ type: Boolean, reflect: true })
+  public disabled = false;
+
+  /** Unique value identifying this item. */
+  @property()
+  public value: string = generateId('accordion-item');
 
   @consume({ context: accordionContext, subscribe: true })
   private accordionCtx?: AccordionContextValue;
+
+  @provide({ context: accordionItemContext })
+  protected itemCtx: AccordionItemContextValue = this.buildItemCtx();
 
   private registeredTriggerElement: Element | null = null;
   private registeredPanelElement: Element | null = null;
   private registered = false;
   private hasSettled = false;
-  private _expanded = false;
+  private expanded = false;
   private expandedChanged = false;
-  private _lastValue = this.value;
-  private _lastDisabled = this.disabled;
-
-  /** Base UI-style alias for the current expanded state. */
-  public get open(): boolean {
-    return this._expanded;
-  }
-
-  /** The currently registered trigger element. */
-  public get registeredTrigger(): Element | null {
-    return this.registeredTriggerElement;
-  }
-
-  /** The currently registered panel element. */
-  public get registeredPanel(): Element | null {
-    return this.registeredPanelElement;
-  }
-
-  @provide({ context: accordionItemContext })
-  protected itemCtx: AccordionItemContextValue = this.buildItemCtx();
+  private lastValue = this.value;
+  private lastDisabled = this.disabled;
 
   private buildItemCtx(): AccordionItemContextValue {
     const index = this.accordionCtx?.getItemIndex(this) ?? -1;
@@ -65,7 +52,7 @@ export class GrundAccordionItem extends LitElement {
       value: this.value,
       index,
       disabled: resolvedDisabled,
-      expanded: this._expanded,
+      expanded: this.expanded,
       orientation: this.accordionCtx?.orientation ?? 'vertical',
       keepMounted: this.accordionCtx?.keepMounted ?? false,
       hiddenUntilFound: this.accordionCtx?.hiddenUntilFound ?? false,
@@ -76,6 +63,7 @@ export class GrundAccordionItem extends LitElement {
         }
 
         this.registeredTriggerElement = trigger;
+        this.accordionCtx?.attachTrigger(this, trigger);
         this.requestUpdate();
       },
       unregisterTrigger: () => {
@@ -84,6 +72,7 @@ export class GrundAccordionItem extends LitElement {
         }
 
         this.registeredTriggerElement = null;
+        this.accordionCtx?.detachTrigger(this);
         this.requestUpdate();
       },
       registerPanel: (panel: Element) => {
@@ -92,6 +81,7 @@ export class GrundAccordionItem extends LitElement {
         }
 
         this.registeredPanelElement = panel;
+        this.accordionCtx?.attachPanel(this, panel);
         this.requestUpdate();
       },
       unregisterPanel: () => {
@@ -100,6 +90,7 @@ export class GrundAccordionItem extends LitElement {
         }
 
         this.registeredPanelElement = null;
+        this.accordionCtx?.detachPanel(this);
         this.requestUpdate();
       },
       registeredTrigger: this.registeredTriggerElement,
@@ -114,11 +105,11 @@ export class GrundAccordionItem extends LitElement {
   }
 
   public override willUpdate() {
-    const valueChanged = this._lastValue !== this.value;
-    const syncStructure = this.registered && (valueChanged || this._lastDisabled !== this.disabled);
+    const valueChanged = this.lastValue !== this.value;
+    const syncStructure = this.registered && (valueChanged || this.lastDisabled !== this.disabled);
 
     if (this.accordionCtx && valueChanged) {
-      this.accordionCtx.renameExpandedValue(this._lastValue, this.value);
+      this.accordionCtx.renameExpandedValue(this.lastValue, this.value);
     }
 
     if (this.accordionCtx && syncStructure) {
@@ -131,13 +122,27 @@ export class GrundAccordionItem extends LitElement {
       this.registered = true;
     }
 
+    if (this.accordionCtx) {
+      if (this.registeredTriggerElement) {
+        this.accordionCtx.attachTrigger(this, this.registeredTriggerElement);
+      } else {
+        this.accordionCtx.detachTrigger(this);
+      }
+
+      if (this.registeredPanelElement) {
+        this.accordionCtx.attachPanel(this, this.registeredPanelElement);
+      } else {
+        this.accordionCtx.detachPanel(this);
+      }
+    }
+
     const nextExpanded = this.accordionCtx?.expandedItems.has(this.value) ?? false;
-    this.expandedChanged = nextExpanded !== this._expanded;
-    this._expanded = nextExpanded;
+    this.expandedChanged = nextExpanded !== this.expanded;
+    this.expanded = nextExpanded;
     this.itemCtx = this.buildItemCtx();
 
-    this.toggleAttribute('expanded', this._expanded);
-    this.toggleAttribute('data-open', this._expanded);
+    this.toggleAttribute('expanded', this.expanded);
+    this.toggleAttribute('data-open', this.expanded);
     this.toggleAttribute('data-disabled', this.itemCtx.disabled);
 
     if (this.itemCtx.index >= 0) {
@@ -146,8 +151,8 @@ export class GrundAccordionItem extends LitElement {
       delete this.dataset.index;
     }
 
-    this._lastValue = this.value;
-    this._lastDisabled = this.disabled;
+    this.lastValue = this.value;
+    this.lastDisabled = this.disabled;
   }
 
   public override updated() {
@@ -155,7 +160,7 @@ export class GrundAccordionItem extends LitElement {
       this.dispatchEvent(
         new CustomEvent('grund-open-change', {
           detail: {
-            open: this._expanded,
+            open: this.expanded,
             value: this.value,
             index: this.itemCtx.index,
           },

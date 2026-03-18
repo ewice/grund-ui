@@ -31,6 +31,29 @@ class TestAccordionRootActions extends LitElement {
   }
 }
 
+@customElement('test-accordion-root-state')
+class TestAccordionRootState extends LitElement {
+  private accordionCtx?: AccordionContextValue;
+
+  // @ts-expect-error -- ContextConsumer is registered for side effects; TS cannot see that read
+  private accordionConsumer = new ContextConsumer(this, {
+    context: accordionContext,
+    callback: (ctx) => {
+      this.accordionCtx = ctx;
+      this.requestUpdate();
+    },
+    subscribe: true,
+  });
+
+  public getItemState(item: Element) {
+    return this.accordionCtx?.getItemState(item as never);
+  }
+
+  public override render() {
+    return html``;
+  }
+}
+
 async function createAccordion() {
   const el = await fixture<GrundAccordion>(html`
     <grund-accordion>
@@ -284,7 +307,7 @@ describe('grund-accordion', () => {
       `);
       await flush(el);
 
-      const actions = el.querySelector('test-accordion-root-actions')!;
+      const actions = el.querySelector('test-accordion-root-actions') as TestAccordionRootActions;
       const toggle = actions.shadowRoot?.querySelector<HTMLButtonElement>('#toggle');
       const open = actions.shadowRoot?.querySelector<HTMLButtonElement>('#open');
 
@@ -304,11 +327,13 @@ describe('grund-accordion', () => {
     it('registers trigger and panel children that mount after the item', async () => {
       const el = await fixture<GrundAccordion>(html`
         <grund-accordion keep-mounted>
+          <test-accordion-root-state></test-accordion-root-state>
           <grund-accordion-item value="item-1"></grund-accordion-item>
         </grund-accordion>
       `);
       await flush(el);
 
+      const state = el.querySelector('test-accordion-root-state') as TestAccordionRootState;
       const item = el.querySelector('grund-accordion-item')!;
       const header = document.createElement('grund-accordion-header');
       const trigger = document.createElement('grund-accordion-trigger');
@@ -324,10 +349,13 @@ describe('grund-accordion', () => {
 
       const button = trigger.shadowRoot?.querySelector('button');
       const panelDiv = getPanelInner(panel);
+      const snapshot = state.getItemState(item);
 
       expect(button?.getAttribute('aria-expanded')).toBe('false');
       expect(button?.hasAttribute('aria-controls')).toBe(true);
       expect(panelDiv?.hasAttribute('aria-labelledby')).toBe(true);
+      expect(snapshot?.trigger).toBe(trigger);
+      expect(snapshot?.panel).toBe(panel);
     });
   });
 
