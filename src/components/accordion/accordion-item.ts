@@ -1,4 +1,4 @@
-import { LitElement, html, type PropertyValues } from 'lit';
+import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { consume, provide } from '@lit/context';
 import {
@@ -27,9 +27,6 @@ export class GrundAccordionItem extends LitElement {
   /** Disables this item, preventing it from being expanded or collapsed. */
   @property({ type: Boolean, reflect: true }) public disabled = false;
 
-  /** Reflects the current expanded state as an HTML attribute for CSS selectors. */
-  @property({ type: Boolean, reflect: true }) public expanded = false;
-
   @consume({ context: accordionContext, subscribe: true })
   private accordionCtx?: AccordionContextValue;
 
@@ -37,10 +34,14 @@ export class GrundAccordionItem extends LitElement {
   private registeredPanelElement: Element | null = null;
   private registered = false;
   private hasSettled = false;
+  private _expanded = false;
+  private expandedChanged = false;
+  private _lastValue = this.value;
+  private _lastDisabled = this.disabled;
 
   /** Base UI-style alias for the current expanded state. */
   public get open(): boolean {
-    return this.expanded;
+    return this._expanded;
   }
 
   /** The currently registered trigger element. */
@@ -53,47 +54,54 @@ export class GrundAccordionItem extends LitElement {
     return this.registeredPanelElement;
   }
 
-  private registerTrigger = (trigger: Element) => {
-    this.registeredTriggerElement = trigger;
-    this.requestUpdate();
-  };
-
-  private unregisterTrigger = () => {
-    this.registeredTriggerElement = null;
-    this.requestUpdate();
-  };
-
-  private registerPanel = (panel: Element) => {
-    this.registeredPanelElement = panel;
-    this.requestUpdate();
-  };
-
-  private unregisterPanel = () => {
-    this.registeredPanelElement = null;
-    this.requestUpdate();
-  };
-
   @provide({ context: accordionItemContext })
   protected itemCtx: AccordionItemContextValue = this.buildItemCtx();
 
   private buildItemCtx(): AccordionItemContextValue {
     const index = this.accordionCtx?.getItemIndex(this) ?? -1;
     const resolvedDisabled = this.disabled || (this.accordionCtx?.disabled ?? false);
-    const expanded = this.accordionCtx?.expandedItems.has(this.value) ?? false;
 
     return {
       value: this.value,
       index,
       disabled: resolvedDisabled,
-      expanded,
+      expanded: this._expanded,
       orientation: this.accordionCtx?.orientation ?? 'vertical',
       keepMounted: this.accordionCtx?.keepMounted ?? false,
       hiddenUntilFound: this.accordionCtx?.hiddenUntilFound ?? false,
-      open: () => this.accordionCtx?.openItem(this.value),
-      registerTrigger: this.registerTrigger,
-      unregisterTrigger: this.unregisterTrigger,
-      registerPanel: this.registerPanel,
-      unregisterPanel: this.unregisterPanel,
+      open: () => this.accordionCtx?.requestOpen(this.value),
+      registerTrigger: (trigger: Element) => {
+        if (this.registeredTriggerElement === trigger) {
+          return;
+        }
+
+        this.registeredTriggerElement = trigger;
+        this.requestUpdate();
+      },
+      unregisterTrigger: () => {
+        if (this.registeredTriggerElement == null) {
+          return;
+        }
+
+        this.registeredTriggerElement = null;
+        this.requestUpdate();
+      },
+      registerPanel: (panel: Element) => {
+        if (this.registeredPanelElement === panel) {
+          return;
+        }
+
+        this.registeredPanelElement = panel;
+        this.requestUpdate();
+      },
+      unregisterPanel: () => {
+        if (this.registeredPanelElement == null) {
+          return;
+        }
+
+        this.registeredPanelElement = null;
+        this.requestUpdate();
+      },
       registeredTrigger: this.registeredTriggerElement,
       registeredPanel: this.registeredPanelElement,
     };
@@ -106,15 +114,27 @@ export class GrundAccordionItem extends LitElement {
   }
 
   public override willUpdate() {
+    const syncStructure = this.registered && (
+      this._lastValue !== this.value || this._lastDisabled !== this.disabled
+    );
+
+    if (this.accordionCtx && syncStructure) {
+      this.accordionCtx.unregisterItem(this);
+      this.registered = false;
+    }
+
     if (this.accordionCtx && !this.registered) {
       this.accordionCtx.registerItem(this);
       this.registered = true;
     }
 
-    this.expanded = this.accordionCtx?.expandedItems.has(this.value) ?? false;
+    const nextExpanded = this.accordionCtx?.expandedItems.has(this.value) ?? false;
+    this.expandedChanged = nextExpanded !== this._expanded;
+    this._expanded = nextExpanded;
     this.itemCtx = this.buildItemCtx();
 
-    this.toggleAttribute('data-open', this.expanded);
+    this.toggleAttribute('expanded', this._expanded);
+    this.toggleAttribute('data-open', this._expanded);
     this.toggleAttribute('data-disabled', this.itemCtx.disabled);
 
     if (this.itemCtx.index >= 0) {
@@ -122,14 +142,17 @@ export class GrundAccordionItem extends LitElement {
     } else {
       delete this.dataset.index;
     }
+
+    this._lastValue = this.value;
+    this._lastDisabled = this.disabled;
   }
 
-  public override updated(changedProperties: PropertyValues) {
-    if (this.hasSettled && changedProperties.has('expanded')) {
+  public override updated() {
+    if (this.hasSettled && this.expandedChanged) {
       this.dispatchEvent(
         new CustomEvent('grund-open-change', {
           detail: {
-            open: this.expanded,
+            open: this._expanded,
             value: this.value,
             index: this.itemCtx.index,
           },
@@ -139,6 +162,7 @@ export class GrundAccordionItem extends LitElement {
       );
     }
 
+    this.expandedChanged = false;
     this.hasSettled = true;
   }
 

@@ -27,7 +27,7 @@ export class GrundAccordionTrigger extends LitElement {
   private itemCtx?: AccordionItemContextValue;
 
   // @ts-expect-error -- ContextConsumer is registered for side effects; TS cannot see that read
-  private _accordionConsumer = new ContextConsumer(this, {
+  private accordionConsumer = new ContextConsumer(this, {
     context: accordionContext,
     callback: (ctx) => {
       this.accordionCtx = ctx;
@@ -37,10 +37,10 @@ export class GrundAccordionTrigger extends LitElement {
   });
 
   // @ts-expect-error -- ContextConsumer is registered for side effects; TS cannot see that read
-  private _itemConsumer = new ContextConsumer(this, {
+  private itemConsumer = new ContextConsumer(this, {
     context: accordionItemContext,
     callback: (ctx) => {
-      if (this.itemCtx) {
+      if (this.itemCtx && this.itemCtx.value !== ctx.value) {
         this.itemCtx.unregisterTrigger();
       }
       this.itemCtx = ctx;
@@ -63,8 +63,11 @@ export class GrundAccordionTrigger extends LitElement {
   // @ts-expect-error -- controller registered for side effects; TS cannot see that read
   private ariaLink = new AriaLinkController(this, {
     source: () => this.triggerButton,
-    target: () => (this.itemCtx?.registeredPanel as GrundAccordionPanel | null)
-      ?.shadowRoot?.querySelector('[part="panel"]') ?? null,
+    target: () => {
+      const panel = this.itemCtx?.registeredPanel as GrundAccordionPanel | null;
+
+      return panel?.shadowRoot?.querySelector('[part="panel"]') ?? null;
+    },
     type: 'controls',
   });
 
@@ -75,7 +78,7 @@ export class GrundAccordionTrigger extends LitElement {
 
   private handleClick() {
     if (this.disabled) return;
-    this.accordionCtx?.toggle(this.itemCtx?.value ?? '');
+    this.accordionCtx?.requestToggle(this.itemCtx?.value ?? '');
   }
 
   public override willUpdate() {

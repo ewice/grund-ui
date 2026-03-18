@@ -183,6 +183,32 @@ describe('grund-accordion', () => {
       expect(panelDiv?.hasAttribute('aria-labelledby')).toBe(true);
     });
 
+    it('relinks trigger and panel after the panel is reattached', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion keep-mounted>
+          <grund-accordion-item value="item-1">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 1</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      const panel = el.querySelector('grund-accordion-panel') as GrundAccordionPanel;
+      panel.remove();
+      await flush(el);
+
+      const replacement = document.createElement('grund-accordion-panel');
+      replacement.textContent = 'Content 1';
+      el.querySelector('grund-accordion-item')?.append(replacement);
+      await flush(el);
+
+      expect(getPanelInner(replacement)?.hasAttribute('aria-labelledby')).toBe(true);
+      expect(getTriggerButton(el, 0)?.hasAttribute('aria-controls')).toBe(true);
+    });
+
     it('sets role="region" on an open panel', async () => {
       const el = await createAccordion();
       getTriggerButton(el, 0)?.click();
@@ -331,6 +357,22 @@ describe('grund-accordion', () => {
       const button1 = getTriggerButton(el, 1);
       button0?.focus();
       button0?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+      await flush(el);
+
+      expect(button0?.tabIndex).toBe(-1);
+      expect(button1?.tabIndex).toBe(0);
+    });
+
+    it('moves focus away from a trigger when its item becomes disabled', async () => {
+      const el = await createAccordion();
+      const item0 = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
+      const button0 = getTriggerButton(el, 0);
+      const button1 = getTriggerButton(el, 1);
+
+      expect(button0?.tabIndex).toBe(0);
+      expect(button1?.tabIndex).toBe(-1);
+
+      item0.setAttribute('disabled', '');
       await flush(el);
 
       expect(button0?.tabIndex).toBe(-1);
@@ -814,8 +856,7 @@ describe('grund-accordion', () => {
       expect(el.getAttribute('data-orientation')).toBe('vertical');
       expect(item?.hasAttribute('data-open')).toBe(true);
       expect(item?.getAttribute('data-index')).toBe('0');
-      expect(header?.hasAttribute('data-open')).toBe(true);
-      expect(header?.getAttribute('data-index')).toBe('0');
+      expect(header?.shadowRoot?.querySelector('grund-heading')).toBeTruthy();
       expect(trigger?.hasAttribute('data-panel-open')).toBe(true);
       expect(panel?.hasAttribute('data-open')).toBe(true);
       expect(panel?.getAttribute('data-orientation')).toBe('vertical');

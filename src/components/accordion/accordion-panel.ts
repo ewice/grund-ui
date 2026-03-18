@@ -30,7 +30,7 @@ export class GrundAccordionPanel extends LitElement {
   private itemConsumer = new ContextConsumer(this, {
     context: accordionItemContext,
     callback: (ctx) => {
-      if (this.itemCtx) {
+      if (this.itemCtx && this.itemCtx.value !== ctx.value) {
         this.itemCtx.unregisterPanel();
       }
       this.itemCtx = ctx;
@@ -43,8 +43,11 @@ export class GrundAccordionPanel extends LitElement {
   // @ts-expect-error -- controller registered for side effects; TS cannot see that read
   private ariaLink = new AriaLinkController(this, {
     source: () => this.shadowRoot?.querySelector('[part="panel"]') ?? null,
-    target: () => (this.itemCtx?.registeredTrigger as GrundAccordionTrigger | null)
-      ?.triggerButton ?? null,
+    target: () => {
+      const trigger = this.itemCtx?.registeredTrigger as GrundAccordionTrigger | null;
+
+      return trigger?.triggerButton ?? null;
+    },
     type: 'labelledby',
   });
 

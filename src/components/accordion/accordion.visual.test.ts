@@ -63,7 +63,7 @@ describe('grund-accordion visual', () => {
 
   it('multiple mode — two items expanded', async () => {
     const el = await fixture<GrundAccordion>(html`
-      <grund-accordion type="multiple" style="font-family: monospace; width: 300px;">
+      <grund-accordion multiple style="font-family: monospace; width: 300px;">
         <grund-accordion-item value="item-1">
           <grund-accordion-header>
             <grund-accordion-trigger>Item 1</grund-accordion-trigger>
