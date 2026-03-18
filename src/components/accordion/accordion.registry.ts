@@ -1,8 +1,5 @@
-import type {
-  GrundAccordionItemLike,
-  GrundAccordionItemSnapshot,
-} from './types';
-
+import type { GrundAccordionItemLike, GrundAccordionItemSnapshot } from './types';
+import type { GrundAccordionTrigger } from './accordion-trigger';
 
 interface AccordionItemRecord {
   item: GrundAccordionItemLike;
@@ -12,7 +9,6 @@ interface AccordionItemRecord {
   trigger: Element | null;
   panel: Element | null;
 }
-
 
 /**
  * Maintains ordered accordion item records.
@@ -81,11 +77,7 @@ export class AccordionRegistry {
   }
 
   public get disabledValues(): ReadonlySet<string> {
-    return new Set(
-      this.records
-        .filter((record) => record.disabled)
-        .map((record) => record.value),
-    );
+    return new Set(this.records.filter((record) => record.disabled).map((record) => record.value));
   }
 
   public getItemState(item: GrundAccordionItemLike): GrundAccordionItemSnapshot | undefined {
@@ -95,6 +87,13 @@ export class AccordionRegistry {
     }
 
     return this.snapshot(record);
+  }
+
+  public getOrderedTriggers(): GrundAccordionTrigger[] {
+    this.syncOrder();
+    return this.records.flatMap((record) =>
+      record.trigger == null ? [] : [record.trigger as GrundAccordionTrigger],
+    );
   }
 
   private createRecord(item: GrundAccordionItemLike): AccordionItemRecord {

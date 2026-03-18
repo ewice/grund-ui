@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ReactiveControllerHost } from 'lit';
 import { AccordionRootController } from '../accordion-root.controller';
 import type { AccordionHostSnapshot, GrundAccordionItemLike } from '../types';
+import type { GrundAccordionTrigger } from '../accordion-trigger';
 
 interface MockHost extends ReactiveControllerHost, HTMLElement {
   addController: ReturnType<typeof vi.fn>;
@@ -48,6 +49,10 @@ function createItem(value: string, disabled = false): GrundAccordionItemLike {
   item.value = value;
   item.disabled = disabled;
   return item;
+}
+
+function createTrigger(): GrundAccordionTrigger {
+  return document.createElement('button') as unknown as GrundAccordionTrigger;
 }
 
 describe('AccordionRootController', () => {
@@ -180,5 +185,43 @@ describe('AccordionRootController', () => {
 
     expect([...controller.contextValue.expandedItems]).toEqual([]);
     expect(host.dispatchEvent).not.toHaveBeenCalled();
+  });
+
+  it('exposes ordered triggers from the registry', () => {
+    const controller = new AccordionRootController(host);
+    const container = document.createElement('div');
+    const first = createItem('item-1');
+    const second = createItem('item-2');
+    const firstTrigger = createTrigger();
+    const secondTrigger = createTrigger();
+
+    container.append(first, second);
+    controller.contextValue.registerItem(second);
+    controller.contextValue.registerItem(first);
+    controller.contextValue.attachTrigger(first, firstTrigger);
+    controller.contextValue.attachTrigger(second, secondTrigger);
+
+    expect(controller.triggers).toEqual([firstTrigger, secondTrigger]);
+  });
+
+  it('updates trigger ordering after registered items are reordered', () => {
+    const controller = new AccordionRootController(host);
+    const container = document.createElement('div');
+    const first = createItem('item-1');
+    const second = createItem('item-2');
+    const firstTrigger = createTrigger();
+    const secondTrigger = createTrigger();
+
+    container.append(first, second);
+    controller.contextValue.registerItem(first);
+    controller.contextValue.registerItem(second);
+    controller.contextValue.attachTrigger(first, firstTrigger);
+    controller.contextValue.attachTrigger(second, secondTrigger);
+
+    expect(controller.triggers).toEqual([firstTrigger, secondTrigger]);
+
+    container.insertBefore(second, first);
+
+    expect(controller.triggers).toEqual([secondTrigger, firstTrigger]);
   });
 });

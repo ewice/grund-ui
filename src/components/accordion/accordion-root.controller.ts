@@ -5,6 +5,7 @@ import {
 } from '../../utils/accordion/engine';
 import { AccordionRegistry } from './accordion.registry';
 import type { AccordionContextValue } from './context';
+import type { GrundAccordionTrigger } from './accordion-trigger';
 import type {
   AccordionHostSnapshot,
   GrundAccordionChangeDetail,
@@ -41,6 +42,10 @@ export class AccordionRootController implements ReactiveController {
     this.host = host;
     this.host.addController(this);
     this.contextValue = this.createContextValue();
+  }
+
+  public get triggers(): GrundAccordionTrigger[] {
+    return this.registry.getOrderedTriggers();
   }
 
   public syncFromHost(input: AccordionHostSnapshot): void {
