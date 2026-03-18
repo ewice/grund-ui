@@ -6,9 +6,9 @@ import {
   accordionItemContext,
   type AccordionContextValue,
   type AccordionItemContextValue,
-} from './context';
-import { generateId } from '../../utils/id';
-import { accordionItemStyles } from './accordion.styles';
+} from '../context';
+import { generateId } from '../../../utils/id';
+import { accordionItemStyles } from './accordion-item.styles';
 
 /**
  * A single item within an accordion. Groups a header/trigger with its panel

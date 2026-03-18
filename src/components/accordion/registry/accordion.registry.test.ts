@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { AccordionRegistry } from '../accordion.registry';
+import { AccordionRegistry } from './accordion.registry';
 import type { GrundAccordionItemLike } from '../types';
-import type { GrundAccordionTrigger } from '../accordion-trigger';
+import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
 
 function createItem(value: string, disabled = false): GrundAccordionItemLike {
   const item = document.createElement('div') as GrundAccordionItemLike;
@@ -105,6 +105,32 @@ describe('AccordionRegistry', () => {
 
     expect(initialTriggers).toEqual([firstTrigger]);
     expect(registry.getOrderedTriggers()).toEqual([firstTrigger, secondTrigger]);
+  });
+
+  it('reflects item disabled change after syncOrder', () => {
+    const registry = new AccordionRegistry();
+    const item = createItem('item-1', false);
+
+    registry.registerItem(item);
+    expect(registry.getItemState(item)).toMatchObject({ disabled: false });
+
+    item.disabled = true;
+    registry.syncOrder();
+
+    expect(registry.getItemState(item)).toMatchObject({ disabled: true });
+  });
+
+  it('reflects item value change after syncOrder', () => {
+    const registry = new AccordionRegistry();
+    const item = createItem('item-1');
+
+    registry.registerItem(item);
+    expect(registry.getItemState(item)?.value).toBe('item-1');
+
+    item.value = 'renamed';
+    registry.syncOrder();
+
+    expect(registry.getItemState(item)?.value).toBe('renamed');
   });
 
   it('rejects duplicate item values', () => {

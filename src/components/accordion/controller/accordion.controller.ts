@@ -1,40 +1,28 @@
 import type { ReactiveController } from 'lit';
-import {
-  normalizeAccordionValues,
-  resolveAccordionAction,
-} from '../../utils/accordion/engine';
-import { AccordionRegistry } from './accordion.registry';
-import type { AccordionContextValue } from './context';
-import type { GrundAccordionTrigger } from './accordion-trigger';
+import { normalizeAccordionValues, resolveAccordionAction } from '../../../utils/accordion/engine';
+import { AccordionRegistry } from '../registry/accordion.registry';
+import type { AccordionContextValue } from '../context';
+import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
 import type {
   AccordionHostSnapshot,
   GrundAccordionChangeDetail,
   GrundAccordionItemLike,
   GrundAccordionItemSnapshot,
   GrundAccordionValueChangeDetail,
-} from './types';
-
-const DEFAULT_SNAPSHOT: AccordionHostSnapshot = {
-  multiple: false,
-  value: undefined,
-  defaultValue: undefined,
-  disabled: false,
-  orientation: 'vertical',
-  loopFocus: true,
-  keepMounted: false,
-  hiddenUntilFound: false,
-};
+} from '../types';
+import { DEFAULT_SNAPSHOT } from './constants';
+import { AccordionControllerHost } from './types';
 
 export class AccordionController implements ReactiveController {
   public contextValue: AccordionContextValue;
 
-  private readonly host: AccordionRootControllerHost;
+  private readonly host: AccordionControllerHost;
   private readonly registry = new AccordionRegistry();
   private expandedValues = new Set<string>();
   private latestHostSnapshot: AccordionHostSnapshot = DEFAULT_SNAPSHOT;
   private defaultValueSeeded = false;
 
-  constructor(host: AccordionRootControllerHost) {
+  constructor(host: AccordionControllerHost) {
     this.host = host;
     this.host.addController(this);
     this.contextValue = this.createContextValue();
@@ -213,10 +201,4 @@ export class AccordionController implements ReactiveController {
   private requestHostUpdate(): void {
     this.host.requestUpdate();
   }
-}
-
-interface AccordionRootControllerHost {
-  addController(controller: ReactiveController): void;
-  requestUpdate(): void;
-  dispatchEvent(event: Event): boolean;
 }

@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ReactiveControllerHost } from 'lit';
-import { AccordionRootController } from '../accordion-root.controller';
+import { AccordionRootController } from '../root/accordion-root.controller';
 import type { AccordionHostSnapshot, GrundAccordionItemLike } from '../types';
-import type { GrundAccordionTrigger } from '../accordion-trigger';
+import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
 
 interface MockHost extends ReactiveControllerHost, HTMLElement {
   addController: ReturnType<typeof vi.fn>;

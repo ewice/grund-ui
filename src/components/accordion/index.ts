@@ -1,6 +1,6 @@
-export { GrundAccordion } from './accordion';
+export { GrundAccordion } from './root/accordion';
 
-export { GrundAccordionItem } from './accordion-item';
-export { GrundAccordionHeader } from './accordion-header';
-export { GrundAccordionTrigger } from './accordion-trigger';
-export { GrundAccordionPanel } from './accordion-panel';
+export { GrundAccordionItem } from './item/accordion-item';
+export { GrundAccordionHeader } from './header/accordion-header';
+export { GrundAccordionTrigger } from './trigger/accordion-trigger';
+export { GrundAccordionPanel } from './panel/accordion-panel';

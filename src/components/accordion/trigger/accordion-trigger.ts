@@ -6,10 +6,10 @@ import {
   accordionItemContext,
   type AccordionContextValue,
   type AccordionItemContextValue,
-} from './context';
-import { AriaLinkController } from '../../controllers/aria-link.controller';
-import { accordionTriggerStyles } from './accordion.styles';
-import type { GrundAccordionPanel } from './accordion-panel';
+} from '../context';
+import { AriaLinkController } from '../../../controllers/aria-link.controller';
+import { accordionTriggerStyles } from './accordion-trigger.styles';
+import type { GrundAccordionPanel } from '../panel/accordion-panel';
 
 /**
  * The interactive button that expands or collapses an accordion item.

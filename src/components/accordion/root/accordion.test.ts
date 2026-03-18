@@ -4,9 +4,9 @@ import { ContextConsumer } from '@lit/context';
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import '../index.js';
-import type { GrundAccordion } from '../accordion';
-import type { GrundAccordionPanel } from '../accordion-panel';
-import { accordionContext, type AccordionContextValue } from '../context';
+import type { GrundAccordion } from './accordion.js';
+import type { GrundAccordionPanel } from '../panel/accordion-panel.js';
+import { accordionContext, type AccordionContextValue } from '../context/index.js';
 import { flush } from '../../../test-utils/index';
 
 @customElement('test-accordion-root-actions')

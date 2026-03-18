@@ -1,10 +1,10 @@
 import { LitElement, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ContextConsumer } from '@lit/context';
-import { accordionItemContext, type AccordionItemContextValue } from './context';
-import { AriaLinkController } from '../../controllers/aria-link.controller';
-import type { GrundAccordionTrigger } from './accordion-trigger';
-import { accordionPanelStyles } from './accordion.styles';
+import { accordionItemContext, type AccordionItemContextValue } from '../context';
+import { AriaLinkController } from '../../../controllers/aria-link.controller';
+import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
+import { accordionPanelStyles } from './accordion-panel.styles';
 
 /**
  * The collapsible content region of an accordion item.

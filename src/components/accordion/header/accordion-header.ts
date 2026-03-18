@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { accordionHeaderStyles } from './accordion.styles';
-import '../heading/heading.js';
+import { accordionHeaderStyles } from './accordion-header.styles';
+import '../../heading/heading.js';
 
 /**
  * Semantic heading wrapper for an accordion item's trigger.

@@ -1,14 +1,14 @@
 import { LitElement, html, type PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { provide } from '@lit/context';
-import { RovingFocusController } from '../../controllers/roving-focus.controller';
-import { AccordionController } from './accordion.controller';
-import { accordionContext, type AccordionContextValue } from './context';
+import { RovingFocusController } from '../../../controllers/roving-focus.controller';
+import { AccordionController } from '../controller/accordion.controller';
+import { accordionContext, type AccordionContextValue } from '../context';
 import type {
   AccordionHostSnapshot,
   GrundAccordionOrientation,
-} from './types';
-import type { GrundAccordionTrigger } from './accordion-trigger';
+} from '../types';
+import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
 import { accordionStyles } from './accordion.styles';
 
 /**

@@ -3,7 +3,7 @@ import { fixture } from '@open-wc/testing-helpers/pure';
 import { html } from 'lit';
 import { page } from 'vitest/browser';
 import '../index.js';
-import type { GrundAccordion } from '../accordion';
+import type { GrundAccordion } from '../root/accordion';
 import { flush } from '../../../test-utils';
 
 /**

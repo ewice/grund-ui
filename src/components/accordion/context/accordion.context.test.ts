@@ -4,7 +4,7 @@ import {
   accordionItemContext,
   type AccordionContextValue,
   type AccordionItemContextValue,
-} from '../context';
+} from '.';
 
 describe('accordion context barrel', () => {
   it('exports the root and item contexts', () => {
