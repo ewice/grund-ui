@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ReactiveControllerHost } from 'lit';
 import { AccordionRootController } from '../accordion-root.controller';
-import type { AccordionHostSnapshot } from '../types';
+import type { AccordionHostSnapshot, GrundAccordionItemLike } from '../types';
 
 interface MockHost extends ReactiveControllerHost, HTMLElement {
   addController: ReturnType<typeof vi.fn>;
@@ -13,6 +13,7 @@ function createHost(): MockHost {
   (el as any).requestUpdate = vi.fn();
   (el as any).removeController = vi.fn();
   (el as any).updateComplete = Promise.resolve(true);
+  el.dispatchEvent = vi.fn(el.dispatchEvent.bind(el));
   return el;
 }
 
@@ -30,6 +31,16 @@ function createSnapshot(
     hiddenUntilFound: false,
     ...overrides,
   };
+}
+
+function registerDisabledItem(controller: AccordionRootController): {
+  disabledItem: GrundAccordionItemLike;
+} {
+  const disabledItem = document.createElement('div') as GrundAccordionItemLike;
+  disabledItem.value = 'item-disabled';
+  disabledItem.disabled = true;
+  controller.contextValue.registerItem(disabledItem);
+  return { disabledItem };
 }
 
 describe('AccordionRootController', () => {
@@ -88,5 +99,53 @@ describe('AccordionRootController', () => {
     );
 
     expect([...controller.contextValue.expandedItems]).toEqual(['item-2']);
+  });
+
+  it('dispatches grund-change and grund-value-change on toggle', () => {
+    const controller = new AccordionRootController(host);
+
+    controller.syncFromHost(createSnapshot());
+
+    controller.contextValue.requestToggle('item-1');
+
+    expect(host.dispatchEvent).toHaveBeenCalledWith(
+      expect.objectContaining({ type: 'grund-change' }),
+    );
+    expect(host.dispatchEvent).toHaveBeenCalledWith(
+      expect.objectContaining({ type: 'grund-value-change' }),
+    );
+  });
+
+  it('does not mutate uncontrolled state when the host is controlled', () => {
+    const controller = new AccordionRootController(createHost());
+
+    controller.syncFromHost(createSnapshot({ value: 'item-1' }));
+
+    controller.contextValue.requestToggle('item-2');
+
+    expect([...controller.contextValue.expandedItems]).toEqual(['item-1']);
+  });
+
+  it('does nothing when the root is disabled', () => {
+    const controller = new AccordionRootController(host);
+
+    controller.syncFromHost(createSnapshot({ disabled: true }));
+
+    controller.contextValue.requestToggle('item-1');
+
+    expect([...controller.contextValue.expandedItems]).toEqual([]);
+    expect(host.dispatchEvent).not.toHaveBeenCalled();
+  });
+
+  it('does nothing when the target item is disabled in the registry', () => {
+    const controller = new AccordionRootController(host);
+    const { disabledItem } = registerDisabledItem(controller);
+
+    controller.syncFromHost(createSnapshot());
+
+    controller.contextValue.requestToggle(disabledItem.value);
+
+    expect([...controller.contextValue.expandedItems]).toEqual([]);
+    expect(host.dispatchEvent).not.toHaveBeenCalled();
   });
 });
