@@ -114,9 +114,12 @@ export class GrundAccordionItem extends LitElement {
   }
 
   public override willUpdate() {
-    const syncStructure = this.registered && (
-      this._lastValue !== this.value || this._lastDisabled !== this.disabled
-    );
+    const valueChanged = this._lastValue !== this.value;
+    const syncStructure = this.registered && (valueChanged || this._lastDisabled !== this.disabled);
+
+    if (this.accordionCtx && valueChanged) {
+      this.accordionCtx.renameExpandedValue(this._lastValue, this.value);
+    }
 
     if (this.accordionCtx && syncStructure) {
       this.accordionCtx.unregisterItem(this);

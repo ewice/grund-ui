@@ -541,6 +541,48 @@ describe('grund-accordion', () => {
       expect(item2.hasAttribute('expanded')).toBe(true);
     });
 
+    it('keeps an open item expanded when its value changes', async () => {
+      const el = await fixture<GrundAccordion>(html`
+        <grund-accordion multiple>
+          <grund-accordion-item value="item-1">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 1</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 1</grund-accordion-panel>
+          </grund-accordion-item>
+          <grund-accordion-item value="item-2">
+            <grund-accordion-header>
+              <grund-accordion-trigger>Item 2</grund-accordion-trigger>
+            </grund-accordion-header>
+            <grund-accordion-panel>Content 2</grund-accordion-panel>
+          </grund-accordion-item>
+        </grund-accordion>
+      `);
+      await flush(el);
+
+      const item = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
+      getTriggerButton(el, 0)?.click();
+      await flush(el);
+
+      const openHandler = vi.fn();
+      item.addEventListener('grund-open-change', openHandler);
+
+      const valueHandler = vi.fn();
+      el.addEventListener('grund-value-change', valueHandler);
+
+      item.value = 'item-1-renamed';
+      await flush(el);
+
+      expect(item.hasAttribute('expanded')).toBe(true);
+      expect(openHandler).not.toHaveBeenCalled();
+
+      getTriggerButton(el, 1)?.click();
+      await flush(el);
+
+      expect(valueHandler).toHaveBeenCalledOnce();
+      expect(valueHandler.mock.calls[0][0].detail.value).toEqual(['item-1-renamed', 'item-2']);
+    });
+
   });
 
   describe('registration', () => {

@@ -27,6 +27,7 @@ declare module './accordion.context' {
     expandedItems: ReadonlySet<string>;
     toggle: (value: string) => void;
     openItem: (value: string) => void;
+    renameExpandedValue: (previousValue: string, nextValue: string) => void;
     getItemIndex: (item: GrundAccordionItemLike) => number;
   }
 }
@@ -35,6 +36,7 @@ interface AccordionContextBridge extends AccordionContextValue {
   expandedItems: ReadonlySet<string>;
   toggle: (value: string) => void;
   openItem: (value: string) => void;
+  renameExpandedValue: (previousValue: string, nextValue: string) => void;
   getItemIndex: (item: GrundAccordionItemLike) => number;
 }
 
@@ -153,6 +155,8 @@ export class GrundAccordion extends LitElement {
       expandedItems: this.expandedValues,
       toggle: (value: string) => this.requestToggle(value),
       openItem: (value: string) => this.requestOpen(value),
+      renameExpandedValue: (previousValue: string, nextValue: string) =>
+        this.renameExpandedValue(previousValue, nextValue),
       getItemIndex: (item: GrundAccordionItemLike) => this.registry.getItemState(item)?.index ?? -1,
     };
   }
@@ -229,6 +233,21 @@ export class GrundAccordion extends LitElement {
 
   private requestOpen(value: string): void {
     this.applyAction('open', value);
+  }
+
+  private renameExpandedValue(previousValue: string, nextValue: string): void {
+    if (previousValue === nextValue || !this.expandedValues.has(previousValue)) {
+      return;
+    }
+
+    const renamedValues = [...this.expandedValues];
+    this.expandedValues.clear();
+
+    for (const value of renamedValues) {
+      this.expandedValues.add(value === previousValue ? nextValue : value);
+    }
+
+    this.requestUpdate();
   }
 
   private dispatchToggleEvents(result: AccordionActionResult): void {
