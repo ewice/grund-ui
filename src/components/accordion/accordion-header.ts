@@ -15,7 +15,8 @@ export class GrundAccordionHeader extends LitElement {
   public static override styles = accordionHeaderStyles;
 
   /** Heading level rendered in the DOM (1-6). Defaults to 3. */
-  @property({ type: Number }) public level: 1 | 2 | 3 | 4 | 5 | 6 = 3;
+  @property({ type: Number })
+  public level: 1 | 2 | 3 | 4 | 5 | 6 = 3;
 
   public override render() {
     return html`<grund-heading .level=${this.level} exportparts="heading">

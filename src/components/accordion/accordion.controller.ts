@@ -25,7 +25,7 @@ const DEFAULT_SNAPSHOT: AccordionHostSnapshot = {
   hiddenUntilFound: false,
 };
 
-export class AccordionRootController implements ReactiveController {
+export class AccordionController implements ReactiveController {
   public contextValue: AccordionContextValue;
 
   private readonly host: AccordionRootControllerHost;

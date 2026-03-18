@@ -14,7 +14,9 @@ describe('grund-heading', () => {
 
   it('renders the correct heading level', async () => {
     for (const level of [1, 2, 3, 4, 5, 6] as const) {
-      const el = await fixture<GrundHeading>(html`<grund-heading .level=${level}>Title</grund-heading>`);
+      const el = await fixture<GrundHeading>(
+        html`<grund-heading .level=${level}>Title</grund-heading>`,
+      );
       const tag = `h${level}`;
       const heading = el.shadowRoot?.querySelector(tag);
       expect(heading).toBeTruthy();

@@ -1,6 +1,5 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 
-
 /** Configuration for an ARIA element reflection link. */
 export interface AriaLinkOptions {
   /** Returns the element that gets the ARIA property set. */
@@ -10,7 +9,6 @@ export interface AriaLinkOptions {
   /** The ARIA relationship type to establish. */
   type: 'controls' | 'labelledby';
 }
-
 
 /**
  * Reactive controller that manages ARIA element reflection between two elements.

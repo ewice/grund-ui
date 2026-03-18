@@ -1,7 +1,7 @@
 import { LitElement, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ContextConsumer } from '@lit/context';
-import { accordionItemContext, type AccordionItemContextValue } from './accordion.context';
+import { accordionItemContext, type AccordionItemContextValue } from './context';
 import { AriaLinkController } from '../../controllers/aria-link.controller';
 import type { GrundAccordionTrigger } from './accordion-trigger';
 import { accordionPanelStyles } from './accordion.styles';
@@ -78,7 +78,7 @@ export class GrundAccordionPanel extends LitElement {
     const hiddenUntilFound = this.resolveHiddenUntilFound();
     const keepMounted = hiddenUntilFound
       ? true
-      : (this.keepMounted || (this.itemCtx?.keepMounted ?? false));
+      : this.keepMounted || (this.itemCtx?.keepMounted ?? false);
 
     if (!expanded && !keepMounted) {
       return nothing;
@@ -86,12 +86,7 @@ export class GrundAccordionPanel extends LitElement {
 
     if (!expanded && hiddenUntilFound) {
       return html`
-        <div
-          part="panel"
-          role="region"
-          hidden="until-found"
-          @beforematch=${this.handleBeforeMatch}
-        >
+        <div part="panel" role="region" hidden="until-found" @beforematch=${this.handleBeforeMatch}>
           <slot></slot>
         </div>
       `;

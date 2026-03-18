@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { ReactiveControllerHost } from 'lit';
 import { OpenStateController } from './open-state.controller';
 
-
 interface MockHost extends ReactiveControllerHost, HTMLElement {
   addController: ReturnType<typeof vi.fn>;
 }
@@ -15,7 +14,6 @@ function createMockHost(): MockHost {
   (el as any).updateComplete = Promise.resolve(true);
   return el;
 }
-
 
 describe('OpenStateController', () => {
   let host: MockHost;

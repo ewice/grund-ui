@@ -1,12 +1,10 @@
 import { css } from 'lit';
 
-
 export const accordionStyles = css`
   :host {
     display: block;
   }
 `;
-
 
 export const accordionItemStyles = css`
   :host {
@@ -14,13 +12,11 @@ export const accordionItemStyles = css`
   }
 `;
 
-
 export const accordionHeaderStyles = css`
   :host {
     display: block;
   }
 `;
-
 
 export const accordionTriggerStyles = css`
   :host {
@@ -44,7 +40,6 @@ export const accordionTriggerStyles = css`
     cursor: default;
   }
 `;
-
 
 export const accordionPanelStyles = css`
   :host {

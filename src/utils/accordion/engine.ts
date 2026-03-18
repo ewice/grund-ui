@@ -1,11 +1,9 @@
 export type AccordionActionType = 'toggle' | 'open';
 
-
 export interface AccordionAction {
   type: AccordionActionType;
   value: string;
 }
-
 
 export interface AccordionActionInput {
   action: AccordionAction;
@@ -15,7 +13,6 @@ export interface AccordionActionInput {
   multiple: boolean;
 }
 
-
 export interface AccordionActionResult {
   changed: boolean;
   value: string;
@@ -23,14 +20,12 @@ export interface AccordionActionResult {
   nextValues: string[];
 }
 
-
 export function normalizeAccordionValues(
   values: readonly string[],
   options: { multiple: boolean },
 ): string[] {
   return options.multiple ? [...values] : values.slice(0, 1);
 }
-
 
 export function resolveAccordionAction(input: AccordionActionInput): AccordionActionResult {
   const currentValues = orderAccordionValues(
@@ -61,7 +56,6 @@ export function resolveAccordionAction(input: AccordionActionInput): AccordionAc
   };
 }
 
-
 function buildNextValues(
   input: AccordionActionInput,
   currentValues: readonly string[],
@@ -84,7 +78,6 @@ function buildNextValues(
   return input.multiple ? [...currentValues, value] : [value];
 }
 
-
 function orderAccordionValues(values: readonly string[], itemOrder: readonly string[]): string[] {
   const nextValues = new Set(values);
   const orderedValues = itemOrder.filter((itemValue) => nextValues.has(itemValue));
@@ -97,7 +90,6 @@ function orderAccordionValues(values: readonly string[], itemOrder: readonly str
 
   return orderedValues;
 }
-
 
 function areValuesEqual(left: readonly string[], right: readonly string[]): boolean {
   if (left.length !== right.length) {

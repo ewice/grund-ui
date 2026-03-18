@@ -2,7 +2,7 @@ import { LitElement, html, type PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 import { RovingFocusController } from '../../controllers/roving-focus.controller';
-import { AccordionRootController } from './accordion-root.controller';
+import { AccordionController } from './accordion.controller';
 import { accordionContext, type AccordionContextValue } from './context';
 import type {
   AccordionHostSnapshot,
@@ -21,7 +21,7 @@ import { accordionStyles } from './accordion.styles';
  */
 @customElement('grund-accordion')
 export class GrundAccordion extends LitElement {
-  public static override styles = accordionStyles;
+  public static override readonly styles = accordionStyles;
 
   /** The initially expanded item value(s) in uncontrolled mode. */
   @property({ attribute: 'default-value' })
@@ -55,12 +55,12 @@ export class GrundAccordion extends LitElement {
   @property({ attribute: false })
   public value?: string | string[];
 
-  private controller = new AccordionRootController(this);
+  private readonly controller = new AccordionController(this);
 
   @provide({ context: accordionContext })
   protected accordionCtx: AccordionContextValue = this.controller.contextValue;
 
-  private rovingFocus = new RovingFocusController<GrundAccordionTrigger>(this, {
+  private readonly rovingFocus = new RovingFocusController<GrundAccordionTrigger>(this, {
     getItems: () => this.controller.triggers,
     getFocusTarget: (element) => element.triggerButton,
     isDisabled: (element) => element.disabled,

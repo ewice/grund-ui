@@ -2,9 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { fixture } from '@open-wc/testing-helpers/pure';
 import { html } from 'lit';
 import { page } from 'vitest/browser';
-import './index.js';
-import type { GrundAccordion } from './accordion';
-import { flush } from '../../test-utils/index';
+import '../index.js';
+import type { GrundAccordion } from '../accordion';
+import { flush } from '../../../test-utils';
 
 /**
  * Visual regression tests for structural rendering.

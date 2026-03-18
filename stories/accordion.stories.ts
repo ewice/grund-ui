@@ -65,9 +65,7 @@ function renderAccordion(args: AccordionStoryArgs, defaultValue?: string | strin
           <grund-accordion-trigger>How do I get started?</grund-accordion-trigger>
         </grund-accordion-header>
         <grund-accordion-panel>
-          <div style="padding: 12px;">
-            Install the package and import the components you need.
-          </div>
+          <div style="padding: 12px;">Install the package and import the components you need.</div>
         </grund-accordion-panel>
       </grund-accordion-item>
       <grund-accordion-item value="item-3">

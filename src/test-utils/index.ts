@@ -1,6 +1,5 @@
 import { elementUpdated } from '@open-wc/testing-helpers/pure';
 
-
 /**
  * Flushes Lit's async update queue and allows microtasks to settle.
  * Use after triggering state changes to ensure Lit re-renders and context

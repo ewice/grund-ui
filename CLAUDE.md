@@ -47,17 +47,18 @@ Parent-child communication uses **Lit Context** internally and **custom events**
 
 ## Tooling
 
-| Tool | Purpose |
-|------|---------|
-| `npm run build` | `vite build && tsc --emitDeclarationOnly --declarationMap` |
-| `npm run test:run` | Vitest run (CI) |
-| `npm run lint` | ESLint across `src/` and `stories/` |
-| `npm run analyze` | Custom Elements Manifest |
-| `npm run storybook` | Storybook dev server (port 6006) |
+| Tool                | Purpose                                                    |
+| ------------------- | ---------------------------------------------------------- |
+| `npm run build`     | `vite build && tsc --emitDeclarationOnly --declarationMap` |
+| `npm run test:run`  | Vitest run (CI)                                            |
+| `npm run lint`      | ESLint across `src/` and `stories/`                        |
+| `npm run analyze`   | Custom Elements Manifest                                   |
+| `npm run storybook` | Storybook dev server (port 6006)                           |
 
 ## Accessibility
 
 Target: WCAG 2.1 AA, WAI-ARIA Authoring Practices. Every component needs:
+
 - Correct `role`, `aria-*` attributes
 - Full keyboard navigation (Arrow keys, Home/End, Tab, Enter/Space)
 - `RovingFocusController` for roving tabindex patterns
@@ -90,19 +91,22 @@ this.ctx = this._buildCtx();
 JSDoc serves two consumers: **humans** (IDE tooltips) and **machines** (CEM analyzer → Storybook autodocs). Use JSDoc syntax, not TSDoc — CEM only understands JSDoc.
 
 **Core rules:**
+
 - Never duplicate types — no `{Type}` in `@param`/`@returns`. TypeScript is canonical
-- Don't over-document — if the name + type says it all, skip the comment. Document *why* and *constraints*, not *what*
+- Don't over-document — if the name + type says it all, skip the comment. Document _why_ and _constraints_, not _what_
 - First sentence = summary (shown in autocomplete, Storybook argstable). Keep under ~80 chars
 
 **Phrasing conventions:**
-- Classes: what it *is* — `"Root accordion container."`
+
+- Classes: what it _is_ — `"Root accordion container."`
 - Methods: imperative verb — `"Toggle the expanded state."`
-- Properties: what it *controls* — `"Controls whether multiple items can be open."`
+- Properties: what it _controls_ — `"Controls whether multiple items can be open."`
 - Booleans: `"Whether ..."` — never `"True if ..."`
 - `@param name -` Description (dash convention). Omit when name + type is self-evident
 - `@returns` — omit for void and obvious returns. Noun phrase, not `"Returns ..."`
 
 **CEM tags (required on every custom element):**
+
 - `@element grund-{name}`
 - `@slot - Default content` / `@slot name - Description`
 - `@fires {CustomEvent<{key: type}>} grund-{component}-{action} - Description`
@@ -110,6 +114,7 @@ JSDoc serves two consumers: **humans** (IDE tooltips) and **machines** (CEM anal
 - `@cssproperty --grund-{component}-{property} - Description`
 
 **Selective use:**
+
 - `@example` — controllers and utilities only; stories cover element usage
 - `@internal` — on non-public exports (context symbols, internal helpers)
 - `@deprecated` — always include migration: `@deprecated Use X instead.`

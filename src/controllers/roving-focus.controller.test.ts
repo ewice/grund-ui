@@ -120,7 +120,11 @@ describe('RovingFocusController', () => {
       });
       ctrl.hostUpdated();
 
-      const e = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true });
+      const e = new KeyboardEvent('keydown', {
+        key: 'ArrowRight',
+        bubbles: true,
+        cancelable: true,
+      });
       Object.defineProperty(e, 'composedPath', { value: () => [items[0].button] });
       ctrl.handleKeyDown(e);
 
@@ -139,7 +143,11 @@ describe('RovingFocusController', () => {
       });
       ctrl.hostUpdated();
 
-      const e = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true });
+      const e = new KeyboardEvent('keydown', {
+        key: 'ArrowRight',
+        bubbles: true,
+        cancelable: true,
+      });
       Object.defineProperty(e, 'composedPath', { value: () => [items[0].button] });
       ctrl.handleKeyDown(e);
 

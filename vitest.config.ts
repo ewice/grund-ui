@@ -38,7 +38,13 @@ export default defineConfig({
                 resolveScreenshotPath({ root, testFileName, arg, browserName, ext }) {
                   const component = testFileName.replace(/\.(visual\.)?test\.ts$/, '');
                   const os = process.platform;
-                  return path.join(root, '__screenshots__', component, os, `${arg}-${browserName}${ext}`);
+                  return path.join(
+                    root,
+                    '__screenshots__',
+                    component,
+                    os,
+                    `${arg}-${browserName}${ext}`,
+                  );
                 },
               },
             },

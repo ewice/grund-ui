@@ -25,8 +25,7 @@ export default [
       'no-restricted-syntax': [
         'error',
         {
-          selector:
-            ':matches(PropertyDefinition, MethodDefinition) > PrivateIdentifier.key',
+          selector: ':matches(PropertyDefinition, MethodDefinition) > PrivateIdentifier.key',
           message:
             'Use TypeScript `private` instead of `#` private fields — `#` fields are incompatible with Lit decorators.',
         },

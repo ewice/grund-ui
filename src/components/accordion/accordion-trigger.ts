@@ -6,11 +6,10 @@ import {
   accordionItemContext,
   type AccordionContextValue,
   type AccordionItemContextValue,
-} from './accordion.context';
+} from './context';
 import { AriaLinkController } from '../../controllers/aria-link.controller';
 import { accordionTriggerStyles } from './accordion.styles';
 import type { GrundAccordionPanel } from './accordion-panel';
-
 
 /**
  * The interactive button that expands or collapses an accordion item.
@@ -102,7 +101,6 @@ export class GrundAccordionTrigger extends LitElement {
     `;
   }
 }
-
 
 declare global {
   interface HTMLElementTagNameMap {

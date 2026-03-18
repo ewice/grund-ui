@@ -1,12 +1,10 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 
-
 /** Configuration for open/closed state management. */
 export interface OpenStateOptions {
   /** Returns whether the host should be in the open state. */
   isOpen: () => boolean;
 }
-
 
 /**
  * Reactive controller that manages `data-state` on the host element.

@@ -1,9 +1,7 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 
-
 /** Direction to move focus within a roving focus group. */
 export type FocusDirection = 'next' | 'previous' | 'first' | 'last';
-
 
 /** Configuration for a roving focus group. */
 export interface RovingFocusOptions<T = unknown> {
@@ -18,7 +16,6 @@ export interface RovingFocusOptions<T = unknown> {
   /** Whether focus wraps when the end of the list is reached. Defaults to `true`. */
   loop?: boolean | (() => boolean);
 }
-
 
 /**
  * Manages keyboard-driven focus movement within a container element.
@@ -102,10 +99,12 @@ export class RovingFocusController<T = unknown> implements ReactiveController {
     // Prefer the active target only when it currently has DOM focus and is still
     // in the enabled set. Otherwise fall back to the first enabled item so that
     // dynamic item changes (e.g. prepending a new item) are reflected correctly.
-    const activeHasFocus = this._activeTarget !== null &&
+    const activeHasFocus =
+      this._activeTarget !== null &&
       (document.activeElement === this._activeTarget ||
         document.activeElement?.shadowRoot?.activeElement === this._activeTarget);
-    const activeIsEnabled = activeHasFocus &&
+    const activeIsEnabled =
+      activeHasFocus &&
       enabledItems.some((item) => this.options.getFocusTarget(item) === this._activeTarget);
 
     const roving = activeIsEnabled
@@ -146,8 +145,10 @@ export class RovingFocusController<T = unknown> implements ReactiveController {
       case 'previous':
         if (currentIndex === 0 && !loop) return items[currentIndex];
         return items[(currentIndex - 1 + len) % len];
-      case 'first': return items[0];
-      case 'last': return items[len - 1];
+      case 'first':
+        return items[0];
+      case 'last':
+        return items[len - 1];
     }
   }
 
