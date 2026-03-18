@@ -1,8 +1,9 @@
-import type { ReactiveController, ReactiveControllerHost } from 'lit';
+import type { ReactiveController } from 'lit';
 import {
   normalizeAccordionValues,
   resolveAccordionAction,
 } from '../../utils/accordion/engine';
+import { AccordionRegistry } from './accordion.registry';
 import type { AccordionContextValue } from './context';
 import type {
   AccordionHostSnapshot,
@@ -26,7 +27,7 @@ const DEFAULT_SNAPSHOT: AccordionHostSnapshot = {
 export class AccordionRootController implements ReactiveController {
   public readonly contextValue: AccordionContextValue;
 
-  private readonly host: ReactiveControllerHost;
+  private readonly host: AccordionRootControllerHost;
 
   private expandedValues = new Set<string>();
 
@@ -34,11 +35,9 @@ export class AccordionRootController implements ReactiveController {
 
   private defaultValueSeeded = false;
 
-  private records: GrundAccordionItemSnapshotRecord[] = [];
+  private readonly registry = new AccordionRegistry();
 
-  private recordByItem = new Map<GrundAccordionItemLike, GrundAccordionItemSnapshotRecord>();
-
-  public constructor(host: ReactiveControllerHost) {
+  public constructor(host: AccordionRootControllerHost) {
     this.host = host;
     this.host.addController(this);
     this.contextValue = this.createContextValue();
@@ -115,66 +114,28 @@ export class AccordionRootController implements ReactiveController {
   }
 
   private registerItem(item: GrundAccordionItemLike): void {
-    const existing = this.recordByItem.get(item);
-    if (existing) {
-      this.syncItemOrder();
-      return;
-    }
-
-    const record: GrundAccordionItemSnapshotRecord = {
-      item,
-      value: item.value,
-      index: -1,
-      disabled: item.disabled ?? false,
-      trigger: null,
-      panel: null,
-    };
-
-    this.records = [...this.records, record];
-    this.recordByItem.set(item, record);
-    this.syncItemOrder();
+    this.registry.registerItem(item);
   }
 
   private unregisterItem(item: GrundAccordionItemLike): void {
-    const record = this.recordByItem.get(item);
-    if (!record) {
-      return;
-    }
-
-    this.recordByItem.delete(item);
-    this.records = this.records.filter((current) => current !== record);
-    this.syncItemOrder();
+    this.registry.unregisterItem(item);
   }
 
   private attachTrigger(item: GrundAccordionItemLike, trigger: Element | null): void {
-    const record = this.recordByItem.get(item);
-    if (!record) {
-      return;
-    }
-
-    record.trigger = trigger;
+    this.registry.attachTrigger(item, trigger);
   }
 
   private attachPanel(item: GrundAccordionItemLike, panel: Element | null): void {
-    const record = this.recordByItem.get(item);
-    if (!record) {
-      return;
-    }
-
-    record.panel = panel;
+    this.registry.attachPanel(item, panel);
   }
 
   private getItemState(item: GrundAccordionItemLike): GrundAccordionItemSnapshot | undefined {
-    const record = this.recordByItem.get(item);
-    if (!record) {
-      return undefined;
-    }
-
-    return this.snapshotRecord(record);
+    this.registry.syncOrder();
+    return this.registry.getItemState(item);
   }
 
   private getItemIndex(item: GrundAccordionItemLike): number {
-    return this.recordByItem.get(item)?.index ?? -1;
+    return this.getItemState(item)?.index ?? -1;
   }
 
   private requestToggle(value: string): void {
@@ -190,13 +151,12 @@ export class AccordionRootController implements ReactiveController {
       return;
     }
 
+    this.registry.syncOrder();
     const result = resolveAccordionAction({
       action: { type: action, value },
       expandedValues: [...this.expandedValues],
-      itemOrder: this.records.map((record) => record.value),
-      disabledValues: new Set(
-        this.records.filter((record) => record.disabled).map((record) => record.value),
-      ),
+      itemOrder: this.registry.itemOrder,
+      disabledValues: this.registry.disabledValues,
       multiple: this.latestHostSnapshot.multiple,
     });
 
@@ -236,46 +196,16 @@ export class AccordionRootController implements ReactiveController {
   }
 
   private dispatchHostEvent(event: Event): void {
-    (this.host as AccordionControllerEventHost).dispatchEvent(event);
+    this.host.dispatchEvent(event);
   }
 
   private requestHostUpdate(): void {
-    (this.host as ReactiveControllerHost).requestUpdate();
-  }
-
-  private syncItemOrder(): void {
-    const previousOrder = new Map(this.records.map((record, index) => [record, index]));
-    this.records = [...this.records].sort((left, right) => {
-      const position = left.item.compareDocumentPosition(right.item);
-      if (position & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
-      if (position & Node.DOCUMENT_POSITION_PRECEDING) return 1;
-      return (previousOrder.get(left) ?? 0) - (previousOrder.get(right) ?? 0);
-    });
-
-    this.records.forEach((record, index) => {
-      record.value = record.item.value;
-      record.disabled = record.item.disabled ?? false;
-      record.index = index;
-    });
-  }
-
-  private snapshotRecord(record: GrundAccordionItemSnapshotRecord): GrundAccordionItemSnapshot {
-    return {
-      value: record.value,
-      index: record.index,
-      disabled: record.disabled,
-      trigger: record.trigger,
-      panel: record.panel,
-    };
+    this.host.requestUpdate();
   }
 }
 
-interface AccordionControllerEventHost extends ReactiveControllerHost {
+interface AccordionRootControllerHost {
+  addController(controller: ReactiveController): void;
+  requestUpdate(): void;
   dispatchEvent(event: Event): boolean;
-}
-
-interface GrundAccordionItemSnapshotRecord extends GrundAccordionItemSnapshot {
-  item: GrundAccordionItemLike;
-  trigger: Element | null;
-  panel: Element | null;
 }

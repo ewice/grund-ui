@@ -43,6 +43,13 @@ function registerDisabledItem(controller: AccordionRootController): {
   return { disabledItem };
 }
 
+function createItem(value: string, disabled = false): GrundAccordionItemLike {
+  const item = document.createElement('div') as GrundAccordionItemLike;
+  item.value = value;
+  item.disabled = disabled;
+  return item;
+}
+
 describe('AccordionRootController', () => {
   let host: MockHost;
 
@@ -144,6 +151,32 @@ describe('AccordionRootController', () => {
     controller.syncFromHost(createSnapshot());
 
     controller.contextValue.requestToggle(disabledItem.value);
+
+    expect([...controller.contextValue.expandedItems]).toEqual([]);
+    expect(host.dispatchEvent).not.toHaveBeenCalled();
+  });
+
+  it('rejects duplicate item values through the controller registry path', () => {
+    const controller = new AccordionRootController(host);
+    const first = createItem('item-1');
+    const second = createItem('item-1');
+
+    controller.contextValue.registerItem(first);
+
+    expect(() => controller.contextValue.registerItem(second)).toThrowError(
+      /Duplicate accordion item value "item-1"/,
+    );
+  });
+
+  it('re-reads disabled item state from the registry before resolving actions', () => {
+    const controller = new AccordionRootController(host);
+    const item = createItem('item-1');
+
+    controller.contextValue.registerItem(item);
+    controller.syncFromHost(createSnapshot());
+
+    item.disabled = true;
+    controller.contextValue.requestToggle(item.value);
 
     expect([...controller.contextValue.expandedItems]).toEqual([]);
     expect(host.dispatchEvent).not.toHaveBeenCalled();
