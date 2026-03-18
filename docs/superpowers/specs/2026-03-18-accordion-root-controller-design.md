@@ -138,6 +138,18 @@ The sync snapshot should contain:
 
 This keeps host/controller synchronization explicit and easy to reason about in `willUpdate()`.
 
+### `defaultValue` Semantics
+
+`defaultValue` should preserve the current uncontrolled behavior:
+
+- it seeds uncontrolled expanded state once
+- later uncontrolled `defaultValue` changes do not re-seed state after initial seeding
+- controlled `value` always takes precedence over `defaultValue`
+
+The controller should treat later uncontrolled `defaultValue` updates as ignored input, not as a request to reset accordion state.
+
+If other host options change at runtime, such as `multiple`, the controller may still normalize the current expanded state through the engine rules. That normalization is separate from `defaultValue` seeding and must not be implemented as a second seed pass.
+
 ### Internal Controller Helpers
 
 The controller can have private helpers like:
@@ -183,6 +195,19 @@ The context object should include:
 - trigger and panel attachment hooks
 - derived item lookup
 - rename hook if that remains part of the contract
+
+### Descendant Context Compatibility
+
+Moving context construction into the controller must not change the descendant-facing context contract during this refactor.
+
+The controller-owned context must continue to expose the existing action aliases that descendants already consume:
+
+- `toggle`
+- `openItem`
+
+These aliases can delegate internally to controller methods like `requestToggle()` and `requestOpen()`, but they must remain present in `AccordionContextValue` for this refactor so `accordion-trigger` and `accordion-item` do not need a concurrent contract change.
+
+If the library later wants to rename or remove these aliases, that should be handled as a separate API decision rather than being coupled to the controller extraction.
 
 ## Roving Focus Boundary
 
@@ -246,7 +271,8 @@ They continue to verify transition math only.
 Add dedicated controller tests for:
 
 - controlled vs uncontrolled sync
-- default value seeding
+- one-time default value seeding
+- ignored uncontrolled `defaultValue` changes after initial seeding
 - registry-driven trigger ordering
 - root disabled behavior
 - item disabled behavior
