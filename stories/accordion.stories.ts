@@ -2,27 +2,34 @@ import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import '../src/components/accordion/index.js';
 
+type AccordionStoryArgs = {
+  multiple: boolean;
+  disabled: boolean;
+  orientation: 'vertical' | 'horizontal';
+  loopFocus: boolean;
+  keepMounted: boolean;
+  hiddenUntilFound: boolean;
+};
 
-
-const meta: Meta = {
+const meta: Meta<AccordionStoryArgs> = {
   title: 'Components/Accordion',
   tags: ['autodocs'],
   argTypes: {
     multiple: { control: 'boolean' },
-    collapsible: { control: 'boolean' },
     disabled: { control: 'boolean' },
     orientation: {
       control: 'select',
       options: ['vertical', 'horizontal'],
     },
+    loopFocus: { control: 'boolean' },
     keepMounted: { control: 'boolean' },
     hiddenUntilFound: { control: 'boolean' },
   },
   args: {
     multiple: false,
-    collapsible: false,
     disabled: false,
     orientation: 'vertical',
+    loopFocus: true,
     keepMounted: false,
     hiddenUntilFound: false,
   },
@@ -30,17 +37,18 @@ const meta: Meta = {
 
 export default meta;
 
-type Story = StoryObj;
+type Story = StoryObj<AccordionStoryArgs>;
 
-export const Default: Story = {
-  render: (args) => html`
+function renderAccordion(args: AccordionStoryArgs, defaultValue?: string | string[]) {
+  return html`
     <grund-accordion
       ?multiple=${args.multiple}
-      ?collapsible=${args.collapsible}
       ?disabled=${args.disabled}
       orientation=${args.orientation}
+      ?loop-focus=${args.loopFocus}
       ?keep-mounted=${args.keepMounted}
       ?hidden-until-found=${args.hiddenUntilFound}
+      .defaultValue=${defaultValue}
     >
       <grund-accordion-item value="item-1">
         <grund-accordion-header>
@@ -71,17 +79,20 @@ export const Default: Story = {
         </grund-accordion-panel>
       </grund-accordion-item>
     </grund-accordion>
-  `,
+  `;
+}
+
+export const Default: Story = {
+  render: (args) => renderAccordion(args),
 };
 
 export const Multiple: Story = {
   args: { multiple: true },
-  render: Default.render,
+  render: (args) => renderAccordion(args),
 };
 
-export const Collapsible: Story = {
-  args: { collapsible: true },
-  render: Default.render,
+export const WithDefaultValue: Story = {
+  render: (args) => renderAccordion(args, 'item-2'),
 };
 
 export const WithDisabledItem: Story = {
