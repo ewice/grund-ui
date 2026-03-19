@@ -1,8 +1,14 @@
 import type { GrundAccordionItemLike, GrundAccordionItemSnapshot } from '../types';
 import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
 import { AccordionItemRecord } from './types';
-import { GrundAccordionPanel } from '../panel/accordion-panel';
+import type { GrundAccordionPanel } from '../panel/accordion-panel';
 
+
+/**
+ * Maintains ordered accordion item records.
+ *
+ * The registry owns structural relationships; consumers only receive snapshots.
+ */
 export class AccordionRegistry {
   private records = new Map<string, AccordionItemRecord>();
 
@@ -76,14 +82,14 @@ export class AccordionRegistry {
   }
 
   public syncOrder(): void {
-    for (const [key, record] of this.records.entries()) {
-      record.disabled = record.item.disabled ?? false;
+    const updated = new Map<string, AccordionItemRecord>();
 
-      if (key !== record.item.value) {
-        this.records.delete(key);
-        this.records.set(record.item.value, record);
-      }
+    for (const record of this.records.values()) {
+      record.disabled = record.item.disabled ?? false;
+      updated.set(record.item.value, record);
     }
+
+    this.records = updated;
   }
 
   public get itemOrder(): string[] {
