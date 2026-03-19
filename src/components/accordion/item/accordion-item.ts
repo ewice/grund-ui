@@ -1,4 +1,5 @@
-import { LitElement, html } from 'lit';
+/// <reference types="vite/client" />
+import { LitElement, html, type PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { consume, provide } from '@lit/context';
 import {
@@ -9,6 +10,8 @@ import {
 } from '../context';
 import { generateId } from '../../../utils/id';
 import { accordionItemStyles } from './accordion-item.styles';
+import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
+import type { GrundAccordionPanel } from '../panel/accordion-panel';
 
 /**
  * A single item within an accordion. Groups a header/trigger with its panel
@@ -41,8 +44,6 @@ export class GrundAccordionItem extends LitElement {
   private hasSettled = false;
   private expanded = false;
   private expandedChanged = false;
-  private lastValue = this.value;
-  private lastDisabled = this.disabled;
 
   private buildItemCtx(): AccordionItemContextValue {
     const index = this.accordionCtx?.getItemIndex(this) ?? -1;
@@ -63,7 +64,7 @@ export class GrundAccordionItem extends LitElement {
         }
 
         this.registeredTriggerElement = trigger;
-        this.accordionCtx?.attachTrigger(this, trigger);
+        this.accordionCtx?.attachTrigger(this, trigger as GrundAccordionTrigger);
         this.requestUpdate();
       },
       unregisterTrigger: () => {
@@ -81,7 +82,7 @@ export class GrundAccordionItem extends LitElement {
         }
 
         this.registeredPanelElement = panel;
-        this.accordionCtx?.attachPanel(this, panel);
+        this.accordionCtx?.attachPanel(this, panel as GrundAccordionPanel);
         this.requestUpdate();
       },
       unregisterPanel: () => {
@@ -104,12 +105,19 @@ export class GrundAccordionItem extends LitElement {
     this.registered = false;
   }
 
-  public override willUpdate() {
-    const valueChanged = this.lastValue !== this.value;
-    const syncStructure = this.registered && (valueChanged || this.lastDisabled !== this.disabled);
+  public override willUpdate(changedProperties: PropertyValues): void {
+    this.syncRegistration(changedProperties);
+    this.syncExpandedState();
+    this.syncAttributes();
+  }
+
+  private syncRegistration(changedProperties: PropertyValues): void {
+    const valueChanged = changedProperties.has('value');
+    const disabledChanged = changedProperties.has('disabled');
+    const syncStructure = this.registered && (valueChanged || disabledChanged);
 
     if (this.accordionCtx && valueChanged) {
-      this.accordionCtx.renameExpandedValue(this.lastValue, this.value);
+      this.accordionCtx.renameExpandedValue(changedProperties.get('value') as string, this.value);
     }
 
     if (this.accordionCtx && syncStructure) {
@@ -122,25 +130,19 @@ export class GrundAccordionItem extends LitElement {
       this.registered = true;
     }
 
-    if (this.accordionCtx) {
-      if (this.registeredTriggerElement) {
-        this.accordionCtx.attachTrigger(this, this.registeredTriggerElement);
-      } else {
-        this.accordionCtx.detachTrigger(this);
-      }
-
-      if (this.registeredPanelElement) {
-        this.accordionCtx.attachPanel(this, this.registeredPanelElement);
-      } else {
-        this.accordionCtx.detachPanel(this);
-      }
+    if (import.meta.env.DEV && !this.registered && !this.accordionCtx) {
+      console.warn('[grund-ui] <grund-accordion-item> must be a descendant of <grund-accordion>.');
     }
+  }
 
+  private syncExpandedState(): void {
     const nextExpanded = this.accordionCtx?.expandedItems.has(this.value) ?? false;
     this.expandedChanged = nextExpanded !== this.expanded;
     this.expanded = nextExpanded;
     this.itemCtx = this.buildItemCtx();
+  }
 
+  private syncAttributes(): void {
     this.toggleAttribute('expanded', this.expanded);
     this.toggleAttribute('data-open', this.expanded);
     this.toggleAttribute('data-disabled', this.itemCtx.disabled);
@@ -150,9 +152,6 @@ export class GrundAccordionItem extends LitElement {
     } else {
       delete this.dataset.index;
     }
-
-    this.lastValue = this.value;
-    this.lastDisabled = this.disabled;
   }
 
   public override updated() {
