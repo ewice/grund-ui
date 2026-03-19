@@ -1,4 +1,4 @@
-import { AccordionHostSnapshot } from '../types';
+import type { AccordionHostSnapshot } from '../types';
 
 export const DEFAULT_SNAPSHOT: AccordionHostSnapshot = {
   multiple: true,

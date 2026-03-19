@@ -131,6 +131,7 @@ export class GrundAccordionItem extends LitElement {
     }
 
     if (import.meta.env.DEV && !this.registered && !this.accordionCtx) {
+      // eslint-disable-next-line no-console
       console.warn('[grund-ui] <grund-accordion-item> must be a descendant of <grund-accordion>.');
     }
   }

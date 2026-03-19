@@ -1,6 +1,6 @@
 import type { GrundAccordionItemLike, GrundAccordionItemSnapshot } from '../types';
 import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
-import { AccordionItemRecord } from './types';
+import type { AccordionItemRecord } from './types';
 import type { GrundAccordionPanel } from '../panel/accordion-panel';
 
 

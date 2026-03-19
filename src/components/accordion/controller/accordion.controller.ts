@@ -11,8 +11,8 @@ import type {
   GrundAccordionValueChangeDetail,
 } from '../types';
 import { DEFAULT_SNAPSHOT } from './constants';
-import { AccordionControllerHost } from './types';
-import { GrundAccordionPanel } from '../panel/accordion-panel';
+import type { AccordionControllerHost } from './types';
+import type { GrundAccordionPanel } from '../panel/accordion-panel';
 
 export class AccordionController implements ReactiveController {
   public contextValue: AccordionContextValue;
