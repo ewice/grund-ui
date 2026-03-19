@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 import { accordionItemContext, type AccordionItemContextValue } from '../context';
 import { AriaLinkController } from '../../../controllers/aria-link.controller';
+import { OpenStateController } from '../../../controllers/open-state.controller';
 import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
 import { accordionPanelStyles } from './accordion-panel.styles';
 
@@ -26,6 +27,11 @@ export class GrundAccordionPanel extends LitElement {
 
   @consume({ context: accordionItemContext, subscribe: true })
   private itemCtx?: AccordionItemContextValue;
+
+  // @ts-expect-error -- controller registered for side effects; TS cannot see that read
+  private openState = new OpenStateController(this, {
+    isOpen: () => this.itemCtx?.expanded ?? false,
+  });
 
   // @ts-expect-error -- controller registered for side effects; TS cannot see that read
   private ariaLink = new AriaLinkController(this, {
@@ -61,7 +67,6 @@ export class GrundAccordionPanel extends LitElement {
     this.toggleAttribute('data-open', expanded);
     this.toggleAttribute('data-disabled', this.itemCtx?.disabled ?? false);
     this.toggleAttribute('data-hidden-until-found', hiddenUntilFound);
-    this.dataset.state = expanded ? 'open' : 'closed';
     this.dataset.orientation = this.itemCtx?.orientation ?? 'vertical';
 
     if ((this.itemCtx?.index ?? -1) >= 0) {
