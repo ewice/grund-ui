@@ -7,6 +7,5 @@ storybook-static/
 *storybook.log
 .vitest-attachments/
 .worktrees/
-docs/
 .claude/
 .idea/
