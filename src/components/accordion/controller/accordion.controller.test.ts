@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ReactiveControllerHost } from 'lit';
-import { AccordionRootController } from '../root/accordion-root.controller';
+import { AccordionController } from './accordion.controller';
 import type { AccordionHostSnapshot, GrundAccordionItemLike } from '../types';
 import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
 
@@ -34,7 +34,7 @@ function createSnapshot(
   };
 }
 
-function registerDisabledItem(controller: AccordionRootController): {
+function registerDisabledItem(controller: AccordionController): {
   disabledItem: GrundAccordionItemLike;
 } {
   const disabledItem = document.createElement('div') as GrundAccordionItemLike;
@@ -55,7 +55,7 @@ function createTrigger(): GrundAccordionTrigger {
   return document.createElement('button') as unknown as GrundAccordionTrigger;
 }
 
-describe('AccordionRootController', () => {
+describe('AccordionController', () => {
   let host: MockHost;
 
   beforeEach(() => {
@@ -63,7 +63,7 @@ describe('AccordionRootController', () => {
   });
 
   it('seeds uncontrolled state from defaultValue once', () => {
-    const controller = new AccordionRootController(host);
+    const controller = new AccordionController(host);
 
     controller.syncFromHost(
       createSnapshot({
@@ -85,7 +85,7 @@ describe('AccordionRootController', () => {
   });
 
   it('preserves descendant aliases in contextValue', () => {
-    const controller = new AccordionRootController(host);
+    const controller = new AccordionController(host);
 
     controller.syncFromHost(createSnapshot());
 
@@ -94,7 +94,7 @@ describe('AccordionRootController', () => {
   });
 
   it('renames an expanded value without reseeding state', () => {
-    const controller = new AccordionRootController(host);
+    const controller = new AccordionController(host);
 
     controller.syncFromHost(
       createSnapshot({
@@ -114,7 +114,7 @@ describe('AccordionRootController', () => {
   });
 
   it('dispatches grund-change and grund-value-change on toggle', () => {
-    const controller = new AccordionRootController(host);
+    const controller = new AccordionController(host);
 
     controller.syncFromHost(createSnapshot());
 
@@ -129,7 +129,7 @@ describe('AccordionRootController', () => {
   });
 
   it('does not mutate uncontrolled state when the host is controlled', () => {
-    const controller = new AccordionRootController(createHost());
+    const controller = new AccordionController(createHost());
 
     controller.syncFromHost(createSnapshot({ value: 'item-1' }));
 
@@ -139,7 +139,7 @@ describe('AccordionRootController', () => {
   });
 
   it('does nothing when the root is disabled', () => {
-    const controller = new AccordionRootController(host);
+    const controller = new AccordionController(host);
 
     controller.syncFromHost(createSnapshot({ disabled: true }));
 
@@ -150,7 +150,7 @@ describe('AccordionRootController', () => {
   });
 
   it('does nothing when the target item is disabled in the registry', () => {
-    const controller = new AccordionRootController(host);
+    const controller = new AccordionController(host);
     const { disabledItem } = registerDisabledItem(controller);
 
     controller.syncFromHost(createSnapshot());
@@ -162,7 +162,7 @@ describe('AccordionRootController', () => {
   });
 
   it('rejects duplicate item values through the controller registry path', () => {
-    const controller = new AccordionRootController(host);
+    const controller = new AccordionController(host);
     const first = createItem('item-1');
     const second = createItem('item-1');
 
@@ -174,7 +174,7 @@ describe('AccordionRootController', () => {
   });
 
   it('re-reads disabled item state from the registry before resolving actions', () => {
-    const controller = new AccordionRootController(host);
+    const controller = new AccordionController(host);
     const item = createItem('item-1');
 
     controller.contextValue.registerItem(item);
@@ -188,7 +188,7 @@ describe('AccordionRootController', () => {
   });
 
   it('exposes ordered triggers from the registry', () => {
-    const controller = new AccordionRootController(host);
+    const controller = new AccordionController(host);
     const container = document.createElement('div');
     const first = createItem('item-1');
     const second = createItem('item-2');
@@ -205,7 +205,7 @@ describe('AccordionRootController', () => {
   });
 
   it('updates trigger ordering after registered items are reordered', () => {
-    const controller = new AccordionRootController(host);
+    const controller = new AccordionController(host);
     const container = document.createElement('div');
     const first = createItem('item-1');
     const second = createItem('item-2');
