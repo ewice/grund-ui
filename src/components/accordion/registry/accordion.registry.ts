@@ -1,12 +1,8 @@
 import type { GrundAccordionItemLike, GrundAccordionItemSnapshot } from '../types';
 import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
 import { AccordionItemRecord } from './types';
+import { GrundAccordionPanel } from '../panel/accordion-panel';
 
-/**
- * Maintains ordered accordion item records.
- *
- * The registry owns structural relationships; consumers only receive snapshots.
- */
 export class AccordionRegistry {
   private records = new Map<string, AccordionItemRecord>();
 
@@ -19,7 +15,6 @@ export class AccordionRegistry {
 
     this.records.set(value, {
       item,
-      value,
       disabled: item.disabled ?? false,
       trigger: null,
       panel: null,
@@ -30,69 +25,38 @@ export class AccordionRegistry {
     this.records.delete(item.value);
   }
 
-  public attachTrigger(item: GrundAccordionItemLike, trigger: Element | null): void {
-    this.updateRecordTrigger(item, trigger);
+  public attachTrigger(item: GrundAccordionItemLike, trigger: GrundAccordionTrigger | null): void {
+    this.setRecordField(item, 'trigger', trigger);
   }
 
   public detachTrigger(item: GrundAccordionItemLike): void {
-    this.updateRecordTrigger(item, null);
+    this.setRecordField(item, 'trigger', null);
   }
 
-  private updateRecordTrigger(item: GrundAccordionItemLike, trigger: Element | null): void {
-    const record = this.records.get(item.value);
-
-    if (!record) {
-      return;
-    }
-
-    record.trigger = trigger;
-  }
-
-  public attachPanel(item: GrundAccordionItemLike, panel: Element | null): void {
-    const record = this.records.get(item.value);
-    
-    if (!record) {
-      return;
-    }
-
-    record.panel = panel;
+  public attachPanel(item: GrundAccordionItemLike, panel: GrundAccordionPanel | null): void {
+    this.setRecordField(item, 'panel', panel);
   }
 
   public detachPanel(item: GrundAccordionItemLike): void {
-    this.attachPanel(item, null);
+    this.setRecordField(item, 'panel', null);
   }
 
-  public syncOrder(): void {
-    for (const record of this.records.values()) {
-      record.value = record.item.value;
-      record.disabled = record.item.disabled ?? false;
-    }
-  }
+  private setRecordField<K extends 'trigger' | 'panel'>(
+    item: GrundAccordionItemLike,
+    field: K,
+    value: AccordionItemRecord[K],
+  ): void {
+    const record = this.records.get(item.value);
 
-  public get itemOrder(): string[] {
-    return this.orderedRecords.map((record) => record.value);
-  }
-
-  public get disabledValues(): ReadonlySet<string> {
-    return new Set(
-      [...this.records.values()].filter((record) => record.disabled).map((record) => record.value),
-    );
-  }
-
-  public getItemState(item: GrundAccordionItemLike): GrundAccordionItemSnapshot | undefined {
-    const record = this.records.get(item);
     if (!record) {
-      return undefined;
+      return;
     }
 
-    return this.snapshot(record);
-  }
+    if (record[field] === value) {
+      return;
+    }
 
-  public getOrderedTriggers(): GrundAccordionTrigger[] {
-    this.syncOrder();
-    return this.orderedRecords.flatMap((record) =>
-      record.trigger == null ? [] : [record.trigger as GrundAccordionTrigger],
-    );
+    record[field] = value;
   }
 
   private get orderedRecords(): AccordionItemRecord[] {
@@ -111,10 +75,48 @@ export class AccordionRegistry {
     });
   }
 
-  private snapshot(record: AccordionItemRecord): GrundAccordionItemSnapshot {
+  public syncOrder(): void {
+    for (const [key, record] of this.records.entries()) {
+      record.disabled = record.item.disabled ?? false;
+
+      if (key !== record.item.value) {
+        this.records.delete(key);
+        this.records.set(record.item.value, record);
+      }
+    }
+  }
+
+  public get itemOrder(): string[] {
+    return this.orderedRecords.map((r) => r.item.value);
+  }
+
+  public get disabledValues(): ReadonlySet<string> {
+    return new Set(
+      [...this.records.values()].filter((r) => r.disabled).map((r) => r.item.value),
+    );
+  }
+
+  public getItemState(item: GrundAccordionItemLike): GrundAccordionItemSnapshot | undefined {
+    const ordered = this.orderedRecords;
+    const index = ordered.findIndex((r) => r.item === item);
+
+    if (index === -1) {
+      return undefined;
+    }
+
+    return this.snapshot(ordered[index], index);
+  }
+
+  public getOrderedTriggers(): GrundAccordionTrigger[] {
+    return this.orderedRecords
+      .map((r) => r.trigger)
+      .filter((t): t is GrundAccordionTrigger => t !== null);
+  }
+
+  private snapshot(record: AccordionItemRecord, index: number): GrundAccordionItemSnapshot {
     return {
-      value: record.value,
-      index: this.orderedRecords.indexOf(record),
+      value: record.item.value,
+      index,
       disabled: record.disabled,
       trigger: record.trigger,
       panel: record.panel,
