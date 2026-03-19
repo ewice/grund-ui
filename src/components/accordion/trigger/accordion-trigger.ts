@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { ContextConsumer } from '@lit/context';
+import { ContextConsumer, consume } from '@lit/context';
 import {
   accordionContext,
   accordionItemContext,
@@ -22,19 +22,14 @@ import type { GrundAccordionPanel } from '../panel/accordion-panel';
 export class GrundAccordionTrigger extends LitElement {
   public static override styles = accordionTriggerStyles;
 
+  @consume({ context: accordionContext, subscribe: true })
   private accordionCtx?: AccordionContextValue;
+
   private itemCtx?: AccordionItemContextValue;
 
-  // @ts-expect-error -- ContextConsumer is registered for side effects; TS cannot see that read
-  private accordionConsumer = new ContextConsumer(this, {
-    context: accordionContext,
-    callback: (ctx) => {
-      this.accordionCtx = ctx;
-      this.requestUpdate();
-    },
-    subscribe: true,
-  });
-
+  // ContextConsumer used here (not @consume) because the trigger must unregister
+  // from the previous item context before registering with the new one. The
+  // callback gives us the previous value via `this.itemCtx` before overwriting it.
   // @ts-expect-error -- ContextConsumer is registered for side effects; TS cannot see that read
   private itemConsumer = new ContextConsumer(this, {
     context: accordionItemContext,
