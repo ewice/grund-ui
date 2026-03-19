@@ -84,13 +84,13 @@ describe('AccordionController', () => {
     expect(controller.contextValue.expandedItems).toEqual(new Set(['item-2']));
   });
 
-  it('preserves descendant aliases in contextValue', () => {
+  it('exposes requestToggle and requestOpen on the context value', () => {
     const controller = new AccordionController(host);
 
     controller.syncFromHost(createSnapshot());
 
-    expect(controller.contextValue.toggle).toBeTypeOf('function');
-    expect(controller.contextValue.openItem).toBeTypeOf('function');
+    expect(controller.contextValue.requestToggle).toBeTypeOf('function');
+    expect(controller.contextValue.requestOpen).toBeTypeOf('function');
   });
 
   it('renames an expanded value without reseeding state', () => {

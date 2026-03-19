@@ -1,6 +1,6 @@
-import { LitElement, html, nothing } from 'lit';
+import { LitElement, html, nothing, type PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { ContextConsumer } from '@lit/context';
+import { consume } from '@lit/context';
 import { accordionItemContext, type AccordionItemContextValue } from '../context';
 import { AriaLinkController } from '../../../controllers/aria-link.controller';
 import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
@@ -24,21 +24,8 @@ export class GrundAccordionPanel extends LitElement {
   /** Whether this panel uses `hidden="until-found"` while closed. */
   @property({ type: Boolean, attribute: 'hidden-until-found' }) public hiddenUntilFound = false;
 
+  @consume({ context: accordionItemContext, subscribe: true })
   private itemCtx?: AccordionItemContextValue;
-
-  // @ts-expect-error -- ContextConsumer is registered for side effects; TS cannot see that read
-  private itemConsumer = new ContextConsumer(this, {
-    context: accordionItemContext,
-    callback: (ctx) => {
-      if (this.itemCtx && this.itemCtx.value !== ctx.value) {
-        this.itemCtx.unregisterPanel();
-      }
-      this.itemCtx = ctx;
-      ctx.registerPanel(this);
-      this.requestUpdate();
-    },
-    subscribe: true,
-  });
 
   // @ts-expect-error -- controller registered for side effects; TS cannot see that read
   private ariaLink = new AriaLinkController(this, {
@@ -51,12 +38,23 @@ export class GrundAccordionPanel extends LitElement {
     type: 'labelledby',
   });
 
+  private onItemContextChanged(prev?: AccordionItemContextValue): void {
+    if (prev && prev.value !== this.itemCtx?.value) {
+      prev.unregisterPanel();
+    }
+    this.itemCtx?.registerPanel(this);
+  }
+
   public override disconnectedCallback() {
     super.disconnectedCallback();
     this.itemCtx?.unregisterPanel();
   }
 
-  public override willUpdate() {
+  public override willUpdate(changedProperties: PropertyValues) {
+    if (changedProperties.has('itemCtx')) {
+      this.onItemContextChanged(changedProperties.get('itemCtx'));
+    }
+
     const expanded = this.itemCtx?.expanded ?? false;
     const hiddenUntilFound = this.resolveHiddenUntilFound();
 

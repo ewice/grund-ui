@@ -12,7 +12,7 @@ describe('accordion context barrel', () => {
     expect(accordionItemContext).toBeTruthy();
   });
 
-  it('keeps the descendant-facing root context aliases in the contract', () => {
+  it('exposes requestToggle and requestOpen on the root context contract', () => {
     const noop = vi.fn();
     const rootContext: AccordionContextValue = {
       orientation: 'vertical',
@@ -32,12 +32,10 @@ describe('accordion context barrel', () => {
       detachPanel: noop,
       getItemState: () => undefined,
       getItemIndex: () => -1,
-      toggle: noop,
-      openItem: noop,
     };
 
-    expect(rootContext.toggle).toBe(noop);
-    expect(rootContext.openItem).toBe(noop);
+    expect(rootContext.requestToggle).toBe(noop);
+    expect(rootContext.requestOpen).toBe(noop);
   });
 
   it('keeps the item context contract intact for descendants', () => {

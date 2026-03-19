@@ -12,6 +12,7 @@ import type {
 } from '../types';
 import { DEFAULT_SNAPSHOT } from './constants';
 import { AccordionControllerHost } from './types';
+import { GrundAccordionPanel } from '../panel/accordion-panel';
 
 export class AccordionController implements ReactiveController {
   public contextValue: AccordionContextValue;
@@ -79,17 +80,15 @@ export class AccordionController implements ReactiveController {
       unregisterItem: (item: GrundAccordionItemLike) => this.unregisterItem(item),
       renameExpandedValue: (previousValue: string, nextValue: string) =>
         this.renameExpandedValue(previousValue, nextValue),
-      attachTrigger: (item: GrundAccordionItemLike, trigger: Element | null) =>
+      attachTrigger: (item: GrundAccordionItemLike, trigger: GrundAccordionTrigger | null) =>
         this.attachTrigger(item, trigger),
       detachTrigger: (item: GrundAccordionItemLike) => this.attachTrigger(item, null),
-      attachPanel: (item: GrundAccordionItemLike, panel: Element | null) =>
+      attachPanel: (item: GrundAccordionItemLike, panel: GrundAccordionPanel | null) =>
         this.attachPanel(item, panel),
       detachPanel: (item: GrundAccordionItemLike) => this.attachPanel(item, null),
       getItemState: (item: GrundAccordionItemLike): GrundAccordionItemSnapshot | undefined =>
         this.getItemState(item),
       getItemIndex: (item: GrundAccordionItemLike) => this.getItemIndex(item),
-      toggle: (value: string) => this.requestToggle(value),
-      openItem: (value: string) => this.requestOpen(value),
     };
   }
 
@@ -108,22 +107,12 @@ export class AccordionController implements ReactiveController {
     this.requestHostUpdate();
   }
 
-  private attachTrigger(item: GrundAccordionItemLike, trigger: Element | null): void {
-    const currentTrigger = this.registry.getItemState(item)?.trigger ?? null;
-    if (currentTrigger === trigger) {
-      return;
-    }
-
+  private attachTrigger(item: GrundAccordionItemLike, trigger: GrundAccordionTrigger | null): void {
     this.registry.attachTrigger(item, trigger);
     this.requestHostUpdate();
   }
 
-  private attachPanel(item: GrundAccordionItemLike, panel: Element | null): void {
-    const currentPanel = this.registry.getItemState(item)?.panel ?? null;
-    if (currentPanel === panel) {
-      return;
-    }
-
+  private attachPanel(item: GrundAccordionItemLike, panel: GrundAccordionPanel | null): void {
     this.registry.attachPanel(item, panel);
     this.requestHostUpdate();
   }

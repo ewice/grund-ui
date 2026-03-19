@@ -25,8 +25,8 @@ class TestAccordionRootActions extends LitElement {
 
   public override render() {
     return html`
-      <button id="toggle" @click=${() => this.accordionCtx?.toggle('item-1')}>toggle</button>
-      <button id="open" @click=${() => this.accordionCtx?.openItem('item-2')}>open</button>
+      <button id="toggle" @click=${() => this.accordionCtx?.requestToggle('item-1')}>toggle</button>
+      <button id="open" @click=${() => this.accordionCtx?.requestOpen('item-2')}>open</button>
     `;
   }
 }
@@ -287,7 +287,7 @@ describe('grund-accordion', () => {
       expect(first.dataset.index).toBe('1');
     });
 
-    it('keeps descendant root actions working through the preserved context aliases', async () => {
+    it('keeps descendant root actions working via requestToggle and requestOpen', async () => {
       const el = await fixture<GrundAccordion>(html`
         <grund-accordion>
           <test-accordion-root-actions></test-accordion-root-actions>

@@ -43,10 +43,6 @@ export interface AccordionContextValue {
   getItemState: (item: GrundAccordionItemLike) => GrundAccordionItemSnapshot | undefined;
   /** Returns the current DOM index of an item. */
   getItemIndex: (item: GrundAccordionItemLike) => number;
-  /** Backward-compatible toggle alias used by current descendants. */
-  toggle: (value: string) => void;
-  /** Backward-compatible open alias used by current descendants. */
-  openItem: (value: string) => void;
 }
 
 /** @internal */

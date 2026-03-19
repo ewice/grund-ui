@@ -1,9 +1,10 @@
-import { GrundAccordionItemLike } from '../types';
+import type { GrundAccordionPanel } from '../panel/accordion-panel';
+import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
+import type { GrundAccordionItemLike } from '../types';
 
 export interface AccordionItemRecord {
   item: GrundAccordionItemLike;
-  value: string;
   disabled: boolean;
-  trigger: Element | null;
-  panel: Element | null;
+  trigger: GrundAccordionTrigger | null;
+  panel: GrundAccordionPanel | null;
 }
