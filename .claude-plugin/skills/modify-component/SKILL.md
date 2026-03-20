@@ -72,7 +72,7 @@ security issues (listener leaks, XSS) and render-loop risks can appear anywhere.
 | Public API change | `guidelines-reviewer`, `security-reviewer`, `performance-reviewer`, `spec-compliance-reviewer`, `api-surface-reviewer`, `consistency-reviewer` |
 | Accessibility change | `guidelines-reviewer`, `security-reviewer`, `performance-reviewer`, `accessibility-reviewer`, `test-coverage-reviewer` |
 | Bug fix | `guidelines-reviewer`, `security-reviewer`, `performance-reviewer`, `test-coverage-reviewer` |
-| New sub-part | All reviewers (all 6 quality reviewers + `spec-compliance-reviewer` + `consistency-reviewer`) |
+| New sub-part | All reviewers (all 7 quality reviewers: `guidelines`, `security`, `performance`, `accessibility`, `api-surface`, `test-coverage`, `story` + `spec-compliance-reviewer` + `consistency-reviewer`) |
 | Code style / refactor | `guidelines-reviewer`, `security-reviewer`, `performance-reviewer`, `consistency-reviewer` |
 
 If a reviewer finds issues, fix them inline — do not spawn a separate patch loop
@@ -91,7 +91,7 @@ Report:
 - Reviewer results (PASS/FAIL for each)
 - Build validation result
 
-Await engineer's `/commit` or corrections.
+Await engineer's review. Commit when ready.
 
 ## Common Mistakes
 

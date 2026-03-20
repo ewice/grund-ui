@@ -7,11 +7,11 @@ description: "Use after superpowers:executing-plans completes to run the quality
 
 ## Overview
 
-`superpowers:executing-plans` implements the changes and runs `npm test` at
-each task boundary. This skill picks up where that ends: it reads the plan's
-File Map to know which files changed, infers which reviewers apply from the
-Change Set, runs them in parallel, patches any findings, then validates the
-build.
+`superpowers:subagent-driven-development` or `superpowers:executing-plans`
+implements the changes and runs `npm test` at each task boundary. This skill
+picks up where that ends: it reads the plan's File Map to know which files
+changed, infers which reviewers apply from the Change Set, runs them in
+parallel, patches any findings, then validates the build.
 
 This is the seam between Superpowers execution and Grund UI quality gates.
 Run it as the final step of every Superpowers-driven change.
@@ -49,10 +49,14 @@ Read the plan file. Extract:
 
    A single plan may have multiple change types. Collect all that apply.
 
-3. **Spec file reference** — check whether a spec exists for the component
-   being changed. Look for `docs/specs/{name}.spec.md` or
-   `docs/superpowers/specs/` files referencing the same component. If found,
-   include it in the spec-compliance review.
+3. **Spec file reference** — check whether a component API spec exists at
+   `docs/specs/{name}.spec.md` (written by `/new-component`). If found, it
+   will be used by `spec-compliance-reviewer`.
+
+   Do not use `docs/superpowers/specs/` files for spec-compliance — those are
+   change-set design specs (Background / Goals / Change Set format) and are
+   incompatible with `spec-compliance-reviewer`'s expected format. They are
+   passed as context to other reviewers only.
 
 ### Phase 2 — Select reviewers
 
@@ -65,18 +69,21 @@ Add based on change types detected in Phase 1:
 
 | Change type detected | Additional reviewers |
 |---|---|
-| `api` | `api-surface-reviewer`, `spec-compliance-reviewer` (if spec exists) |
+| `api` | `api-surface-reviewer`, `spec-compliance-reviewer` (if `docs/specs/{name}.spec.md` exists) |
 | `accessibility` | `accessibility-reviewer`, `test-coverage-reviewer` |
-| `new-element` | `accessibility-reviewer`, `api-surface-reviewer`, `consistency-reviewer`, `test-coverage-reviewer`, `story-reviewer` |
+| `new-element` | `accessibility-reviewer`, `api-surface-reviewer`, `test-coverage-reviewer`, `story-reviewer` |
 | `bugfix` | `test-coverage-reviewer` |
-| `refactor` | `consistency-reviewer` |
+| `refactor` | _(no additions — base three + Phase 5 consistency check)_ |
 | `internal` | _(no additions — base three cover this)_ |
+
+`consistency-reviewer` is intentionally excluded from this table — it requires
+the full `src/components/` directory for meaningful cross-component comparison
+and runs separately in Phase 5.
 
 Also add `story-reviewer` if the plan's File Map includes any `stories/` file.
 
 If the plan touches more than 5 files across multiple change types, run all
-reviewers — the overhead is lower than the risk of missing a cross-cutting
-finding.
+reviewers except `consistency-reviewer` (which stays in Phase 5 regardless).
 
 ### Phase 3 — Run reviewers (parallel)
 
