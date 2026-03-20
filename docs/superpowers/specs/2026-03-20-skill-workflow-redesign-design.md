@@ -105,7 +105,7 @@ Generation is incremental. Each skill validates its output before the next skill
 
 **Validates:** Types compile. Context interfaces follow vocabulary. Correct shape for category.
 
-**Reviewer gate:** `api-reviewer` on types + context only.
+**Reviewer gate:** `api-reviewer` on types + context, `headless-reviewer` on `::part()` names and `data-*` attributes defined in types (these are public API decisions made at scaffold time).
 
 #### `/build-controller`
 
@@ -185,7 +185,7 @@ All return standardized JSON:
 
 #### `lit-reviewer`
 
-**Owns:** Lit lifecycle correctness (`willUpdate` vs `updated` vs `firstUpdated`), reactive property design (`hasChanged`, reflection, `@property` vs `@state`), Shadow DOM patterns (`exportparts`, slot projection, `slotchange`), SSR safety (no `document`/`window` in constructors), template readability, member ordering, dev-mode warning presence, context subscription lifecycle, observer cleanup (`hostDisconnected`), define timing assumptions, `WeakRef` usage in registries, state machine pattern in controllers, error boundaries.
+**Owns:** Lit lifecycle correctness (`willUpdate` vs `updated` vs `firstUpdated`), reactive property design (`hasChanged`, reflection, `@property` vs `@state`), Shadow DOM patterns (`exportparts`, slot projection, `slotchange`), SSR safety (no `document`/`window` in constructors), template readability, member ordering, dev-mode warning presence, context subscription lifecycle, context object stability (no recreation per cycle), observer cleanup (`hostDisconnected`), define timing assumptions, `WeakRef` usage in registries, state machine pattern in controllers, error boundaries, render performance anti-patterns (`requestUpdate()` in `updated()`, unnecessary re-renders, expensive computations in `render()`).
 
 **Loads:** `refs/lit-patterns.md`, `refs/ssr-contract.md`.
 
@@ -267,7 +267,22 @@ All return standardized JSON:
 
 #### `/update-dependency`
 
-**New.** Evaluates dependency changelog, updates code, runs security audit, runs full test suite across all components, `/validate-build`.
+**New.** Manages dependency version changes for the library.
+
+**Input:** Dependency name + target version (e.g., `lit@4.0.0`, `@lit/context@2.0.0`).
+
+**Steps:**
+1. Read the dependency's changelog/release notes for breaking changes and migration guides.
+2. Evaluate impact: which components/controllers/utilities import from this dependency?
+3. If breaking changes detected: create a migration checklist per affected file.
+4. Apply version bump in `package.json`. Run `npm install`.
+5. Apply code migrations per the checklist (API changes, import path changes, deprecated API replacements).
+6. Run `npm audit` to verify no new vulnerabilities introduced.
+7. Run full test suite across all components (`/validate-build --cross-browser`).
+8. If tests fail: diagnose whether failures are migration bugs or pre-existing. Fix migration bugs.
+9. Dispatch `/audit-cross-component` to verify no subtle behavioral changes across the library.
+
+**Output:** Updated `package.json`, migrated code, passing test suite, audit report.
 
 #### `/rebuild-component`
 
@@ -317,7 +332,7 @@ Target size: <800 lines per document. Split by category if exceeded.
 - Shadow DOM: `exportparts` for compound layers. Nested slot projection. `slotchange` handling patterns. `delegatesFocus`.
 - Context: `@consume` (default) vs `ContextConsumer` (when callback needed). Late provider handling. Context key collision prevention. Subscription lifecycle across disconnect/reconnect.
 - SSR: No `document`/`window` in constructors or class fields. Deterministic ID strategy. Declarative Shadow DOM compatibility.
-- Dev-mode warnings: `if (DEV)` pattern for structural validation, deprecation notices, misuse detection.
+- Dev-mode warnings: Guard with `import.meta.env.DEV` (Vite tree-shakes in production). Pattern: `if (import.meta.env.DEV) { console.warn('grund-accordion-trigger: ...') }`. Used for structural validation, deprecation notices, misuse detection.
 - Template organization: Member ordering (decorators -> properties -> constructor -> lifecycle -> public methods -> private methods -> render). Template extraction threshold. Import organization.
 - Define timing: Upgrade ordering. Safe `customElements.define()` wrapper. Components must work regardless of registration order.
 - Memory: `WeakRef` for element references in registries. Observer cleanup in `hostDisconnected`. `connectedCallback`/`disconnectedCallback` symmetry.
@@ -437,6 +452,17 @@ Focus management strategy per shape. Positioning needs per shape. Live region ne
 
 ## 5. Workflows
 
+### Universal Reviewer Gate Policy
+
+All reviewer gates across all pipelines follow the same escalation path:
+
+1. **First pass:** Reviewers run in parallel, return findings.
+2. **Fix blockers:** The orchestrating skill applies `fix_hint` suggestions and re-runs only the reviewers that reported blockers.
+3. **Second pass (max):** If blockers persist after the second pass, escalate to `/diagnose-failure` which determines: `FIX_CODE`, `FIX_SPEC`, `FALSE_POSITIVE`, or `NEEDS_DISCUSSION`.
+4. **NEEDS_DISCUSSION** surfaces to the user for a decision. The pipeline pauses — it does not silently skip.
+
+Warnings are logged but do not block. The orchestrating skill may choose to fix them or defer.
+
 ### 5.1 Pipeline 1: New Component (Full)
 
 For composite widgets, form controls, overlays, collections — anything with real complexity.
@@ -460,7 +486,7 @@ superpowers:writing-plans
     -> types.ts, context/, index.ts
     -> loads refs/lit-patterns.md, refs/headless-contract.md
     -> validates: types compile, context interfaces match vocabulary
-    -> reviewer gate: api-reviewer (types + context only)
+    -> reviewer gate: api-reviewer (types + context), headless-reviewer (parts + data attributes)
 
 /build-controller
     -> controller, registry (if needed), utils/
@@ -720,10 +746,14 @@ Not built now. Built when the first component in their category needs them. Trac
 - Context design rules
 - Controlled/uncontrolled pattern
 - Data attribute API
-- Component design rules (prefix, Shadow DOM, IDs, ElementInternals)
+- Component design rules (prefix, Shadow DOM, ElementInternals)
 - Accessibility targets (WCAG 2.1 AA, APG)
 - JSDoc/CEM standards
 - Updated skill workflow reference (new pipeline overview)
+
+**Rules changed from current CLAUDE.md:**
+- **ID generation:** Current rule (`crypto.randomUUID().slice(0, 8)`) is replaced. New rule: Accept optional `id` prop; generate deterministic ID from component position/context if not provided; `crypto.randomUUID()` only as last resort in client-only code path. This change is required for SSR/hydration safety. Update CLAUDE.md to reference `refs/ssr-contract.md` for the full ID strategy.
+- **Dev-mode warnings:** New requirement not in current CLAUDE.md. Components must emit dev-mode console warnings for structural misuse. The `DEV` guard is resolved via Vite's `import.meta.env.DEV` (tree-shaken in production builds via dead code elimination). Add to CLAUDE.md component design rules section.
 
 **Move to reference docs:**
 - Detailed Lit patterns -> `refs/lit-patterns.md`
@@ -756,7 +786,7 @@ Not built now. Built when the first component in their category needs them. Trac
 - `/implement` (replaced by layered generation: `/scaffold` -> `/build-controller` -> `/build-elements` -> `/build-stories`)
 
 ### What's New
-- 7 maintenance skills (`/fix-bug`, `/extract-pattern`, `/deprecate`, `/audit-cross-component`, `/update-dependency`, `/rebuild-component`, `/prepare-release`, `/review-system-health`)
+- 8 new maintenance skills (`/fix-bug`, `/extract-pattern`, `/deprecate`, `/audit-cross-component`, `/update-dependency`, `/rebuild-component`, `/prepare-release`, `/review-system-health`)
 - 3 reviewers redesigned (`lit-reviewer`, `headless-reviewer`, `api-reviewer`)
 - 10 reference documents (from 0)
 - 1 vocabulary registry (from 0)
