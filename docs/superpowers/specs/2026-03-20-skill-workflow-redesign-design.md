@@ -37,6 +37,45 @@ The current 16-skill system was designed around the accordion component and has 
 
 ---
 
+## 2.5 Implementation Decisions
+
+Seven implementation ambiguities resolved during spec review:
+
+**D1 — Skill file format:**
+Two separate directories. User-invocable skills live in `.claude-plugin/skills/{name}/SKILL.md` — loaded via the Skill tool, written as "instructions for the main agent to follow." Reviewer agents live in `.claude-plugin/reviewers/{name}/SKILL.md` — never user-invocable, written as "instructions for a subagent to execute." Generation skills dispatch reviewers by reading their SKILL.md content and passing it as the Agent tool's `prompt` parameter, augmented with the specific files, spec, and reference docs for that review.
+
+**D2 — Reference doc loading:**
+Hybrid. Core refs always-needed for a skill are loaded via `@file` mentions in the SKILL.md (e.g., `refs/lit-patterns.md` is always loaded by generation skills). Category-specific refs are loaded conditionally at runtime via the Read tool (e.g., `refs/form-participation.md` only when the component is a form control). Reference docs live in `.claude-plugin/refs/`.
+
+**D3 — Pipeline invocation model:**
+Pipelines are human-driven workflow documentation, not automated orchestration. The engineer (or the AI in a session) follows the pipeline sequence, invoking each skill manually in order. Automation exists only *within* individual skills (e.g., `/build-elements` dispatches 6 reviewer agents in parallel), not *across* skills.
+
+**D4 — State machine formalization:**
+Scoped to components with complex lifecycle only (Dialog, Sheet, multi-step overlays — where impossible states are a real risk). These use an explicit `states` object + `transition(event)` method in TypeScript. Simple and composite widget controllers (Accordion, Tabs) continue using pure resolver functions (current accordion pattern). The `refs/lit-patterns.md` section on state machines includes both patterns with decision guidance.
+
+**D5 — `/validate-build` classification:**
+A user-invocable `SKILL.md` in `.claude-plugin/skills/`. The main agent follows its checklist inline in the current session — runs the commands, reports results. Not dispatched as a subprocess. Other skills invoke it by instructing the agent to follow the `/validate-build` skill steps at the end of their pipeline.
+
+**D6 — `/component-spec` parsing:**
+Design specs produced by `superpowers:brainstorming` include a required YAML front-matter block at the top of the file. `/component-spec --from <path>` parses this block directly. Prose sections remain free-form. Required front-matter fields: `component_name`, `category`, `purpose`, `key_decisions` (list), `open_questions` (list). Example:
+```yaml
+---
+component_name: accordion
+category: composite-widget
+purpose: Vertically stacked sections that expand/collapse to reveal content
+key_decisions:
+  - Single vs multiple open items controlled by `multiple` prop
+  - keepMounted for exit animations
+open_questions: []
+---
+```
+The brainstorming skill's spec document output template must include this front-matter block. If `/component-spec` is run without `--from`, it asks the user for the category and purpose directly.
+
+**D7 — `/rebuild-component` operational model:**
+Planning skill only. It audits the existing component against current standards, generates a gap list, and produces a rebuild plan via `superpowers:writing-plans`. The engineer then follows Pipeline 1 manually using the plan, with the existing component's tests as regression baseline. `/rebuild-component` hands off after producing the plan — it does not orchestrate execution.
+
+---
+
 ## 3. Skill Inventory
 
 ### 3.1 Layer 1: Design Skills
@@ -113,7 +152,7 @@ Generation is incremental. Each skill validates its output before the next skill
 
 **Key behaviors:**
 - TDD: tests written first, then implementation
-- Controller uses explicit state/transition pattern where appropriate (state machine formalization)
+- Controller uses explicit state/transition pattern only for complex lifecycle components (Dialog, Sheet, multi-step overlays). Simple and composite widgets use pure resolver functions (current accordion pattern). See `refs/lit-patterns.md` for both patterns and decision guidance.
 - No DOM access in controller
 - Registry uses `WeakRef` where appropriate for long-lived element references
 - Loads `refs/lit-patterns.md`
@@ -162,7 +201,7 @@ Generation is incremental. Each skill validates its output before the next skill
 
 ### 3.3 Layer 3: Verification Skills (Reviewer Agents)
 
-All reviewers are dispatched as subagents in parallel. Each receives: files to review, component spec, relevant reference docs, review scope.
+All reviewers live in `.claude-plugin/reviewers/{name}/SKILL.md`. They are never user-invocable. Generation skills dispatch them by reading their SKILL.md content and passing it as the Agent tool's `prompt`, augmented with: files to review, component spec, relevant reference docs, and review scope. All run in parallel where possible.
 
 All return standardized JSON:
 
@@ -243,11 +282,11 @@ All return standardized JSON:
 
 #### `/validate-build`
 
-**Expanded.** Lint -> build -> test -> CEM generation (fail if CEM drifts from committed version) -> axe-core run -> bundle size check (per-component budget) -> cross-browser flag (optional `--cross-browser` for Chromium + Firefox + WebKit).
+**Expanded.** User-invocable skill in `.claude-plugin/skills/`. The main agent follows its checklist inline (not dispatched as a subprocess). Steps: lint -> build -> test -> CEM generation (fail if CEM drifts from committed version) -> axe-core run -> bundle size check (per-component budget) -> cross-browser flag (optional `--cross-browser` for Chromium + Firefox + WebKit). Other skills invoke it by instructing the agent to follow the `/validate-build` steps at the end of their pipeline.
 
 #### `/diagnose-failure`
 
-**Unchanged.** Root cause when reviewer findings persist after 2 patch iterations. Outputs: `FIX_CODE`, `FIX_SPEC`, `FALSE_POSITIVE`, `NEEDS_DISCUSSION`.
+**Unchanged.** Root cause when reviewer findings persist after 2 patch iterations. Outputs: `FIX_CODE`, `FIX_SPEC`, `FALSE_POSITIVE`, `NEEDS_DISCUSSION`. User-invocable skill in `.claude-plugin/skills/`.
 
 #### `/extract-pattern`
 
@@ -286,7 +325,7 @@ All return standardized JSON:
 
 #### `/rebuild-component`
 
-**New.** Audits existing component against current standards (CLAUDE.md, reference docs, vocabulary). Generates gap list. Creates rebuild plan via `superpowers:writing-plans`. Executes via Pipeline 1 generation steps with existing tests as regression baseline. Old component stays until rebuild passes all gates.
+**New.** Planning skill only. Audits existing component against current standards (CLAUDE.md, reference docs, vocabulary registry). Generates gap list. Produces rebuild plan via `superpowers:writing-plans`. Hands off after plan is written — the engineer follows Pipeline 1 manually using the plan, with existing tests as regression baseline. Old component stays in place until the rebuild passes all pipeline gates.
 
 #### `/prepare-release`
 
@@ -301,6 +340,8 @@ All return standardized JSON:
 ## 4. Reference Documents
 
 ### 4.1 Document Structure
+
+Reference docs live in `.claude-plugin/refs/`. Core refs (always needed) are loaded via `@file` mentions in skill SKILL.md files. Category-specific refs are loaded conditionally at runtime via the Read tool based on the component's category.
 
 All reference docs follow a consistent format:
 
@@ -678,20 +719,63 @@ Is this a release?
 
 **Agents** (isolated subprocesses): Work with clear inputs/outputs that can be parallelized or needs to protect the main context from noise.
 
+### File Locations
+
+```
+.claude-plugin/
+├── skills/          → user-invocable SKILL.md files (main agent follows inline)
+│   ├── component-spec/
+│   ├── apg/
+│   ├── scaffold/
+│   ├── build-controller/
+│   ├── build-elements/
+│   ├── build-stories/
+│   ├── modify-component/
+│   ├── fix-bug/
+│   ├── validate-build/
+│   ├── diagnose-failure/
+│   ├── extract-pattern/
+│   ├── deprecate/
+│   ├── post-plan-review/
+│   ├── audit-cross-component/
+│   ├── update-dependency/
+│   ├── rebuild-component/
+│   ├── prepare-release/
+│   └── review-system-health/
+├── reviewers/       → programmatic agent SKILL.md files (dispatched as subagents)
+│   ├── accessibility-reviewer/
+│   ├── lit-reviewer/
+│   ├── headless-reviewer/
+│   ├── api-reviewer/
+│   ├── test-reviewer/
+│   └── security-reviewer/
+└── refs/            → reference documents loaded by skills at runtime
+    ├── lit-patterns.md
+    ├── component-shapes.md
+    ├── headless-contract.md
+    ├── test-patterns.md
+    ├── consumer-dx.md
+    ├── form-participation.md
+    ├── transition-contract.md
+    ├── focus-management.md
+    ├── positioning-strategy.md
+    └── ssr-contract.md
+```
+
 ### Mapping
 
-**Skills (main agent):** `/component-spec`, `/apg`, `/scaffold`, `/build-controller`, `/build-elements`, `/build-stories`, `/modify-component`, `/fix-bug`, `/extract-pattern`, `/rebuild-component`, `/deprecate`, `/prepare-release`.
+**Skills (main agent, `.claude-plugin/skills/`):** `/component-spec`, `/apg`, `/scaffold`, `/build-controller`, `/build-elements`, `/build-stories`, `/modify-component`, `/fix-bug`, `/validate-build`, `/diagnose-failure`, `/extract-pattern`, `/deprecate`, `/post-plan-review`, `/audit-cross-component`, `/update-dependency`, `/rebuild-component`, `/prepare-release`, `/review-system-health`.
 
-**Agents (dispatched):** All 6 reviewers (parallel, clear input/output), `/validate-build` (shell commands, pass/fail), `/audit-cross-component` (one subagent per component), `/review-system-health` (isolated analysis), pattern extraction checks (focused search returning yes/no).
+**Reviewer agents (`.claude-plugin/reviewers/`):** All 6 reviewers — dispatched programmatically by generation skills. Never user-invocable. Each skill reads the reviewer's SKILL.md content and passes it as the Agent tool prompt, augmented with files + spec + relevant refs.
 
-**Hybrid (skill orchestrates, dispatches agents):**
-- `/scaffold` dispatches `api-reviewer`
+**Dispatching relationships:**
+- `/scaffold` dispatches `api-reviewer` + `headless-reviewer`
 - `/build-controller` dispatches `lit-reviewer`
 - `/build-elements` dispatches all 6 reviewers in parallel
 - `/build-stories` dispatches `test-reviewer`
-- `/fix-bug` dispatches `/audit-cross-component` agents
-- `/post-plan-review` dispatches relevant reviewers
-- `/modify-component` dispatches relevant reviewers
+- `/fix-bug` dispatches reviewer agents on changed files, then `/audit-cross-component`
+- `/post-plan-review` dispatches relevant reviewers based on change map
+- `/modify-component` dispatches relevant reviewers based on change type
 
 ### Arbitration
 
