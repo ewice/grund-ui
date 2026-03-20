@@ -170,12 +170,18 @@ JSDoc serves both IDE tooltips and the Custom Elements Manifest (→ Storybook a
 Component development uses skills in `.claude-plugin/skills/`. The full workflow:
 
 ```
-/apg {pattern}          → fetch WAI-ARIA APG contract
-/new-component          → interactive spec builder → docs/specs/{name}.spec.md
-/implement              → parallel generation + gated review loop
-/modify-component       → change an existing component with targeted reviews
-/validate-build         → verify build, tests, CEM, lint all pass
-/diagnose-failure       → investigate why a reviewer finding persists
+Design phase (use Superpowers):
+  superpowers:design-review   → spec + implementation plan → docs/superpowers/specs/ + plans/
+  /apg {pattern}              → fetch WAI-ARIA APG contract (input to Superpowers)
+
+Implementation phase:
+  /implement              → parallel generation + gated review loop (new components)
+  /modify-component       → change an existing component with targeted reviews
+  superpowers:executing-plans → execute a Superpowers-generated plan task-by-task
+
+Validation:
+  /validate-build         → verify build, tests, CEM, lint all pass
+  /diagnose-failure       → investigate why a reviewer finding persists
 ```
 
 Review skills invoked by `/implement` and `/modify-component`:
@@ -187,4 +193,6 @@ accessibility-reviewer     → APG pattern, ARIA, keyboard
 api-surface-reviewer       → types, JSDoc, CEM diff
 test-coverage-reviewer     → spec → test mapping
 consistency-reviewer       → cross-component patterns
+security-reviewer          → XSS vectors, event listener hygiene, CSP, Shadow DOM boundary safety
+performance-reviewer       → render loops, memory leaks, context stability, hot-path cost
 ```

@@ -41,12 +41,14 @@ stop and surface the failures to the engineer. Do not proceed to Phase 3.
 
 ### Phase 3 — Quality review (parallel)
 
-Spawn all four reviewer agents simultaneously:
+Spawn all six reviewer agents simultaneously:
 
 - `guidelines-reviewer`
 - `accessibility-reviewer`
 - `api-surface-reviewer`
 - `test-coverage-reviewer`
+- `security-reviewer`
+- `performance-reviewer`
 
 Each reviewer returns JSON findings. Collect all findings. Filter:
 - Keep findings with confidence ≥ 80
