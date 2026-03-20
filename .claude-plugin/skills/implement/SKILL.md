@@ -2,7 +2,8 @@
 name: "implement"
 description: "Use when you have an approved component spec and need to generate
   all files, run the review loop, and produce a commit-ready component. Triggered
-  after /new-component spec is approved."
+  after the component API spec is approved (from /new-component, or /new-component
+  pre-filled from a Superpowers design spec)."
 ---
 
 ## Overview
@@ -12,15 +13,22 @@ handing off to the engineer. The spec-compliance gate blocks progression to code
 quality review. The patch loop runs max 2 iterations before escalating via
 `/diagnose-failure`.
 
-For an existing component, use `/modify-component` instead.
+For an existing component, use `/modify-component` (ad-hoc changes) or
+`superpowers:executing-plans` + `/post-plan-review` (Superpowers-planned changes)
+instead.
 
 ## Implementation
 
 ### Phase 1 — Generate (parallel)
 
 Spawn one Agent per file group simultaneously — do not wait between spawns.
-Each agent receives the full spec from `docs/specs/{name}.spec.md` and should
-read `src/components/accordion/` as the reference implementation.
+
+Locate the spec file — check both paths in order:
+1. `docs/specs/{name}.spec.md` (written by `/new-component`)
+2. `docs/superpowers/specs/` — look for a file whose name includes `{name}`
+
+Each agent receives the full spec and should read `src/components/accordion/`
+as the reference implementation.
 
 - **Agent A** — `types.ts` and `context/` (context interfaces, symbols, index)
 - **Agent B** — `controller/` (controller class, types, constants)

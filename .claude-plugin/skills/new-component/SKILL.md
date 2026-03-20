@@ -14,7 +14,47 @@ Code generation happens in `implement`.
 Output: `docs/specs/{component-name}.spec.md` — the source of truth for the
 component that all reviewer skills check against.
 
+If a Superpowers design spec already exists for this component (in
+`docs/superpowers/specs/`), pass its path as input. The skill will pre-fill
+answers from the design spec and skip the Q&A, going straight to API contract
+formalisation. This is the standard path when Superpowers was used for design.
+
+## Usage
+
+```
+/new-component                                          ← interactive mode
+/new-component docs/superpowers/specs/2026-03-19-tabs-design.md  ← pre-filled mode
+```
+
 ## Implementation
+
+### Phase 0 — Check for Superpowers design spec
+
+If a path was provided, read the design spec file. Extract:
+- Component name and purpose
+- Compound element structure (root, item, sub-parts)
+- Public properties and events
+- APG pattern name
+- Any explicit decisions about variants (disabled, orientation, multiple, etc.)
+
+Pre-fill all Phase 1 answers from the design spec. Confirm with the engineer
+in one message:
+
+```
+I found the Superpowers design spec for {component}. Here's what I'll use:
+
+- APG pattern: {pattern}
+- Elements: {list}
+- Value type: {type}
+- Events: {list}
+- Variants: {list}
+
+Anything to change before I write the spec?
+```
+
+If the engineer confirms, skip Phases 1–2 and go directly to Phase 3.
+
+If no path was provided, proceed to Phase 1 (interactive mode).
 
 ### Phase 1 — Gather intent
 
@@ -282,11 +322,16 @@ Do not run `/implement` yourself. The engineer decides when to proceed.
 
 ## Common Mistakes
 
-- **Skipping Phase 1 questions and guessing.** Always ask first.
-- **Writing the spec without APG data.** Always run `/apg` first if a pattern exists.
+- **Skipping Phase 1 questions and guessing.** Always ask first (unless in
+  pre-filled mode with a Superpowers design spec).
+- **Writing the spec without APG data.** Always run `/apg` first if a pattern
+  exists — even in pre-filled mode, the APG fetch adds keyboard detail that
+  design specs often omit.
 - **Proposing implementation details in the spec.** The spec is the _what_,
   not the _how_. No TypeScript in the spec except for interface shapes.
 - **Leaving open questions unresolved.** Every open question must be answered
   before `/implement` runs.
 - **Copying accordion fields verbatim.** Only include properties and events that
   this specific component actually needs.
+- **Ignoring the Superpowers spec when one exists.** If a design spec exists,
+  use it — don't start a fresh Q&A that might contradict already-made decisions.

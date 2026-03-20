@@ -167,32 +167,60 @@ JSDoc serves both IDE tooltips and the Custom Elements Manifest (→ Storybook a
 
 ## Skills — Workflow Reference
 
-Component development uses skills in `.claude-plugin/skills/`. The full workflow:
+Component development uses skills in `.claude-plugin/skills/`. Superpowers is
+the entry point for all design work. Our skill suite provides the quality gate.
+
+### New component
 
 ```
-Design phase (use Superpowers):
-  superpowers:design-review   → spec + implementation plan → docs/superpowers/specs/ + plans/
-  /apg {pattern}              → fetch WAI-ARIA APG contract (input to Superpowers)
+1. superpowers:design-review          → design spec  → docs/superpowers/specs/
+   /apg {pattern}                     → ARIA contract (feed into Superpowers)
 
-Implementation phase:
-  /implement              → parallel generation + gated review loop (new components)
-  /modify-component       → change an existing component with targeted reviews
-  superpowers:executing-plans → execute a Superpowers-generated plan task-by-task
+2. /new-component <superpowers-spec>  → API spec     → docs/specs/{name}.spec.md
+                                        (pre-filled from design spec, skips Q&A)
 
-Validation:
-  /validate-build         → verify build, tests, CEM, lint all pass
-  /diagnose-failure       → investigate why a reviewer finding persists
+3. /implement                         → parallel generation + 6-reviewer gate + build
 ```
 
-Review skills invoked by `/implement` and `/modify-component`:
+### Modifying an existing component (Superpowers-planned)
+
+```
+1. superpowers:design-review          → design spec + plan → docs/superpowers/specs/ + plans/
+
+2. superpowers:executing-plans        → implements plan task-by-task, tests at each step
+
+3. /post-plan-review <plan-file>      → reads File Map, runs relevant reviewers,
+                                        patches findings, validates build
+```
+
+### Modifying an existing component (ad-hoc)
+
+```
+/modify-component {name} — {description}   → scoped edit + targeted reviews + build
+```
+
+Use for small, well-understood changes that don't need Superpowers design
+reasoning. When in doubt, use the Superpowers path.
+
+### Supporting skills
+
+```
+/apg {pattern}        → fetch WAI-ARIA APG contract
+/validate-build       → verify build, tests, CEM, lint all pass
+/diagnose-failure     → investigate why a reviewer finding persists
+```
+
+### Review skills
+
+Invoked by `/implement`, `/modify-component`, and `/post-plan-review`:
 
 ```
 spec-compliance-reviewer   → Gate 1: spec vs. generated files
-guidelines-reviewer        → CLAUDE.md compliance
+guidelines-reviewer        → CLAUDE.md compliance              ← every change
+security-reviewer          → XSS, listener hygiene, CSP, Shadow DOM safety  ← every change
+performance-reviewer       → render loops, memory leaks, context stability   ← every change
 accessibility-reviewer     → APG pattern, ARIA, keyboard
 api-surface-reviewer       → types, JSDoc, CEM diff
 test-coverage-reviewer     → spec → test mapping
 consistency-reviewer       → cross-component patterns
-security-reviewer          → XSS vectors, event listener hygiene, CSP, Shadow DOM boundary safety
-performance-reviewer       → render loops, memory leaks, context stability, hot-path cost
 ```
