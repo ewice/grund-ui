@@ -7,5 +7,6 @@ storybook-static/
 *storybook.log
 .vitest-attachments/
 .worktrees/
-.claude/
+.claude/*
+!.claude/settings.json
 .idea/
