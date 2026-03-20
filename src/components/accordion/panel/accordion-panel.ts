@@ -20,29 +20,35 @@ export class GrundAccordionPanel extends LitElement {
   public static override styles = accordionPanelStyles;
 
   /** Whether this panel stays mounted while closed. */
-  @property({ type: Boolean, attribute: 'keep-mounted' }) public keepMounted = false;
+  @property({ type: Boolean, attribute: 'keep-mounted' })
+  public keepMounted = false;
 
   /** Whether this panel uses `hidden="until-found"` while closed. */
-  @property({ type: Boolean, attribute: 'hidden-until-found' }) public hiddenUntilFound = false;
+  @property({ type: Boolean, attribute: 'hidden-until-found' })
+  public hiddenUntilFound = false;
 
   @consume({ context: accordionItemContext, subscribe: true })
   private itemCtx?: AccordionItemContextValue;
 
-  // @ts-expect-error -- controller registered for side effects; TS cannot see that read
-  private openState = new OpenStateController(this, {
-    isOpen: () => this.itemCtx?.expanded ?? false,
-  });
+  constructor() {
+    super();
+    this.addController(
+      new OpenStateController(this, {
+        isOpen: () => this.itemCtx?.expanded ?? false,
+      }),
+    );
+    this.addController(
+      new AriaLinkController(this, {
+        source: () => this.shadowRoot?.querySelector('[part="panel"]') ?? null,
+        target: () => {
+          const trigger = this.itemCtx?.registeredTrigger as GrundAccordionTrigger | null;
 
-  // @ts-expect-error -- controller registered for side effects; TS cannot see that read
-  private ariaLink = new AriaLinkController(this, {
-    source: () => this.shadowRoot?.querySelector('[part="panel"]') ?? null,
-    target: () => {
-      const trigger = this.itemCtx?.registeredTrigger as GrundAccordionTrigger | null;
-
-      return trigger?.triggerButton ?? null;
-    },
-    type: 'labelledby',
-  });
+          return trigger?.triggerButton ?? null;
+        },
+        type: 'labelledby',
+      }),
+    );
+  }
 
   private onItemContextChanged(prev?: AccordionItemContextValue): void {
     if (prev && prev.value !== this.itemCtx?.value) {

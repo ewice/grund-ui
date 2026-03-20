@@ -38,8 +38,8 @@ export class GrundAccordionItem extends LitElement {
   @provide({ context: accordionItemContext })
   protected itemCtx: AccordionItemContextValue = this.buildItemCtx();
 
-  private registeredTriggerElement: Element | null = null;
-  private registeredPanelElement: Element | null = null;
+  private registeredTriggerElement: GrundAccordionTrigger | null = null;
+  private registeredPanelElement: GrundAccordionPanel | null = null;
   private registered = false;
   private hasSettled = false;
   private expanded = false;
@@ -58,13 +58,13 @@ export class GrundAccordionItem extends LitElement {
       keepMounted: this.accordionCtx?.keepMounted ?? false,
       hiddenUntilFound: this.accordionCtx?.hiddenUntilFound ?? false,
       open: () => this.accordionCtx?.requestOpen(this.value),
-      registerTrigger: (trigger: Element) => {
+      registerTrigger: (trigger: GrundAccordionTrigger) => {
         if (this.registeredTriggerElement === trigger) {
           return;
         }
 
         this.registeredTriggerElement = trigger;
-        this.accordionCtx?.attachTrigger(this, trigger as GrundAccordionTrigger);
+        this.accordionCtx?.attachTrigger(this, trigger);
         this.requestUpdate();
       },
       unregisterTrigger: () => {
@@ -76,13 +76,13 @@ export class GrundAccordionItem extends LitElement {
         this.accordionCtx?.detachTrigger(this);
         this.requestUpdate();
       },
-      registerPanel: (panel: Element) => {
+      registerPanel: (panel: GrundAccordionPanel) => {
         if (this.registeredPanelElement === panel) {
           return;
         }
 
         this.registeredPanelElement = panel;
-        this.accordionCtx?.attachPanel(this, panel as GrundAccordionPanel);
+        this.accordionCtx?.attachPanel(this, panel);
         this.requestUpdate();
       },
       unregisterPanel: () => {

@@ -1,4 +1,6 @@
 import { createContext } from '@lit/context';
+import type { GrundAccordionPanel } from '../panel/accordion-panel';
+import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
 import type { GrundAccordionOrientation } from '../types';
 
 /** Per-item state provided by `<grund-accordion-item>` to its trigger and panel children. */
@@ -20,17 +22,17 @@ export interface AccordionItemContextValue {
   /** Requests that this item be opened. */
   open: () => void;
   /** Registers a trigger element with this item. */
-  registerTrigger: (trigger: Element) => void;
+  registerTrigger: (trigger: GrundAccordionTrigger) => void;
   /** Unregisters the trigger element from this item. */
   unregisterTrigger: () => void;
   /** Registers a panel element with this item. */
-  registerPanel: (panel: Element) => void;
+  registerPanel: (panel: GrundAccordionPanel) => void;
   /** Unregisters the panel element from this item. */
   unregisterPanel: () => void;
   /** The currently registered trigger element, if any. */
-  registeredTrigger: Element | null;
+  registeredTrigger: GrundAccordionTrigger | null;
   /** The currently registered panel element, if any. */
-  registeredPanel: Element | null;
+  registeredPanel: GrundAccordionPanel | null;
 }
 
 /** @internal */
