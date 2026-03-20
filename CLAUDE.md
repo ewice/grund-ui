@@ -79,92 +79,9 @@ Context interfaces are API contracts. Design them by consumer role, not convenie
 - **State flows down, actions flow up.** Don't put query methods on context that can be derived from state already provided.
 - **Consumers only see what they need.** A trigger doesn't need `registerPanel`. A panel doesn't need `requestToggle`. Split interfaces if roles diverge significantly.
 - **No redundant methods.** Every method must earn its place.
-- **Context objects must be stable.** Replacing a context object or its method references on every `willUpdate` triggers cascading re-renders across all consumers. Bind action methods once in the constructor and mutate only the state fields that change — never recreate the whole object each cycle.
-
-```ts
-// ✅ Stable — bind once in constructor, mutate fields on update
-constructor(host: Host) {
-  this.ctx = {
-    expanded: false,
-    requestToggle: this.requestToggle.bind(this), // stable reference
-  };
-}
-
-syncFromHost(snapshot: HostSnapshot): void {
-  this.ctx.expanded = snapshot.expanded; // mutate field, same object
-}
-
-// ❌ Unstable — new function references created on every update cycle
-willUpdate() {
-  this.ctx = {
-    expanded: this.expanded,
-    requestToggle: () => this.toggle(), // new reference every cycle
-  };
-}
-```
-
-### Context Consumption
-
-Use `@consume` as the default. Use `ContextConsumer` only when you need the callback — and document why.
-
-```ts
-// ✅ Default
-@consume({ context: accordionItemContext, subscribe: true })
-private itemCtx?: AccordionItemContextValue;
-
-// ✅ Exception — ContextConsumer used here because the trigger must unregister
-// from the previous item context before registering with the new one.
-private itemConsumer = new ContextConsumer(this, { context: accordionItemContext, ... });
-```
-
-Context subscriptions are always `private`. Expose derived values via public getters if other code needs them.
-
----
-
-## Registration Lifecycle
-
-Each step happens in exactly one place:
-
-```
-connectedCallback    → call super; minimal one-time setup only
-willUpdate           → sync registration (register/unregister on value or disabled change)
-                     → derive state from parent context
-                     → sync host-level data-* attributes (on `this` — shadow DOM not yet available on first call)
-render               → return template only; no mutations, no side effects
-updated              → dispatch user-facing events; mutate shadow DOM elements
-disconnectedCallback → unregister from parent context; clean up event listeners
-```
-
-Sub-part registration (trigger, panel) follows the same discipline: the sub-part registers itself via a context callback. The item never re-attaches sub-parts in its own `willUpdate`.
-
-> **Why `willUpdate` for registration, not `connectedCallback`?** Context may already be available in `connectedCallback` if the element is appended to an existing provider tree. The reason registration is deferred to `willUpdate` is architectural: `changedProperties` is only available there, and it provides a consistent, single entry point for all derived state logic.
-
----
-
-## Lit Patterns
-
-- **`willUpdate`** — derive state, sync registration, set attributes on the host element (`this.toggleAttribute`, `this.dataset`). Shadow DOM has not yet rendered on the first call — do not access it here.
-- **`render`** — return template only. No state mutations, no attribute writes, no side effects.
-- **`updated`** — DOM side effects on shadow DOM elements, dispatch user-facing events. Do not set reactive properties here (causes a re-render loop).
-- **`@provide` requires a class property**, not a getter. Re-assign the property in `willUpdate` to notify consumers.
-- **`useDefineForClassFields: false` + `experimentalDecorators: true`** in tsconfig — required for Lit decorators. Do not migrate to standard decorators until Lit explicitly recommends it.
-
-### Decompose `willUpdate` by Phase
-
-When `willUpdate` handles multiple concerns, extract named methods for each phase:
-
-```ts
-// ✅ One entry point, readable phases
-public override willUpdate(changedProperties: PropertyValues): void {
-  this.syncRegistration(changedProperties);
-  this.syncState();
-  this.syncAttributes();
-}
-```
-
-### Minimize Manual Change Tracking
-
-Prefer `changedProperties` over manual previous-value fields. Manual tracking is justified only when context values (not reactive properties) change between renders — document why `changedProperties` wasn't sufficient when you use it.
+- **Context objects must be stable.** Bind action methods once in the constructor and mutate only the state fields that change — never recreate the whole object each cycle.
+- **Use `@consume` as the default.** Use `ContextConsumer` only when you need the callback — and document why.
+- **Context subscriptions are always `private`.** Expose derived values via public getters if other code needs them.
 
 ---
 
@@ -176,16 +93,6 @@ Components that own a value (accordion, tabs, select) follow this pattern:
 - **Controlled:** `value` prop drives state entirely. Internal state does not change on interaction — only events fire. The consumer is responsible for updating `value`.
 
 The root element packages its own properties into a plain `HostSnapshot` object and hands it to the controller via `syncFromHost()` in `willUpdate`. The controller does not reach into reactive properties on the host directly — this keeps it decoupled from Lit's property system and independently testable.
-
-```ts
-// Root in willUpdate — controller stays decoupled from Lit
-this.controller.syncFromHost({
-  value: this.value,
-  defaultValue: this.defaultValue,
-  multiple: this.multiple,
-  disabled: this.disabled,
-});
-```
 
 ---
 
@@ -230,57 +137,6 @@ The keyboard contract (which keys do what) must be covered by tests and document
 
 ---
 
-## Testing
-
-- Vitest browser mode (Playwright, headless Chromium) — real browser, real Shadow DOM
-- Use `@open-wc/testing-helpers/pure`, **not** `@open-wc/testing` (avoids Web Dev Server websocket conflict)
-- Shared test utilities live in `src/test-utils/`
-
-**What to test for every component:**
-
-- Every public property and attribute — initial state and dynamic changes at runtime
-- Keyboard navigation (Arrow keys, Home/End, Tab, Enter/Space per the APG pattern)
-- Event payloads — assert `detail` shape, not just that an event fired
-- Controlled and uncontrolled mode separately
-- Dynamic registration: add and remove child elements after initial render
-- ARIA attribute correctness after state changes
-
-**Mechanics:**
-
-- `flush(el)` awaits Lit's update cycle. Call it after every state-triggering action before asserting.
-- Keyboard events must use `{ bubbles: true, composed: true }` to cross Shadow DOM boundaries.
-- Test context consumers by mounting a minimal `LitElement` that consumes the relevant context inside the fixture — see `TestAccordionRootState` in the accordion tests as the pattern.
-
-Name tests as plain English sentences that read as specifications.
-
----
-
-## Storybook
-
-Every component ships with stories that serve as living documentation:
-
-- A `Default` story showing basic usage
-- A story per significant variant: `Disabled`, `Controlled`, `Multiple`, plus any component-specific features (e.g. `HiddenUntilFound`)
-- Arg types are generated from CEM autodocs — keep `@property` JSDoc descriptions accurate and concise
-
-Stories are the consumer-facing documentation. They must work with zero consumer CSS applied. Use `::part()` selectors in story styles to demonstrate available styling hooks.
-
----
-
-## Dev-Mode Warnings
-
-Use `import.meta.env.DEV` guards for developer-facing warnings that vanish in production:
-
-```ts
-if (import.meta.env.DEV && !this.accordionCtx) {
-  console.warn('[grund-ui] <grund-accordion-item> must be a descendant of <grund-accordion>.');
-}
-```
-
-Warn for: missing required parent context, duplicate item values, structural misuse. Never throw in production — degrade gracefully with `??` fallbacks.
-
----
-
 ## JSDoc / CEM
 
 JSDoc serves both IDE tooltips and the Custom Elements Manifest (→ Storybook autodocs). Use JSDoc syntax, not TSDoc.
@@ -309,27 +165,26 @@ JSDoc serves both IDE tooltips and the Custom Elements Manifest (→ Storybook a
 
 ---
 
-## Code Style
+## Skills — Workflow Reference
 
-Blank lines convey grouping, not spacing:
+Component development uses skills in `.claude-plugin/skills/`. The full workflow:
 
-- Never at the start or end of a block
-- Never between a declaration and its first use
-- One blank line between logical phases within a method
-- One blank line between class members
-- Two blank lines between top-level declarations in a file
-- Imports: external packages → internal (one blank line between groups)
+```
+/apg {pattern}          → fetch WAI-ARIA APG contract
+/new-component          → interactive spec builder → docs/specs/{name}.spec.md
+/implement              → parallel generation + gated review loop
+/modify-component       → change an existing component with targeted reviews
+/validate-build         → verify build, tests, CEM, lint all pass
+/diagnose-failure       → investigate why a reviewer finding persists
+```
 
-Always use braces for `if`/`else`. Exception: single-line early-return guards (`if (!x) return;`).
+Review skills invoked by `/implement` and `/modify-component`:
 
----
-
-## Tooling
-
-| Command | Purpose |
-|---|---|
-| `npm run build` | `vite build && tsc --emitDeclarationOnly --declarationMap` |
-| `npm run test:run` | Vitest (CI) |
-| `npm run lint` | ESLint across `src/` and `stories/` |
-| `npm run analyze` | Custom Elements Manifest |
-| `npm run storybook` | Storybook dev server (port 6006) |
+```
+spec-compliance-reviewer   → Gate 1: spec vs. generated files
+guidelines-reviewer        → CLAUDE.md compliance
+accessibility-reviewer     → APG pattern, ARIA, keyboard
+api-surface-reviewer       → types, JSDoc, CEM diff
+test-coverage-reviewer     → spec → test mapping
+consistency-reviewer       → cross-component patterns
+```

@@ -12,22 +12,28 @@ Gate 1. If the component does the wrong thing, reviewing its style is wasteful.
 
 ## Output Format
 
+Return findings as JSON lines:
+
+```json
+{"requirement": "aria-expanded on trigger button", "status": "IMPLEMENTED", "location": "src/components/tabs/trigger/tabs-trigger.ts:45"}
 ```
-REQUIREMENT: <requirement from spec>
-STATUS: IMPLEMENTED | MISSING | PARTIAL
-LOCATION: <file:line if implemented>
-NOTE: <explanation if MISSING or PARTIAL>
+
+```json
+{"requirement": "grund-value-change event with detail.value as string[]", "status": "MISSING", "location": null, "note": "Event dispatched but detail.value is a string, not string[]"}
 ```
+
+Status values: `IMPLEMENTED`, `MISSING`, `PARTIAL`.
 
 End with:
 - `PASS` — all requirements are IMPLEMENTED
-- `FAIL` — one or more requirements are MISSING or PARTIAL; list them
+- `FAIL(missing=N, partial=M)` — counts of each
 
 ## Process
 
-1. Read the spec in full. Extract every stated requirement as a bullet.
-   Requirements include: properties, events, keyboard behaviours, ARIA contract,
-   controlled/uncontrolled modes, data attributes, slots, CSS parts.
+1. Read the spec in `docs/specs/{component-name}.spec.md`. Extract every stated
+   requirement as a bullet. Requirements include: properties, events, keyboard
+   behaviours, ARIA contract, controlled/uncontrolled modes, data attributes,
+   slots, CSS parts.
 
 2. For each requirement, search the generated files for its implementation.
    Do not infer — verify the actual code.
@@ -41,5 +47,5 @@ End with:
 
 6. Check that every data attribute in the spec is set in willUpdate.
 
-7. Report. If FAIL, list only the missing/partial items — do not pad with passing
-   items.
+7. Report. If FAIL, list only the MISSING/PARTIAL items — do not pad with
+   IMPLEMENTED items unless the output is requested in full.
