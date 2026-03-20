@@ -67,10 +67,12 @@ Add based on change types detected in Phase 1:
 |---|---|
 | `api` | `api-surface-reviewer`, `spec-compliance-reviewer` (if spec exists) |
 | `accessibility` | `accessibility-reviewer`, `test-coverage-reviewer` |
-| `new-element` | `accessibility-reviewer`, `api-surface-reviewer`, `consistency-reviewer`, `test-coverage-reviewer` |
+| `new-element` | `accessibility-reviewer`, `api-surface-reviewer`, `consistency-reviewer`, `test-coverage-reviewer`, `story-reviewer` |
 | `bugfix` | `test-coverage-reviewer` |
 | `refactor` | `consistency-reviewer` |
 | `internal` | _(no additions — base three cover this)_ |
+
+Also add `story-reviewer` if the plan's File Map includes any `stories/` file.
 
 If the plan touches more than 5 files across multiple change types, run all
 reviewers — the overhead is lower than the risk of missing a cross-cutting

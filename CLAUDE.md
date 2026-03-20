@@ -222,5 +222,6 @@ performance-reviewer       → render loops, memory leaks, context stability   �
 accessibility-reviewer     → APG pattern, ARIA, keyboard
 api-surface-reviewer       → types, JSDoc, CEM diff
 test-coverage-reviewer     → spec → test mapping
+story-reviewer             → story variants, keyboard docs, autodoc annotations
 consistency-reviewer       → cross-component patterns
 ```

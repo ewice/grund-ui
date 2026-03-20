@@ -52,7 +52,9 @@ I found the Superpowers design spec for {component}. Here's what I'll use:
 Anything to change before I write the spec?
 ```
 
-If the engineer confirms, skip Phases 1–2 and go directly to Phase 3.
+If the engineer confirms, skip Phase 1 and proceed to Phase 2 (APG fetch).
+The APG fetch must still run — design specs often omit keyboard edge cases and
+focus mode details that the APG contract captures precisely.
 
 If no path was provided, proceed to Phase 1 (interactive mode).
 

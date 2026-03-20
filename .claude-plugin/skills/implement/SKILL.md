@@ -49,7 +49,7 @@ stop and surface the failures to the engineer. Do not proceed to Phase 3.
 
 ### Phase 3 — Quality review (parallel)
 
-Spawn all six reviewer agents simultaneously:
+Spawn all seven reviewer agents simultaneously:
 
 - `guidelines-reviewer`
 - `accessibility-reviewer`
@@ -57,6 +57,7 @@ Spawn all six reviewer agents simultaneously:
 - `test-coverage-reviewer`
 - `security-reviewer`
 - `performance-reviewer`
+- `story-reviewer`
 
 Each reviewer returns JSON findings. Collect all findings. Filter:
 - Keep findings with confidence ≥ 80
@@ -112,6 +113,9 @@ Report a summary:
 - Accessibility: PASS (1 warning suppressed — see below)
 - API surface: PASS
 - Test coverage: PASS
+- Security: PASS
+- Performance: PASS
+- Story: PASS
 - Consistency: PASS
 
 ### Build validation
@@ -124,7 +128,7 @@ Report a summary:
 - [FALSE_POSITIVE] guidelines-reviewer: "..." — reason: ...
 
 ### Next step
-Ready for /commit.
+Implementation complete. Review the summary above and commit when ready.
 ```
 
 Do not commit. The engineer decides when to commit.
