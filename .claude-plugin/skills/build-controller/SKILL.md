@@ -30,6 +30,19 @@ Write `src/components/{name}/controller/{name}.test.ts`:
 - Uncontrolled mode: state changes on action, event fires
 - Edge cases from the spec (e.g., `multiple: false` closes other items when one opens)
 
+The controller requires a host implementing `ReactiveControllerHost`. Create a minimal mock host in the test file:
+
+```ts
+const mockHost = {
+  addController: vi.fn(),
+  removeController: vi.fn(),
+  requestUpdate: vi.fn(),
+  updateComplete: Promise.resolve(true),
+} satisfies ReactiveControllerHost;
+```
+
+See `src/components/accordion/controller/accordion.test.ts` as a reference if it exists.
+
 Run `npm run test:run -- src/components/{name}/controller/` — confirm tests fail.
 
 ### Step 3 — Implement the controller (GREEN)
@@ -37,6 +50,8 @@ Run `npm run test:run -- src/components/{name}/controller/` — confirm tests fa
 Write `src/components/{name}/controller/index.ts`:
 - Implements `ReactiveController`
 - All state as private fields
+- Constructor calls `host.addController(this)` to register with the host
+- `hostConnected()` / `hostDisconnected()` for setup and teardown of any subscriptions or listeners
 - `syncFromHost(snapshot: HostSnapshot): void` — called in host's `willUpdate`
 - Actions dispatch `CustomEvent` through `this.host`
 - No DOM access — controller must be testable without a browser
@@ -48,7 +63,7 @@ Run tests — confirm they pass.
 
 ### Step 4 — Dispatch `lit-reviewer`
 
-Read `.claude-plugin/reviewers/lit-reviewer/SKILL.md`. Use its content as the Agent prompt. Dispatch as Agent call. Read and inject as context: controller file(s) content, registry file content (if exists), component spec content, `.claude-plugin/refs/lit-patterns.md` content.
+Read `.claude-plugin/reviewers/lit-reviewer/SKILL.md`. Use its content as the Agent prompt. Dispatch as Agent call. Read and inject as context: controller file(s) content, registry file content (if exists), component spec content, `.claude-plugin/refs/lit-patterns.md` content, `.claude-plugin/refs/ssr-contract.md` content.
 
 Fix all blockers. Re-review if any fixes were made. Max 2 iterations. Escalate to `/diagnose-failure` if stuck after 2.
 
