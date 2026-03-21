@@ -1,6 +1,11 @@
 # Grund UI — Engineering Guidelines
 
-Grund UI is a headless, accessible Web Component library built with Lit. "Headless" means zero visual styles — Shadow DOM is used for `<slot>` and `::part()` support, not removed. The reference implementation is the accordion. When in doubt, follow its structure.
+Grund UI is a headless, accessible Web Component library built with Lit. "Headless" means
+zero visual styles — Shadow DOM is used for `<slot>` and `::part()` support, not removed.
+The reference implementation is the accordion. When in doubt, follow its structure.
+
+Detailed patterns and rules live in `.claude-plugin/refs/`. This file contains the
+authoritative architecture and the rules that apply to every change in the codebase.
 
 ---
 
@@ -29,7 +34,7 @@ component/
 **Each layer has one job:**
 
 - **Controller** — owns state, resolves actions, dispatches events through the host. No DOM access.
-- **Registry** — ordered child tracking, sub-part attachment (trigger↔panel). No Lit runtime dependency — plain TypeScript class. May import concrete element types for type safety.
+- **Registry** — ordered child tracking, sub-part attachment (trigger↔panel). No Lit runtime dependency.
 - **Context** — carries reactive state down, action callbacks up. Interfaces designed per consumer role.
 - **Elements** — read context, render templates, delegate actions via context callbacks.
 
@@ -43,15 +48,18 @@ Use these — don't reinvent:
 | `AriaLinkController` | `ariaControlsElements` / `ariaLabelledByElements` | Trigger↔panel, label↔input |
 | `RovingFocusController` | Keyboard-driven roving tabindex | Container element |
 
+Planned controllers (built when first component of that category is built): see `.claude-plugin/refs/component-shapes.md`.
+
 ### Pattern Extraction
 
-**Extract on second use, flag on first.** Implement inline for the first component that needs a pattern. Extract to a shared utility or controller when a second component needs it. Don't abstract prematurely, don't copy-paste twice.
+**Extract on second use, flag on first.** Implement inline for the first component. Extract to a
+shared utility or controller when a second component needs it. Use `/extract-pattern` skill.
 
 ---
 
 ## Component Communication
 
-One canonical mechanism per direction — don't mix paths:
+One canonical mechanism per direction:
 
 | Direction | Mechanism | Example |
 |---|---|---|
@@ -62,43 +70,40 @@ One canonical mechanism per direction — don't mix paths:
 | External API (in) | Public properties on root element | `value`, `disabled`, `multiple` |
 
 **Rules:**
-
-- **Discovery:** Registration via context callbacks only. Never `querySelectorAll` to find child components.
-- **Show/hide:** `data-state="open"/"closed"` via `OpenStateController`. Never use `hidden` for toggle logic — exception: `hidden="until-found"` for browser-native find-in-page support.
-- **Event naming:** `grund-{action}` (e.g. `grund-change`, `grund-open-change`) with `bubbles: true, composed: false`.
-- **ARIA linking:** `AriaLinkController` for all cross-element ARIA relationships.
-- **Keyboard navigation:** `RovingFocusController` on the container element.
-- **No duplicate paths:** A registration or state mutation must happen through exactly one mechanism.
+- Discovery: registration via context callbacks only. Never `querySelectorAll` to find child components.
+- Show/hide: `data-state="open"/"closed"` via `OpenStateController`. Exception: `hidden="until-found"` for browser-native find-in-page.
+- Event naming: `grund-{action}` with `bubbles: true, composed: false`.
+- ARIA linking: `AriaLinkController` for all cross-element ARIA relationships.
+- Keyboard navigation: `RovingFocusController` on the container element.
+- No duplicate paths: a registration or state mutation happens through exactly one mechanism.
 
 ---
 
 ## Context Design
 
-Context interfaces are API contracts. Design them by consumer role, not convenience.
-
-- **State flows down, actions flow up.** Don't put query methods on context that can be derived from state already provided.
-- **Consumers only see what they need.** A trigger doesn't need `registerPanel`. A panel doesn't need `requestToggle`. Split interfaces if roles diverge significantly.
+- **State flows down, actions flow up.** Don't put query methods on context derivable from state.
+- **Consumers only see what they need.** Split interfaces if roles diverge significantly.
 - **No redundant methods.** Every method must earn its place.
-- **Context objects must be stable.** Bind action methods once in the constructor and mutate only the state fields that change — never recreate the whole object each cycle.
-- **Use `@consume` as the default.** Use `ContextConsumer` only when you need the callback — and document why.
-- **Context subscriptions are always `private`.** Expose derived values via public getters if other code needs them.
+- **Context objects must be stable.** Mutate fields — never recreate the whole object each cycle.
+- **Use `@consume` as the default.** Use `ContextConsumer` only when you need the callback — document why.
+- **Context subscriptions are always `private`.** Expose derived values via public getters.
 
 ---
 
 ## Controlled / Uncontrolled Values
 
-Components that own a value (accordion, tabs, select) follow this pattern:
+- **Uncontrolled:** `defaultValue` seeds initial state once. Interactions update internal state.
+- **Controlled:** `value` prop drives state entirely. Internal state does not change — only events fire.
 
-- **Uncontrolled:** `defaultValue` seeds initial state once. Subsequent interactions update internal state.
-- **Controlled:** `value` prop drives state entirely. Internal state does not change on interaction — only events fire. The consumer is responsible for updating `value`.
-
-The root element packages its own properties into a plain `HostSnapshot` object and hands it to the controller via `syncFromHost()` in `willUpdate`. The controller does not reach into reactive properties on the host directly — this keeps it decoupled from Lit's property system and independently testable.
+The root element packages its properties into a `HostSnapshot` object and passes it to the
+controller via `syncFromHost()` in `willUpdate`. The controller never reads reactive properties
+from the host directly.
 
 ---
 
 ## Data Attributes
 
-Data attributes are part of the public API — consumers build CSS selectors and tests against them. Be consistent across all parts of a compound component.
+Data attributes are part of the public API. Be consistent across all parts of a compound component.
 
 | Attribute | Meaning | Set by |
 |---|---|---|
@@ -108,120 +113,108 @@ Data attributes are part of the public API — consumers build CSS selectors and
 | `data-orientation` | Layout axis (`vertical`/`horizontal`) | Root and sub-parts in `willUpdate` |
 | `data-index` | DOM position within the compound | Item in `willUpdate` |
 
-All styling hooks use `data-*` attributes. Never use bare unprefixed attributes (e.g. `expanded`) as CSS hooks.
+All styling hooks use `data-*` attributes. Never use bare unprefixed attributes as CSS hooks.
 
 ---
 
 ## Component Design Rules
 
 - Element prefix: `grund-`
-- Each WAI-ARIA role maps to its own custom element — do not merge compound sub-elements for brevity (e.g. `<grund-accordion-header>` and `<grund-accordion-trigger>` stay separate)
+- Each WAI-ARIA role maps to its own custom element — do not merge compound sub-elements for brevity
 - Shadow DOM on every element, zero visual styles
-- IDs generated with `crypto.randomUUID().slice(0, 8)` — never module-level counters
-- Use `ElementInternals` for form-associated components (Switch, Checkbox, etc.)
+- **IDs:** Accept optional `id` prop from consumers. Derive deterministic IDs from `value` prop where possible. Use `crypto.randomUUID().slice(0, 8)` only inside `connectedCallback` or later — never in constructors or field initializers. See `.claude-plugin/refs/ssr-contract.md` for the full strategy.
+- Use `ElementInternals` for form-associated components. See `.claude-plugin/refs/form-participation.md`.
+- **Dev-mode warnings:** Every compound element that can be structurally misused MUST emit a dev-mode warning. Guard with `if (import.meta.env.DEV)`. Format: `console.warn('[grund-{element}] {problem}. {fix}.')`.
+- Wrap `customElements.define()` with a registration guard: `if (!customElements.get('...'))`.
 
 ---
 
 ## Accessibility
 
-Target: WCAG 2.1 AA. Follow the [WAI-ARIA Authoring Practices Guide (APG)](https://www.w3.org/WAI/ARIA/apg/) pattern for each component type.
+Target: WCAG 2.1 AA. Follow the [WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/) for each component type.
 
 Every component needs:
-
 - Correct `role` and `aria-*` attributes per the relevant APG pattern
-- `RovingFocusController` for composite widgets: Arrow keys move focus within the widget, Tab exits to the next page-level focusable element
+- `RovingFocusController` for composite widgets
 - `AriaLinkController` for trigger↔panel and label↔input ARIA relationships
-- `@csspart` on every interactive and structural shadow element for consumer styling
+- `@csspart` on every interactive and structural shadow element
+- Keyboard contract covered by tests and documented in Storybook
 
-The keyboard contract (which keys do what) must be covered by tests and documented in the component's Storybook story.
+See `.claude-plugin/refs/focus-management.md` for focus management patterns.
 
 ---
 
 ## JSDoc / CEM
 
-JSDoc serves both IDE tooltips and the Custom Elements Manifest (→ Storybook autodocs). Use JSDoc syntax, not TSDoc.
+JSDoc serves IDE tooltips and the Custom Elements Manifest. Use JSDoc syntax, not TSDoc.
 
 **Required on every custom element:**
 
 ```ts
 /**
- * One-sentence description of what this element is.
+ * One-sentence description.
  *
  * @element grund-{name}
  * @slot - Default slot description
- * @fires {CustomEvent<DetailType>} grund-{action} - When this fires and why
+ * @fires {CustomEvent<DetailType>} grund-{action} - When and why
  * @csspart name - What this part wraps
  */
 ```
 
 **Rules:**
-
-- No `{Type}` annotations in `@param`/`@returns` — TypeScript is canonical
-- Document _why_ and _constraints_, not _what_. Omit comments where the name and type are self-evident.
-- First sentence is the IDE autocomplete summary — keep it under ~80 chars
+- No `{Type}` in `@param`/`@returns` — TypeScript is canonical
+- Document why and constraints, not what. Omit where self-evident.
+- First sentence under ~80 chars
 - Booleans: "Whether ..." — never "True if ..."
-- `@internal` on non-public exports (context symbols, internal helpers)
-- `@deprecated` always includes a migration path: `@deprecated Use X instead.`
+- `@internal` on non-public exports
+- `@deprecated` always includes migration path
 
 ---
 
 ## Skills — Workflow Reference
 
-Component development uses skills in `.claude-plugin/skills/`. Superpowers is
-the entry point for all design work. Our skill suite provides the quality gate.
+Skills live in `.claude-plugin/skills/`. Reviewer agents in `.claude-plugin/reviewers/`.
+Reference docs in `.claude-plugin/refs/`. Superpowers is the orchestrator.
 
-### New component
-
+### New component (complex)
 ```
-1. superpowers:design-review          → design spec  → docs/superpowers/specs/
-   /apg {pattern}                     → ARIA contract (feed into Superpowers)
-
-2. /new-component <superpowers-spec>  → API spec     → docs/specs/{name}.spec.md
-                                        (pre-filled from design spec, skips Q&A)
-
-3. /implement                         → parallel generation + 6-reviewer gate + build
+superpowers:brainstorming → /component-spec → /scaffold → /build-controller
+    → /build-elements → /build-stories → /validate-build
 ```
 
-### Modifying an existing component (Superpowers-planned)
-
+### New component (simple, no state)
 ```
-1. superpowers:design-review          → design spec + plan → docs/superpowers/specs/ + plans/
-
-2. superpowers:executing-plans        → implements plan task-by-task, tests at each step
-
-3. /post-plan-review <plan-file>      → reads File Map, runs relevant reviewers,
-                                        patches findings, validates build
+/component-spec → /scaffold → /build-elements → /build-stories → /validate-build
 ```
 
-### Modifying an existing component (ad-hoc)
-
+### Modify existing (planned)
 ```
-/modify-component {name} — {description}   → scoped edit + targeted reviews + build
+superpowers:brainstorming → superpowers:writing-plans
+    → superpowers:executing-plans → /post-plan-review → /validate-build
 ```
 
-Use for small, well-understood changes that don't need Superpowers design
-reasoning. When in doubt, use the Superpowers path.
+### Modify existing (ad-hoc)
+```
+/modify-component {name} — {description}
+```
+
+### Bug fix
+```
+/fix-bug {component} — {description}
+```
+
+### Rebuild to new standards
+```
+/rebuild-component {name}
+```
 
 ### Supporting skills
-
 ```
-/apg {pattern}        → fetch WAI-ARIA APG contract
-/validate-build       → verify build, tests, CEM, lint all pass
-/diagnose-failure     → investigate why a reviewer finding persists
-```
-
-### Review skills
-
-Invoked by `/implement`, `/modify-component`, and `/post-plan-review`:
-
-```
-spec-compliance-reviewer   → Gate 1: spec vs. generated files
-guidelines-reviewer        → CLAUDE.md compliance              ← every change
-security-reviewer          → XSS, listener hygiene, CSP, Shadow DOM safety  ← every change
-performance-reviewer       → render loops, memory leaks, context stability   ← every change
-accessibility-reviewer     → APG pattern, ARIA, keyboard
-api-surface-reviewer       → types, JSDoc, CEM diff
-test-coverage-reviewer     → spec → test mapping
-story-reviewer             → story variants, keyboard docs, autodoc annotations
-consistency-reviewer       → cross-component patterns
+/apg {pattern}              → WAI-ARIA contract
+/validate-build             → lint, build, test, CEM, axe, bundle size
+/diagnose-failure           → investigate persistent reviewer findings
+/extract-pattern            → promote inline pattern to shared controller
+/deprecate                  → mark API deprecated with migration path
+/prepare-release            → semver, changelog, publish
+/review-system-health       → periodic skill/reviewer quality audit
 ```
