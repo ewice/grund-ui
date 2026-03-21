@@ -1,11 +1,11 @@
 ---
 name: "fix-bug"
-description: "Use to fix a reported bug in an existing component. Follows TDD: reproduces in a failing test first, then applies the minimal fix. Use /diagnose-failure if root cause is unclear after reading the code."
+description: "Use to fix a reported defect — something that worked before or violates the spec. TDD mandatory: reproduces in a failing test first, then applies the minimal fix. For intentional behavior changes (new property, changed event, new sub-part), use /modify-component instead."
 ---
 
 ## Overview
 
-Bug → failing test (RED) → root cause → minimal fix (GREEN) → targeted review → `/validate-build`. Never fix a bug without a test that would have caught it.
+Bug → failing test (RED) → root cause → minimal fix (GREEN) → targeted review → cross-component audit → `/validate-build`. Never fix a bug without a test that would have caught it.
 
 ## Usage
 
@@ -51,21 +51,21 @@ All tests must pass. If fixing the bug requires changing other tests: that is a 
 
 ### Step 4 — Targeted review
 
-Read the relevant reviewer SKILL.md files from `.claude-plugin/reviewers/{name}/SKILL.md`. Use each file's content as the Agent prompt. Dispatch as Agent calls. Read and inject the changed file contents as context.
+Read `.claude-plugin/refs/reviewer-dispatch.md` for the change-type selection table and context injection rules. Classify the bug fix by change type (typically "Bug fix", but use "Accessibility or keyboard change" if the fix is ARIA/focus-related, etc.). Select reviewers per the dispatch table.
 
-| Modified layer | Reviewers |
-|---|---|
-| Controller only | `lit-reviewer`, `security-reviewer` |
-| Elements | `lit-reviewer`, `headless-reviewer`, `accessibility-reviewer`, `security-reviewer` |
-| ARIA or focus behavior | `accessibility-reviewer`, `security-reviewer` |
-| Events or types | `api-reviewer`, `security-reviewer` |
-| Tests only | `test-reviewer` |
+Read each selected reviewer's SKILL.md from `.claude-plugin/reviewers/{name}/SKILL.md`. Use its content as the Agent prompt. Dispatch as Agent calls, injecting context per the dispatch table.
 
-### Step 5 — Validate
+### Step 5 — Cross-component audit
+
+If the bug could exist in other components (same pattern, shared controller, or common idiom): run `/audit-cross-component -- {one-sentence description of the pattern}`. Fix all affected components before proceeding.
+
+Skip this step only if the bug is clearly specific to one component's unique logic.
+
+### Step 6 — Validate
 
 Run `/validate-build`.
 
-### Step 6 — Commit
+### Step 7 — Commit
 
 ```bash
 git add <affected files>
@@ -78,3 +78,4 @@ git commit -m "fix({name}): <one-line description of what was fixed>"
 - **Changing unrelated code.** Minimal fix only. Refactoring is a separate commit.
 - **Updating existing tests to pass instead of fixing the code.** Existing tests document intended behavior — update them only if the spec changed.
 - **Skipping `security-reviewer`.** Listener leaks and XSS vectors hide in bug fixes.
+- **Skipping cross-component audit.** If the same pattern exists elsewhere, the same bug exists elsewhere.

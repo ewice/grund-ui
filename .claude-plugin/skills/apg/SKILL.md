@@ -8,7 +8,7 @@ description: "Use when you need the WAI-ARIA Authoring Practices Guide contract
 ## Overview
 
 Fetches the WAI-ARIA APG pattern page and extracts the accessibility contract
-as a structured block. Output is used directly by `new-component` when
+as a structured block. Output is used directly by `/component-spec` when
 constructing the spec.
 
 ## Usage

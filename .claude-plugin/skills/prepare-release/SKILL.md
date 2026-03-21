@@ -27,6 +27,33 @@ Read the CEM diff. Classify the highest-impact change:
 - **Minor** — new public property, event, element, part, or slot; no removals
 - **Patch** — bug fixes, internal refactors, documentation; no API surface changes
 
+**CEM snapshot diff (breaking change safety net):** If a previous release tag exists, diff the current CEM against the last release's CEM to catch accidental API removals:
+
+```bash
+# Get CEM from last release tag
+LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
+if [ -n "$LAST_TAG" ]; then
+  git show "$LAST_TAG:custom-elements.json" > /tmp/cem-previous.json 2>/dev/null
+  # Compare public API surface: element names, property names, event names, part names
+  node --input-type=module <<'DIFF'
+  import { readFileSync } from 'fs';
+  const prev = JSON.parse(readFileSync('/tmp/cem-previous.json', 'utf8'));
+  const curr = JSON.parse(readFileSync('custom-elements.json', 'utf8'));
+  const getNames = (cem) => (cem.modules || []).flatMap(m =>
+    (m.declarations || []).filter(d => d.customElement).map(d => d.name)
+  );
+  const removed = getNames(prev).filter(n => !getNames(curr).includes(n));
+  if (removed.length) {
+    console.error('REMOVED elements:', removed.join(', '));
+    process.exit(1);
+  }
+  console.log('CEM snapshot diff: no removals detected');
+DIFF
+fi
+```
+
+If removals are detected in a non-major release: **stop** and surface to the engineer.
+
 If `@changesets/cli` is configured (`package.json` has `@changesets/cli`): run `npx changeset version` and follow its output instead of the above.
 
 ### Step 2 — Generate changelog

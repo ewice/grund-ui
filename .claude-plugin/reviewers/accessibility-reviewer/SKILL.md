@@ -67,3 +67,12 @@ Return a single JSON object:
 `blockers` = WCAG violations (must fix). `warnings` = APG recommendations (should fix). `notes` = observations.
 
 Set `verdict` to `"FAIL"` if any blockers are present.
+
+## axe-core False-Positive Allow-List
+
+If a finding is a known axe-core false positive for this component pattern (e.g., axe flags a valid APG pattern as a violation), do NOT mark it as a blocker. Instead:
+- Add it to `notes` with prefix `[axe-false-positive]`
+- Ensure a corresponding entry exists in `docs/axe-allow-list.md` (component, rule ID, justification referencing the APG spec)
+- If no allow-list entry exists: flag as a warning asking the engineer to document it
+
+This prevents global axe rule suppression while handling legitimate spec disagreements per component.

@@ -211,10 +211,12 @@ superpowers:brainstorming → superpowers:writing-plans
 ### Supporting skills
 ```
 /apg {pattern}              → WAI-ARIA contract
-/validate-build             → lint, build, test, CEM, axe, bundle size
+/validate-build             → lint, build, test, CEM, exports, bundle size
 /diagnose-failure           → investigate persistent reviewer findings
 /extract-pattern            → promote inline pattern to shared controller
 /deprecate                  → mark API deprecated with migration path
+/audit-cross-component      → check if a bug/pattern affects multiple components
+/update-dependency          → safe dependency version bump with migration
 /prepare-release            → semver, changelog, publish
 /review-system-health       → periodic skill/reviewer quality audit
 ```

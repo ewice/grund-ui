@@ -23,39 +23,17 @@ Read the plan file. Extract:
 
 1. **File Map** — all files listed as `Create:`, `Modify:`, or `Delete:`. These are the files the reviewers will scope to.
 
-2. **Change types** — read the task titles and classify:
-
-| Keyword in titles | Change type |
-|---|---|
-| "API", "property", "event", "interface", "type", "export" | `api` |
-| "ARIA", "keyboard", "accessibility", "role", "focus" | `accessibility` |
-| "element", "compound", "sub-part", "register" | `new-element` |
-| "fix", "restore", "broken", "missing" | `bugfix` |
-| "refactor", "rename", "remove", "replace" | `refactor` |
-| "controller", "context", "lifecycle", "willUpdate" | `internal` |
-
-A plan may have multiple change types.
+2. **Change types** — read the task titles and classify using the keyword-to-change-type mapping in `.claude-plugin/refs/reviewer-dispatch.md`. A plan may have multiple change types.
 
 3. **Component spec** — check whether `docs/specs/{name}.spec.md` exists. If found, pass it to `api-reviewer` and `accessibility-reviewer`.
 
 ### Phase 2 — Select reviewers
 
-| Change type | Reviewers to run |
-|---|---|
-| `api` | `api-reviewer`, `lit-reviewer`, `security-reviewer` |
-| `accessibility` | `accessibility-reviewer`, `lit-reviewer`, `test-reviewer`, `security-reviewer` |
-| `new-element` | All 6 reviewers |
-| `bugfix` | `lit-reviewer`, `test-reviewer`, `security-reviewer` |
-| `refactor` | `lit-reviewer`, `security-reviewer` |
-| `internal` | `lit-reviewer`, `security-reviewer` |
-
-If the plan touches files across 3+ change types, or modifies more than 5 files: run all 6 reviewers.
-
-`security-reviewer` runs for every change type.
+Use the change-type selection table in `.claude-plugin/refs/reviewer-dispatch.md` to determine which reviewers to run.
 
 ### Phase 3 — Run reviewers (parallel)
 
-Read each selected reviewer's SKILL.md from `.claude-plugin/reviewers/{name}/SKILL.md`. Use its content as the Agent prompt. Dispatch all selected reviewers as simultaneous Agent calls. Read and inject as context: changed file contents, component spec content (if exists), relevant ref doc contents per reviewer.
+Read `.claude-plugin/refs/reviewer-dispatch.md` for context injection rules. Read each selected reviewer's SKILL.md from `.claude-plugin/reviewers/{name}/SKILL.md`. Use its content as the Agent prompt. Dispatch all selected reviewers as simultaneous Agent calls, injecting context per the dispatch table.
 
 ### Phase 4 — Patch loop
 

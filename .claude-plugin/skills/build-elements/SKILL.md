@@ -61,32 +61,13 @@ Run tests — confirm they pass.
 
 ### Step 4 — Run all 6 reviewers in parallel
 
-Read all 6 reviewer SKILL.md files:
-- `.claude-plugin/reviewers/accessibility-reviewer/SKILL.md`
-- `.claude-plugin/reviewers/lit-reviewer/SKILL.md`
-- `.claude-plugin/reviewers/headless-reviewer/SKILL.md`
-- `.claude-plugin/reviewers/api-reviewer/SKILL.md`
-- `.claude-plugin/reviewers/test-reviewer/SKILL.md`
-- `.claude-plugin/reviewers/security-reviewer/SKILL.md`
+Read `.claude-plugin/refs/reviewer-dispatch.md` for the canonical context injection table and patch loop rules.
 
-Use each file's content as the Agent prompt. Dispatch all 6 as simultaneous Agent calls:
-
-| Reviewer | Read and inject as context |
-|---|---|
-| `accessibility-reviewer` | All element file contents, full component spec content (contains the APG contract — keyboard interactions, roles, ARIA attributes), `.claude-plugin/refs/focus-management.md` content |
-| `lit-reviewer` | All element file contents, `.claude-plugin/refs/lit-patterns.md` content, `.claude-plugin/refs/ssr-contract.md` content |
-| `headless-reviewer` | All element file contents, `.claude-plugin/refs/headless-contract.md` content, `docs/vocabulary.md` content |
-| `api-reviewer` | All element file contents, `types.ts` content, `docs/vocabulary.md` content |
-| `test-reviewer` | Test file content, `.claude-plugin/refs/test-patterns.md` content, component spec content |
-| `security-reviewer` | All element file contents, controller file content |
+Read all 6 reviewer SKILL.md files from `.claude-plugin/reviewers/{name}/SKILL.md`. Use each file's content as the Agent prompt. Dispatch all 6 as simultaneous Agent calls, injecting context files per the dispatch table.
 
 Note: Storybook story files do not exist at this step — `test-reviewer` checklist items covering `play` functions and story coverage are deferred to the test-reviewer run inside `/build-stories`.
 
-Collect all findings. For each reviewer with blockers:
-1. Fix the blockers
-2. Re-run only that reviewer (not the full fleet)
-3. Max 2 patch iterations per reviewer
-4. If blockers persist after 2: invoke `/diagnose-failure` and surface to engineer
+Collect all findings and follow the patch loop rules from `reviewer-dispatch.md`.
 
 ### Step 5 — Commit
 

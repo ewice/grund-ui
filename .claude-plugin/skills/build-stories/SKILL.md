@@ -1,11 +1,11 @@
 ---
 name: "build-stories"
-description: "Use after /build-elements to create Storybook stories covering all spec variants, play functions, and RTL story. Runs test-reviewer on stories. Final step before /validate-build."
+description: "Use after /build-elements to create Storybook stories covering all spec variants, play functions, and RTL story. Runs test-reviewer and api-reviewer on stories. Final step before /validate-build."
 ---
 
 ## Overview
 
-Builds the full Storybook story file: all spec variants, keyboard play functions, RTL story, and autodoc annotations. test-reviewer gate ensures coverage is complete.
+Builds the full Storybook story file: all spec variants, keyboard play functions, RTL story, and autodoc annotations. Reviewer gate ensures coverage and documentation alignment.
 
 ## Usage
 
@@ -80,13 +80,14 @@ The `play` function must cover:
   ```
 - Story `name` as plain English description of the variant
 
-### Step 3 — Dispatch `test-reviewer`
+### Step 3 — Dispatch reviewers (parallel)
 
-Read `.claude-plugin/reviewers/test-reviewer/SKILL.md`. Use its content as the Agent prompt. Dispatch as Agent call. Read and inject as context: story file content, unit test file content, component spec content, `.claude-plugin/refs/test-patterns.md` content.
+Read `.claude-plugin/reviewers/test-reviewer/SKILL.md` and `.claude-plugin/reviewers/api-reviewer/SKILL.md`. Use each file's content as the Agent prompt. Dispatch both as parallel Agent calls:
 
-Note: this is the first run where the `test-reviewer` sees both unit tests AND story files together. It will re-evaluate unit test checklist items (1–15) in addition to story coverage items (16–17). Fix blockers in either category.
+- **test-reviewer**: inject story file, unit test file, component spec, `.claude-plugin/refs/test-patterns.md`. Note: this is the first run where the `test-reviewer` sees both unit tests AND story files together. It will re-evaluate unit test checklist items (1–15) in addition to story coverage items (16–17).
+- **api-reviewer**: inject story file, element files, `types.ts`, component spec, `docs/vocabulary.md`. Focus: argTypes alignment with public properties, autodoc JSDoc tag completeness.
 
-Fix all blockers. Re-review after fixes. Max 2 patch iterations. Escalate to `/diagnose-failure` if blockers persist after 2.
+Fix all blockers from both reviewers. Re-review after fixes. Max 2 patch iterations. Escalate to `/diagnose-failure` if blockers persist after 2.
 
 ### Step 4 — Commit
 

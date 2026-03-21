@@ -1,6 +1,6 @@
 ---
 name: "component-spec"
-description: "Use to author a complete component specification before building. Run with --from <design-spec-path> to parse a Superpowers design spec, or interactively without arguments. Replaces /new-component. Outputs docs/specs/{name}.spec.md."
+description: "Use to author a complete component specification before building. Run with --from <design-spec-path> to parse a Superpowers design spec, or interactively without arguments. Outputs docs/specs/{name}.spec.md."
 ---
 
 ## Overview

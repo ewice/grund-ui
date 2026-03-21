@@ -10,6 +10,9 @@ import {
 } from '../context';
 import { generateId } from '../../../utils/id';
 import { accordionItemStyles } from './accordion-item.styles';
+
+/** Sentinel value indicating no consumer-provided value was set. */
+const NO_VALUE = '';
 import type { GrundAccordionTrigger } from '../trigger/accordion-trigger';
 import type { GrundAccordionPanel } from '../panel/accordion-panel';
 
@@ -30,7 +33,7 @@ export class GrundAccordionItem extends LitElement {
 
   /** Unique value identifying this item. */
   @property()
-  public value: string = generateId('accordion-item');
+  public value: string = NO_VALUE;
 
   @consume({ context: accordionContext, subscribe: true })
   private accordionCtx?: AccordionContextValue;
@@ -99,6 +102,14 @@ export class GrundAccordionItem extends LitElement {
     };
   }
 
+  public override connectedCallback() {
+    super.connectedCallback();
+
+    if (this.value === NO_VALUE) {
+      this.value = generateId('accordion-item');
+    }
+  }
+
   public override disconnectedCallback() {
     super.disconnectedCallback();
     this.accordionCtx?.unregisterItem(this);
@@ -144,7 +155,6 @@ export class GrundAccordionItem extends LitElement {
   }
 
   private syncAttributes(): void {
-    this.toggleAttribute('expanded', this.expanded);
     this.toggleAttribute('data-open', this.expanded);
     this.toggleAttribute('data-disabled', this.itemCtx.disabled);
 

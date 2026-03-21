@@ -15,6 +15,11 @@ Keeps the skill system sharp. Identifies patterns that recur in reviewer finding
 
 Run after every 3rd new component, or whenever reviewers are producing many blockers per component.
 
+**Trigger guidance:** Nothing auto-triggers this skill. Run it:
+- After building component #3, #6, #9, etc. (the `/validate-build` summary reminds you)
+- When the patch loop in `/build-elements` or `/post-plan-review` hits iteration 2 repeatedly
+- On demand when the skill system feels noisy or stale
+
 ## Implementation
 
 ### Step 1 — Collect recent reviewer findings

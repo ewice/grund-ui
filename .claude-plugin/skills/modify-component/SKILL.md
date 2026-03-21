@@ -1,18 +1,23 @@
 ---
 name: "modify-component"
-description: "Use when changing an existing component — adding a property, changing an event, fixing a bug, or adding a sub-part. Runs a targeted subset of the 6 reviewers based on what changed. Use instead of /build-elements for changes to existing components."
+description: "Use for intentional behavior changes to an existing component — adding a property, changing an event, or adding a sub-part. Spec update likely. For reported defects, use /fix-bug instead. Runs a targeted subset of the 6 reviewers based on what changed."
 ---
 
 ## Overview
 
-Scoped changes to existing components. Only the reviewers relevant to the change type run — not the full fleet. Faster than `/build-elements` for isolated changes.
+Intentional changes to existing components — new API surface, changed behavior, new sub-parts. Only the reviewers relevant to the change type run — not the full fleet. Faster than `/build-elements` for isolated changes.
+
+**When to use which skill:**
+- **`/modify-component`** — intentional behavior change (new property, changed event, new sub-part). Spec update likely.
+- **`/fix-bug`** — reported defect (something broken or violating spec). TDD mandatory.
+- **`superpowers:executing-plans` + `/post-plan-review`** — when a Superpowers plan already exists.
 
 ## Usage
 
 ```
 /modify-component accordion -- add loopFocus property
-/modify-component tabs -- fix keyboard navigation in horizontal mode
 /modify-component dialog -- add hidden-until-found support
+/modify-component tabs -- change orientation to support both vertical and horizontal
 ```
 
 ## Implementation
@@ -33,7 +38,6 @@ If a Superpowers plan exists for this change (`docs/superpowers/plans/`): use `s
 | New property on item | `item/`, context, `types.ts`, test, story |
 | New event | controller, `types.ts`, dispatch element, test |
 | New sub-part element | New element file, context (add registration), registry, test |
-| Bug fix | Typically controller or element + test |
 | Keyboard change | Root element (RovingFocusController config), test |
 
 List the affected files explicitly. Do not touch unaffected files.
@@ -44,18 +48,7 @@ Edit the affected files. Follow existing patterns in the component. Reference th
 
 ### Phase 4 — Targeted review
 
-Read the relevant reviewer SKILL.md files from `.claude-plugin/reviewers/{name}/SKILL.md`. Use each file's content as the Agent prompt. Dispatch as Agent calls. Read and inject the changed file contents as context.
-
-| Change type | Reviewers to run |
-|---|---|
-| New or changed property/event (API change) | `api-reviewer`, `lit-reviewer`, `security-reviewer` |
-| New or changed element (structural change) | `lit-reviewer`, `headless-reviewer`, `accessibility-reviewer`, `security-reviewer` |
-| Accessibility or keyboard change | `accessibility-reviewer`, `lit-reviewer`, `test-reviewer`, `security-reviewer` |
-| Bug fix | `lit-reviewer`, `security-reviewer`, `test-reviewer` |
-| New sub-part | All 6 reviewers |
-| Code style / refactor only | `lit-reviewer`, `security-reviewer` |
-
-`security-reviewer` runs for every change type — event listener leaks and XSS vectors appear in refactors and bug fixes.
+Read `.claude-plugin/refs/reviewer-dispatch.md` for the change-type selection table and context injection rules. Select reviewers based on the change type identified in Phase 2. Read each selected reviewer's SKILL.md from `.claude-plugin/reviewers/{name}/SKILL.md`. Use its content as the Agent prompt. Dispatch as Agent calls, injecting context per the dispatch table.
 
 Fix blockers inline. The patch loop (multiple subagents) is for `/build-elements` bulk generation — for focused changes, fix directly.
 

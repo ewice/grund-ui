@@ -1,11 +1,15 @@
 ---
 name: "rebuild-component"
-description: "Use to bring an existing component up to current standards. Audits against CLAUDE.md, ref docs, and vocabulary, then produces a rebuild plan via superpowers:writing-plans. Planning skill only — does not implement."
+description: "Audit→plan shortcut: audits an existing component against current standards and produces a gap list fed directly into superpowers:writing-plans. Use instead of running brainstorming + writing-plans manually when the goal is standards alignment, not new features. Planning only — does not implement."
 ---
 
 ## Overview
 
-Audits the existing component, produces a gap list, and generates a rebuild plan. The plan guides complete reimplementation using the current pipeline, with existing tests as the regression baseline. This skill produces a plan — not code.
+Audits the existing component against current standards, produces a structured gap list, and feeds it directly into `superpowers:writing-plans`. This is a **shortcut** for the `brainstorming → writing-plans` workflow when the goal is standards alignment rather than new feature design. The plan guides reimplementation using the generation pipeline, with existing tests as the regression baseline. This skill produces a plan — not code.
+
+**When to use which:**
+- **`/rebuild-component`** — bring an existing component up to current standards (audit-driven, no new features)
+- **`superpowers:brainstorming` → `superpowers:writing-plans`** — new features, design exploration, or changes that need creative problem-solving
 
 ## Usage
 

@@ -136,7 +136,7 @@ describe('grund-accordion', () => {
       await flush(el);
 
       const item = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
-      expect(item.hasAttribute('expanded')).toBe(true);
+      expect(item.hasAttribute('data-open')).toBe(true);
     });
 
     it('collapses the previous item in single mode', async () => {
@@ -148,8 +148,8 @@ describe('grund-accordion', () => {
 
       const item1 = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
       const item2 = el.querySelector('grund-accordion-item[value="item-2"]') as HTMLElement;
-      expect(item1.hasAttribute('expanded')).toBe(false);
-      expect(item2.hasAttribute('expanded')).toBe(true);
+      expect(item1.hasAttribute('data-open')).toBe(false);
+      expect(item2.hasAttribute('data-open')).toBe(true);
     });
 
     it('does not expand a disabled item', async () => {
@@ -158,7 +158,7 @@ describe('grund-accordion', () => {
       await flush(el);
 
       const item = el.querySelector('grund-accordion-item[value="item-3"]') as HTMLElement;
-      expect(item.hasAttribute('expanded')).toBe(false);
+      expect(item.hasAttribute('data-open')).toBe(false);
     });
 
     it('collapses the item when its trigger is clicked again', async () => {
@@ -169,7 +169,7 @@ describe('grund-accordion', () => {
       await flush(el);
 
       const item = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
-      expect(item.hasAttribute('expanded')).toBe(false);
+      expect(item.hasAttribute('data-open')).toBe(false);
     });
   });
 
@@ -199,8 +199,8 @@ describe('grund-accordion', () => {
       await flush(el);
 
       const items = el.querySelectorAll('grund-accordion-item');
-      expect(items[0]?.hasAttribute('expanded')).toBe(true);
-      expect(items[1]?.hasAttribute('expanded')).toBe(true);
+      expect(items[0]?.hasAttribute('data-open')).toBe(true);
+      expect(items[1]?.hasAttribute('data-open')).toBe(true);
     });
   });
 
@@ -314,14 +314,14 @@ describe('grund-accordion', () => {
       toggle?.click();
       await flush(el);
 
-      expect(getItem(el, 'item-1').hasAttribute('expanded')).toBe(true);
-      expect(getItem(el, 'item-2').hasAttribute('expanded')).toBe(false);
+      expect(getItem(el, 'item-1').hasAttribute('data-open')).toBe(true);
+      expect(getItem(el, 'item-2').hasAttribute('data-open')).toBe(false);
 
       open?.click();
       await flush(el);
 
-      expect(getItem(el, 'item-1').hasAttribute('expanded')).toBe(false);
-      expect(getItem(el, 'item-2').hasAttribute('expanded')).toBe(true);
+      expect(getItem(el, 'item-1').hasAttribute('data-open')).toBe(false);
+      expect(getItem(el, 'item-2').hasAttribute('data-open')).toBe(true);
     });
 
     it('registers trigger and panel children that mount after the item', async () => {
@@ -650,14 +650,14 @@ describe('grund-accordion', () => {
       `);
       await flush(el);
 
-      expect(getItem(el, 'item-1').hasAttribute('expanded')).toBe(false);
-      expect(getItem(el, 'item-2').hasAttribute('expanded')).toBe(true);
+      expect(getItem(el, 'item-1').hasAttribute('data-open')).toBe(false);
+      expect(getItem(el, 'item-2').hasAttribute('data-open')).toBe(true);
 
       el.defaultValue = 'item-1';
       await flush(el);
 
-      expect(getItem(el, 'item-1').hasAttribute('expanded')).toBe(false);
-      expect(getItem(el, 'item-2').hasAttribute('expanded')).toBe(true);
+      expect(getItem(el, 'item-1').hasAttribute('data-open')).toBe(false);
+      expect(getItem(el, 'item-2').hasAttribute('data-open')).toBe(true);
     });
 
     it('switches from single to multiple mode at runtime', async () => {
@@ -672,8 +672,8 @@ describe('grund-accordion', () => {
 
       const item1 = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
       const item2 = el.querySelector('grund-accordion-item[value="item-2"]') as HTMLElement;
-      expect(item1.hasAttribute('expanded')).toBe(true);
-      expect(item2.hasAttribute('expanded')).toBe(true);
+      expect(item1.hasAttribute('data-open')).toBe(true);
+      expect(item2.hasAttribute('data-open')).toBe(true);
     });
 
     it('keeps an open item expanded when its value changes', async () => {
@@ -708,7 +708,7 @@ describe('grund-accordion', () => {
       item.value = 'item-1-renamed';
       await flush(el);
 
-      expect(item.hasAttribute('expanded')).toBe(true);
+      expect(item.hasAttribute('data-open')).toBe(true);
       expect(openHandler).not.toHaveBeenCalled();
 
       getTriggerButton(el, 1)?.click();
@@ -751,7 +751,7 @@ describe('grund-accordion', () => {
       await flush(el);
 
       expect((item as unknown as { value: string }).value).toBe('item-1-renamed');
-      expect(item.hasAttribute('expanded')).toBe(false);
+      expect(item.hasAttribute('data-open')).toBe(false);
       expect(handler).toHaveBeenCalledOnce();
       expect(handler.mock.calls[0][0].detail).toEqual({
         value: [],
@@ -768,7 +768,7 @@ describe('grund-accordion', () => {
       getTriggerButton(el, 0)?.click();
       await flush(el);
 
-      expect(item1.hasAttribute('expanded')).toBe(true);
+      expect(item1.hasAttribute('data-open')).toBe(true);
 
       item1.remove();
       await flush(el);
@@ -800,7 +800,7 @@ describe('grund-accordion', () => {
       await flush(el);
 
       const item2 = el.querySelector('grund-accordion-item[value="item-2"]') as HTMLElement;
-      expect(item2.hasAttribute('expanded')).toBe(true);
+      expect(item2.hasAttribute('data-open')).toBe(true);
     });
 
     it('expands multiple items when defaultValue is an array in multiple mode', async () => {
@@ -824,8 +824,8 @@ describe('grund-accordion', () => {
 
       const item1 = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
       const item2 = el.querySelector('grund-accordion-item[value="item-2"]') as HTMLElement;
-      expect(item1.hasAttribute('expanded')).toBe(true);
-      expect(item2.hasAttribute('expanded')).toBe(true);
+      expect(item1.hasAttribute('data-open')).toBe(true);
+      expect(item2.hasAttribute('data-open')).toBe(true);
     });
   });
 
@@ -858,8 +858,8 @@ describe('grund-accordion', () => {
       getTriggerButton(el, 1)?.click();
       await flush(el);
 
-      expect(getItem(el, 'item-1').hasAttribute('expanded')).toBe(true);
-      expect(getItem(el, 'item-2').hasAttribute('expanded')).toBe(false);
+      expect(getItem(el, 'item-1').hasAttribute('data-open')).toBe(true);
+      expect(getItem(el, 'item-2').hasAttribute('data-open')).toBe(false);
       expect(changeHandler).toHaveBeenCalledOnce();
       expect(changeHandler.mock.calls[0][0].detail).toEqual({ value: 'item-2', expanded: true });
       expect(valueHandler).toHaveBeenCalledOnce();
@@ -890,12 +890,12 @@ describe('grund-accordion', () => {
       await flush(el);
 
       const item1 = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
-      expect(item1.hasAttribute('expanded')).toBe(true);
+      expect(item1.hasAttribute('data-open')).toBe(true);
 
       getTriggerButton(el, 1)?.click();
       await flush(el);
 
-      expect(item1.hasAttribute('expanded')).toBe(true);
+      expect(item1.hasAttribute('data-open')).toBe(true);
     });
 
     it('fires grund-change with the requested state in controlled mode', async () => {
@@ -1052,7 +1052,7 @@ describe('grund-accordion', () => {
       await flush(el);
 
       const item = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
-      expect(item.hasAttribute('expanded')).toBe(true);
+      expect(item.hasAttribute('data-open')).toBe(true);
     });
 
     it('does not open a disabled root accordion when beforematch fires', async () => {
@@ -1073,7 +1073,7 @@ describe('grund-accordion', () => {
       await flush(el);
 
       const item = el.querySelector('grund-accordion-item[value="item-1"]') as HTMLElement;
-      expect(item.hasAttribute('expanded')).toBe(false);
+      expect(item.hasAttribute('data-open')).toBe(false);
     });
 
     it('applies Base UI-style data attributes across the parts', async () => {

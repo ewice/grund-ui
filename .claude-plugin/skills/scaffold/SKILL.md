@@ -1,11 +1,11 @@
 ---
 name: "scaffold"
-description: "Use after /component-spec to create directory structure, types.ts, context interfaces, and barrel exports. Runs api-reviewer and headless-reviewer on scaffold output. Next step after /component-spec."
+description: "Use after /component-spec to create directory structure, types.ts, context interfaces, and barrel exports. Validates structure only — reviewer gates run in /build-elements where there is real code to review. Next step after /component-spec."
 ---
 
 ## Overview
 
-Creates the file skeleton: directories, `types.ts` with all public interfaces, `context/` interfaces, and barrel `index.ts` files. No logic — just structure and types. Reviewer gate ensures the API surface is correct before any logic is written.
+Creates the file skeleton: directories, `types.ts` with all public interfaces, `context/` interfaces, and barrel `index.ts` files. No logic — just structure and types. Structural validation only — full reviewer gates run in `/build-elements` where there is real code to review.
 
 ## Usage
 
@@ -83,14 +83,17 @@ Create `src/components/{name}/index.ts`:
 - Re-export all element classes from their stub files
 - Re-export all public types from `types.ts`
 
-### Step 7 — Run reviewer gate (parallel)
+### Step 7 — Structural validation
 
-Read `.claude-plugin/reviewers/api-reviewer/SKILL.md` and `.claude-plugin/reviewers/headless-reviewer/SKILL.md`. Use each file's content as the Agent prompt. Dispatch both as parallel Agent calls:
+Verify before committing:
+- All directories from the spec's category exist
+- `types.ts` exports all event detail interfaces and `HostSnapshot`
+- `context/index.ts` exports the context key and interface
+- Barrel `index.ts` re-exports all element classes and public types
+- Every element stub has the `customElements.define()` guard
+- All names in `types.ts` and `context/index.ts` match vocabulary registry entries
 
-- **api-reviewer**: prompt = `api-reviewer` SKILL.md content; read and inject as context: `types.ts` content, `context/index.ts` content, component spec content, `docs/vocabulary.md` content
-- **headless-reviewer**: prompt = `headless-reviewer` SKILL.md content; read and inject as context: `types.ts` content, component spec content, `.claude-plugin/refs/headless-contract.md` content
-
-Collect findings. Fix all blockers before proceeding. Note warnings for follow-up.
+No reviewer agents run at this step — element stubs have no logic to review. Full reviewer gates run in `/build-elements`.
 
 ### Step 8 — Commit
 

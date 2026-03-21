@@ -1,6 +1,6 @@
 ---
 name: "audit-cross-component"
-description: "Use when a bug or pattern issue may affect multiple components. Dispatches one subagent per component to check for the same issue. Returns consolidated findings. Called by /fix-bug and /update-dependency."
+description: "Use when a bug or pattern issue may affect multiple components. Dispatches one subagent per component to check for the same issue. Returns consolidated findings. Called by /fix-bug (Step 5) and /update-dependency (Step 8), or invoked directly."
 ---
 
 ## Overview
