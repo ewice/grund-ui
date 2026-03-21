@@ -52,7 +52,7 @@ The caller provides `refs/headless-contract.md`. Cross-reference rule numbers in
 23. Every interactive state (focused, expanded, disabled) communicates via `outline`/`border`/text decoration — not color alone.
 
 ### Consumer Styling Reachability
-24. Verify the full `exportparts` chain: `grund-{component}::part({name})` resolves from outside without intermediate CSS.
+24. Every element that carries visual significance (interactive states, decoration, slottable content) exposes at least one `part` attribute — no visually significant element is left unstyable by consumers.
 
 ## Output Format
 
