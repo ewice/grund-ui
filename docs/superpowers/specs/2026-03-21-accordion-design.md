@@ -238,7 +238,7 @@ interface AccordionItemContext {
 
 | Property | Type | Default | Attribute |
 |---|---|---|---|
-| `value` | `string` | auto-generated | `value` |
+| `value` | `string` | `''` (see below) | `value` |
 | `disabled` | `boolean` | `false` | `disabled` |
 
 **Events:**
@@ -246,6 +246,8 @@ interface AccordionItemContext {
 | Event | Detail | When |
 |---|---|---|
 | `grund-open-change` | `{ open: boolean, value: string, index: number }` | Item open state changes (after mount) |
+
+**Value auto-generation:** Consumer-provided `value` is strongly preferred — ARIA IDs are derived from it and must be deterministic for SSR. If `value` is empty when `connectedCallback` fires, fall back to `crypto.randomUUID().slice(0, 8)` and emit a dev-mode warning: `'[grund-accordion-item] No value provided. Set value="..." for SSR-safe, deterministic IDs.'`
 
 **Data attributes:** `data-open`, `data-disabled`, `data-index`
 
@@ -276,7 +278,7 @@ interface AccordionItemContext {
 - Visibility:
   - Default (closed): removed from DOM entirely
   - `keepMounted`: stays in DOM with `hidden` attribute
-  - `hiddenUntilFound`: uses `hidden="until-found"` for browser find-in-page
+  - `hiddenUntilFound`: uses `hidden="until-found"` for browser find-in-page. Panel listens for the `beforematch` event and calls `toggle()` to expand the item when the browser reveals the content via find-in-page
 - `willUpdate`: sets `data-open`, `data-disabled`, `data-state="open"/"closed"` (inline, no OpenStateController), `data-orientation`, `data-index`
 - Panel-level `keepMounted` and `hiddenUntilFound` properties override the root-level defaults when set
 - Registers/unregisters panel with item context

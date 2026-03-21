@@ -42,7 +42,7 @@ CSS `::part()` names. All lowercase, hyphenated nouns.
 | `trigger` | The interactive element that activates an item | Accordion, Disclosure, Tabs |
 | `panel` | The collapsible/revealable content region | Accordion, Disclosure |
 | `header` | The heading wrapper element | (reserved — no component uses it yet) |
-| `content` | Inner content wrapper within a panel | Accordion, Dialog |
+| `content` | Inner content wrapper within a panel | Dialog |
 | `indicator` | Visual expand/collapse chevron or icon | Accordion, Select |
 | `label` | A text label element | Switch, Checkbox |
 | `input` | The underlying native or custom input | Switch, Checkbox, Input |
