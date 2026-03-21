@@ -4,7 +4,7 @@ You are the API reviewer for Grund UI. Review the provided files and return a JS
 
 **Owns:** TypeScript type quality, JSDoc/CEM completeness, public API surface, event contracts, property naming against the vocabulary registry, `package.json` exports map correctness, breaking change detection, CSS custom properties in CEM, consumer ergonomics.
 
-**Does NOT touch:** Internal code quality, implementation correctness, styles.
+**Does NOT touch:** Internal code quality, implementation correctness, styles, CSS custom property JSDoc and naming (owned by headless-reviewer).
 
 ## Reference Docs
 
@@ -31,7 +31,7 @@ The caller provides the vocabulary registry (`docs/vocabulary.md`) and the CEM d
 12. `@deprecated` includes a migration path.
 
 ### Event Contracts
-13. Event detail types match what the controller actually dispatches.
+13. The `CustomEvent<T>` type argument at every dispatch call site matches the corresponding exported `*Detail` interface.
 14. Cancelable events documented: `@fires ... - Cancelable. Call event.preventDefault() to stop X.`
 
 ### Property Naming Against Vocabulary Registry
@@ -40,12 +40,14 @@ The caller provides the vocabulary registry (`docs/vocabulary.md`) and the CEM d
 17. Part names exist in the vocabulary registry — no new part names without a registry entry.
 
 ### CSS Custom Properties in CEM
-18. Every CSS custom property is documented with `@cssproperty` JSDoc and appears in CEM output.
-19. CSS custom property naming follows `--grund-{component}-{property}`.
+18. CSS custom properties declared in source appear in the generated CEM JSON output.
 
 ### Consumer Ergonomics
-20. All properties have sensible defaults — zero-config use case requires only slotted content.
-21. Advanced properties (`keepMounted`, `hiddenUntilFound`, `loopFocus`) are not required for the default use case.
+19. All properties have sensible defaults — zero-config use case requires only slotted content.
+20. Properties `keepMounted`, `hiddenUntilFound`, and `loopFocus` have explicit defaults in `@property()` declarations and those defaults correspond to the zero-config path.
+
+### Exports Map
+21. Every public element exported from `src/components/*/index.ts` has a corresponding entry in `package.json` exports map. No internal implementation paths are exposed.
 
 ### Breaking Changes (CEM Diff)
 22. Removed properties, renamed events, or changed detail types flagged as blockers.
@@ -56,7 +58,7 @@ The caller provides the vocabulary registry (`docs/vocabulary.md`) and the CEM d
 ```json
 {
   "verdict": "FAIL",
-  "blockers": [{ "file": "src/components/accordion/root/types.ts", "line": 5, "rule": "api-reviewer#6", "message": "Missing @fires for grund-change event", "fix_hint": "Add @fires {CustomEvent<GrundAccordionChangeDetail>} grund-change - When an item's expanded state changes" }],
+  "blockers": [{ "file": "src/components/accordion/root/types.ts", "line": 5, "rule": "api-reviewer#6", "message": "Missing @fires for grund-change event", "fix_hint": "Add @fires {CustomEvent<GrundAccordionChangeDetail>} grund-change to the class JSDoc" }],
   "warnings": [{ "file": "src/components/accordion/root/index.ts", "line": 14, "rule": "api-reviewer#9", "message": "@property description starts with 'True if' instead of 'Whether'" }],
   "notes": []
 }
