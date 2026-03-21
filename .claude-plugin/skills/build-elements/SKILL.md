@@ -22,7 +22,7 @@ Always read:
 - `docs/vocabulary.md`
 - `.claude-plugin/refs/lit-patterns.md`
 - `.claude-plugin/refs/headless-contract.md`
-- `.claude-plugin/refs/consumer-dx.md`
+- `.claude-plugin/refs/consumer-dx.md` (implementation guidance only — not passed to reviewers)
 
 Read conditionally based on category:
 - Form control: `.claude-plugin/refs/form-participation.md`
@@ -38,8 +38,12 @@ Write `src/components/{name}/{name}.test.ts` using `simulateKeyboard`, `flush`, 
 - Dynamic registration: add and remove child after initial render
 - Mount/unmount memory test (verify every `addEventListener` has a matching `removeEventListener` after disconnect)
 - RTL (if component has `orientation`)
+- Composition: two sibling instances of the same component do not interfere with each other's state
+- Event ordering: when one interaction fires multiple events, collect them in an `events[]` array and assert sequence
+- Reparenting: item moved to a different root resubscribes to the new context
+- Define order: children-defined-before-parent scenario (separate Playwright page — see `test-patterns.md`)
 
-Run tests — confirm they fail.
+Run `npm run test:run -- src/components/{name}/{name}.test.ts` — confirm tests fail.
 
 ### Step 3 — Implement elements (GREEN)
 
@@ -69,12 +73,14 @@ Use each file's content as the Agent prompt. Dispatch all 6 as simultaneous Agen
 
 | Reviewer | Read and inject as context |
 |---|---|
-| `accessibility-reviewer` | All element file contents, spec ARIA section content, `.claude-plugin/refs/focus-management.md` content |
+| `accessibility-reviewer` | All element file contents, full component spec content (contains the APG contract — keyboard interactions, roles, ARIA attributes), `.claude-plugin/refs/focus-management.md` content |
 | `lit-reviewer` | All element file contents, `.claude-plugin/refs/lit-patterns.md` content, `.claude-plugin/refs/ssr-contract.md` content |
 | `headless-reviewer` | All element file contents, `.claude-plugin/refs/headless-contract.md` content, `docs/vocabulary.md` content |
 | `api-reviewer` | All element file contents, `types.ts` content, `docs/vocabulary.md` content |
 | `test-reviewer` | Test file content, `.claude-plugin/refs/test-patterns.md` content, component spec content |
 | `security-reviewer` | All element file contents, controller file content |
+
+Note: Storybook story files do not exist at this step — `test-reviewer` checklist items covering `play` functions and story coverage are deferred to the test-reviewer run inside `/build-stories`.
 
 Collect all findings. For each reviewer with blockers:
 1. Fix the blockers
