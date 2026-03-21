@@ -37,7 +37,7 @@ export class GrundAccordion extends LitElement {
 
   @provide({ context: accordionRootContext })
   @state()
-  private rootCtx!: AccordionRootContext;
+  protected rootCtx!: AccordionRootContext;
 
   private controller = new AccordionController();
   private registry = new AccordionRegistry();

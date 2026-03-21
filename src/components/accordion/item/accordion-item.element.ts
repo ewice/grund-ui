@@ -31,7 +31,7 @@ export class GrundAccordionItem extends LitElement {
 
   @provide({ context: accordionItemContext })
   @state()
-  private itemCtx: AccordionItemContext = this.createItemContext();
+  protected itemCtx: AccordionItemContext = this.createItemContext();
 
   private hasSettled = false;
   private prevExpanded: boolean | undefined = undefined;
