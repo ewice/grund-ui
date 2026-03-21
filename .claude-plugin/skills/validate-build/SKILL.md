@@ -60,7 +60,7 @@ After analysis succeeds, check for CEM drift:
 git diff --exit-code custom-elements.json
 ```
 
-If the CEM has drifted from the committed version: report the diff as a failure. The CEM must be committed after every API-affecting change — run `git add custom-elements.json && git commit -m "chore: update CEM"`.
+If the CEM has drifted from the committed version: report the diff as a failure. Surface to the engineer — they must run `git add custom-elements.json && git commit -m "chore: update CEM"` before handoff.
 
 ### Step 5 — Bundle size check
 
