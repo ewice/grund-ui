@@ -19,7 +19,7 @@ The caller provides `refs/focus-management.md`, the component spec's ARIA sectio
 
 ### Required ARIA Attributes
 4. `aria-expanded` present and reflects open/closed state on triggers.
-5. `aria-controls` wired via `AriaLinkController` — not manual ID strings.
+5. `aria-controls` wired via `AriaLinkController` — not manual ID strings (i.e., any value not resolved through `AriaLinkController`, including template literals like `${this.panelId}`).
 6. `aria-labelledby` wired via `AriaLinkController` where the APG requires.
 7. `aria-disabled` reflects disabled state.
 8. `aria-orientation` present when component supports both axes.
@@ -39,17 +39,17 @@ The caller provides `refs/focus-management.md`, the component spec's ARIA sectio
 
 ### Live Regions
 18. `role="alert"` (assertive) for errors; `role="status"` (polite) for informational.
-19. No competing `aria-live` regions across component instances.
+19. No more than one `aria-live` region declared within this component's own files.
 
 ### Forced Colors
-20. Every interactive state (focused, hovered, expanded, disabled) communicates through something other than color alone.
+20. Forced colors support is either handled via `@media (forced-colors: active)` with `forced-color-adjust`, or states are communicated through `outline`, `border`, or `text-decoration` rather than color-only properties. If neither is present and the component has interactive states, flag as a warning.
 
 ### Screen Reader Behavior
-20. State changes (expanded/collapsed, selected, disabled) are announced via ARIA attribute updates — not via `aria-live` unless the APG specifies a live region.
-21. Interactive elements have a visible, descriptive accessible name — label matches what a screen reader would announce on focus.
+21. State changes (expanded/collapsed, selected, disabled) are announced via ARIA attribute updates — not via `aria-live` unless the APG specifies a live region.
+22. Interactive elements have a visible, descriptive accessible name — label matches what a screen reader would announce on focus.
 
 ### Touch Targets
-22. Touch target sizing guidance: interactive elements (triggers, close buttons) should be at least 44×44 CSS pixels per WCAG 2.5.5. Flag elements that appear smaller without a note in the spec.
+23. Touch target sizing guidance: interactive elements (triggers, close buttons) should be at least 44×44 CSS pixels per WCAG 2.5.5. Flag elements that appear smaller without a note in the spec.
 
 ## Output Format
 
@@ -57,7 +57,7 @@ Return a single JSON object:
 
 ```json
 {
-  "verdict": "PASS",
+  "verdict": "FAIL",
   "blockers": [{ "file": "", "line": 0, "rule": "aria-expanded required", "message": "Trigger missing aria-expanded attribute", "fix_hint": "Add aria-expanded=${this.expanded} to the button in render()" }],
   "warnings": [{ "file": "", "line": 0, "rule": "role=region landmark count", "message": "role=region on every panel may create too many landmarks when accordion has 6+ items" }],
   "notes": ["APG pattern: Accordion (sections with show/hide functionality)"]
