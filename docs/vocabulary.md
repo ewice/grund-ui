@@ -14,6 +14,11 @@ for the same semantic action.
 
 | Verb | Meaning | Example |
 |---|---|---|
+| `requestToggle` | Request a state toggle (may be rejected by controlled mode) | `ctx.requestToggle(itemValue, itemDisabled)` |
+| `toggle` | Unconditional toggle action (item-scoped) | `itemCtx.toggle()` |
+| `registerItem` / `unregisterItem` | Add/remove a child from the parent registry | `ctx.registerItem(this, value)` |
+| `attachTrigger` / `detachTrigger` | Link/unlink a trigger sub-part to its item | `itemCtx.attachTrigger(this)` |
+| `attachPanel` / `detachPanel` | Link/unlink a panel sub-part to its item | `itemCtx.attachPanel(this)` |
 
 ---
 
@@ -24,7 +29,7 @@ All events follow `grund-{action}` pattern, `bubbles: true`, `composed: false`.
 | Event | Detail type | Meaning |
 |---|---|---|
 | `grund-value-change` | `{ value: string[], itemValue: string, open: boolean }` | Full expanded values snapshot |
-| `grund-open-change` | `{ value: string, open: boolean }` | An item opened or closed |
+| `grund-open-change` | `{ value: string, open: boolean, index: number }` | An item opened or closed |
 
 ---
 
@@ -36,7 +41,7 @@ CSS `::part()` names. All lowercase, hyphenated nouns.
 |---|---|---|
 | `trigger` | The interactive element that activates an item | Accordion, Disclosure, Tabs |
 | `panel` | The collapsible/revealable content region | Accordion, Disclosure |
-| `header` | The heading wrapper element | Accordion |
+| `header` | The heading wrapper element | (reserved — no component uses it yet) |
 | `content` | Inner content wrapper within a panel | Accordion, Dialog |
 | `indicator` | Visual expand/collapse chevron or icon | Accordion, Select |
 | `label` | A text label element | Switch, Checkbox |
@@ -67,6 +72,7 @@ Standard data attributes set by controllers or elements as public API.
 | `data-open` | boolean presence | Host element in `willUpdate` |
 | `data-disabled` | boolean presence | Host element in `willUpdate` |
 | `data-orientation` | `"vertical"` / `"horizontal"` | Root and sub-parts in `willUpdate` |
+| `data-state` | `"open"` / `"closed"` | Element in `willUpdate` (inline until OpenStateController is extracted) |
 | `data-index` | string integer | Item element in `willUpdate` |
 
 ---
@@ -78,6 +84,8 @@ Context symbols follow the pattern `{ComponentName}Context` for the root context
 
 | Symbol | Type |
 |---|---|
+| `accordionRootContext` | Root-level context for accordion |
+| `accordionItemContext` | Per-item context for accordion |
 
 ---
 
@@ -87,6 +95,11 @@ All custom elements: `grund-{component-name}[-{sub-element}]`
 
 | Element | Tag |
 |---|---|
+| Accordion root | `grund-accordion` |
+| Accordion item | `grund-accordion-item` |
+| Accordion header | `grund-accordion-header` |
+| Accordion trigger | `grund-accordion-trigger` |
+| Accordion panel | `grund-accordion-panel` |
 
 ---
 

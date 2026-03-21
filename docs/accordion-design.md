@@ -33,7 +33,6 @@ High-level design reference for reimplementing the accordion component.
 | `loopFocus` | `boolean` | `true` | `loop-focus` |
 | `keepMounted` | `boolean` | `false` | `keep-mounted` |
 | `hiddenUntilFound` | `boolean` | `false` | `hidden-until-found` |
-| `onValueChange` | `(value: string[], details: Accordion.Root.ChangeEventDetails) => void` | `undefined` | — |
 
 **Events:**
 
@@ -66,8 +65,6 @@ High-level design reference for reimplementing the accordion component.
 |---|---|---|---|
 | `level` | `1–6` | `3` | `level` |
 
-Wraps `<grund-heading>`. Exports `heading` CSS part.
-
 ---
 
 ### `<grund-accordion-trigger>` — Trigger
@@ -75,8 +72,8 @@ Wraps `<grund-heading>`. Exports `heading` CSS part.
 No public properties. Renders an inner `<button>`.
 
 **CSS parts:** `trigger`
-**ARIA:** `aria-expanded`, `aria-controls` (via `AriaLinkController`)
-**Data attributes:** `data-panel-open`, `data-disabled`
+**ARIA:** `aria-expanded`, `aria-controls`
+**Data attributes:** `data-open`, `data-disabled`, `data-orientation`, `data-index`
 
 ---
 
@@ -88,9 +85,9 @@ No public properties. Renders an inner `<button>`.
 | `hiddenUntilFound` | `boolean` | `false` | `hidden-until-found` |
 
 **CSS parts:** `panel`
-**ARIA:** `role="region"`, `aria-labelledby` (via `AriaLinkController`)
+**ARIA:** `role="region"`, `aria-labelledby`
 **Data attributes:** `data-open`, `data-disabled`, `data-state`, `data-orientation`, `data-index`
-**Visibility:** Uses `OpenStateController`. Supports `hidden="until-found"` for browser find-in-page.
+**Visibility:** Supports `hidden="until-found"` for browser find-in-page.
 
 ---
 

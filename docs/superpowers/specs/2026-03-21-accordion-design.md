@@ -129,7 +129,7 @@ class AccordionRegistry {
 
 - DOM-order sorting via `compareDocumentPosition` on `registerItem`
 - Trigger↔panel linking scoped to item — each record holds at most one trigger and one panel
-- No `WeakRef` — items explicitly unregister in `disconnectedCallback`
+- No `WeakRef` — Lit elements reliably fire `disconnectedCallback`, making explicit unregistration sufficient and `WeakRef` unnecessary overhead
 - Root element owns the registry instance; item element owns attach/detach for its sub-parts
 
 ---
@@ -168,8 +168,8 @@ interface AccordionItemContext {
   expanded: boolean;
   disabled: boolean;          // merged: root disabled OR item disabled
   orientation: 'vertical' | 'horizontal';
-  keepMounted: boolean;
-  hiddenUntilFound: boolean;
+  keepMounted: boolean;       // root default, may be overridden per-panel
+  hiddenUntilFound: boolean;  // root default, may be overridden per-panel
 
   triggerId: string;          // derived from value
   panelId: string;            // derived from value
@@ -261,7 +261,7 @@ interface AccordionItemContext {
 
 - `@consume` item context
 - Renders `<button part="trigger"><slot></slot></button>`
-- `willUpdate`: sets `aria-expanded`, `aria-controls` (panel ID), `id` (trigger ID), `data-panel-open`, `data-disabled`
+- `willUpdate`: sets `aria-expanded`, `aria-controls` (panel ID), `id` (trigger ID), `data-open`, `data-disabled`, `data-orientation`, `data-index`
 - Click handler calls `itemCtx.toggle()`
 - Registers/unregisters trigger with item context
 - `:host { display: block }`
@@ -277,10 +277,20 @@ interface AccordionItemContext {
   - Default (closed): removed from DOM entirely
   - `keepMounted`: stays in DOM with `hidden` attribute
   - `hiddenUntilFound`: uses `hidden="until-found"` for browser find-in-page
-- `willUpdate`: sets `data-open`, `data-disabled`, `data-state`, `data-orientation`, `data-index`
+- `willUpdate`: sets `data-open`, `data-disabled`, `data-state="open"/"closed"` (inline, no OpenStateController), `data-orientation`, `data-index`
+- Panel-level `keepMounted` and `hiddenUntilFound` properties override the root-level defaults when set
 - Registers/unregisters panel with item context
 - `:host { display: block }`
 - Dev warning if used outside item
+
+**Properties:**
+
+| Property | Type | Default | Attribute |
+|---|---|---|---|
+| `keepMounted` | `boolean` | `false` | `keep-mounted` |
+| `hiddenUntilFound` | `boolean` | `false` | `hidden-until-found` |
+
+Panel uses its own property if set, otherwise falls back to the value from item context (which originates from the root).
 
 **CSS parts:** `panel`
 
