@@ -57,16 +57,15 @@ Create `src/components/{name}/index.ts`:
 
 Also add SSR-safe ID helpers and define guard to every element stub:
 - Accept optional `id` property (`@property() id?: string`)
-- Derive deterministic IDs from `value` prop where applicable: `` `grund-${tagName}-${value}` ``
-- Fall back to `crypto.randomUUID().slice(0, 8)` only in `connectedCallback` — never in constructors or field initializers
+- When the component has a `value` prop, derive deterministic IDs: `` `grund-${tagName}-${value}` ``. For components without `value`, fall back to `crypto.randomUUID().slice(0, 8)` only inside `connectedCallback` — never in constructors or field initializers
 - Wrap `customElements.define(...)` with `if (!customElements.get('grund-{name}'))` guard
 
 ### Step 6 — Run reviewer gate (parallel)
 
-Read `.claude-plugin/reviewers/api-reviewer/SKILL.md` and `.claude-plugin/reviewers/headless-reviewer/SKILL.md`. Dispatch both as parallel Agent calls:
+Read `.claude-plugin/reviewers/api-reviewer/SKILL.md` and `.claude-plugin/reviewers/headless-reviewer/SKILL.md`. Use each file's content as the Agent prompt. Dispatch both as parallel Agent calls:
 
-- **api-reviewer**: pass `types.ts` and `context/index.ts`, the component spec, and `docs/vocabulary.md`
-- **headless-reviewer**: pass `types.ts` (checks part names and data-* attribute declarations), the component spec, and `.claude-plugin/refs/headless-contract.md`
+- **api-reviewer**: prompt = `api-reviewer` SKILL.md content; pass `types.ts`, `context/index.ts`, the component spec, and `docs/vocabulary.md`
+- **headless-reviewer**: prompt = `headless-reviewer` SKILL.md content; pass `types.ts`, the component spec, and `.claude-plugin/refs/headless-contract.md`
 
 Collect findings. Fix all blockers before proceeding. Note warnings for follow-up.
 
