@@ -315,6 +315,19 @@ describe('RovingFocusController', () => {
     simulateKeyboard(el, 'ArrowDown');
     expect(document.activeElement).to.equal(buttons[0]);
   });
+
+  it('reverses ArrowLeft/ArrowRight in RTL for horizontal orientation', async () => {
+    const wrapper = document.createElement('div');
+    wrapper.dir = 'rtl';
+    document.body.appendChild(wrapper);
+    const { el, buttons } = await setup({ orientation: 'horizontal' });
+    wrapper.appendChild(el);
+    buttons[0].focus();
+    // In RTL, ArrowLeft = next (visually right-to-left, so "left" moves forward)
+    simulateKeyboard(el, 'ArrowLeft');
+    expect(document.activeElement).to.equal(buttons[1]);
+    wrapper.remove();
+  });
 });
 ```
 
@@ -1063,7 +1076,7 @@ export class GrundAccordion extends LitElement {
 
   @provide({ context: accordionRootContext })
   @state()
-  private rootCtx: AccordionRootContext = this.createRootContext();
+  private rootCtx!: AccordionRootContext;
 
   private controller = new AccordionController();
   private registry = new AccordionRegistry();
@@ -1097,8 +1110,11 @@ export class GrundAccordion extends LitElement {
 
     this.dataset.orientation = this.orientation;
 
-    // Only recreate context when state-bearing properties change
+    // Recreate context on first render or when state-bearing properties change.
+    // Note: handleToggle() also recreates context directly because internal
+    // controller state changes don't trigger willUpdate (no reactive prop changes).
     if (
+      !this.hasUpdated ||
       changed.has('value') ||
       changed.has('defaultValue') ||
       changed.has('multiple') ||
@@ -1149,7 +1165,9 @@ export class GrundAccordion extends LitElement {
       }),
     );
 
-    // Reassign context to trigger consumer re-renders
+    // Must recreate context here because toggle changes internal controller
+    // state (expandedValues) without changing any reactive property, so
+    // willUpdate's guard won't detect the change on the next render cycle.
     this.rootCtx = this.createRootContext();
   }
 
@@ -1204,6 +1222,23 @@ export class GrundAccordionItem extends LitElement {
 
   private hasSettled = false;
   private prevExpanded: boolean | undefined = undefined;
+
+  // Stable callback references — bound once, reused across context recreations
+  private readonly boundToggle = () => {
+    this.rootCtx?.requestToggle(this.value, this.disabled);
+  };
+  private readonly boundAttachTrigger = (el: HTMLElement) => {
+    this.rootCtx?.attachTrigger(this, el);
+  };
+  private readonly boundDetachTrigger = (_el: HTMLElement) => {
+    this.rootCtx?.detachTrigger(this);
+  };
+  private readonly boundAttachPanel = (el: HTMLElement) => {
+    this.rootCtx?.attachPanel(this, el);
+  };
+  private readonly boundDetachPanel = (_el: HTMLElement) => {
+    this.rootCtx?.detachPanel(this);
+  };
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -1285,16 +1320,11 @@ export class GrundAccordionItem extends LitElement {
       hiddenUntilFound: this.rootCtx?.hiddenUntilFound ?? false,
       triggerId: `grund-accordion-trigger-${this.value}`,
       panelId: `grund-accordion-panel-${this.value}`,
-      toggle: () => {
-        this.rootCtx?.requestToggle(this.value, this.disabled);
-      },
-      attachTrigger: (el: HTMLElement) => {
-        // Delegate to root registry via a method we need to add
-        // For now, this is a placeholder — Task 7 wires this up
-      },
-      detachTrigger: (el: HTMLElement) => {},
-      attachPanel: (el: HTMLElement) => {},
-      detachPanel: (el: HTMLElement) => {},
+      toggle: this.boundToggle,
+      attachTrigger: this.boundAttachTrigger,
+      detachTrigger: this.boundDetachTrigger,
+      attachPanel: this.boundAttachPanel,
+      detachPanel: this.boundDetachPanel,
     };
   }
 
@@ -1326,14 +1356,7 @@ const index = this.rootCtx.indexOf(this);
 this.dataset.index = String(index);
 ```
 
-And update `GrundAccordionItem.createItemContext` to also set attach/detach:
-```ts
-attachTrigger: (el: HTMLElement) => {
-  this.rootCtx?.attachTrigger?.(this, el);
-},
-```
-
-This means also add `attachTrigger`, `detachTrigger`, `attachPanel`, `detachPanel` to root context that delegate to the registry.
+This means also add `indexOf`, `attachTrigger`, `detachTrigger`, `attachPanel`, `detachPanel` to root context that delegate to the registry.
 
 - [ ] **Step 5: Update context interface with indexOf and attach/detach**
 
@@ -1365,29 +1388,14 @@ detachPanel: (item: HTMLElement) => {
 },
 ```
 
-Update `GrundAccordionItem.willUpdate`:
+Update `GrundAccordionItem.willUpdate` to set `data-index`:
 
 ```ts
 const index = this.rootCtx.indexOf(this);
 this.dataset.index = String(index);
 ```
 
-Update `GrundAccordionItem.createItemContext` attach/detach:
-
-```ts
-attachTrigger: (el: HTMLElement) => {
-  this.rootCtx?.attachTrigger(this, el);
-},
-detachTrigger: (_el: HTMLElement) => {
-  this.rootCtx?.detachTrigger(this);
-},
-attachPanel: (el: HTMLElement) => {
-  this.rootCtx?.attachPanel(this, el);
-},
-detachPanel: (_el: HTMLElement) => {
-  this.rootCtx?.detachPanel(this);
-},
-```
+Note: `createItemContext` already uses the bound callbacks (`this.boundAttachTrigger`, etc.) defined as class fields.
 
 - [ ] **Step 6: Run tests to verify they pass**
 
