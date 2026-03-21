@@ -11,7 +11,7 @@ Produces `docs/specs/{name}.spec.md` — the source of truth for all downstream 
 
 ```
 /component-spec
-/component-spec --from docs/superpowers/specs/2026-03-20-accordion-design.md
+/component-spec --from docs/superpowers/specs/{date}-{name}-design.md
 ```
 
 ## Implementation
@@ -34,9 +34,13 @@ Read `docs/vocabulary.md` and `.claude-plugin/refs/component-shapes.md`.
 
 Derive the APG pattern name from component name and category. Follow the `/apg` skill to extract: keyboard interactions, roles, required/optional ARIA attributes, gaps to flag.
 
+**If the category is `simple` or `feedback`, or `/apg` returns no matching pattern:** skip to Step 4 and note "No APG pattern — ARIA contract is minimal" in the spec's ARIA contract section.
+
 ### Step 4 — Ask category-specific questions
 
-Ask only questions the design spec left open:
+**If `--from`:** Ask only questions not already answered by `key_decisions` or `open_questions` in the design spec.
+
+**If interactive:** Ask all category-specific questions for the identified category.
 
 | Category | Key questions |
 |---|---|
@@ -49,7 +53,11 @@ Ask only questions the design spec left open:
 
 All categories: Cancelable events? RTL considerations? Exit animations?
 
-### Step 5 — Write the spec
+### Step 5 — Update vocabulary
+
+Before writing the spec, check whether the component introduces new action verbs, event names, or part names not yet in `docs/vocabulary.md`. Propose any new entries to the user. Once confirmed, add them to `docs/vocabulary.md`.
+
+### Step 6 — Write the spec
 
 Write `docs/specs/{name}.spec.md`:
 - Front-matter (component_name, category, purpose, key_decisions, open_questions)
@@ -64,7 +72,7 @@ Write `docs/specs/{name}.spec.md`:
 - Data attributes
 - Edge cases and constraints
 
-### Step 6 — Verify
+### Step 7 — Verify
 
 Re-read the spec. Confirm:
 - All APG keyboard keys documented
@@ -74,6 +82,6 @@ Re-read the spec. Confirm:
 
 Fill any gaps before handing off.
 
-### Step 7 — Handoff
+### Step 8 — Handoff
 
 Report: spec written to `docs/specs/{name}.spec.md`. **Next step: `/scaffold {name}`.**
