@@ -22,17 +22,16 @@ export class GrundAccordionTrigger extends LitElement {
   @state()
   private itemCtx?: AccordionItemContext;
 
+  private isTriggerRegistered = false;
+
   override connectedCallback(): void {
     super.connectedCallback();
-    // Defer registration to let context settle
-    this.updateComplete.then(() => {
-      this.itemCtx?.attachTrigger(this);
-    });
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.itemCtx?.detachTrigger(this);
+    this.isTriggerRegistered = false;
   }
 
   override willUpdate(): void {
@@ -43,6 +42,11 @@ export class GrundAccordionTrigger extends LitElement {
           'Wrap this element in <grund-accordion-item value="...">.',
         );
       }
+    }
+
+    if (this.itemCtx && !this.isTriggerRegistered) {
+      this.itemCtx.attachTrigger(this);
+      this.isTriggerRegistered = true;
     }
 
     if (this.itemCtx) {

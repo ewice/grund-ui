@@ -25,21 +25,21 @@ export class GrundAccordionPanel extends LitElement {
   @state()
   private itemCtx?: AccordionItemContext;
 
+  private isPanelRegistered = false;
+
   private handleBeforematch = (): void => {
     this.itemCtx?.toggle();
   };
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.updateComplete.then(() => {
-      this.itemCtx?.attachPanel(this);
-    });
     this.addEventListener('beforematch', this.handleBeforematch);
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.itemCtx?.detachPanel(this);
+    this.isPanelRegistered = false;
     this.removeEventListener('beforematch', this.handleBeforematch);
   }
 
@@ -51,6 +51,11 @@ export class GrundAccordionPanel extends LitElement {
           'Wrap this element in <grund-accordion-item value="...">.',
         );
       }
+    }
+
+    if (this.itemCtx && !this.isPanelRegistered) {
+      this.itemCtx.attachPanel(this);
+      this.isPanelRegistered = true;
     }
 
     if (this.itemCtx) {

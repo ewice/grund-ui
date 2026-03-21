@@ -103,7 +103,18 @@ export class GrundAccordionItem extends LitElement {
     this.toggleAttribute('data-disabled', mergedDisabled);
     this.dataset.index = String(index);
 
-    this.itemCtx = this.createItemContext();
+    // Only recreate item context when relevant state changes.
+    // IMPORTANT: rootCtx is always a new object when root re-renders
+    // (because @lit/context notifies on object reference change),
+    // so changed.has('rootCtx') covers all root state changes.
+    if (
+      !this.hasUpdated ||
+      changed.has('rootCtx') ||
+      changed.has('value') ||
+      changed.has('disabled')
+    ) {
+      this.itemCtx = this.createItemContext();
+    }
   }
 
   override updated(_changed: Map<PropertyKey, unknown>): void {
