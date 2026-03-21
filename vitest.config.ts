@@ -9,6 +9,13 @@ export default defineConfig({
     projects: [
       {
         extends: './vite.config.ts',
+        resolve: {
+          alias: {
+            '/__web-dev-server__web-socket.js': path.resolve(
+              './node_modules/@open-wc/testing/index.js',
+            ),
+          },
+        },
         test: {
           name: 'components',
           include: ['src/**/*.test.ts'],
