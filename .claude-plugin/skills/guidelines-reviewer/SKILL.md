@@ -1,8 +1,6 @@
 ---
 name: "guidelines-reviewer"
-description: "Use when reviewing component files for compliance with CLAUDE.md
-  engineering guidelines. Triggered by the implement skill (Phase 3) or manually
-  on any PR before merge."
+description: "DEPRECATED — replaced by lit-reviewer and headless-reviewer in .claude-plugin/reviewers/. Do not use."
 ---
 
 ## Overview

@@ -1,9 +1,6 @@
 ---
 name: "implement"
-description: "Use when you have an approved component spec and need to generate
-  all files, run the review loop, and produce a commit-ready component. Triggered
-  after the component API spec is approved (from /new-component, or /new-component
-  pre-filled from a Superpowers design spec)."
+description: "DEPRECATED — replaced by /scaffold + /build-controller + /build-elements + /build-stories pipeline. Do not use."
 ---
 
 ## Overview

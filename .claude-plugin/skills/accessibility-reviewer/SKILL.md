@@ -1,8 +1,6 @@
 ---
 name: "accessibility-reviewer"
-description: "Use when reviewing a component's accessibility implementation against
-  the WAI-ARIA APG pattern. Triggered by the implement skill (Phase 3) or manually
-  on any component before release."
+description: "DEPRECATED — replaced by .claude-plugin/reviewers/accessibility-reviewer/. Do not use."
 ---
 
 ## Overview

@@ -1,7 +1,6 @@
 ---
 name: "test-coverage-reviewer"
-description: "Use when verifying that test files cover every requirement in the
-  component spec. Triggered by the implement skill (Phase 3)."
+description: "DEPRECATED — replaced by .claude-plugin/reviewers/test-reviewer/. Do not use."
 ---
 
 ## Overview

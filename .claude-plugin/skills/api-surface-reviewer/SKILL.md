@@ -1,8 +1,6 @@
 ---
 name: "api-surface-reviewer"
-description: "Use when reviewing the public API surface of a component for
-  completeness, JSDoc accuracy, and absence of unintended breaking changes.
-  Triggered by the implement skill (Phase 3)."
+description: "DEPRECATED — replaced by .claude-plugin/reviewers/api-reviewer/. Do not use."
 ---
 
 ## Overview

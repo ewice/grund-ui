@@ -1,8 +1,6 @@
 ---
 name: "new-component"
-description: "Use when starting to build a new Grund UI component from scratch.
-  Guides the engineer through spec authoring, fetches the APG contract, and
-  produces a spec file that the implement skill can consume."
+description: "DEPRECATED — replaced by /component-spec. Do not use."
 ---
 
 ## Overview

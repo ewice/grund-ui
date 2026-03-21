@@ -1,8 +1,6 @@
 ---
 name: "security-reviewer"
-description: "Use when reviewing component files for security issues specific to
-  Lit Web Components. Triggered by the implement skill (Phase 3) or manually on
-  any PR before merge."
+description: "DEPRECATED — replaced by .claude-plugin/reviewers/security-reviewer/. Do not use."
 ---
 
 ## Overview

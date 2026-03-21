@@ -1,8 +1,6 @@
 ---
 name: "story-reviewer"
-description: "Use when reviewing a generated or modified Storybook story file
-  for a Grund UI component. Triggered by the implement skill (Phase 3) or
-  manually when story quality needs verification."
+description: "DEPRECATED — replaced by .claude-plugin/reviewers/test-reviewer/. Do not use."
 ---
 
 ## Overview

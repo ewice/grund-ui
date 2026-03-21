@@ -1,8 +1,6 @@
 ---
 name: "performance-reviewer"
-description: "Use when reviewing component files for performance issues specific
-  to Lit Web Components. Triggered by the implement skill (Phase 3) or manually
-  on any PR before merge."
+description: "DEPRECATED — render performance coverage merged into lit-reviewer. Do not use."
 ---
 
 ## Overview

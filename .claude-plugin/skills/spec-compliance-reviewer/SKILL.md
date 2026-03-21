@@ -1,8 +1,6 @@
 ---
 name: "spec-compliance-reviewer"
-description: "Use when verifying that generated component files implement everything
-  in the approved spec. Must run before code quality review. Triggered by the
-  implement skill (Phase 2)."
+description: "DEPRECATED — scope split across api-reviewer and lit-reviewer. Do not use."
 ---
 
 ## Overview

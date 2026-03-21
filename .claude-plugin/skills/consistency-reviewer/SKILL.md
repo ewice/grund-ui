@@ -1,8 +1,6 @@
 ---
 name: "consistency-reviewer"
-description: "Use when checking that a new or modified component follows the same
-  patterns as existing components. Triggered by the implement skill (Phase 5)
-  after the quality review loop passes."
+description: "DEPRECATED — scope merged into api-reviewer. Do not use."
 ---
 
 ## Overview
