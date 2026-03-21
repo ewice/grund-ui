@@ -1,19 +1,20 @@
 ---
 name: "validate-build"
-description: "Use after implementation or modification to verify that build, tests,
-  lint, and CEM analysis all pass. Triggered by implement (Phase 6) and
-  modify-component (Phase 5), or manually before committing."
+description: "Use after implementation or modification to verify build, tests, lint, CEM, and bundle size all pass. Run all steps even if one fails — the engineer needs the full picture. Pass --cross-browser for Firefox + WebKit coverage."
 ---
 
 ## Overview
 
-Runs the project toolchain and reports results. No code changes — only
-verification. If any step fails, reports the failure clearly so the engineer
-or a patch agent can fix it.
+Runs the full project toolchain and reports results. No code changes — read-only verification. Run all steps even if one fails — the engineer needs the full picture.
+
+## Usage
+
+```
+/validate-build
+/validate-build --cross-browser
+```
 
 ## Implementation
-
-Run each validation step. Report results as they complete.
 
 ### Step 1 — Lint
 
@@ -21,8 +22,7 @@ Run each validation step. Report results as they complete.
 npm run lint
 ```
 
-If lint fails: report each error with file and line. These are typically
-auto-fixable — suggest `npm run lint -- --fix` or specific code changes.
+Failure: report each error with file and line. Auto-fixable issues: suggest `npm run lint -- --fix`.
 
 ### Step 2 — TypeScript build
 
@@ -30,8 +30,7 @@ auto-fixable — suggest `npm run lint -- --fix` or specific code changes.
 npm run build
 ```
 
-If build fails: report TypeScript errors with file, line, and error message.
-Common causes: missing exports, type mismatches, unused imports.
+Failure: report TypeScript errors with file, line, and error message. Common causes: missing exports, type mismatches, unused imports.
 
 ### Step 3 — Tests
 
@@ -39,42 +38,56 @@ Common causes: missing exports, type mismatches, unused imports.
 npm run test:run
 ```
 
-If tests fail: report the failing test name, file, and assertion message.
-Distinguish between:
-- **Test failure** (assertion wrong) — likely a bug in the component or test
-- **Test error** (runtime exception) — likely a missing import or registration
+If `--cross-browser` was passed:
 
-### Step 4 — CEM analysis
+```bash
+npm run test:run -- --project=components-firefox --project=components-webkit
+```
+
+Failure: report failing test name, file, and assertion message. Distinguish test failure (wrong assertion) from test error (runtime exception — typically a missing import or unregistered element).
+
+### Step 4 — CEM analysis and drift check
 
 ```bash
 npm run analyze
 ```
 
-If analysis fails: report the error. Common cause: JSDoc syntax errors that
-the CEM analyzer cannot parse.
+If analysis fails: report the error (common cause: JSDoc syntax errors).
 
-### Step 5 — Summary
+After analysis succeeds, check for CEM drift:
 
-Report:
-
-```
-LINT:    PASS | FAIL (N errors)
-BUILD:   PASS | FAIL (N errors)
-TESTS:   PASS | FAIL (N failing, M total)
-CEM:     PASS | FAIL
-
-RESULT:  ALL PASS | BLOCKED (list failing steps)
+```bash
+git diff --exit-code custom-elements.json
 ```
 
-If ALL PASS: tell the engineer the component is ready for `/commit`.
+If the CEM has drifted from the committed version: report the diff as a failure. The CEM must be committed after every API-affecting change — run `git add custom-elements.json && git commit -m "chore: update CEM"`.
 
-If BLOCKED: list the failing steps with enough detail to diagnose. Do not
-attempt to fix — the engineer or a patch agent decides what to do.
+### Step 5 — Bundle size check
+
+```bash
+npm run build:bundle-stats 2>/dev/null || echo "SKIP: no bundle-stats script"
+```
+
+If the script exists and fails: report which component exceeds its budget. Budget is defined per-component in `package.json` → `bundleSize` (if configured). If the key is absent: skip silently.
+
+### Step 6 — Summary
+
+```
+LINT:         PASS | FAIL (N errors)
+BUILD:        PASS | FAIL (N errors)
+TESTS:        PASS | FAIL (N failing / M total)
+CEM:          PASS | FAIL | DRIFT
+BUNDLE:       PASS | FAIL (N over budget) | SKIP
+CROSS-BROWSER: SKIP | PASS | FAIL
+
+RESULT: ALL PASS | BLOCKED (list failing steps)
+```
+
+If ALL PASS: component is ready for commit or handoff.
+If BLOCKED: list failing steps with enough detail to diagnose. Do not fix — report and stop.
 
 ## Common Mistakes
 
-- **Skipping steps after the first failure.** Run all 4 steps even if one fails.
-  Multiple failures are common and the engineer needs the full picture.
+- **Skipping steps after first failure.** Run all steps — multiple failures are common.
 - **Attempting to fix failures.** This skill is read-only. Report and stop.
-- **Running before reviews pass.** validate-build should run after the review
-  loop, not before. Code that fails reviews will often also fail build.
+- **Forgetting CEM drift.** Any JSDoc or property change must be followed by `npm run analyze` + committing the updated CEM.
