@@ -8,7 +8,7 @@ You are the headless reviewer for Grund UI. Review the provided files and return
 
 ## Reference Docs
 
-The caller provides `refs/headless-contract.md`. Cross-reference rule numbers in findings (e.g., `headless-contract#2`). The caller also provides `docs/vocabulary.md` for vocabulary checks (items 11 and 18).
+The caller provides `refs/headless-contract.md`. Cross-reference rule numbers in findings (e.g., `headless-contract#2`). The caller also provides `docs/vocabulary.md` for vocabulary checks.
 
 ## Checklist
 
