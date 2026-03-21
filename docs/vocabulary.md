@@ -14,19 +14,6 @@ for the same semantic action.
 
 | Verb | Meaning | Example |
 |---|---|---|
-| `requestToggle(value)` | Toggle expanded/collapsed state of an item | Accordion, Disclosure |
-| `requestOpen(value)` | Open a specific item | Accordion, Dialog |
-| `requestClose(value?)` | Close a specific item or all items | Accordion, Dialog, Popover |
-| `requestSelect(value)` | Select an item | Tabs, Select, Listbox |
-| `requestNavigate(direction)` | Move focus/selection in a direction | Combobox, Menu |
-| `registerItem(el)` | Register a child item with the root | All composite widgets |
-| `unregisterItem(el)` | Unregister a child item | All composite widgets |
-| `registerTrigger(el)` | Register a trigger sub-element with an item | Accordion, Disclosure |
-| `registerPanel(el)` | Register a panel sub-element with an item | Accordion, Disclosure |
-| `attachTrigger(el)` | Link a trigger element via registry | Accordion |
-| `detachTrigger(el)` | Unlink a trigger element | Accordion |
-| `attachPanel(el)` | Link a panel element via registry | Accordion |
-| `detachPanel(el)` | Unlink a panel element | Accordion |
 
 ---
 
@@ -36,10 +23,8 @@ All events follow `grund-{action}` pattern, `bubbles: true`, `composed: false`.
 
 | Event | Detail type | Meaning |
 |---|---|---|
-| `grund-change` | `{ value: string, expanded: boolean }` | An item's expanded state changed |
 | `grund-value-change` | `{ value: string[], itemValue: string, open: boolean }` | Full expanded values snapshot |
 | `grund-open-change` | `{ value: string, open: boolean }` | An item opened or closed |
-| `grund-select` | `{ value: string }` | An item was selected |
 
 ---
 
@@ -79,7 +64,6 @@ Standard data attributes set by controllers or elements as public API.
 
 | Attribute | Values | Set by |
 |---|---|---|
-| `data-state` | `"open"` / `"closed"` | `OpenStateController` |
 | `data-open` | boolean presence | Host element in `willUpdate` |
 | `data-disabled` | boolean presence | Host element in `willUpdate` |
 | `data-orientation` | `"vertical"` / `"horizontal"` | Root and sub-parts in `willUpdate` |
@@ -94,8 +78,6 @@ Context symbols follow the pattern `{ComponentName}Context` for the root context
 
 | Symbol | Type |
 |---|---|
-| `accordionContext` | `Context<AccordionContextValue>` |
-| `accordionItemContext` | `Context<AccordionItemContextValue>` |
 
 ---
 
@@ -105,11 +87,6 @@ All custom elements: `grund-{component-name}[-{sub-element}]`
 
 | Element | Tag |
 |---|---|
-| Accordion root | `grund-accordion` |
-| Accordion item | `grund-accordion-item` |
-| Accordion header | `grund-accordion-header` |
-| Accordion trigger | `grund-accordion-trigger` |
-| Accordion panel | `grund-accordion-panel` |
 
 ---
 
