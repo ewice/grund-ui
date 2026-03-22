@@ -15,6 +15,14 @@ When the plan is the code, subagents copy it without judgment and reviewers degr
 "does this match the plan?" instead of "is this correct?" Bugs in plan code propagate
 undetected through the entire pipeline.
 
+**Self-review checklist after writing a plan** — scan each implementation section and rewrite if any of these are true:
+- The section contains more than 5 lines of copy-paste TypeScript, HTML, or CSS
+- The section describes HOW to implement rather than WHAT the file is responsible for
+- A subagent could copy the section verbatim without making any design decisions
+
+Rewrite offending sections as: interface definitions, invariants ("X must always equal Y"), or
+pseudocode describing the algorithm without syntax details.
+
 ---
 
 ## 2. Risk-Based Review
@@ -60,3 +68,20 @@ Every change should be the minimum diff that achieves the goal. Reviewers should
 - Speculative code not required by the current task
 - Redundant abstractions or premature generalizations
 - Files touched but not meaningfully changed
+
+---
+
+## 6. Deviation Tracking
+
+When a subagent deviates from the plan — fixing a bug differently, discovering a constraint, or choosing an alternative pattern — it must record the deviation before finishing its task. The orchestrator incorporates deviations into the plan before the next subagent starts.
+
+**Deviation format** (append to a `## Deviations` section in the plan file):
+```
+### Task N — {task title}
+- **Deviated from:** {what the plan said}
+- **Actual approach:** {what was implemented instead}
+- **Why:** {reason — constraint, bug discovered, pattern incompatibility}
+- **Downstream impact:** {which later tasks or reviewers need to know}
+```
+
+**Why this matters:** Later subagents read the plan as truth. Spec reviewers compare implementation against the original plan. Without deviation records, correct deviations are flagged as non-conformant and incorrect deviations propagate silently.

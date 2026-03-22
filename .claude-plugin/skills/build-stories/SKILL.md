@@ -17,7 +17,7 @@ Builds the full Storybook story file: all spec variants, keyboard play functions
 
 ### Step 1 — Read spec and patterns
 
-Read `docs/specs/{name}.spec.md` and `.claude-plugin/refs/test-patterns.md`.
+Read `docs/specs/{name}.spec.md`, `.claude-plugin/refs/test-patterns.md`, and `.claude-plugin/refs/consumer-dx.md`.
 
 ### Step 2 — Write stories
 
@@ -85,7 +85,10 @@ The `play` function must cover:
 Read `.claude-plugin/reviewers/test-reviewer/SKILL.md` and `.claude-plugin/reviewers/api-reviewer/SKILL.md`. Use each file's content as the Agent prompt. Dispatch both as parallel Agent calls:
 
 - **test-reviewer**: inject story file, unit test file, component spec, `.claude-plugin/refs/test-patterns.md`. Note: this is the first run where the `test-reviewer` sees both unit tests AND story files together. It will re-evaluate unit test checklist items (1–15) in addition to story coverage items (16–17).
-- **api-reviewer**: inject story file, element files, `types.ts`, component spec, `docs/vocabulary.md`. Focus: argTypes alignment with public properties, autodoc JSDoc tag completeness.
+- **api-reviewer**: inject story file, element files, `types.ts`, component spec, `docs/vocabulary.md`, `.claude-plugin/refs/consumer-dx.md`. Focus: argTypes alignment with public properties, autodoc JSDoc tag completeness, and consumer-dx compliance:
+  - `Default` story uses zero configuration beyond slotted content (consumer-dx Rule 4)
+  - A composition story exists — `AsLink` or `CustomTrigger` — showing render delegation via slot (consumer-dx Rule 14-15)
+  - Advanced properties (`keepMounted`, `hiddenUntilFound`, `loopFocus`) are secondary stories, not the default (consumer-dx Rule 5)
 
 Fix all blockers from both reviewers. Re-review after fixes. Max 2 patch iterations. Escalate to `/diagnose-failure` if blockers persist after 2.
 

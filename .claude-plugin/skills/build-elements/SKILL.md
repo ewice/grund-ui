@@ -31,7 +31,14 @@ Read conditionally based on category:
 
 ### Step 2 — Write failing integration tests (RED)
 
-Write `src/components/{name}/{name}.test.ts` using `simulateKeyboard`, `flush`, `getByPart` from `src/test-utils/index.ts`:
+**Start with a smoke test (required first).** Before writing any detailed tests, write one test that mounts the full compound structure (root + at least one item + trigger + panel) and asserts that:
+1. Context is available (trigger and panel receive item context)
+2. A toggle action works end-to-end (click trigger → panel becomes visible)
+3. No console errors on mount
+
+Run the smoke test immediately: `npm run test:run -- src/components/{name}/{name}.test.ts`. It must fail (RED) — if it passes, the scaffold is broken or context wiring was already correct.
+
+**Then write the remaining tests:**
 - Every public property: initial default, dynamic change, attribute reflection
 - Every event: detail shape, controlled mode (state unchanged), uncontrolled mode (state changes)
 - Full keyboard contract from spec
@@ -43,7 +50,7 @@ Write `src/components/{name}/{name}.test.ts` using `simulateKeyboard`, `flush`, 
 - Reparenting: item moved to a different root resubscribes to the new context
 - Define order: children-defined-before-parent scenario (separate Playwright page — see `test-patterns.md`)
 
-Run `npm run test:run -- src/components/{name}/{name}.test.ts` — confirm tests fail.
+Run `npm run test:run -- src/components/{name}/{name}.test.ts` — confirm all tests fail.
 
 ### Step 3 — Implement elements (GREEN)
 
@@ -63,7 +70,14 @@ Run tests — confirm they pass.
 
 Read `.claude-plugin/refs/reviewer-dispatch.md` for the canonical context injection table and patch loop rules.
 
-Read all 6 reviewer SKILL.md files from `.claude-plugin/reviewers/{name}/SKILL.md`. Use each file's content as the Agent prompt. Dispatch all 6 as simultaneous Agent calls, injecting context files per the dispatch table.
+Read each of the following reviewer SKILL.md files. Use each file's content as the Agent prompt. Dispatch all 6 as simultaneous Agent calls, injecting context files per the dispatch table:
+
+- `.claude-plugin/reviewers/accessibility-reviewer/SKILL.md`
+- `.claude-plugin/reviewers/api-reviewer/SKILL.md`
+- `.claude-plugin/reviewers/headless-reviewer/SKILL.md`
+- `.claude-plugin/reviewers/lit-reviewer/SKILL.md`
+- `.claude-plugin/reviewers/security-reviewer/SKILL.md`
+- `.claude-plugin/reviewers/test-reviewer/SKILL.md`
 
 Note: Storybook story files do not exist at this step — `test-reviewer` checklist items covering `play` functions and story coverage are deferred to the test-reviewer run inside `/build-stories`.
 

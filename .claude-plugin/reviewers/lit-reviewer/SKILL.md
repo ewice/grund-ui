@@ -29,7 +29,7 @@ Caller provides `refs/lit-patterns.md` and `refs/ssr-contract.md`. Cross-referen
 
 ### Context
 10. `@consume` default. `ContextConsumer` only when a callback is needed — document why.
-11. With `@provide`: context object recreation is acceptable (required for consumer notification) but only when state fields actually changed. With `ContextProvider` directly: prefer in-place mutation with `setValue(ref, true)`. Action callbacks must be stable references in both cases.
+11. With `@provide`: context object recreation is acceptable (required for consumer notification) but only when state fields actually changed. Guard recreation with `!this.hasUpdated || changed.has('relevantProp')` — recreating on every `willUpdate` call causes consumers to re-render on every host update even when nothing changed. Flag any context recreation inside `willUpdate` that lacks such a guard. With `ContextProvider` directly: prefer in-place mutation with `setValue(ref, true)`. Action callbacks must be stable references (class field arrow functions, not inline lambdas) in both cases.
 12. Context subscriptions declared `private`.
 
 ### Dev-Mode Warnings
