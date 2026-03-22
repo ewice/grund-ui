@@ -98,7 +98,6 @@ export class GrundAccordionItem extends LitElement {
     const mergedDisabled = this.rootCtx.disabled || this.disabled;
     const index = this.rootCtx.indexOf(this);
 
-    // Data attributes
     this.toggleAttribute('data-open', expanded);
     this.toggleAttribute('data-disabled', mergedDisabled);
     this.dataset.index = String(index);

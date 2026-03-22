@@ -24,10 +24,6 @@ export class GrundAccordionTrigger extends LitElement {
 
   private isTriggerRegistered = false;
 
-  override connectedCallback(): void {
-    super.connectedCallback();
-  }
-
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.itemCtx?.detachTrigger(this);

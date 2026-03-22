@@ -18,7 +18,6 @@ export class AccordionRegistry {
   }
 
   registerItem(item: HTMLElement, value: string): void {
-    // Insert in DOM order using compareDocumentPosition
     const record: AccordionItemRecord = { item, value, trigger: null, panel: null };
     const insertIndex = this.records.findIndex(
       (existing) =>

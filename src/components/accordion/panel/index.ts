@@ -1,6 +1,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { accordionItemContext } from '../context/accordion.context.js';
 
@@ -79,47 +80,23 @@ export class GrundAccordionPanel extends LitElement {
     const ctx = this.itemCtx;
     if (!ctx) return nothing;
 
-    const expanded = ctx.expanded;
-
-    // Not expanded: decide visibility strategy
-    if (!expanded) {
-      if (this.effectiveHiddenUntilFound) {
-        return html`
-          <div
-            part="panel"
-            id="${ctx.panelId}"
-            role="region"
-            aria-labelledby="${ctx.triggerId}"
-            hidden="until-found"
-          >
-            <slot></slot>
-          </div>
-        `;
+    if (!ctx.expanded) {
+      if (!this.effectiveKeepMounted && !this.effectiveHiddenUntilFound) {
+        return nothing;
       }
-      if (this.effectiveKeepMounted) {
-        return html`
-          <div
-            part="panel"
-            id="${ctx.panelId}"
-            role="region"
-            aria-labelledby="${ctx.triggerId}"
-            hidden
-          >
-            <slot></slot>
-          </div>
-        `;
-      }
-      // Default: remove from DOM
-      return nothing;
     }
 
-    // Expanded
+    const hidden = ctx.expanded ? undefined
+      : this.effectiveHiddenUntilFound ? 'until-found'
+      : '';
+
     return html`
       <div
         part="panel"
         id="${ctx.panelId}"
         role="region"
         aria-labelledby="${ctx.triggerId}"
+        hidden="${ifDefined(hidden)}"
       >
         <slot></slot>
       </div>
