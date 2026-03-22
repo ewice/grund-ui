@@ -1,6 +1,6 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
-import { flush, getByPart, expectDataState } from '../../../test-utils/index.js';
+import { flush, getByPart } from '../../../test-utils/index.js';
 
 import '../root/accordion.element.js';
 import '../item/accordion-item.element.js';
@@ -73,19 +73,6 @@ describe('Accordion Panel Visibility', () => {
     expect(panelDiv?.hasAttribute('hidden')).to.be.true;
   });
 
-  it('sets data-state on panel', async () => {
-    const el = await fixture<GrundAccordion>(html`
-      <grund-accordion .defaultValue=${['a']}>
-        <grund-accordion-item value="a">
-          <grund-accordion-header><grund-accordion-trigger>A</grund-accordion-trigger></grund-accordion-header>
-          <grund-accordion-panel>Content</grund-accordion-panel>
-        </grund-accordion-item>
-      </grund-accordion>
-    `);
-    await flush(el);
-    const panel = el.querySelector('grund-accordion-panel')!;
-    expectDataState(panel, 'open');
-  });
 });
 
 describe('Accordion Event Suppression', () => {

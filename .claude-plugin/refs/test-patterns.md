@@ -48,15 +48,6 @@ expectAriaRelationship(trigger, panel, 'controls');
 // asserts: trigger.getAttribute('aria-controls') === panel.id
 ```
 
-### `expectDataState(el, state)`
-
-**Add to `src/test-utils/index.ts` when first needed.** Asserts `data-state` attribute value.
-
-```ts
-expectDataState(panel, 'open');
-expectDataState(panel, 'closed');
-```
-
 ---
 
 ## Recipes

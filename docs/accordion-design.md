@@ -86,7 +86,7 @@ No public properties. Renders an inner `<button>`.
 
 **CSS parts:** `panel`
 **ARIA:** `role="region"`, `aria-labelledby`
-**Data attributes:** `data-open`, `data-disabled`, `data-state`, `data-orientation`, `data-index`
+**Data attributes:** `data-open`, `data-disabled`, `data-orientation`, `data-index`
 **Visibility:** Supports `hidden="until-found"` for browser find-in-page.
 
 ---

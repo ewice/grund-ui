@@ -40,7 +40,7 @@ The caller provides `refs/headless-contract.md`. Cross-reference rule numbers in
 
 ### `data-*` Attributes (Rules 17–20)
 17. State styling hooks use `data-*` — no bare unprefixed attributes.
-18. Standard attributes (`data-state`, `data-open`, `data-disabled`, `data-orientation`, `data-index`) match `headless-contract.md`.
+18. Standard attributes (`data-open`, `data-disabled`, `data-orientation`, `data-index`) match `headless-contract.md`.
 19. `data-*` attributes set in `willUpdate` only — not in event handlers or methods.
 20. Every public `data-*` attribute registered in `docs/vocabulary.md`.
 

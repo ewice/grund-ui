@@ -51,7 +51,6 @@ Loaded by generation skills and the `headless-reviewer`.
 
 | Attribute | Values | Set by |
 |---|---|---|
-| `data-state` | `"open"` / `"closed"` | `OpenStateController` |
 | `data-open` | boolean presence | Host in `willUpdate` |
 | `data-disabled` | boolean presence | Host in `willUpdate` |
 | `data-orientation` | `"vertical"` / `"horizontal"` | Root and sub-parts in `willUpdate` |
@@ -78,5 +77,5 @@ Loaded by generation skills and the `headless-reviewer`.
 | `display: contents` on semantic element | Strips accessibility tree | Use `display: block` |
 | Part name as verb or state adjective | Unstable, semantically wrong | Noun-only part names |
 | Missing `exportparts` on compound layer | Consumer can't style nested parts | Declare `exportparts` on every layer |
-| Bare `expanded` attribute as CSS hook | Inconsistent, not part of public API | Use `data-open` or `data-state` |
+| Bare `expanded` attribute as CSS hook | Inconsistent, not part of public API | Use `data-open` |
 | CSS custom property for color | Headless contract violation | Consumers provide all colors |

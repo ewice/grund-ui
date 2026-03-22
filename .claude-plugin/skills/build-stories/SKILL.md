@@ -56,7 +56,7 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: /first item/i });
     await userEvent.click(trigger);
-    // assert expanded state — check aria-expanded, data-state, or both:
+    // assert expanded state — check aria-expanded, data-open, or both:
     expect(trigger).toHaveAttribute('aria-expanded', 'true');
     await userEvent.keyboard('{ArrowDown}');
     // assert focus moved to next trigger
@@ -66,7 +66,7 @@ export const Default: Story = {
 
 The `play` function must cover:
 - Keyboard navigation: Tab to enter, Arrow keys between items, Enter/Space to activate, Escape to dismiss (where applicable)
-- State verification: assert `aria-expanded`, `data-state`, or focus position after each key interaction
+- State verification: assert `aria-expanded`, `data-open`, or focus position after each key interaction
 
 **Required on every story:**
 - Correct autodoc: verify `@element`, `@slot`, `@csspart`, `@fires` JSDoc tags are present on the element class source file (not in the story file) — the `meta.tags: ['autodocs']` renders them

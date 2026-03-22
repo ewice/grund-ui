@@ -62,7 +62,6 @@ export class GrundAccordionPanel extends LitElement {
       const expanded = this.itemCtx.expanded;
       this.toggleAttribute('data-open', expanded);
       this.toggleAttribute('data-disabled', this.itemCtx.disabled);
-      this.dataset.state = expanded ? 'open' : 'closed';
       this.dataset.orientation = this.itemCtx.orientation;
       this.dataset.index = String(this.itemCtx.index);
     }

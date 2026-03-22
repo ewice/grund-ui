@@ -49,7 +49,7 @@ Run `npm run test:run -- src/components/{name}/{name}.test.ts` — confirm tests
 
 For each element in the spec:
 - `@provide` context on root; `@consume` on all consumers
-- Attach shared controllers: `OpenStateController`, `AriaLinkController`, `RovingFocusController` (as applicable)
+- Attach shared controllers: `RovingFocusController` (as applicable)
 - Category-specific: `FormController` (form), `FocusTrapController` / `FocusRestorationController` (overlay)
 - Set `data-*` attributes in `willUpdate` (not in `updated` or event handlers)
 - `exportparts` on every compound layer wrapping shadow elements with `part` attributes

@@ -33,7 +33,7 @@ and planned shared controllers (built when the first component of that category 
 
 **Focus management:** `RovingFocusController` on root. Arrow keys move focus within widget. Tab exits to next page-level focusable.
 
-**Required shared controllers:** `RovingFocusController` (exists in `src/controllers/`). `OpenStateController` and `AriaLinkController` are candidates for extraction when a second composite widget needs them — implement inline for the first component.
+**Required shared controllers:** `RovingFocusController` (exists in `src/controllers/`). Open/closed state and ARIA linking are inline patterns — set `data-open` in `willUpdate` and derive ARIA IDs from context, binding them directly in templates.
 
 **Context pattern:**
 - Root provides: expanded state, actions (requestToggle, requestOpen), registration callbacks
@@ -144,8 +144,6 @@ Track build status here as the library grows:
 
 | Controller | Status | First built for |
 |---|---|---|
-| `OpenStateController` | 🔲 Planned | Extract when second composite widget needs it |
-| `AriaLinkController` | 🔲 Planned | Extract when second composite widget needs it |
 | `RovingFocusController` | ✅ Exists | Accordion |
 | `PresenceController` | 🔲 Planned | First overlay component |
 | `FocusTrapController` | 🔲 Planned | Dialog |

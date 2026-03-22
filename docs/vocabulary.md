@@ -72,7 +72,6 @@ Standard data attributes set by controllers or elements as public API.
 | `data-open` | boolean presence | Host element in `willUpdate` |
 | `data-disabled` | boolean presence | Host element in `willUpdate` |
 | `data-orientation` | `"vertical"` / `"horizontal"` | Root and sub-parts in `willUpdate` |
-| `data-state` | `"open"` / `"closed"` | Element in `willUpdate` (inline until OpenStateController is extracted) |
 | `data-index` | string integer | Item element in `willUpdate` |
 
 ---

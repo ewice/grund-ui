@@ -57,13 +57,3 @@ export function expectAriaRelationship(
   const attr = type === 'controls' ? 'aria-controls' : 'aria-labelledby';
   expect(source.getAttribute(attr)).to.equal(target.id);
 }
-
-/**
- * Asserts the data-state attribute value.
- */
-export function expectDataState(
-  el: Element,
-  state: 'open' | 'closed',
-): void {
-  expect((el as HTMLElement).dataset.state).to.equal(state);
-}

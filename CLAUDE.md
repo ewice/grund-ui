@@ -44,9 +44,9 @@ Use these — don't reinvent:
 
 | Controller | Purpose | Attach to |
 |---|---|---|
-| `OpenStateController` | `data-state="open"/"closed"` on host | Any element with open/closed state |
-| `AriaLinkController` | `ariaControlsElements` / `ariaLabelledByElements` | Trigger↔panel, label↔input |
 | `RovingFocusController` | Keyboard-driven roving tabindex | Container element |
+
+Extract on second use: `data-open` toggle and ARIA ID linking are one-liners — extract to a shared controller when a second component needs the pattern.
 
 Planned controllers (built when first component of that category is built): see `.claude-plugin/refs/component-shapes.md`.
 
@@ -71,9 +71,9 @@ One canonical mechanism per direction:
 
 **Rules:**
 - Discovery: registration via context callbacks only. Never `querySelectorAll` to find child components.
-- Show/hide: `data-state="open"/"closed"` via `OpenStateController`. Exception: `hidden="until-found"` for browser-native find-in-page.
+- Show/hide: `data-open` boolean attribute set in `willUpdate`. Exception: `hidden="until-found"` for browser-native find-in-page.
 - Event naming: `grund-{action}` with `bubbles: true, composed: false`.
-- ARIA linking: `AriaLinkController` for all cross-element ARIA relationships.
+- ARIA linking: derive IDs from context, bind in templates (`aria-controls`, `aria-labelledby`).
 - Keyboard navigation: `RovingFocusController` on the container element.
 - No duplicate paths: a registration or state mutation happens through exactly one mechanism.
 
@@ -107,7 +107,6 @@ Data attributes are part of the public API. Be consistent across all parts of a 
 
 | Attribute | Meaning | Set by |
 |---|---|---|
-| `data-state="open"/"closed"` | Visibility state | `OpenStateController` |
 | `data-open` | Element or item is currently open | Host in `willUpdate` |
 | `data-disabled` | Element or item is disabled | Host in `willUpdate` |
 | `data-orientation` | Layout axis (`vertical`/`horizontal`) | Root and sub-parts in `willUpdate` |
@@ -136,7 +135,6 @@ Target: WCAG 2.1 AA. Follow the [WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/)
 Every component needs:
 - Correct `role` and `aria-*` attributes per the relevant APG pattern
 - `RovingFocusController` for composite widgets
-- `AriaLinkController` for trigger↔panel and label↔input ARIA relationships
 - `@csspart` on every interactive and structural shadow element
 - Keyboard contract covered by tests and documented in Storybook
 

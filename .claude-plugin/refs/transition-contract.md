@@ -7,8 +7,8 @@ Loaded by `/build-elements` for overlay and show/hide components.
 
 ## The Core Contract
 
-Components expose `data-state="open"` / `data-state="closed"` on their panel/content element
-via `OpenStateController`. Consumers write all CSS transitions keyed on this attribute.
+Components expose `data-open` (boolean presence attribute) on their panel/content element.
+Consumers write all CSS transitions keyed on this attribute.
 
 ```css
 /* Consumer's stylesheet — the component provides zero transition CSS */
@@ -16,7 +16,7 @@ grund-accordion-panel::part(panel) {
   overflow: hidden;
   transition: height 200ms ease;
 }
-grund-accordion-panel[data-state="closed"]::part(panel) {
+grund-accordion-panel:not([data-open])::part(panel) {
   height: 0;
 }
 ```
@@ -101,7 +101,7 @@ Document in Storybook: show a motion-safe story variant with the above CSS appli
 
 ## `hidden="until-found"` Interaction
 
-When `hiddenUntilFound=true`, the panel uses `hidden="until-found"` instead of `data-state`.
+When `hiddenUntilFound=true`, the panel uses `hidden="until-found"` instead of `data-open`.
 The browser reveals the panel when find-in-page matches content inside it.
 The component handles `beforematch` event to update internal expanded state.
 
@@ -126,7 +126,7 @@ render() {
 
 ## Rules
 
-1. Components expose `data-state="open"/"closed"` as the sole animation hook. No transition CSS in Shadow DOM.
+1. Components expose `data-open` (boolean presence attribute) as the sole animation hook. No transition CSS in Shadow DOM.
 2. When `keepMounted=false`, use `PresenceController` to delay DOM removal until animation completes.
 3. When `keepMounted=true`, `PresenceController` is not needed — CSS transitions work naturally.
 4. Document motion-safe patterns in Storybook stories.

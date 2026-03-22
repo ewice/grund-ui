@@ -19,8 +19,8 @@ The caller provides `refs/focus-management.md`, the component spec's ARIA sectio
 
 ### Required ARIA Attributes
 4. `aria-expanded` present and reflects open/closed state on triggers.
-5. `aria-controls` wired via `AriaLinkController` — not manual ID strings (i.e., any value not resolved through `AriaLinkController`, including template literals like `${this.panelId}`).
-6. `aria-labelledby` wired via `AriaLinkController` where the APG requires.
+5. `aria-controls` wired via inline ARIA binding — derive IDs from context and bind directly in templates (e.g., `aria-controls=${this._panelId}` where `_panelId` is derived from item context).
+6. `aria-labelledby` wired via inline ARIA binding — derive IDs from context and bind directly in templates where the APG requires.
 7. `aria-disabled` reflects disabled state.
 8. `aria-orientation` present when component supports both axes.
 
