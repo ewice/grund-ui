@@ -31,6 +31,10 @@ component/
 └── index.ts       → Barrel export
 ```
 
+Element files use `index.ts` inside their part directory. Test files use descriptive names
+(e.g., `accordion.test.ts`). Component type definitions (event details, host snapshots,
+public interfaces) live in `types.ts`, separate from element implementations.
+
 **Each layer has one job:**
 
 - **Controller** — owns state, resolves actions, dispatches events through the host. No DOM access.
@@ -81,38 +85,19 @@ One canonical mechanism per direction:
 
 ## Context Design
 
-- **State flows down, actions flow up.** Don't put query methods on context derivable from state.
-- **Consumers only see what they need.** Split interfaces if roles diverge significantly.
-- **No redundant methods.** Every method must earn its place.
-- **Context objects must be stable.** Mutate fields — never recreate the whole object each cycle.
-- **Use `@consume` as the default.** Use `ContextConsumer` only when you need the callback — document why.
-- **Context subscriptions are always `private`.** Expose derived values via public getters.
+See `.claude-plugin/refs/lit-patterns.md` Rules 14–16 for the full context contract.
 
 ---
 
 ## Controlled / Uncontrolled Values
 
-- **Uncontrolled:** `defaultValue` seeds initial state once. Interactions update internal state.
-- **Controlled:** `value` prop drives state entirely. Internal state does not change — only events fire.
-
-The root element packages its properties into a `HostSnapshot` object and passes it to the
-controller via `syncFromHost()` in `willUpdate`. The controller never reads reactive properties
-from the host directly.
+See `.claude-plugin/refs/lit-patterns.md` Rule 5 for the HostSnapshot and controlled/uncontrolled contract.
 
 ---
 
 ## Data Attributes
 
-Data attributes are part of the public API. Be consistent across all parts of a compound component.
-
-| Attribute | Meaning | Set by |
-|---|---|---|
-| `data-open` | Element or item is currently open | Host in `willUpdate` |
-| `data-disabled` | Element or item is disabled | Host in `willUpdate` |
-| `data-orientation` | Layout axis (`vertical`/`horizontal`) | Root and sub-parts in `willUpdate` |
-| `data-index` | DOM position within the compound | Item in `willUpdate` |
-
-All styling hooks use `data-*` attributes. Never use bare unprefixed attributes as CSS hooks.
+See `.claude-plugin/refs/headless-contract.md` Rules 21–24 for the canonical data attribute table and rules.
 
 ---
 
@@ -125,6 +110,8 @@ All styling hooks use `data-*` attributes. Never use bare unprefixed attributes 
 - Use `ElementInternals` for form-associated components. See `.claude-plugin/refs/form-participation.md`.
 - **Dev-mode warnings:** Every compound element that can be structurally misused MUST emit a dev-mode warning. Guard with `if (import.meta.env.DEV)`. Format: `console.warn('[grund-{element}] {problem}. {fix}.')`.
 - Wrap `customElements.define()` with a registration guard: `if (!customElements.get('...'))`.
+- **Comments:** Non-JSDoc comments explain WHY, not WHAT. Code needing a WHAT-comment should be refactored to be self-explanatory.
+- **Smallest diff:** Every change should be the minimum diff that achieves the goal. No speculative code, unused imports, or redundant abstractions.
 
 ---
 
@@ -173,6 +160,7 @@ JSDoc serves IDE tooltips and the Custom Elements Manifest. Use JSDoc syntax, no
 
 Skills live in `.claude-plugin/skills/`. Reviewer agents in `.claude-plugin/reviewers/`.
 Reference docs in `.claude-plugin/refs/`. Superpowers is the orchestrator.
+See `.claude-plugin/refs/workflow-guidelines.md` for subagent pipeline guidelines.
 
 ### New component (complex)
 ```
