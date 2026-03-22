@@ -11,7 +11,7 @@ When a build skill's patch loop hits iteration 2 and escalates, or when a review
 
 ```
 /diagnose-failure — lit-reviewer says context object is unstable but it looks stable
-/diagnose-failure — accessibility-reviewer flags missing aria-controls but AriaLinkController is attached
+/diagnose-failure — accessibility-reviewer flags missing aria-controls but ARIA IDs are bound in templates
 /diagnose-failure — tests pass locally but test-reviewer says MISSING
 ```
 

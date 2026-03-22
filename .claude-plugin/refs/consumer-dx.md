@@ -51,7 +51,7 @@ Loaded by `/build-elements` and the `api-reviewer`.
 
 ### Render Delegation (Composition)
 
-14. The Web Component composition mechanism is `<slot>`. When a consumer needs the trigger to render as a different element (e.g., `<a>` instead of `<button>`), they slot their element and the component applies ARIA and keyboard behaviour via `AriaLinkController` and `RovingFocusController`.
+14. The Web Component composition mechanism is `<slot>`. When a consumer needs the trigger to render as a different element (e.g., `<a>` instead of `<button>`), they slot their element and the component applies ARIA and keyboard behaviour via context-derived ARIA bindings and `RovingFocusController`.
 
 15. Document the composition pattern per component in the Storybook `AsLink` or `CustomTrigger` story variant.
 

@@ -10,7 +10,7 @@ Single-issue audit across the entire component library. Each component gets a fo
 ## Usage
 
 ```
-/audit-cross-component -- aria-controls links missing when AriaLinkController is not attached
+/audit-cross-component -- aria-controls links missing when ARIA IDs are not bound in templates
 /audit-cross-component -- crypto.randomUUID() called in class field initializers (SSR unsafe)
 /audit-cross-component -- event listeners not cleaned up in hostDisconnected
 ```
