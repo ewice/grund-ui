@@ -1,8 +1,8 @@
-export { GrundAccordion } from './root/accordion.element.js';
-export { GrundAccordionItem } from './item/accordion-item.element.js';
-export { GrundAccordionHeader } from './header/accordion-header.element.js';
-export { GrundAccordionTrigger } from './trigger/accordion-trigger.element.js';
-export { GrundAccordionPanel } from './panel/accordion-panel.element.js';
+export { GrundAccordion } from './root/index.js';
+export { GrundAccordionItem } from './item/index.js';
+export { GrundAccordionHeader } from './header/index.js';
+export { GrundAccordionTrigger } from './trigger/index.js';
+export { GrundAccordionPanel } from './panel/index.js';
 
 export type {
   AccordionValueChangeDetail,

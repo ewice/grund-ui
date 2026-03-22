@@ -2,13 +2,13 @@ import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
 import { flush, getByPart } from '../../../test-utils/index.js';
 
-import '../root/accordion.element.js';
-import '../item/accordion-item.element.js';
-import '../header/accordion-header.element.js';
-import '../trigger/accordion-trigger.element.js';
-import '../panel/accordion-panel.element.js';
+import '../root/index.js';
+import '../item/index.js';
+import '../header/index.js';
+import '../trigger/index.js';
+import '../panel/index.js';
 
-import type { GrundAccordion } from '../root/accordion.element.js';
+import type { GrundAccordion } from '../root/index.js';
 
 function getAccordionParts(el: GrundAccordion) {
   const items = Array.from(el.querySelectorAll('grund-accordion-item'));
