@@ -83,4 +83,20 @@ describe('TabsRegistry', () => {
     reg.registerTab(b, 'b');
     expect(reg.firstNonDisabled()?.value).to.equal('b');
   });
+
+  it('firstNonDisabled skips stub records (panel registered before tab)', () => {
+    const reg = new TabsRegistry();
+    const panel = makeEl('panel-a');
+    reg.attachPanel('a', panel); // creates stub: element === panel
+    expect(reg.firstNonDisabled()).to.be.undefined;
+  });
+
+  it('detachPanel removes stub record if tab never registered', () => {
+    const reg = new TabsRegistry();
+    const panel = makeEl('panel-a');
+    reg.attachPanel('a', panel);     // stub: element === panel
+    reg.detachPanel('a');            // should remove the stub
+    expect(reg.firstNonDisabled()).to.be.undefined;
+    expect(reg.getByValue('a')).to.be.undefined;
+  });
 });

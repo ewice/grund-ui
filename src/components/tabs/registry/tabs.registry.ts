@@ -16,11 +16,9 @@ export class TabsRegistry extends OrderedRegistry<TabsRecord> {
   registerTab(tab: HTMLElement, value: string): void {
     const existing = this.getByValue(value);
     if (existing) {
-      // Panel registered first — merge tab element into existing record.
-      existing.element = tab;
-      // Re-sort to maintain DOM order after element reference is set.
+      // Record exists (panel registered first) — remove stub and re-insert with correct element.
       this.remove((r) => r.value === value);
-      this.insert(existing);
+      this.insert({ ...existing, element: tab });
     } else {
       this.insert({ element: tab, value, panel: null });
     }
@@ -44,7 +42,13 @@ export class TabsRegistry extends OrderedRegistry<TabsRecord> {
 
   detachPanel(value: string): void {
     const record = this.getByValue(value);
-    if (record) record.panel = null;
+    if (!record) return;
+    if (record.element === record.panel) {
+      // Stub record (panel registered before tab) — remove entirely rather than leaving zombie.
+      this.remove((r) => r.value === value);
+    } else {
+      record.panel = null;
+    }
   }
 
   getByValue(value: string): TabsRecord | undefined {
