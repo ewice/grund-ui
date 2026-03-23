@@ -122,7 +122,7 @@ describe('<grund-tabs-list> keyboard', () => {
     expect(el.querySelectorAll('grund-tab')[1].hasAttribute('data-selected')).to.be.true;
   });
 
-  it('Home moves focus only, does not activate tab', async () => {
+  it('Home moves focus and activates tab in activateOnFocus=true mode', async () => {
     const el = await setup();
     const buttons = getTabButtons(el);
     // First activate tab C via click so it is selected
@@ -130,14 +130,14 @@ describe('<grund-tabs-list> keyboard', () => {
     await flush(el);
     // Tab C is now selected
     expect(el.querySelectorAll('grund-tab')[2].hasAttribute('data-selected')).to.be.true;
-    // Now press Home from tab B's button to verify Home doesn't activate
+    // Now press Home from tab B's button
     buttons[1].focus();
     simulateKeyboard(buttons[1], 'Home');
     await flush(el);
-    // Focus moved to first tab, but tab C should still be selected
-    expect(el.querySelectorAll('grund-tab')[2].hasAttribute('data-selected')).to.be.true;
-    // And focus is on first button
+    // Focus moved to first tab
     expect(getActiveShadowButton()).to.equal(buttons[0]);
+    // And tab A is now selected (activateOnFocus=true activates on Home)
+    expect(el.querySelectorAll('grund-tab')[0].hasAttribute('data-selected')).to.be.true;
   });
 
   it('skips disabled tabs', async () => {

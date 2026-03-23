@@ -79,18 +79,13 @@ export class GrundTabsList extends LitElement {
       ? ['ArrowLeft', 'ArrowRight', 'Home', 'End']
       : ['ArrowUp', 'ArrowDown', 'Home', 'End'];
 
-    const arrowKeys = isHorizontal
-      ? ['ArrowLeft', 'ArrowRight']
-      : ['ArrowUp', 'ArrowDown'];
-
     const isNavKey = navKeys.includes(event.key);
-    const isArrowKey = arrowKeys.includes(event.key);
     const isConfirmKey = event.key === 'Enter' || event.key === ' ';
 
     if (!isNavKey && !isConfirmKey) return;
     event.preventDefault();
 
-    if (isArrowKey && this.activateOnFocus) {
+    if (isNavKey && this.activateOnFocus) {
       // Arrow key in auto-activation mode: RovingFocusController already moved focus.
       const tabHost = document.activeElement;
       if (tabHost && this.contains(tabHost)) {

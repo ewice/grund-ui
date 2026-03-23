@@ -7,7 +7,8 @@ import { TabsRegistry } from '../registry/tabs.registry.js';
 import { tabsRootContext } from '../context/tabs.context.js';
 
 import type { TabsRootContext } from '../context/tabs.context.js';
-import type { TabsHostSnapshot, TabsValueChangeDetail } from '../types.js';
+import type { TabsHostSnapshot } from '../controller/tabs.controller.js';
+import type { TabsValueChangeDetail } from '../types.js';
 
 /** Minimum shape expected from registered tab/panel elements. */
 interface RegisterableElement extends HTMLElement {

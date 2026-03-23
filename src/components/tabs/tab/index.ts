@@ -83,6 +83,19 @@ export class GrundTab extends LitElement {
     }
   }
 
+  override firstUpdated(): void {
+    if (import.meta.env.DEV) {
+      if (this.ctx) {
+        const record = this.ctx.getRegistry().getByValue(this.value);
+        if (!record?.panel) {
+          console.warn(
+            `[grund-tab] No <grund-tabs-panel value="${this.value}"> found.`,
+          );
+        }
+      }
+    }
+  }
+
   private handleClick(): void {
     if (this.disabled || this.ctx?.disabled) return;
     this.ctx?.activateTab(this.value);

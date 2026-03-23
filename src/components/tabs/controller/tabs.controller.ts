@@ -1,4 +1,12 @@
-import type { TabsHostSnapshot } from '../types.js';
+/**
+ * Snapshot of host properties passed to TabsController.syncFromHost().
+ * @internal
+ */
+export interface TabsHostSnapshot {
+  value: string | null | undefined;
+  defaultValue: string | null;
+  disabled: boolean;
+}
 
 /**
  * Pure activation state machine for tabs.

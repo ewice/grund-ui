@@ -31,10 +31,6 @@ export class GrundTabsPanel extends LitElement {
         console.warn('[grund-tabs-panel] Must be a child of <grund-tabs>.');
       }
     }
-    // id can be set here — doesn't require ctx.
-    if (this.value) {
-      this.id = `grund-tabs-panel-${this.value}`;
-    }
     // ctx not available here — registration deferred to willUpdate.
   }
 
