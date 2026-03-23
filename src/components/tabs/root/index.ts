@@ -9,6 +9,11 @@ import { tabsRootContext } from '../context/tabs.context.js';
 import type { TabsRootContext } from '../context/tabs.context.js';
 import type { TabsHostSnapshot, TabsValueChangeDetail } from '../types.js';
 
+/** Minimum shape expected from registered tab/panel elements. */
+interface RegisterableElement extends HTMLElement {
+  value: string;
+}
+
 /**
  * Root tabs container. Manages active tab state and provides context.
  *
@@ -71,7 +76,7 @@ export class GrundTabs extends LitElement {
       orientation: this.orientation,
       disabled: this.disabled,
       registerTab: (tab: HTMLElement) => {
-        const value = (tab as any).value as string;
+        const value = (tab as RegisterableElement).value;
         this.registry.registerTab(tab, value);
         if (this._activeValue === null) {
           const first = this.registry.firstNonDisabled();
@@ -80,7 +85,7 @@ export class GrundTabs extends LitElement {
       },
       unregisterTab: (value: string) => this.registry.unregisterTab(value),
       registerPanel: (panel: HTMLElement) => {
-        const value = (panel as any).value as string;
+        const value = (panel as RegisterableElement).value;
         this.registry.attachPanel(value, panel);
         // Recreate context so tab consumers re-run updated() and set ariaControlsElements
         // to the now-available panel element reference.
@@ -94,6 +99,8 @@ export class GrundTabs extends LitElement {
 
   activateTab(value: string): void {
     const record = this.registry.getByValue(value);
+    // Use hasAttribute rather than dataset.disabled — the attribute is set as a boolean
+    // presence attribute with empty value, so dataset.disabled returns '' (falsy).
     const isDisabled = !!record?.element.hasAttribute('data-disabled');
     const previousValue = this._activeValue;
     const result = this.controller.requestActivate(value, isDisabled);
