@@ -1,4 +1,3 @@
-// STUB — full implementation in Task 9
 import { LitElement, html, css, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
@@ -6,6 +5,13 @@ import { consume } from '@lit/context';
 import { tabsRootContext } from '../context/tabs.context.js';
 import type { TabsRootContext } from '../context/tabs.context.js';
 
+/**
+ * Content panel associated with a tab by matching value.
+ *
+ * @element grund-tabs-panel
+ * @slot - Panel content
+ * @csspart panel - The tabpanel container
+ */
 export class GrundTabsPanel extends LitElement {
   static override styles = css`:host { display: block; }`;
 
@@ -18,13 +24,19 @@ export class GrundTabsPanel extends LitElement {
 
   private isRegistered = false;
 
-  // id can be set in connectedCallback since it doesn't require ctx.
-  override connectedCallback() {
+  override connectedCallback(): void {
     super.connectedCallback();
+    if (import.meta.env.DEV) {
+      if (!this.closest('grund-tabs')) {
+        console.warn('[grund-tabs-panel] Must be a child of <grund-tabs>.');
+      }
+    }
+    // id can be set here — doesn't require ctx.
     this.id = `grund-tabs-panel-${this.value}`;
+    // ctx not available here — registration deferred to willUpdate.
   }
 
-  override disconnectedCallback() {
+  override disconnectedCallback(): void {
     super.disconnectedCallback();
     if (this.isRegistered) {
       this.ctx?.unregisterPanel(this.value);
@@ -32,21 +44,52 @@ export class GrundTabsPanel extends LitElement {
     }
   }
 
-  // Registration deferred to willUpdate — ctx not available in connectedCallback.
-  override willUpdate() {
+  override willUpdate(): void {
     if (this.ctx && !this.isRegistered) {
       this.ctx.registerPanel(this);
       this.isRegistered = true;
     }
+
+    const isActive = this.ctx?.activeValue === this.value;
+    this.toggleAttribute('data-selected', isActive);
+    if (this.ctx) {
+      this.dataset.orientation = this.ctx.orientation;
+      this.dataset.activationDirection = this.ctx.activationDirection;
+    }
+  }
+
+  override updated(): void {
+    // Set ariaLabelledByElements after render using the Element Reference API.
+    // The tab host element is in the registry by the time the panel renders
+    // (tabs connect before panels in document order).
+    const div = this.shadowRoot?.querySelector<HTMLElement>('[part="panel"]');
+    if (!div || !this.ctx) return;
+    const record = this.ctx.getRegistry().getByValue(this.value);
+    if (record?.element) {
+      // Cast needed until TypeScript DOM lib includes these properties.
+      (div as any).ariaLabelledByElements = [record.element];
+    }
   }
 
   override render() {
-    const active = this.ctx?.activeValue === this.value;
-    if (!active && !this.keepMounted) return nothing;
-    return active
-      ? html`<div part="panel" role="tabpanel" tabindex="0"><slot></slot></div>`
-      : html`<div part="panel" hidden><slot></slot></div>`;
-    // ariaLabelledByElements set in updated() in full implementation (Task 9)
+    const isActive = this.ctx?.activeValue === this.value;
+
+    if (isActive) {
+      return html`
+        <div part="panel" role="tabpanel" tabindex="0">
+          <slot></slot>
+        </div>
+      `;
+      // No aria-labelledby attribute — ariaLabelledByElements set imperatively in updated().
+    }
+
+    if (this.keepMounted) {
+      return html`<div part="panel" hidden><slot></slot></div>`;
+    }
+
+    // Inactive + not keepMounted: render nothing. Slotted content is unassigned
+    // and not displayed. The host element itself stays in the light DOM.
+    return nothing;
   }
 }
 
