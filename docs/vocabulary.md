@@ -67,12 +67,14 @@ CSS `::part()` names. All lowercase, hyphenated nouns.
 
 Standard data attributes set by controllers or elements as public API.
 
-| Attribute | Values | Set by |
-|---|---|---|
-| `data-open` | boolean presence | Host element in `willUpdate` |
-| `data-disabled` | boolean presence | Host element in `willUpdate` |
-| `data-orientation` | `"vertical"` / `"horizontal"` | Root and sub-parts in `willUpdate` |
-| `data-index` | string integer | Item element in `willUpdate` |
+| Attribute | Values | Set by | Semantics |
+|---|---|---|---|
+| `data-open` | boolean presence | Host element in `willUpdate` | — |
+| `data-disabled` | boolean presence | Host element in `willUpdate` | — |
+| `data-orientation` | `"vertical"` / `"horizontal"` | Root and sub-parts in `willUpdate` | — |
+| `data-index` | string integer | Item element in `willUpdate` | — |
+| `data-selected` | boolean presence | Host in `willUpdate` | Active in a selection group. Standard for single- and multi-select components (tabs, radio group, listbox, combobox, select, toggle group, menu). Distinct from `data-open` — use `data-open` for disclosure/expand patterns (accordion, collapsible, dialog, popover). |
+| `data-activation-direction` | `'start'` / `'end'` / `'none'` | Root + all sub-elements in `willUpdate` | Direction of the last activation relative to list order. Logical, not physical — consumers combine with `data-orientation` to derive the physical direction for animations. `none` on the initial activation. |
 
 ---
 
