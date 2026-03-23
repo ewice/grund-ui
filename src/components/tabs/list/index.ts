@@ -24,7 +24,7 @@ export class GrundTabsList extends LitElement {
   @state()
   private ctx?: TabsRootContext;
 
-  private rovingFocus!: RovingFocusController;
+  private rovingFocus?: RovingFocusController;
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -75,33 +75,37 @@ export class GrundTabsList extends LitElement {
     const orientation = this.ctx?.orientation ?? 'horizontal';
     const isHorizontal = orientation === 'horizontal';
 
-    const activationKeys = isHorizontal
+    const navKeys = isHorizontal
       ? ['ArrowLeft', 'ArrowRight', 'Home', 'End']
       : ['ArrowUp', 'ArrowDown', 'Home', 'End'];
 
-    const isActivationKey = activationKeys.includes(event.key);
+    const arrowKeys = isHorizontal
+      ? ['ArrowLeft', 'ArrowRight']
+      : ['ArrowUp', 'ArrowDown'];
+
+    const isNavKey = navKeys.includes(event.key);
+    const isArrowKey = arrowKeys.includes(event.key);
     const isConfirmKey = event.key === 'Enter' || event.key === ' ';
 
-    if (!isActivationKey && !isConfirmKey) return;
+    if (!isNavKey && !isConfirmKey) return;
+    event.preventDefault();
 
-    // RovingFocusController already called preventDefault() for navigation keys.
-    // We call it here for confirm keys (Enter/ ) to prevent form submission.
-    if (isConfirmKey) event.preventDefault();
-
-    if (isActivationKey && this.activateOnFocus) {
-      // RovingFocusController moved focus synchronously before this handler ran.
-      // document.activeElement is now the <grund-tab> host (shadow focus delegation).
-      const tabHost = document.activeElement as HTMLElement | null;
-      const value = (tabHost as any)?.value as string | undefined;
-      if (value) this.ctx?.activateTab(value);
+    if (isArrowKey && this.activateOnFocus) {
+      // Arrow key in auto-activation mode: RovingFocusController already moved focus.
+      const tabHost = document.activeElement;
+      if (tabHost && this.contains(tabHost)) {
+        const value = (tabHost as { value?: string })?.value;
+        if (value) this.ctx?.activateTab(value);
+      }
     }
 
-    if (isConfirmKey && !this.activateOnFocus) {
-      // In manual activation mode, confirm keys activate the currently focused tab.
-      // document.activeElement is the <grund-tab> host.
-      const tabHost = document.activeElement as HTMLElement | null;
-      const value = (tabHost as any)?.value as string | undefined;
-      if (value) this.ctx?.activateTab(value);
+    if (isConfirmKey) {
+      // Enter/Space activates the focused tab regardless of activateOnFocus mode.
+      const tabHost = document.activeElement;
+      if (tabHost && this.contains(tabHost)) {
+        const value = (tabHost as { value?: string })?.value;
+        if (value) this.ctx?.activateTab(value);
+      }
     }
   };
 

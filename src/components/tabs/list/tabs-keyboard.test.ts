@@ -113,6 +113,33 @@ describe('<grund-tabs-list> keyboard', () => {
     expect(getActiveShadowButton()).to.equal(buttons[0]);
   });
 
+  it('Enter activates the focused tab', async () => {
+    const el = await setup();
+    const buttons = getTabButtons(el);
+    buttons[1].focus();
+    simulateKeyboard(buttons[1], 'Enter');
+    await flush(el);
+    expect(el.querySelectorAll('grund-tab')[1].hasAttribute('data-selected')).to.be.true;
+  });
+
+  it('Home moves focus only, does not activate tab', async () => {
+    const el = await setup();
+    const buttons = getTabButtons(el);
+    // First activate tab C via click so it is selected
+    el.querySelectorAll('grund-tab')[2].shadowRoot!.querySelector('button')!.click();
+    await flush(el);
+    // Tab C is now selected
+    expect(el.querySelectorAll('grund-tab')[2].hasAttribute('data-selected')).to.be.true;
+    // Now press Home from tab B's button to verify Home doesn't activate
+    buttons[1].focus();
+    simulateKeyboard(buttons[1], 'Home');
+    await flush(el);
+    // Focus moved to first tab, but tab C should still be selected
+    expect(el.querySelectorAll('grund-tab')[2].hasAttribute('data-selected')).to.be.true;
+    // And focus is on first button
+    expect(getActiveShadowButton()).to.equal(buttons[0]);
+  });
+
   it('skips disabled tabs', async () => {
     const el = await fixture<GrundTabs>(html`
       <grund-tabs>
