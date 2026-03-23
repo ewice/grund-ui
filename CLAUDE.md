@@ -77,7 +77,7 @@ One canonical mechanism per direction:
 - Discovery: registration via context callbacks only. Never `querySelectorAll` to find child components.
 - Show/hide: `data-open` boolean attribute set in `willUpdate`. Exception: `hidden="until-found"` for browser-native find-in-page.
 - Event naming: `grund-{action}` with `bubbles: true, composed: false`.
-- ARIA linking: derive IDs from context, bind in templates (`aria-controls`, `aria-labelledby`).
+- ARIA linking: use the Element Reference API (`ariaControlsElements`, `ariaLabelledByElements`) for cross-shadow relationships. Set in `updated()` after render. See `.claude-plugin/refs/aria-linking.md` for the full pattern. Legacy IDREF approach (`aria-controls`, `aria-labelledby`) does not resolve across shadow root boundaries.
 - Keyboard navigation: `RovingFocusController` on the container element.
 - No duplicate paths: a registration or state mutation happens through exactly one mechanism.
 
