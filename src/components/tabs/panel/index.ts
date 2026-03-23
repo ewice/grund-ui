@@ -32,7 +32,9 @@ export class GrundTabsPanel extends LitElement {
       }
     }
     // id can be set here — doesn't require ctx.
-    this.id = `grund-tabs-panel-${this.value}`;
+    if (this.value) {
+      this.id = `grund-tabs-panel-${this.value}`;
+    }
     // ctx not available here — registration deferred to willUpdate.
   }
 
@@ -65,7 +67,7 @@ export class GrundTabsPanel extends LitElement {
     const div = this.shadowRoot?.querySelector<HTMLElement>('[part="panel"]');
     if (!div || !this.ctx) return;
     const record = this.ctx.getRegistry().getByValue(this.value);
-    if (record?.element) {
+    if (record?.element && record.element !== this) {
       // Cast needed until TypeScript DOM lib includes these properties.
       (div as any).ariaLabelledByElements = [record.element];
     }
