@@ -62,13 +62,18 @@ export class GrundTabsIndicator extends LitElement {
       this.dataset.activationDirection = this.ctx.activationDirection;
     }
     this.updateTabObserver();
+    // Note: measure() is called in updated() to read post-render geometry
+  }
+
+  override updated(): void {
     this.measure();
   }
 
   private updateTabObserver(): void {
     if (!this.ctx) return;
     const record = this.ctx.getRegistry().getByValue(this.ctx.activeValue ?? '');
-    const activeTab = record?.element ?? null;
+    // Skip stub records where element is the panel placeholder (not a real tab element)
+    const activeTab = (record && record.element !== record.panel) ? record.element : null;
     if (activeTab === this.observedTab) return;
 
     this.tabObserver?.disconnect();
@@ -82,7 +87,8 @@ export class GrundTabsIndicator extends LitElement {
   private measure(): void {
     if (!this.ctx?.activeValue) return;
     const record = this.ctx.getRegistry().getByValue(this.ctx.activeValue);
-    const tab = record?.element;
+    // Skip stub records where element is the panel placeholder
+    const tab = (record && record.element !== record.panel) ? record.element : null;
     const list = this.closest('grund-tabs-list') as HTMLElement | null;
     if (!tab || !list) return;
 
