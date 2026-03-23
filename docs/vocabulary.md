@@ -40,7 +40,7 @@ CSS `::part()` names. All lowercase, hyphenated nouns.
 | Part | Meaning | Components |
 |---|---|---|
 | `trigger` | The interactive element that activates an item | Accordion, Disclosure, Tabs |
-| `panel` | The collapsible/revealable content region | Accordion, Disclosure |
+| `panel` | The collapsible/revealable content region | Accordion, Disclosure, Tabs |
 | `header` | The heading wrapper element | (reserved — no component uses it yet) |
 | `content` | Inner content wrapper within a panel | Dialog |
 | `indicator` | Visual expand/collapse chevron or icon | Accordion, Select |
