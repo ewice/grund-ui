@@ -56,7 +56,7 @@ export class GrundTab extends LitElement {
     }
 
     // Re-register if value changed after initial registration
-    if (this.isRegistered && changed.has('value') && this.previousValue) {
+    if (this.isRegistered && changed.has('value') && this.previousValue !== this.value) {
       this.ctx?.unregisterTab(this.previousValue);
       this.ctx?.registerTab(this);
       this.previousValue = this.value;
