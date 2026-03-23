@@ -53,8 +53,12 @@ describe('OrderedRegistry', () => {
     expect(reg.findIndex((r) => r.label === 'X')).to.equal(-1);
   });
 
-  it('entries is readonly', () => {
+  it('entries array is isolated — mutations do not affect internal state', () => {
     const reg = new OrderedRegistry<TestRecord>();
-    expect(Array.isArray(reg.entries)).to.be.true;
+    const a = makeEl('a');
+    reg.insert({ element: a, label: 'A' });
+    const snapshot = reg.entries as TestRecord[];
+    snapshot.push({ element: a, label: 'FAKE' });
+    expect(reg.entries).to.have.length(1); // internal state unchanged
   });
 });

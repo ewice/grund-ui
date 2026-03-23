@@ -12,14 +12,14 @@ export class OrderedRegistry<TRecord extends OrderedRecord> {
   private _entries: TRecord[] = [];
 
   get entries(): readonly TRecord[] {
-    return this._entries;
+    return [...this._entries];
   }
 
   insert(record: TRecord): void {
     const idx = this._entries.findIndex(
       (existing) =>
-        record.element.compareDocumentPosition(existing.element) &
-        Node.DOCUMENT_POSITION_FOLLOWING,
+        existing.element.compareDocumentPosition(record.element) &
+        Node.DOCUMENT_POSITION_PRECEDING,
     );
     if (idx === -1) {
       this._entries.push(record);
