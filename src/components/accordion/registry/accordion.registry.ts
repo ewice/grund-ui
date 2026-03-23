@@ -1,5 +1,8 @@
-export interface AccordionItemRecord {
-  item: HTMLElement;
+import { OrderedRegistry } from '../../../utils/ordered-registry.js';
+import type { OrderedRecord } from '../../../utils/ordered-registry.js';
+
+export interface AccordionItemRecord extends OrderedRecord {
+  item: HTMLElement;   // same reference as element — kept for API compatibility
   value: string;
   trigger: HTMLElement | null;
   panel: HTMLElement | null;
@@ -7,32 +10,20 @@ export interface AccordionItemRecord {
 
 /**
  * Ordered child tracking and trigger↔panel linking for accordion items.
- * No Lit dependency — pure DOM-order registry.
  * @internal
  */
-export class AccordionRegistry {
-  private records: AccordionItemRecord[] = [];
-
-  get items(): AccordionItemRecord[] {
-    return this.records;
+export class AccordionRegistry extends OrderedRegistry<AccordionItemRecord> {
+  /** Alias for `entries` — preserves existing public API. */
+  get items(): readonly AccordionItemRecord[] {
+    return this.entries;
   }
 
   registerItem(item: HTMLElement, value: string): void {
-    const record: AccordionItemRecord = { item, value, trigger: null, panel: null };
-    const insertIndex = this.records.findIndex(
-      (existing) =>
-        existing.item.compareDocumentPosition(item) &
-        Node.DOCUMENT_POSITION_PRECEDING,
-    );
-    if (insertIndex === -1) {
-      this.records.push(record);
-    } else {
-      this.records.splice(insertIndex, 0, record);
-    }
+    this.insert({ element: item, item, value, trigger: null, panel: null });
   }
 
   unregisterItem(item: HTMLElement): void {
-    this.records = this.records.filter((r) => r.item !== item);
+    this.remove((r) => r.item === item);
   }
 
   attachTrigger(item: HTMLElement, trigger: HTMLElement): void {
@@ -56,10 +47,10 @@ export class AccordionRegistry {
   }
 
   getRecord(item: HTMLElement): AccordionItemRecord | undefined {
-    return this.records.find((r) => r.item === item);
+    return this.find((r) => r.item === item);
   }
 
   indexOf(item: HTMLElement): number {
-    return this.records.findIndex((r) => r.item === item);
+    return this.findIndex((r) => r.item === item);
   }
 }
