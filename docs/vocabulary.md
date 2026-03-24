@@ -19,6 +19,10 @@ for the same semantic action.
 | `registerItem` / `unregisterItem` | Add/remove a child from the parent registry | `ctx.registerItem(this, value)` |
 | `attachTrigger` / `detachTrigger` | Link/unlink a trigger sub-part to its item | `itemCtx.attachTrigger(this)` |
 | `attachPanel` / `detachPanel` | Link/unlink a panel sub-part to its item | `itemCtx.attachPanel(this)` |
+| `requestActivation` | Request a tab activation (may be rejected by controlled mode) | `ctx.requestActivation(value)` |
+| `registerTab` / `unregisterTab` | Add/remove a tab from the tabs registry | `ctx.registerTab(value, this)` |
+| `registerPanel` / `unregisterPanel` | Add/remove a panel from the tabs registry | `ctx.registerPanel(value, this)` |
+| `setDisabled` | Sync disabled state from a tab to the registry | `ctx.setDisabled(value, disabled)` |
 
 ---
 
@@ -28,7 +32,7 @@ All events follow `grund-{action}` pattern, `bubbles: true`, `composed: false`.
 
 | Event | Detail type | Meaning |
 |---|---|---|
-| `grund-value-change` | `{ value: string[], itemValue: string, open: boolean }` | Full expanded values snapshot |
+| `grund-value-change` | `{ value: string[], itemValue: string, open: boolean }` (accordion) / `{ value: string \| null, previousValue: string \| null }` (tabs) | Full expanded values snapshot (accordion); active tab changed (tabs) |
 | `grund-open-change` | `{ value: string, open: boolean, index: number }` | An item opened or closed |
 
 ---
@@ -41,9 +45,11 @@ CSS `::part()` names. All lowercase, hyphenated nouns.
 |---|---|---|
 | `trigger` | The interactive element that activates an item | Accordion, Disclosure, Tabs |
 | `panel` | The collapsible/revealable content region | Accordion, Disclosure, Tabs |
+| `tab` | The tab button element | Tabs |
+| `list` | The tablist container | Tabs |
 | `header` | The heading wrapper element | (reserved — no component uses it yet) |
 | `content` | Inner content wrapper within a panel | Dialog |
-| `indicator` | Visual expand/collapse chevron or icon | Accordion, Select |
+| `indicator` | Visual expand/collapse chevron or icon (Accordion); position tracker for active tab (Tabs) | Accordion, Select, Tabs |
 | `label` | A text label element | Switch, Checkbox |
 | `input` | The underlying native or custom input | Switch, Checkbox, Input |
 | `close-button` | Button that closes an overlay | Dialog, Sheet, Toast |
@@ -87,6 +93,7 @@ Context symbols follow the pattern `{ComponentName}Context` for the root context
 |---|---|
 | `accordionRootContext` | Root-level context for accordion |
 | `accordionItemContext` | Per-item context for accordion |
+| `tabsRootContext` | Root-level context for tabs |
 
 ---
 
@@ -101,6 +108,11 @@ All custom elements: `grund-{component-name}[-{sub-element}]`
 | Accordion header | `grund-accordion-header` |
 | Accordion trigger | `grund-accordion-trigger` |
 | Accordion panel | `grund-accordion-panel` |
+| Tabs root | `grund-tabs` |
+| Tabs list | `grund-tabs-list` |
+| Tab | `grund-tab` |
+| Tabs panel | `grund-tabs-panel` |
+| Tabs indicator | `grund-tabs-indicator` |
 
 ---
 
