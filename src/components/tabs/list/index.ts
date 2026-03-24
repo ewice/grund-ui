@@ -26,7 +26,7 @@ export class GrundTabsList extends LitElement {
   @state()
   private ctx?: TabsRootContext;
 
-  private rovingFocus!: RovingFocusController;
+  private rovingFocus?: RovingFocusController;
   private handleFocusin = this.onFocusin.bind(this);
 
   override connectedCallback(): void {
@@ -48,7 +48,7 @@ export class GrundTabsList extends LitElement {
     this.removeEventListener('focusin', this.handleFocusin);
   }
 
-  override willUpdate(changed: Map<PropertyKey, unknown>): void {
+  override willUpdate(_changed: Map<PropertyKey, unknown>): void {
     this.rovingFocus?.update({
       orientation: this.ctx?.orientation ?? 'horizontal',
       loop: this.loopFocus,
@@ -69,6 +69,7 @@ export class GrundTabsList extends LitElement {
 
   private handleSlotchange(): void {
     this.rovingFocus?.update({ getItems: () => this.getTabButtons() });
+    this.rovingFocus?.sync();
   }
 
   private onFocusin(event: FocusEvent): void {
@@ -78,8 +79,11 @@ export class GrundTabsList extends LitElement {
       (el) => el instanceof HTMLElement && el.tagName === 'GRUND-TAB',
     ) as HTMLElement | undefined;
 
-    if (tabEl && (tabEl as any).value !== this.ctx.activeValue) {
-      this.ctx.requestActivation((tabEl as any).value);
+    if (tabEl) {
+      const value = (tabEl as any).value as string;
+      if (value && value !== this.ctx.activeValue) {
+        this.ctx.requestActivation(value);
+      }
     }
   }
 

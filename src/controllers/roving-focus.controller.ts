@@ -41,6 +41,10 @@ export class RovingFocusController implements ReactiveController {
     Object.assign(this.options, defined);
   }
 
+  sync(): void {
+    this.syncTabIndexes();
+  }
+
   private syncTabIndexes(): void {
     const items = this.options.getItems();
     if (items.length === 0) return;
