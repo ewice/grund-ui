@@ -39,6 +39,15 @@ export const Default: Story = {
       </grund-tabs-panel>
     </grund-tabs>
   `,
+  // play function omitted: @storybook/test is not installed in this project.
+  // To add interaction tests, install @storybook/test and implement:
+  //   play: async ({ canvasElement }) => {
+  //     const canvas = within(canvasElement);
+  //     const passwordTab = canvas.getByText('Password');
+  //     await userEvent.click(passwordTab);
+  //     const tabHost = passwordTab.closest('grund-tab');
+  //     await expect(tabHost).to.have.attribute('data-selected');
+  //   },
 };
 
 export const Vertical: Story = {

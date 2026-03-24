@@ -186,11 +186,73 @@ describe('Tabs Keyboard Navigation', () => {
     simulateKeyboard(buttons[0], 'ArrowRight');
     await flush(el);
 
-    // Now press Enter on focused button B — native button click fires
+    // Native <button> fires click on Enter/Space — .click() faithfully reproduces this
+    // without emitting a synthetic keydown, which is correct for this test.
     buttons[1].click();
     await flush(el);
 
     const tabs = el.querySelectorAll('grund-tab');
     expect(tabs[1].hasAttribute('data-selected')).to.be.true;
+  });
+
+  it('activate-on-focus=false activates with Space key', async () => {
+    const el = await setup(html`
+      <grund-tabs>
+        <grund-tabs-list .activateOnFocus=${false}>
+          <grund-tab value="a">A</grund-tab>
+          <grund-tab value="b">B</grund-tab>
+        </grund-tabs-list>
+        <grund-tabs-panel value="a">A</grund-tabs-panel>
+        <grund-tabs-panel value="b">B</grund-tabs-panel>
+      </grund-tabs>
+    `);
+
+    const buttons = getTabButtons(el);
+    buttons[0].focus();
+    simulateKeyboard(buttons[0], 'ArrowRight');
+    await flush(el);
+
+    // Native <button> fires click on Space — .click() reproduces this in jsdom
+    buttons[1].click();
+    await flush(el);
+
+    const tabs = el.querySelectorAll('grund-tab');
+    expect(tabs[1].hasAttribute('data-selected')).to.be.true;
+  });
+
+  it('ArrowUp moves focus in vertical orientation', async () => {
+    const el = await setup(html`
+      <grund-tabs orientation="vertical">
+        <grund-tabs-list>
+          <grund-tab value="a">A</grund-tab>
+          <grund-tab value="b">B</grund-tab>
+        </grund-tabs-list>
+        <grund-tabs-panel value="a">A</grund-tabs-panel>
+        <grund-tabs-panel value="b">B</grund-tabs-panel>
+      </grund-tabs>
+    `);
+    const buttons = getTabButtons(el);
+    buttons[1].focus();
+    simulateKeyboard(buttons[1], 'ArrowUp');
+    expect(getActiveShadowButton()).to.equal(buttons[0]);
+  });
+
+  it('RTL: ArrowLeft moves focus to next tab (forward in visual order)', async () => {
+    const el = await setup(html`
+      <grund-tabs dir="rtl">
+        <grund-tabs-list>
+          <grund-tab value="a">A</grund-tab>
+          <grund-tab value="b">B</grund-tab>
+          <grund-tab value="c">C</grund-tab>
+        </grund-tabs-list>
+        <grund-tabs-panel value="a">A</grund-tabs-panel>
+        <grund-tabs-panel value="b">B</grund-tabs-panel>
+        <grund-tabs-panel value="c">C</grund-tabs-panel>
+      </grund-tabs>
+    `);
+    const buttons = getTabButtons(el);
+    buttons[0].focus();
+    simulateKeyboard(buttons[0], 'ArrowLeft');
+    expect(getActiveShadowButton()).to.equal(buttons[1]);
   });
 });

@@ -16,7 +16,7 @@ import type { TabsRootContext } from '../context/tabs.context.js';
  */
 export class GrundTabsList extends LitElement {
   static override styles = css`
-    :host { display: block; }
+    :host { display: block; /* block: this element is a block-level container */ }
   `;
 
   @property({ type: Boolean, attribute: 'activate-on-focus' }) activateOnFocus = true;
@@ -26,16 +26,19 @@ export class GrundTabsList extends LitElement {
   @state()
   private ctx?: TabsRootContext;
 
-  private rovingFocus?: RovingFocusController;
+  // Class field initializer — ensures exactly one controller instance per element lifetime.
+  // Constructing in connectedCallback would create a new instance (and duplicate keydown
+  // listeners) on every disconnect+reconnect cycle. willUpdate syncs the live options.
+  private readonly rovingFocus = new RovingFocusController(this, {
+    orientation: 'horizontal',
+    loop: true,
+    getItems: () => this.getTabButtons(),
+  });
+
   private handleFocusin = this.onFocusin.bind(this);
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.rovingFocus = new RovingFocusController(this, {
-      orientation: this.ctx?.orientation ?? 'horizontal',
-      loop: this.loopFocus,
-      getItems: () => this.getTabButtons(),
-    });
     this.addEventListener('focusin', this.handleFocusin);
 
     if (import.meta.env.DEV && !this.closest('grund-tabs')) {

@@ -16,7 +16,7 @@ import type { TabsRootContext } from '../context/tabs.context.js';
  */
 export class GrundTabsPanel extends LitElement {
   static override styles = css`
-    :host { display: block; }
+    :host { display: block; /* block: this element is a block-level container */ }
   `;
 
   @property()

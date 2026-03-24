@@ -4,7 +4,10 @@ export interface TabsValueChangeDetail {
   previousValue: string | null;
 }
 
-/** Snapshot of host properties passed to TabsController.syncFromHost(). */
+/**
+ * Snapshot of host properties passed to TabsController.syncFromHost().
+ * @internal
+ */
 export interface TabsHostSnapshot {
   value: string | null | undefined;
   defaultValue: string | null;

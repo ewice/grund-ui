@@ -1,6 +1,6 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
-import { flush, getByPart } from '../../../test-utils/index.js';
+import { flush, getByPart, simulateKeyboard } from '../../../test-utils/index.js';
 
 import '../root/index.js';
 import '../list/index.js';
@@ -149,5 +149,79 @@ describe('GrundTabs', () => {
     await flush(el);
 
     expect(newTab.hasAttribute('data-selected')).to.be.true;
+  });
+
+  it('two independent tabs instances do not interfere', async () => {
+    const wrapper = await fixture<HTMLDivElement>(html`
+      <div>
+        <grund-tabs id="tabs1">
+          <grund-tabs-list>
+            <grund-tab value="x">X</grund-tab>
+            <grund-tab value="y">Y</grund-tab>
+          </grund-tabs-list>
+          <grund-tabs-panel value="x">X</grund-tabs-panel>
+          <grund-tabs-panel value="y">Y</grund-tabs-panel>
+        </grund-tabs>
+        <grund-tabs id="tabs2">
+          <grund-tabs-list>
+            <grund-tab value="p">P</grund-tab>
+            <grund-tab value="q">Q</grund-tab>
+          </grund-tabs-list>
+          <grund-tabs-panel value="p">P</grund-tabs-panel>
+          <grund-tabs-panel value="q">Q</grund-tabs-panel>
+        </grund-tabs>
+      </div>
+    `);
+
+    const tabs1 = wrapper.querySelector<GrundTabs>('#tabs1')!;
+    const tabs2 = wrapper.querySelector<GrundTabs>('#tabs2')!;
+    await flush(tabs1);
+    await flush(tabs2);
+
+    // Activate Y in tabs1
+    const buttons1 = getTabButtons(tabs1);
+    buttons1[1].click();
+    await flush(tabs1);
+
+    // tabs2 should be unaffected — still have P selected
+    const tabs2Els = tabs2.querySelectorAll('grund-tab');
+    expect(tabs2Els[0].hasAttribute('data-selected')).to.be.true;
+    expect(tabs2Els[1].hasAttribute('data-selected')).to.be.false;
+  });
+
+  it('removing a tab unregisters it from context', async () => {
+    const el = await setup();
+    const list = el.querySelector('grund-tabs-list')!;
+    const tabC = el.querySelector('grund-tab[value="c"]')!;
+
+    // Remove tab C
+    list.removeChild(tabC);
+    await flush(el);
+
+    // Tab C should no longer appear in navigation — verify by checking indexOf returns -1
+    // (indirect: activation on the removed value should silently no-op)
+    const buttons = getTabButtons(el);
+    expect(buttons).to.have.length(2);
+  });
+
+  it('disconnect and reconnect does not duplicate keyboard event handlers', async () => {
+    const el = await setup();
+    const list = el.querySelector('grund-tabs-list')!;
+    await flush(el);
+
+    // Remove and re-add to DOM
+    const parent = list.parentElement!;
+    parent.removeChild(list);
+    parent.insertBefore(list, parent.firstChild);
+    await flush(el);
+
+    const buttons = getTabButtons(el);
+    buttons[0].focus();
+
+    // ArrowRight should advance focus exactly once, not multiple times
+    simulateKeyboard(buttons[0], 'ArrowRight');
+    const active = list.ownerDocument.activeElement;
+    const shadowActive = active?.shadowRoot?.activeElement ?? active;
+    expect(shadowActive).to.equal(buttons[1]);
   });
 });

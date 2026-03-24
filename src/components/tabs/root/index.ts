@@ -18,7 +18,7 @@ import type { TabsHostSnapshot, TabsValueChangeDetail } from '../types.js';
  */
 export class GrundTabs extends LitElement {
   static override styles = css`
-    :host { display: block; }
+    :host { display: block; /* block: this element is a block-level container */ }
   `;
 
   // Not attribute-reflected: null requires property binding, string | null | undefined
@@ -42,6 +42,56 @@ export class GrundTabs extends LitElement {
   private controller = new TabsController();
   private registry = new TabsRegistry();
   private activationDirection: 'start' | 'end' | 'none' = 'none';
+
+  // Stable bound callbacks — defined as class fields so object identity is preserved across
+  // createRootContext() calls. Lit context consumers re-render when context reference changes;
+  // stable callbacks avoid triggering unnecessary re-renders on unrelated state updates.
+  private readonly _registerTab = (value: string, tab: HTMLElement): void => {
+    this.registry.registerTab(value, tab);
+    // Auto-select the first enabled tab when uncontrolled and nothing is selected yet.
+    // This must happen here (not in syncFromHost) because the registry is empty on the
+    // first willUpdate call — tabs register themselves after the root renders.
+    if (this.controller.activeValue === null && this.value === undefined) {
+      const ordered = this.registry.getOrderedValues();
+      const disabled = this.registry.getDisabledValues();
+      const first = ordered.find((v) => !disabled.has(v));
+      if (first !== undefined) {
+        // Use seed() rather than requestActivation() so that a disabled root
+        // still gets its first tab auto-selected. Disabled blocks user
+        // interaction, not initial state seeding.
+        this.controller.seed(first);
+        this.rootCtx = this.createRootContext();
+      }
+    }
+  };
+
+  private readonly _unregisterTab = (value: string): void => {
+    this.registry.unregisterTab(value);
+    this.rootCtx = this.createRootContext();
+  };
+
+  private readonly _registerPanel = (value: string, panel: HTMLElement): void => {
+    this.registry.registerPanel(value, panel);
+    // Recreate context so tabs can resolve ariaControlsElements after panels register.
+    this.rootCtx = this.createRootContext();
+  };
+
+  private readonly _unregisterPanel = (value: string): void => {
+    this.registry.unregisterPanel(value);
+    this.rootCtx = this.createRootContext();
+  };
+
+  private readonly _setDisabled = (value: string, isDisabled: boolean): void => {
+    this.registry.setDisabled(value, isDisabled);
+  };
+
+  private readonly _requestActivation = (value: string): void => {
+    this.handleActivation(value);
+  };
+
+  private readonly _getTabElement = (value: string) => this.registry.getTabElement(value);
+  private readonly _getPanelElement = (value: string) => this.registry.getPanelElement(value);
+  private readonly _indexOf = (value: string) => this.registry.indexOf(value);
 
   override willUpdate(changed: Map<PropertyKey, unknown>): void {
     const snapshot: TabsHostSnapshot = {
@@ -84,53 +134,15 @@ export class GrundTabs extends LitElement {
       activationDirection: this.activationDirection,
       orientation: this.orientation,
       disabled: this.disabled,
-
-      registerTab: (value: string, tab: HTMLElement) => {
-        this.registry.registerTab(value, tab);
-        // Auto-select the first enabled tab when uncontrolled and nothing is selected yet.
-        // This must happen here (not in syncFromHost) because the registry is empty on the
-        // first willUpdate call — tabs register themselves after the root renders.
-        if (this.controller.activeValue === null && this.value === undefined) {
-          const ordered = this.registry.getOrderedValues();
-          const disabled = this.registry.getDisabledValues();
-          const first = ordered.find((v) => !disabled.has(v));
-          if (first !== undefined) {
-            // Use seed() rather than requestActivation() so that a disabled root
-            // still gets its first tab auto-selected. Disabled blocks user
-            // interaction, not initial state seeding.
-            this.controller.seed(first);
-            this.rootCtx = this.createRootContext();
-          }
-        }
-      },
-
-      unregisterTab: (value: string) => {
-        this.registry.unregisterTab(value);
-        this.rootCtx = this.createRootContext();
-      },
-
-      registerPanel: (value: string, panel: HTMLElement) => {
-        this.registry.registerPanel(value, panel);
-        // Recreate context so tabs can resolve ariaControlsElements after panels register.
-        this.rootCtx = this.createRootContext();
-      },
-
-      unregisterPanel: (value: string) => {
-        this.registry.unregisterPanel(value);
-        this.rootCtx = this.createRootContext();
-      },
-
-      setDisabled: (value: string, disabled: boolean) => {
-        this.registry.setDisabled(value, disabled);
-      },
-
-      requestActivation: (value: string) => {
-        this.handleActivation(value);
-      },
-
-      getTabElement: (value: string) => this.registry.getTabElement(value),
-      getPanelElement: (value: string) => this.registry.getPanelElement(value),
-      indexOf: (value: string) => this.registry.indexOf(value),
+      registerTab: this._registerTab,
+      unregisterTab: this._unregisterTab,
+      registerPanel: this._registerPanel,
+      unregisterPanel: this._unregisterPanel,
+      setDisabled: this._setDisabled,
+      requestActivation: this._requestActivation,
+      getTabElement: this._getTabElement,
+      getPanelElement: this._getPanelElement,
+      indexOf: this._indexOf,
     };
   }
 
