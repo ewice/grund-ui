@@ -83,10 +83,11 @@ export class GrundTabsPanel extends LitElement {
     const panelDiv = this.shadowRoot?.querySelector<HTMLElement>('[part="panel"]');
     if (!this.ctx || !panelDiv) return;
 
+    // Clear to [] when the tab is not in the DOM (e.g. dynamic tab removal) to avoid
+    // stale references pointing to disconnected elements — mirrors ariaControlsElements
+    // clearing in <grund-tab>.
     const tabEl = this.ctx.getTabElement(this.value);
-    if (tabEl) {
-      (panelDiv as any).ariaLabelledByElements = [tabEl];
-    }
+    (panelDiv as any).ariaLabelledByElements = tabEl ? [tabEl] : [];
   }
 
   override render() {
