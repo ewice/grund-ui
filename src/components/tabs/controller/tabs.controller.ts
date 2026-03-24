@@ -13,16 +13,13 @@ export class TabsController {
   private isSeeded = false;
   private disabled = false;
 
-  syncFromHost(
-    snapshot: TabsHostSnapshot,
-    registeredValues: string[] = [],
-    disabledValues: Set<string> = new Set(),
-  ): void {
+  syncFromHost(snapshot: TabsHostSnapshot): void {
     this.disabled = snapshot.disabled;
     this.isControlled = snapshot.value !== undefined;
 
     if (this.isControlled) {
-      this.activeValue = snapshot.value;
+      // snapshot.value is string | null when isControlled (undefined is excluded above)
+      this.activeValue = snapshot.value ?? null;
     } else if (!this.isSeeded && snapshot.defaultValue !== null) {
       this.activeValue = snapshot.defaultValue;
       this.isSeeded = true;

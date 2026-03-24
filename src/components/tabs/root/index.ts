@@ -49,7 +49,7 @@ export class GrundTabs extends LitElement {
       defaultValue: this.defaultValue,
       disabled: this.disabled,
     };
-    this.controller.syncFromHost(snapshot, this.registry.getOrderedValues(), this.registry.getDisabledValues());
+    this.controller.syncFromHost(snapshot);
 
     this.dataset.orientation = this.orientation;
     this.activationDirection = this.computeActivationDirection();
