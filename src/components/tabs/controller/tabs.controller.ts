@@ -29,6 +29,17 @@ export class TabsController {
     }
   }
 
+  /**
+   * Seeds the initial active value without going through the disabled check.
+   * Used by the root's registerTab callback for first-render auto-selection —
+   * disabled blocks user interaction, not initial state seeding.
+   */
+  seed(value: string): void {
+    this.previousValue = null;
+    this.activeValue = value;
+    this.isSeeded = true;
+  }
+
   requestActivation(value: string): string | null {
     if (this.disabled) {
       return null;

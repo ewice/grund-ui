@@ -95,7 +95,10 @@ export class GrundTabs extends LitElement {
           const disabled = this.registry.getDisabledValues();
           const first = ordered.find((v) => !disabled.has(v));
           if (first !== undefined) {
-            this.controller.requestActivation(first);
+            // Use seed() rather than requestActivation() so that a disabled root
+            // still gets its first tab auto-selected. Disabled blocks user
+            // interaction, not initial state seeding.
+            this.controller.seed(first);
             this.rootCtx = this.createRootContext();
           }
         }
