@@ -46,12 +46,21 @@ describe('GrundTabsIndicator', () => {
     expect(indicator.dataset.activationDirection).to.equal('none');
   });
 
-  it('sets CSS custom properties from active tab geometry', async () => {
+  it('sets all 6 CSS custom properties from active tab geometry', async () => {
     const el = await setup();
     const indicator = el.querySelector('grund-tabs-indicator')!;
     const div = indicator.shadowRoot?.querySelector<HTMLElement>('[part="indicator"]')!;
-    // The indicator should have measured the active tab and set CSS custom properties
-    // Values will be numeric pixel strings (may be 0 in JSDOM)
-    expect(div.style.getPropertyValue('--grund-tabs-indicator-width')).to.exist;
+    // Values will be numeric pixel strings (may be "0px" in JSDOM — still truthy)
+    const props = [
+      '--grund-tabs-indicator-width',
+      '--grund-tabs-indicator-height',
+      '--grund-tabs-indicator-left',
+      '--grund-tabs-indicator-top',
+      '--grund-tabs-indicator-right',
+      '--grund-tabs-indicator-bottom',
+    ];
+    for (const prop of props) {
+      expect(div.style.getPropertyValue(prop), prop).to.exist;
+    }
   });
 });
