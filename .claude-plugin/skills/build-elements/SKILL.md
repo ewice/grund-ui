@@ -29,9 +29,21 @@ Read conditionally based on category:
 - Overlay or show/hide: `.claude-plugin/refs/transition-contract.md` and `.claude-plugin/refs/focus-management.md`
 - Composite widget with roving focus: `.claude-plugin/refs/focus-management.md`
 
-### Step 1.5 — Abstraction fit check
+### Step 1.5 — Shared code audit and abstraction fit check
 
-For each shared controller the spec requires (e.g., `RovingFocusController`, `FocusTrapController`), run the fit check from `lit-patterns.md` Rule 35 **before writing any code**:
+**Shared code audit (required first):** Before writing any code, search for reusable utilities:
+
+```bash
+ls src/utils/ src/controllers/
+```
+
+For each file found, determine if it applies to this component. Specifically:
+- `OrderedRegistry` (`src/utils/ordered-registry.ts`) — use for ANY registry that tracks DOM-ordered children. Do not reimplement this logic inline.
+- Any shared controller matching the component's category (see `/scaffold` Step 0 table)
+
+If a relevant utility exists, the component's registry or controller MUST extend or use it. Do not reimplement functionality already in `src/utils/` or `src/controllers/`.
+
+**Abstraction fit check:** For each shared controller the spec requires (e.g., `RovingFocusController`, `FocusTrapController`), run the fit check from `lit-patterns.md` Rule 35:
 
 1. List all behaviors the spec demands from the controller
 2. Identify any gaps — behaviors the controller does not cover
@@ -77,6 +89,22 @@ For each element in the spec:
 - Auto-selection logic (e.g., "select first non-disabled item") belongs in registration callbacks on the context interface — not in `firstUpdated()`. Children register asynchronously after context propagation; the registry is always empty when the parent's `firstUpdated()` fires. See `lit-patterns.md` Rules 30–31.
 
 Run tests — confirm they pass.
+
+### Step 3.3 — Update package.json exports map
+
+Add an entry for the new component in `package.json` `exports`:
+
+```json
+"./{name}": "./dist/components/{name}/index.js"
+```
+
+Verify the entry was added:
+
+```bash
+grep '"\./\{name\}"' package.json
+```
+
+---
 
 ### Step 3.5 — Smallest diff audit
 

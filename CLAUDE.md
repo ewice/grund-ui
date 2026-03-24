@@ -175,6 +175,13 @@ superpowers:brainstorming → /component-spec → /scaffold → /build-controlle
 /component-spec → /scaffold → /build-elements → /build-stories → /validate-build
 ```
 
+### New component (trivial — single element, no state, no keyboard, no events)
+```
+/quick-component {name} — {one-line description}
+```
+Examples: Separator, VisuallyHidden, Icon wrapper. If the component has any compound structure,
+keyboard contract, or dispatched events, use the simple pipeline above instead.
+
 ### Modify existing (planned)
 ```
 superpowers:brainstorming → superpowers:writing-plans
@@ -202,6 +209,7 @@ superpowers:brainstorming → superpowers:writing-plans
 /validate-build             → lint, build, test, CEM, exports, bundle size
 /smallest-diff              → audit diff for dead code, speculative additions, noise
 /diagnose-failure           → investigate persistent reviewer findings
+/quick-component {name}     → trivial single-element components (Separator, VisuallyHidden)
 /extract-pattern            → promote inline pattern to shared controller
 /deprecate                  → mark API deprecated with migration path
 /audit-cross-component      → check if a bug/pattern affects multiple components

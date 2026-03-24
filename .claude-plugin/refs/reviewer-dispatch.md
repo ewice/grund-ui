@@ -66,5 +66,28 @@ Run all 6 when:
 After collecting reviewer findings:
 1. Fix all blockers.
 2. Re-run only the reviewer(s) that flagged blockers — not the full fleet.
-3. Max 2 patch iterations per reviewer.
-4. If blockers persist after 2 iterations: invoke `/diagnose-failure` and surface to the engineer.
+3. Max 2 patch iterations per reviewer. One iteration = one fix pass + one re-review. Fixing
+   the same rule violation across multiple files in a single pass counts as one iteration.
+   New findings that surface on the second pass (revealed by the now-cleaner codebase) are
+   not the same blocker recurring — continue fixing those without counting against the limit.
+4. If the *same* finding recurs after 2 genuine fix attempts (the fix didn't take): invoke
+   `/diagnose-failure` and surface to the engineer.
+
+## Dispute Protocol
+
+When the implementer believes a reviewer finding is incorrect:
+
+1. State the disagreement with a specific technical counter-argument citing the relevant rule.
+2. Re-dispatch the reviewer with the counter-argument as additional context. Ask it to either:
+   a. Defend the finding with a concrete scenario that demonstrates the bug, OR
+   b. Withdraw the finding and reclassify it as a note.
+3. If the reviewer defends with a concrete scenario → implement the fix.
+4. If the reviewer cannot produce a concrete scenario → log as a declined finding and move on.
+
+Declined findings are noted in the commit message:
+`Declined: {reviewer}#{rule} — {one-sentence reason}`
+
+This prevents:
+- Blind implementation of incorrect findings (wastes time, may introduce bugs)
+- Silent skipping of findings (no audit trail)
+- Theoretical concerns blocking real work without evidence

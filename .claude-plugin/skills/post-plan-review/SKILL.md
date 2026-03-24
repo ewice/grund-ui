@@ -37,11 +37,7 @@ Read `.claude-plugin/refs/reviewer-dispatch.md` for context injection rules. Rea
 
 ### Phase 4 — Patch loop
 
-**Max 2 iterations.** For each blocker:
-1. Fix the blocker in the affected file
-2. Re-run only the reviewer that flagged it
-
-After 2 iterations, if blockers persist: invoke `/diagnose-failure` for each and surface to the engineer.
+Fix all blockers. Follow the patch loop rules in `.claude-plugin/refs/reviewer-dispatch.md` — re-run only the reviewer(s) that flagged blockers, not the full fleet.
 
 Commit all patch-loop fixes as a single commit:
 ```bash

@@ -84,7 +84,7 @@ Note: git does not track empty directories. Directories will become tracked when
 
 Create `src/components/{name}/types.ts`:
 - `*Detail` interface for every event in the spec (exported)
-- `HostSnapshot` interface for the root element (controlled/uncontrolled pattern)
+- `HostSnapshot` interface for the root element (controlled/uncontrolled pattern). Mark with `/** @internal */` — this interface is consumed only by the controller and must not appear in consumer-facing API docs.
 - Category-specific interfaces (e.g., option types for collection)
 - No Lit-specific types (`PropertyValues`, `LitElement`) — framework-agnostic only
 
@@ -100,11 +100,14 @@ Create `src/components/{name}/context/index.ts`:
 For each element directory in the spec (e.g., `root/`, `item/`, `trigger/`, `panel/`), create a minimal stub file `src/components/{name}/{part}/index.ts`:
 
 ```ts
-import { LitElement, html } from 'lit';
+import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 @customElement('grund-{name}-{part}')
 export class Grund{Name}{Part}Element extends LitElement {
+  static override styles = css`
+    :host { display: block; /* block: this element is a block-level container */ }
+  `;
   // Components with a `value` prop: derive deterministic IDs
   // private get _id() { return `grund-{name}-{part}-${this.value}`; }
   // Components without `value`: generate in connectedCallback only, never in constructors

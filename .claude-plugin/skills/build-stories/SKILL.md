@@ -90,7 +90,7 @@ Read `.claude-plugin/reviewers/test-reviewer/SKILL.md` and `.claude-plugin/revie
   - A composition story exists — `AsLink` or `CustomTrigger` — showing render delegation via slot (consumer-dx Rule 14-15)
   - Advanced properties (`keepMounted`, `hiddenUntilFound`, `loopFocus`) are secondary stories, not the default (consumer-dx Rule 5)
 
-Fix all blockers from both reviewers. Re-review after fixes. Max 2 patch iterations. Escalate to `/diagnose-failure` if blockers persist after 2.
+Fix all blockers from both reviewers. Follow the patch loop rules in `.claude-plugin/refs/reviewer-dispatch.md`.
 
 ### Step 4 — Commit
 

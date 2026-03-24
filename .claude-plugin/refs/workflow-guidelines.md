@@ -35,8 +35,9 @@ Classify each plan task by risk level to avoid uniform review overhead:
 | Medium | Controllers, registries, pure logic | Spec review only |
 | High | Element integration, context wiring, ARIA, keyboard | Both spec + code quality review |
 
-If the plan provided exact code and the implementer reports no deviations, skip the spec
-review — it adds value only when the implementer made design decisions.
+Skip the spec review when the implementer reports no meaningful deviations from the plan's
+contracts — spec review adds value only when the implementer made design decisions the plan
+left open.
 
 ---
 
@@ -91,3 +92,25 @@ When a subagent deviates from the plan — fixing a bug differently, discovering
 ```
 
 **Why this matters:** Later subagents read the plan as truth. Spec reviewers compare implementation against the original plan. Without deviation records, correct deviations are flagged as non-conformant and incorrect deviations propagate silently.
+
+---
+
+## 7. Shared Abstractions Audit
+
+Before defining implementation tasks in a plan, the plan MUST include a shared abstractions audit section:
+
+```markdown
+## Shared Abstractions Audit
+Searched: src/utils/, src/controllers/, reference component (accordion)
+- OrderedRegistry (src/utils/ordered-registry.ts) — DOM-ordered child tracking → USE for registry
+- RovingFocusController (src/controllers/roving-focus.controller.ts) — keyboard navigation → USE for list
+- [none found for X] → implement inline, flag for extraction on second use
+```
+
+This section is injected verbatim into every implementer subagent's prompt. It prevents
+subagents from reimplementing utilities they cannot discover independently within their
+limited context window.
+
+**Who populates this section:** The plan author (orchestrator or `writing-plans` skill), before
+any implementation task is written. It requires a real grep of `src/utils/` and `src/controllers/`
+at plan-writing time.

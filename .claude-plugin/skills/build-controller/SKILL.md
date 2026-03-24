@@ -41,7 +41,7 @@ const mockHost = {
 } satisfies ReactiveControllerHost;
 ```
 
-See `src/components/accordion/controller/accordion.test.ts` as a reference if it exists.
+See `src/components/accordion/controller/accordion.test.ts` as a reference if it exists. Test helper functions (e.g., `createController()`) MUST have parameters that exactly match the public API of the class under test. Do not add convenience parameters that are silently discarded — if `syncFromHost()` accepts only `HostSnapshot`, the helper accepts only `Partial<HostSnapshot>`.
 
 Run `npm run test:run -- src/components/{name}/controller/` — confirm tests fail.
 
@@ -65,7 +65,7 @@ Run tests — confirm they pass.
 
 Read `.claude-plugin/reviewers/lit-reviewer/SKILL.md`. Use its content as the Agent prompt. Dispatch as Agent call. Read and inject as context: controller file(s) content, registry file content (if exists), component spec content, `.claude-plugin/refs/lit-patterns.md` content, `.claude-plugin/refs/ssr-contract.md` content.
 
-Fix all blockers. Re-review if any fixes were made. Max 2 iterations. Escalate to `/diagnose-failure` if stuck after 2.
+Fix all blockers. Follow the patch loop rules in `.claude-plugin/refs/reviewer-dispatch.md`.
 
 ### Step 5 — Commit
 

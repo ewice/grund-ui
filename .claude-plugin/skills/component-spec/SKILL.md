@@ -81,6 +81,17 @@ Write `docs/specs/{name}.spec.md`:
 | Dynamic mutations | Child added after initial render. Active child removed. Child's `value` prop changes after registration. |
 | Controlled↔uncontrolled transition | Consumer switches `value` from defined to `undefined`. Behavior: maintain last value, reset to default, dev warning? |
 
+**Property lifecycle table (required for every `@property()` on the root element):**
+
+For each public property, the spec MUST answer:
+
+| Property | Set before `connectedCallback` | Changed at runtime | Set to `undefined`/`null` | Reflected? |
+|----------|-------------------------------|-------------------|--------------------------|------------|
+| `value` | _e.g., stored, applied on first render_ | _e.g., updates state, fires event_ | _e.g., switches to uncontrolled_ | No |
+| ... | ... | ... | ... | ... |
+
+Fill in the actual behavior for each property. This table is the contract for `syncFromHost()` and for integration tests.
+
 For overlays, additionally specify: what happens when the trigger is removed while open?
 For form controls, additionally specify: what happens on `formResetCallback` when in controlled mode?
 

@@ -90,6 +90,19 @@ grep -rn "customElements.define(" src/components/ --include="*.ts" | sort -t"'" 
 
 Report duplicates as blockers.
 
+**Package.json exports map completeness:** Every component directory under `src/components/*/` with a barrel `index.ts` must have a corresponding `"./name"` entry in `package.json` `exports`.
+
+```bash
+for dir in src/components/*/; do
+  name=$(basename "$dir")
+  if [ -f "$dir/index.ts" ]; then
+    grep -q "\"\./$name\"" package.json || echo "MISSING exports entry: ./$name"
+  fi
+done
+```
+
+Report any missing entry as a failure.
+
 **CEM-vs-code consistency:** After CEM analysis (Step 4), verify every `@element` JSDoc tag in source has a matching entry in `custom-elements.json`. Report any element present in code but missing from CEM.
 
 ### Step 6 — Bundle size check
