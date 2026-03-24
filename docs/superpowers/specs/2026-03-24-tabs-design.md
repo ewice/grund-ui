@@ -54,10 +54,19 @@ class TabsController {
   `grund-value-change`; the consumer must set `value` to make it stick.
 - **Uncontrolled:** `defaultValue` seeds `activeValue` once on first `syncFromHost`.
   After that, `requestActivation` updates `activeValue` directly and returns the new
-  value. If no `defaultValue`, the first non-disabled tab in `registeredValues` is
-  auto-selected.
+  value.
 - `value = null` (controlled, nothing selected) is valid for consumers that want a
   blank initial state.
+
+### Auto-Selection
+
+Context propagation is async — children register after the root's first render, so
+`syncFromHost` is called in `willUpdate` with an empty registry on first render.
+Auto-selection is therefore **not** done in `syncFromHost`. Instead, auto-selection
+is triggered inside the root element's `registerTab` callback: after each registration,
+if `activeValue` is still `null` and the component is uncontrolled, the root selects
+the first non-disabled value in `registry.getOrderedValues()`. `syncFromHost` only
+handles seeding from explicit `value`/`defaultValue` props.
 
 ### Disabled
 
@@ -105,8 +114,14 @@ class TabsRegistry {
 - Async registration: tab and panel register independently. First creates a partial
   record (one side `null`); second completes it.
 - DOM-order sorting via `compareDocumentPosition` on tab elements (tabs define visual
-  order; panels can appear in any DOM order)
-- No `WeakRef` — Lit elements reliably fire `disconnectedCallback`
+  order; panels can appear in any DOM order). `getOrderedValues()` re-sorts on every
+  call — no caching. Registration mutations are infrequent (mount/unmount events), so
+  the cost is negligible. If a future profile shows this is hot, cache and invalidate on
+  register/unregister.
+- No `WeakRef` — intentional departure from lit-patterns Rule 29. Lit elements reliably
+  fire `disconnectedCallback`, making `WeakRef` unnecessary for in-tree elements. The
+  registry is only used within the Grund UI compound component pattern where all child
+  elements are Lit elements with guaranteed lifecycle callbacks.
 - Root element owns the registry instance
 
 ---
@@ -149,8 +164,9 @@ interface TabsRootContext {
 ### Design Rules
 
 - Flat, single scope — no item wrapper, so no item context
-- `activationDirection` derived in root element by comparing `indexOf(previousValue)`
-  and `indexOf(activeValue)` in the registry
+- `activationDirection` derived in root element: `registry.indexOf(controller.previousValue)` vs
+  `registry.indexOf(controller.activeValue)`. If previous index > active index → `'start'`;
+  if previous index < active index → `'end'`; if `previousValue` is null → `'none'`.
 - Action callbacks bound once in `createContextValue()` for stable references
 - One context key symbol: `tabsRootContext`
 
@@ -199,8 +215,17 @@ Event options: `bubbles: true, composed: false`.
   Each `<grund-tab>` exposes a public getter (e.g., `get triggerElement()`) that returns
   its shadow `<button>`. The list queries slotted tabs and maps to their trigger elements.
 - `activateOnFocus` and `loopFocus` are props on this element only (not on context)
-- When `activateOnFocus` is true, listens for roving focus changes and calls
-  `requestActivation` on the newly focused tab's value
+- When `activateOnFocus` is true, listens for `focusin` events on the list host
+  (native bubbling from the inner `<button>` inside each `<grund-tab>`). The handler
+  walks `event.composedPath()` to find the nearest `<grund-tab>` ancestor and calls
+  `ctx.requestActivation(tab.value)`. No `RovingFocusController` API is needed — the
+  native focus event is sufficient. Listener added in `connectedCallback`, removed in
+  `disconnectedCallback` per lit-patterns Rule 27.
+- Listens for `slotchange` on the default slot. On each `slotchange`, calls
+  `rovingFocusController.update({ getItems: ... })` to re-sync `tabIndex` values.
+  This ensures dynamic tab additions and removals keep the roving focus state
+  consistent. Guard with debounce or `requestAnimationFrame` if Lit re-renders cause
+  multiple `slotchange` events per update cycle.
 - Render: `<slot>` with `role="tablist"` and `aria-orientation` on shadow wrapper
 - `:host { display: block }`
 - Dev warning if used outside `<grund-tabs>`
@@ -264,7 +289,10 @@ Event options: `bubbles: true, composed: false`.
     browser find-in-page support. Implies `keepMounted`. Panel listens for `beforematch`
     event and calls `requestActivation` to activate.
 - `willUpdate`: sets `data-selected`, `data-orientation`, `data-activation-direction`
-- Registers/unregisters with root context in `connectedCallback`/`disconnectedCallback`
+- Registers/unregisters with root context in `connectedCallback`/`disconnectedCallback`.
+  In default mode (inactive panels removed from DOM), register/unregister fires on every
+  tab switch — this is intentional. The registry handles partial records correctly, and
+  `ariaControlsElements` on the tab is already scoped to connected panels only.
 - `:host { display: block }`
 - Dev warning if used outside `<grund-tabs>`
 - Dev warning if `value` is empty
@@ -292,7 +320,10 @@ Event options: `bubbles: true, composed: false`.
   CSS custom properties as inline styles on the indicator div
 - `ResizeObserver` on the parent list and the active tab element. Both trigger the same
   `measure()` method. On activation change, swaps observer to new active tab. If no
-  active tab, `measure()` is a no-op.
+  active tab, `measure()` is a no-op. Both observers are disconnected in
+  `disconnectedCallback` (lit-patterns Rule 28). The parent list element is located via
+  `this.closest('grund-tabs-list')` in `connectedCallback` — the indicator is always a
+  direct child of the list in consumer markup.
 - Render: `<div part="indicator"></div>`
 - `:host { display: block; position: absolute; pointer-events: none }` — `position`
   and `pointer-events` are intentional exceptions to the headless "no visual styles"
