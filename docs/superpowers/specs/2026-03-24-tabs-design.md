@@ -29,7 +29,6 @@ interface TabsHostSnapshot {
   value: string | null | undefined;   // undefined = uncontrolled
   defaultValue: string | null;        // seed for uncontrolled mode
   disabled: boolean;
-  orientation: 'horizontal' | 'vertical';
 }
 
 class TabsController {
@@ -188,7 +187,6 @@ interface TabsRootContext {
 Event options: `bubbles: true, composed: false`.
 
 **Data attributes:** `data-orientation`, `data-activation-direction`
-**Part forwarding:** `exportparts="list,tab,indicator,panel"`
 
 ---
 
@@ -215,7 +213,6 @@ Event options: `bubbles: true, composed: false`.
 | `loopFocus` | `boolean` | `true` | `loop-focus` |
 
 **CSS parts:** `list`
-**Part forwarding:** `exportparts="tab,indicator"`
 **ARIA:** `role="tablist"`, `aria-orientation`
 **Data attributes:** `data-orientation`, `data-disabled`, `data-activation-direction`
 
@@ -227,8 +224,10 @@ Event options: `bubbles: true, composed: false`.
 - Renders `<button part="tab" role="tab"><slot></slot></button>`
 - `willUpdate`: sets `aria-selected`, `aria-disabled`, `data-selected`, `data-disabled`,
   `data-orientation`, `data-index`, `data-activation-direction` on the button
-- `updated()`: sets `ariaControlsElements` to the corresponding panel element via
-  `ctx.getPanelElement(this.value)` (Element Reference API for cross-shadow ARIA)
+- `updated()`: sets `ariaControlsElements` to the panel element only when it is
+  connected to the DOM (`ctx.getPanelElement(this.value)`). Clears to `[]` when the
+  panel is not present (e.g., unmounted inactive panel). This avoids dangling references
+  to disconnected elements.
 - Click handler calls `ctx.requestActivation(this.value)`
 - Exposes `get triggerElement(): HTMLButtonElement` — returns the inner button for
   `RovingFocusController` on the list to manage `tabindex`
@@ -247,7 +246,7 @@ Event options: `bubbles: true, composed: false`.
 | `disabled` | `boolean` | `false` | `disabled` |
 
 **CSS parts:** `tab`
-**ARIA:** `role="tab"`, `aria-selected`, `aria-controls` (via Element Reference API), `aria-disabled`
+**ARIA:** `role="tab"`, `aria-selected`, `aria-controls` (via Element Reference API, only when panel is in DOM), `aria-disabled`
 **Data attributes:** `data-selected`, `data-disabled`, `data-orientation`, `data-index`, `data-activation-direction`
 
 ---

@@ -24,7 +24,7 @@ Reference for generation skills and the `lit-reviewer`. All rules are numbered a
 
 ### Shadow DOM
 
-11. Every compound component layer containing elements with `part` attributes MUST declare `exportparts` on its host element, forwarding all contained parts upward. This enables consumers to style `grund-accordion::part(trigger)` from outside the outermost element.
+11. `exportparts` is only needed when an element renders another element with `part` attributes inside its own shadow DOM template. In slot-based compound components, child elements are in the consumer's light DOM — consumers can target their parts directly (e.g., `grund-tab::part(tab)`) without any `exportparts` declaration. Do not add `exportparts` to elements that only slot their children.
 12. Use `slotchange` events on `<slot>` elements when a component must react to slotted content changing. The event fires asynchronously and may fire multiple times during initial render — guard with a flag or debounce if needed.
 13. Use `delegatesFocus: true` on the shadow root only for form controls that wrap a native focusable element (e.g., a custom input wrapping `<input>`). Do not use it on composite widgets — they manage focus via `RovingFocusController`.
 

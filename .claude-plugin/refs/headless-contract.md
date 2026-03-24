@@ -30,8 +30,8 @@ Loaded by generation skills and the `headless-reviewer`.
 
 ### `exportparts` Contract
 
-13. Every compound component layer that wraps another shadow root containing `part` attributes MUST declare `exportparts` on the host, forwarding all contained parts upward.
-14. Verify: the selector `grund-{component}::part({part-name})` MUST resolve from outside the outermost compound element without any intermediate CSS.
+13. `exportparts` is only required when a custom element renders another custom element with `part` attributes **inside its own shadow DOM** (i.e., as a shadow tree child, not slotted). In slot-based compound components — where consumers provide child elements in their own markup — each element is in the consumer's light DOM and its parts are already directly accessible. `exportparts` has no effect on slotted content.
+14. Verify applicability before declaring `exportparts`: ask "is the element with `part` attributes created by this element's shadow template, or provided by the consumer?" If provided by the consumer (slotted), no `exportparts` is needed.
 15. `exportparts` value format: comma-separated list of part names. If renaming, use `inner-name: outer-name` syntax. Prefer no renaming — use the same part name throughout the tree.
 
 ### Slot Design
@@ -76,6 +76,6 @@ Loaded by generation skills and the `headless-reviewer`.
 | CSS in Shadow DOM stylesheet beyond `:host { display }` | Couples visual concerns to component | Move all styles to consumer |
 | `display: contents` on semantic element | Strips accessibility tree | Use `display: block` |
 | Part name as verb or state adjective | Unstable, semantically wrong | Noun-only part names |
-| Missing `exportparts` on compound layer | Consumer can't style nested parts | Declare `exportparts` on every layer |
+| `exportparts` on slotted compound layer | Has no effect on slotted children; consumer styles their own elements directly | Only use `exportparts` when the element renders sub-elements in its own shadow template |
 | Bare `expanded` attribute as CSS hook | Inconsistent, not part of public API | Use `data-open` |
 | CSS custom property for color | Headless contract violation | Consumers provide all colors |
