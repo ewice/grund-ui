@@ -1,0 +1,48 @@
+import type { TabsHostSnapshot } from '../types.js';
+
+/**
+ * Pure state and action resolution for tabs.
+ * No DOM access, no Lit dependency.
+ * @internal
+ */
+export class TabsController {
+  activeValue: string | null = null;
+  previousValue: string | null = null;
+
+  private isControlled = false;
+  private isSeeded = false;
+  private disabled = false;
+
+  syncFromHost(
+    snapshot: TabsHostSnapshot,
+    registeredValues: string[] = [],
+    disabledValues: Set<string> = new Set(),
+  ): void {
+    this.disabled = snapshot.disabled;
+    this.isControlled = snapshot.value !== undefined;
+
+    if (this.isControlled) {
+      this.activeValue = snapshot.value;
+    } else if (!this.isSeeded && snapshot.defaultValue !== null) {
+      this.activeValue = snapshot.defaultValue;
+      this.isSeeded = true;
+    }
+  }
+
+  requestActivation(value: string): string | null {
+    if (this.disabled) {
+      return null;
+    }
+
+    if (!this.isControlled) {
+      this.previousValue = this.activeValue;
+      this.activeValue = value;
+    }
+
+    return value;
+  }
+
+  isActive(value: string): boolean {
+    return this.activeValue === value;
+  }
+}
