@@ -12,7 +12,7 @@
           "name": "GrundAccordion",
           "declaration": {
             "name": "GrundAccordion",
-            "module": "./root/accordion.element.js"
+            "module": "./root/index.js"
           }
         },
         {
@@ -20,7 +20,7 @@
           "name": "GrundAccordionItem",
           "declaration": {
             "name": "GrundAccordionItem",
-            "module": "./item/accordion-item.element.js"
+            "module": "./item/index.js"
           }
         },
         {
@@ -28,7 +28,7 @@
           "name": "GrundAccordionHeader",
           "declaration": {
             "name": "GrundAccordionHeader",
-            "module": "./header/accordion-header.element.js"
+            "module": "./header/index.js"
           }
         },
         {
@@ -36,7 +36,7 @@
           "name": "GrundAccordionTrigger",
           "declaration": {
             "name": "GrundAccordionTrigger",
-            "module": "./trigger/accordion-trigger.element.js"
+            "module": "./trigger/index.js"
           }
         },
         {
@@ -44,7 +44,7 @@
           "name": "GrundAccordionPanel",
           "declaration": {
             "name": "GrundAccordionPanel",
-            "module": "./panel/accordion-panel.element.js"
+            "module": "./panel/index.js"
           }
         },
         {
@@ -73,7 +73,100 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/accordion/header/accordion-header.element.ts",
+      "path": "src/components/tabs/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabs",
+          "declaration": {
+            "name": "GrundTabs",
+            "module": "./root/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundTabsList",
+          "declaration": {
+            "name": "GrundTabsList",
+            "module": "./list/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundTab",
+          "declaration": {
+            "name": "GrundTab",
+            "module": "./tab/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundTabsPanel",
+          "declaration": {
+            "name": "GrundTabsPanel",
+            "module": "./panel/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundTabsIndicator",
+          "declaration": {
+            "name": "GrundTabsIndicator",
+            "module": "./indicator/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TabsValueChangeDetail",
+          "declaration": {
+            "name": "TabsValueChangeDetail",
+            "module": "./types.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/context/accordion.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "accordionRootContext"
+        },
+        {
+          "kind": "variable",
+          "name": "accordionItemContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "accordionRootContext",
+          "declaration": {
+            "name": "accordionRootContext",
+            "module": "src/components/accordion/context/accordion.context.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "accordionItemContext",
+          "declaration": {
+            "name": "accordionItemContext",
+            "module": "src/components/accordion/context/accordion.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/header/index.ts",
       "declarations": [
         {
           "kind": "class",
@@ -128,7 +221,7 @@
           "name": "GrundAccordionHeader",
           "declaration": {
             "name": "GrundAccordionHeader",
-            "module": "src/components/accordion/header/accordion-header.element.ts"
+            "module": "src/components/accordion/header/index.ts"
           }
         },
         {
@@ -136,46 +229,14 @@
           "name": "grund-accordion-header",
           "declaration": {
             "name": "GrundAccordionHeader",
-            "module": "src/components/accordion/header/accordion-header.element.ts"
+            "module": "src/components/accordion/header/index.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/accordion/context/accordion.context.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "accordionRootContext"
-        },
-        {
-          "kind": "variable",
-          "name": "accordionItemContext"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "accordionRootContext",
-          "declaration": {
-            "name": "accordionRootContext",
-            "module": "src/components/accordion/context/accordion.context.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "accordionItemContext",
-          "declaration": {
-            "name": "accordionItemContext",
-            "module": "src/components/accordion/context/accordion.context.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/item/accordion-item.element.ts",
+      "path": "src/components/accordion/item/index.ts",
       "declarations": [
         {
           "kind": "class",
@@ -331,7 +392,7 @@
           "name": "GrundAccordionItem",
           "declaration": {
             "name": "GrundAccordionItem",
-            "module": "src/components/accordion/item/accordion-item.element.ts"
+            "module": "src/components/accordion/item/index.ts"
           }
         },
         {
@@ -339,14 +400,43 @@
           "name": "grund-accordion-item",
           "declaration": {
             "name": "GrundAccordionItem",
-            "module": "src/components/accordion/item/accordion-item.element.ts"
+            "module": "src/components/accordion/item/index.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/accordion/panel/accordion-panel.element.ts",
+      "path": "src/components/accordion/registry/accordion.registry.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/registry/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AccordionRegistry",
+          "declaration": {
+            "name": "AccordionRegistry",
+            "module": "./accordion.registry.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AccordionItemRecord",
+          "declaration": {
+            "name": "AccordionItemRecord",
+            "module": "./accordion.registry.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/panel/index.ts",
       "declarations": [
         {
           "kind": "class",
@@ -390,6 +480,15 @@
                 "text": "AccordionItemContext | undefined"
               },
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isPanelRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
             },
             {
               "kind": "field",
@@ -447,7 +546,7 @@
           "name": "GrundAccordionPanel",
           "declaration": {
             "name": "GrundAccordionPanel",
-            "module": "src/components/accordion/panel/accordion-panel.element.ts"
+            "module": "src/components/accordion/panel/index.ts"
           }
         },
         {
@@ -455,43 +554,14 @@
           "name": "grund-accordion-panel",
           "declaration": {
             "name": "GrundAccordionPanel",
-            "module": "src/components/accordion/panel/accordion-panel.element.ts"
+            "module": "src/components/accordion/panel/index.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/accordion/registry/accordion.registry.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/registry/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "AccordionRegistry",
-          "declaration": {
-            "name": "AccordionRegistry",
-            "module": "./accordion.registry.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "AccordionItemRecord",
-          "declaration": {
-            "name": "AccordionItemRecord",
-            "module": "./accordion.registry.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/root/accordion.element.ts",
+      "path": "src/components/accordion/root/index.ts",
       "declarations": [
         {
           "kind": "class",
@@ -728,7 +798,7 @@
           "name": "GrundAccordion",
           "declaration": {
             "name": "GrundAccordion",
-            "module": "src/components/accordion/root/accordion.element.ts"
+            "module": "src/components/accordion/root/index.ts"
           }
         },
         {
@@ -736,14 +806,14 @@
           "name": "grund-accordion",
           "declaration": {
             "name": "GrundAccordion",
-            "module": "src/components/accordion/root/accordion.element.ts"
+            "module": "src/components/accordion/root/index.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/accordion/trigger/accordion-trigger.element.ts",
+      "path": "src/components/accordion/trigger/index.ts",
       "declarations": [
         {
           "kind": "class",
@@ -771,6 +841,15 @@
               "privacy": "private"
             },
             {
+              "kind": "field",
+              "name": "isTriggerRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
               "kind": "method",
               "name": "handleClick",
               "privacy": "private",
@@ -795,7 +874,7 @@
           "name": "GrundAccordionTrigger",
           "declaration": {
             "name": "GrundAccordionTrigger",
-            "module": "src/components/accordion/trigger/accordion-trigger.element.ts"
+            "module": "src/components/accordion/trigger/index.ts"
           }
         },
         {
@@ -803,7 +882,725 @@
           "name": "grund-accordion-trigger",
           "declaration": {
             "name": "GrundAccordionTrigger",
-            "module": "src/components/accordion/trigger/accordion-trigger.element.ts"
+            "module": "src/components/accordion/trigger/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/context/tabs.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "tabsRootContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "tabsRootContext",
+          "declaration": {
+            "name": "tabsRootContext",
+            "module": "src/components/tabs/context/tabs.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/indicator/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Visual indicator that tracks the active tab's position via CSS custom properties.\nPosition inside `<grund-tabs-list>`. Consumer uses the exposed custom properties\nto animate or style the indicator relative to the active tab.",
+          "name": "GrundTabsIndicator",
+          "cssProperties": [
+            {
+              "description": "Width of the active tab",
+              "name": "--grund-tabs-indicator-width"
+            },
+            {
+              "description": "Height of the active tab",
+              "name": "--grund-tabs-indicator-height"
+            },
+            {
+              "description": "Distance from list left edge to active tab left edge",
+              "name": "--grund-tabs-indicator-left"
+            },
+            {
+              "description": "Distance from list top edge to active tab top edge",
+              "name": "--grund-tabs-indicator-top"
+            },
+            {
+              "description": "Distance from list right edge to active tab right edge",
+              "name": "--grund-tabs-indicator-right"
+            },
+            {
+              "description": "Distance from list bottom edge to active tab bottom edge",
+              "name": "--grund-tabs-indicator-bottom"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The indicator element",
+              "name": "indicator"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "ctx",
+              "type": {
+                "text": "TabsRootContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "listObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "tabObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "listEl",
+              "type": {
+                "text": "Element | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The `<grund-tabs-list>` this indicator is inside. Located in connectedCallback."
+            },
+            {
+              "kind": "field",
+              "name": "observedTab",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The active tab element being observed, used to detect when the active tab changes."
+            },
+            {
+              "kind": "method",
+              "name": "measure",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-tabs-indicator",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabsIndicator",
+          "declaration": {
+            "name": "GrundTabsIndicator",
+            "module": "src/components/tabs/indicator/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-tabs-indicator",
+          "declaration": {
+            "name": "GrundTabsIndicator",
+            "module": "src/components/tabs/indicator/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/list/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Container for tab triggers. Manages keyboard navigation via roving tabindex.",
+          "name": "GrundTabsList",
+          "cssParts": [
+            {
+              "description": "The tablist wrapper",
+              "name": "list"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Tab elements",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "activateOnFocus",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "attribute": "activate-on-focus"
+            },
+            {
+              "kind": "field",
+              "name": "loopFocus",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "attribute": "loop-focus"
+            },
+            {
+              "kind": "field",
+              "name": "ctx",
+              "type": {
+                "text": "TabsRootContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "rovingFocus",
+              "type": {
+                "text": "RovingFocusController | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleFocusin",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getTabButtons",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleSlotchange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onFocusin",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "FocusEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "activate-on-focus",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "activateOnFocus"
+            },
+            {
+              "name": "loop-focus",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "loopFocus"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-tabs-list",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabsList",
+          "declaration": {
+            "name": "GrundTabsList",
+            "module": "src/components/tabs/list/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-tabs-list",
+          "declaration": {
+            "name": "GrundTabsList",
+            "module": "src/components/tabs/list/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/panel/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Content panel associated with a tab by matching value.",
+          "name": "GrundTabsPanel",
+          "cssParts": [
+            {
+              "description": "The panel container",
+              "name": "panel"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Panel content",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "keepMounted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "keep-mounted"
+            },
+            {
+              "kind": "field",
+              "name": "hiddenUntilFound",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hidden-until-found"
+            },
+            {
+              "kind": "field",
+              "name": "ctx",
+              "type": {
+                "text": "TabsRootContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "handleBeforematch",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "keep-mounted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "keepMounted"
+            },
+            {
+              "name": "hidden-until-found",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hiddenUntilFound"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-tabs-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabsPanel",
+          "declaration": {
+            "name": "GrundTabsPanel",
+            "module": "src/components/tabs/panel/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-tabs-panel",
+          "declaration": {
+            "name": "GrundTabsPanel",
+            "module": "src/components/tabs/panel/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/registry/tabs.registry.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/root/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Root tabs container. Provides context to tab list, tabs, and panels.",
+          "name": "GrundTabs",
+          "slots": [
+            {
+              "description": "Tab list and panel elements",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | null | undefined"
+              },
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'",
+              "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "rootCtx",
+              "type": {
+                "text": "TabsRootContext"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "privacy": "private",
+              "default": "new TabsController()"
+            },
+            {
+              "kind": "field",
+              "name": "registry",
+              "privacy": "private",
+              "default": "new TabsRegistry()"
+            },
+            {
+              "kind": "field",
+              "name": "activationDirection",
+              "type": {
+                "text": "'start' | 'end' | 'none'"
+              },
+              "privacy": "private",
+              "default": "'none'"
+            },
+            {
+              "kind": "method",
+              "name": "computeActivationDirection",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "'start' | 'end' | 'none'"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "createRootContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TabsRootContext"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleActivation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-value-change",
+              "type": {
+                "text": "CustomEvent<TabsValueChangeDetail>"
+              },
+              "description": "When the active tab changes"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "default-value",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "defaultValue"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'",
+              "fieldName": "orientation"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-tabs",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabs",
+          "declaration": {
+            "name": "GrundTabs",
+            "module": "src/components/tabs/root/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-tabs",
+          "declaration": {
+            "name": "GrundTabs",
+            "module": "src/components/tabs/root/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/tab/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Individual tab trigger. Renders an accessible button inside shadow DOM.",
+          "name": "GrundTab",
+          "cssParts": [
+            {
+              "description": "The inner button element",
+              "name": "tab"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Tab label content",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "ctx",
+              "type": {
+                "text": "TabsRootContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "triggerElement",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "description": "Exposes the inner button for RovingFocusController on the list to manage tabindex.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "isRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "handleClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-tab",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTab",
+          "declaration": {
+            "name": "GrundTab",
+            "module": "src/components/tabs/tab/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-tab",
+          "declaration": {
+            "name": "GrundTab",
+            "module": "src/components/tabs/tab/index.ts"
           }
         }
       ]
