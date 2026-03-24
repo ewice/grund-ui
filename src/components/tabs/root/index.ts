@@ -7,7 +7,7 @@ import { TabsRegistry } from '../registry/tabs.registry.js';
 import { tabsRootContext } from '../context/tabs.context.js';
 
 import type { TabsRootContext } from '../context/tabs.context.js';
-import type { TabsValueChangeDetail } from '../types.js';
+import type { TabsHostSnapshot, TabsValueChangeDetail } from '../types.js';
 
 /**
  * Root tabs container. Provides context to tab list, tabs, and panels.
@@ -41,16 +41,19 @@ export class GrundTabs extends LitElement {
 
   private controller = new TabsController();
   private registry = new TabsRegistry();
+  private activationDirection: 'start' | 'end' | 'none' = 'none';
 
   override willUpdate(changed: Map<PropertyKey, unknown>): void {
-    this.controller.syncFromHost(
-      { value: this.value, defaultValue: this.defaultValue, disabled: this.disabled },
-      this.registry.getOrderedValues(),
-      this.registry.getDisabledValues(),
-    );
+    const snapshot: TabsHostSnapshot = {
+      value: this.value,
+      defaultValue: this.defaultValue,
+      disabled: this.disabled,
+    };
+    this.controller.syncFromHost(snapshot, this.registry.getOrderedValues(), this.registry.getDisabledValues());
 
     this.dataset.orientation = this.orientation;
-    this.dataset.activationDirection = this.computeActivationDirection();
+    this.activationDirection = this.computeActivationDirection();
+    this.dataset.activationDirection = this.activationDirection;
 
     if (
       !this.hasUpdated ||
@@ -66,7 +69,10 @@ export class GrundTabs extends LitElement {
   private computeActivationDirection(): 'start' | 'end' | 'none' {
     if (this.controller.previousValue === null) return 'none';
     const prevIdx = this.registry.indexOf(this.controller.previousValue);
-    const activeIdx = this.registry.indexOf(this.controller.activeValue!);
+    const activeIdx = this.controller.activeValue !== null
+      ? this.registry.indexOf(this.controller.activeValue)
+      : -1;
+    if (prevIdx < 0 || activeIdx < 0) return 'none';
     if (prevIdx > activeIdx) return 'start';
     if (prevIdx < activeIdx) return 'end';
     return 'none';
@@ -75,7 +81,7 @@ export class GrundTabs extends LitElement {
   private createRootContext(): TabsRootContext {
     return {
       activeValue: this.controller.activeValue,
-      activationDirection: this.computeActivationDirection(),
+      activationDirection: this.activationDirection,
       orientation: this.orientation,
       disabled: this.disabled,
 
@@ -97,6 +103,7 @@ export class GrundTabs extends LitElement {
 
       unregisterTab: (value: string) => {
         this.registry.unregisterTab(value);
+        this.rootCtx = this.createRootContext();
       },
 
       registerPanel: (value: string, panel: HTMLElement) => {
