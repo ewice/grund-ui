@@ -15,6 +15,50 @@ Creates the file skeleton: directories, `types.ts` with all public interfaces, `
 
 ## Implementation
 
+### Step 0 — Pre-flight: verify required controllers exist
+
+Before creating any files, check that every shared controller this category needs is
+already implemented. Proceeding without them leads to a broken build deep into
+`/build-elements` — better to surface the gap now.
+
+1. Read `docs/specs/{name}.spec.md` and identify the component category.
+
+2. Look up the required controllers for that category:
+
+| Category | Required shared controllers | File to check |
+|---|---|---|
+| composite-widget | `RovingFocusController` | `src/controllers/roving-focus.controller.ts` |
+| form-control | `FormController` | `src/controllers/form.controller.ts` |
+| overlay | `PresenceController` | `src/controllers/presence.controller.ts` |
+| overlay (modal) | `FocusTrapController` | `src/controllers/focus-trap.controller.ts` |
+| overlay (non-modal) | `FocusRestorationController` | `src/controllers/focus-restoration.controller.ts` |
+| overlay (dismissable) | `OutsideClickController` | `src/controllers/outside-click.controller.ts` |
+| overlay (modal) | `ScrollLockController` | `src/controllers/scroll-lock.controller.ts` |
+| overlay (positioned) | `PositioningController` | `src/controllers/positioning.controller.ts` |
+| collection (input retains focus) | `VirtualFocusController` | `src/controllers/virtual-focus.controller.ts` |
+| feedback | `LiveRegionController` | `src/controllers/live-region.controller.ts` |
+| simple | (none) | — |
+
+   For overlay components, which sub-rows apply depends on the spec — a Tooltip needs
+   `PresenceController` + `PositioningController` but not `FocusTrapController`. Read the
+   spec and check only the controllers the spec actually requires.
+
+3. For each required controller, verify its file exists in `src/controllers/`.
+
+4. **If any required controller is missing — STOP. Do not create any directories or files.** Output:
+
+   ```
+   [scaffold] Cannot proceed — {ComponentName} ({category}) requires controllers that do not yet exist:
+
+     • {MissingControllerName} → src/controllers/{file}.ts
+
+   Build each missing controller first using /build-controller, guided by the spec in
+   .claude-plugin/refs/component-shapes.md and the relevant refs/ documents.
+   Then re-run /scaffold {name}.
+   ```
+
+5. If all required controllers exist: proceed to Step 1.
+
 ### Step 1 — Read spec and context
 
 Read `docs/specs/{name}.spec.md`, `docs/vocabulary.md`, `.claude-plugin/refs/lit-patterns.md`, and `.claude-plugin/refs/headless-contract.md`.
