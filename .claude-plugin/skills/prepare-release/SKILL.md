@@ -78,6 +78,10 @@ Write or prepend to `CHANGELOG.md`:
 
 For every breaking change in Step 1: confirm a migration guide entry exists in `docs/migration/v{N}.md`. If missing: write the stub using `/deprecate`'s migration guide format before proceeding.
 
+### Step 3.5 — Smallest diff audit
+
+Run `/smallest-diff --base origin/main` to verify the release branch is clean. Flag any dead code, speculative additions, or diff noise that slipped through per-component reviews.
+
 ### Step 4 — Full library validation
 
 ```bash

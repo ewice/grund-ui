@@ -29,6 +29,17 @@ Read conditionally based on category:
 - Overlay or show/hide: `.claude-plugin/refs/transition-contract.md` and `.claude-plugin/refs/focus-management.md`
 - Composite widget with roving focus: `.claude-plugin/refs/focus-management.md`
 
+### Step 1.5 — Abstraction fit check
+
+For each shared controller the spec requires (e.g., `RovingFocusController`, `FocusTrapController`), run the fit check from `lit-patterns.md` Rule 35 **before writing any code**:
+
+1. List all behaviors the spec demands from the controller
+2. Identify any gaps — behaviors the controller does not cover
+3. Classify each gap: **Extend** / **Custom** / **Inline workaround**
+4. If any gap is classified **Extend**: add the missing hook/callback to the controller now, before implementing the element
+
+Do not proceed to Step 2 with an unresolved **Extend** gap — working around it produces temporal coupling and global state reads that reviewers will block.
+
 ### Step 2 — Write failing integration tests (RED)
 
 **Start with a smoke test (required first).** Before writing any detailed tests, write one test that mounts the full compound structure (root + at least one item + trigger + panel) and asserts that:
@@ -60,11 +71,16 @@ For each element in the spec:
 - Category-specific: `FormController` (form), `FocusTrapController` / `FocusRestorationController` (overlay)
 - Set `data-*` attributes in `willUpdate` (not in `updated` or event handlers)
 - `exportparts` on every compound layer wrapping shadow elements with `part` attributes
-- Dev-mode warning in `connectedCallback` when element is used outside its required parent: `if (import.meta.env.DEV) { ... }`
+- Dev-mode warning in `connectedCallback` when element is used outside its required parent: `if (import.meta.env.DEV) { ... }`. Warnings about missing siblings (e.g., "no matching panel") must NOT go in `firstUpdated()` — siblings register asynchronously via context and are not available yet. See `lit-patterns.md` Rules 30–31.
 - `customElements.define()` with `if (!customElements.get(...))` registration guard
 - `HostSnapshot` packaged in root's `willUpdate`, passed to controller via `syncFromHost()`
+- Auto-selection logic (e.g., "select first non-disabled item") belongs in registration callbacks on the context interface — not in `firstUpdated()`. Children register asynchronously after context propagation; the registry is always empty when the parent's `firstUpdated()` fires. See `lit-patterns.md` Rules 30–31.
 
 Run tests — confirm they pass.
+
+### Step 3.5 — Smallest diff audit
+
+Run `/smallest-diff` to catch dead code, speculative additions, and diff noise before dispatching reviewers. Fix any blockers — reviewers should focus on correctness and design, not cleanup.
 
 ### Step 4 — Run all 6 reviewers in parallel
 

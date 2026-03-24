@@ -83,7 +83,7 @@ and planned shared controllers (built when the first component of that category 
 
 **Focus management:** Modal overlays trap focus (`FocusTrapController`). Non-modal overlays restore focus to trigger on close (`FocusRestorationController`). See `refs/focus-management.md`.
 
-**State machine:** Use explicit state machine pattern (from `refs/lit-patterns.md` Rule 30–31) for `opening → open → closing → closed` lifecycle.
+**State machine:** Use explicit state machine pattern (from `refs/lit-patterns.md` Rules 33–34) for `opening → open → closing → closed` lifecycle.
 
 ---
 

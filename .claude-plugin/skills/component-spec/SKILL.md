@@ -70,7 +70,19 @@ Write `docs/specs/{name}.spec.md`:
 - ARIA contract (roles, required attributes, optional attributes)
 - Parts and slots (headless API decisions)
 - Data attributes
-- Edge cases and constraints
+- Edge cases and constraints (see below)
+
+**Edge cases section guidance** — for every component with a `value` or key-based prop, the spec MUST explicitly address:
+
+| Edge case | What to specify |
+|-----------|----------------|
+| Duplicate keys | Two children share the same `value`. Behavior: last-wins, first-wins, or reject with dev warning? |
+| Invalid value | `value` or `defaultValue` doesn't match any registered child. Behavior: fallback to first, select nothing, dev warning? |
+| Dynamic mutations | Child added after initial render. Active child removed. Child's `value` prop changes after registration. |
+| Controlled↔uncontrolled transition | Consumer switches `value` from defined to `undefined`. Behavior: maintain last value, reset to default, dev warning? |
+
+For overlays, additionally specify: what happens when the trigger is removed while open?
+For form controls, additionally specify: what happens on `formResetCallback` when in controlled mode?
 
 ### Step 7 — Verify
 

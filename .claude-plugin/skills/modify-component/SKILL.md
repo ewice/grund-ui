@@ -42,6 +42,16 @@ If a Superpowers plan exists for this change (`docs/superpowers/plans/`): use `s
 
 List the affected files explicitly. Do not touch unaffected files.
 
+### Phase 2.5 — Abstraction fit check (if shared controller is involved)
+
+If the change affects a shared controller (adding a new behavior that a shared controller partially handles), run the fit check from `lit-patterns.md` Rule 35:
+
+1. Does the existing controller cover the new behavior?
+2. If not, classify the gap: **Extend** / **Custom** / **Inline workaround**
+3. If **Extend**: add the missing hook to the controller as part of this change
+
+Skip this step only if the change does not touch any shared controller.
+
 ### Phase 3 — Make the change
 
 Edit the affected files. Follow existing patterns in the component. Reference the accordion implementation for any ambiguity.
@@ -51,6 +61,10 @@ Edit the affected files. Follow existing patterns in the component. Reference th
 Read `.claude-plugin/refs/reviewer-dispatch.md` for the change-type selection table and context injection rules. Select reviewers based on the change type identified in Phase 2. Read each selected reviewer's SKILL.md from `.claude-plugin/reviewers/{name}/SKILL.md`. Use its content as the Agent prompt. Dispatch as Agent calls, injecting context per the dispatch table.
 
 Fix blockers inline. The patch loop (multiple subagents) is for `/build-elements` bulk generation — for focused changes, fix directly.
+
+### Phase 4.5 — Smallest diff audit
+
+Run `/smallest-diff` to verify the change is minimal and scoped to the task. Ad-hoc modifications are a common source of scope creep.
 
 ### Phase 5 — Validate
 

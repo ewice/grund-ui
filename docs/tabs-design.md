@@ -173,30 +173,11 @@ Arrow axis follows `orientation`: Left/Right for `horizontal`, Up/Down for `vert
 
 ## Internal Architecture
 
-### Context
-
-Single root context provided by `<grund-tabs>`, consumed by all sub-elements. No list
-sub-context — it would just mirror root state. The list reads `orientation` and
-`disabled` from root context but is not a provider. `activateOnFocus` and `loopFocus`
-are consumed entirely within the list's own keyboard handler.
-
-### Registry
-
-Lives in the controller. Maps `value → { tab, panel }` with insertion-ordered entries.
-Serves: tab↔panel ARIA linking, `data-index` assignment, `data-activation-direction`
-computation, and indicator geometry lookup.
-
-**Extract as shared utility.** Tabs is the second component using the registry pattern
-(after accordion). Per the "extract on second use" rule, extract a generic ordered
-registry with configurable record shape that both accordion and tabs can use. The
-lifecycle (register on connect, cleanup on disconnect, ordered iteration) is identical
-across both.
-
 ### Auto-selection
 
-Resolved in `firstUpdated` on root. If `activeValue` is still `null`, the controller
-picks the first non-disabled tab from the registry. For programmatically added tabs
-after first render, the same check runs on `registerTab` while `activeValue` is `null`.
+If no `value` or `defaultValue` is set, the first non-disabled tab is activated
+automatically. This applies on initial render and when tabs are added programmatically
+after first render.
 
 ### Indicator Measurement
 
@@ -204,23 +185,3 @@ The indicator element owns its measurement — the controller has no DOM access.
 `ResizeObserver` on the parent list and the active tab element. Both call the same
 `measure()` method. On activation change, the tab-level observer swaps to the new
 active tab. If no active tab exists, `measure()` is a no-op.
-
----
-
-## Design Decisions
-
-| Decision | Choice | Rationale |
-|---|---|---|
-| `activateOnFocus` placement | `<grund-tabs-list>` | Keyboard activation is a `tablist` concern; co-located with `loopFocus` so all list keyboard props are in one place |
-| `loopFocus` placement | `<grund-tabs-list>` | Principle: `loopFocus` lives on the element hosting `RovingFocusController`. For tabs that's the list; for accordion/radio-group/toolbar it's the root (because root IS the focusable container). The principle is consistent — the surface-level location varies by structure. |
-| Tab↔panel linking | Matching `value` attributes | No DOM hierarchy constraint; panels can be placed anywhere inside root |
-| `data-selected` (not `data-open`) | New vocabulary entry | WAI-ARIA uses `aria-selected` on tabs; `data-open` is for disclosure patterns |
-| `data-activation-direction` | On every element | Enables both indicator animation and panel entry/exit transitions from a single attribute |
-| `disabled` on root | Cascades to all tabs | Matches accordion pattern; individual tabs can also be disabled independently |
-| Indicator inside list | Required placement | Indicator measures tab elements; must share the same offset parent as the tablist |
-| `keepMounted` | Per-panel only | Zero ambiguity about which panel is affected; no cascading precedence to reason about |
-| Value type | `string` only | HTML attributes are strings; web-component-native choice. Document for React library migrants. |
-| Indicator measurement | `ResizeObserver` on list + active tab | Covers layout shifts from viewport resize and active tab content changes. Lighter than observing all tabs (Base UI's approach); easy to expand later if needed. |
-| Registry extraction | Shared utility | Second use of the pattern (after accordion). Extract generic ordered registry with configurable record shape. |
-| Context layers | Single root context | No per-item state to scope. A list sub-context would just mirror root state. |
-| Auto-selection timing | `firstUpdated` on root | Idiomatic Lit lifecycle. All declaratively parsed children have connected by the time `firstUpdated` fires. Fallback: `registerTab` check for programmatic additions. |

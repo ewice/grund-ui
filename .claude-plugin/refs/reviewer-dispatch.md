@@ -12,11 +12,11 @@ and inject the context files listed below alongside the changed/generated file c
 
 | Reviewer | Always inject | Inject when available |
 |---|---|---|
-| `accessibility-reviewer` | All element files, `.claude-plugin/refs/focus-management.md` | Component spec (`docs/specs/{name}.spec.md`) |
+| `accessibility-reviewer` | All element files, `.claude-plugin/refs/focus-management.md`, `.claude-plugin/refs/aria-linking.md` | Component spec (`docs/specs/{name}.spec.md`) |
 | `lit-reviewer` | All element files, `.claude-plugin/refs/lit-patterns.md`, `.claude-plugin/refs/ssr-contract.md` | Controller files |
 | `headless-reviewer` | All element files, `.claude-plugin/refs/headless-contract.md` | `docs/vocabulary.md` |
 | `api-reviewer` | All element files, `types.ts` | `docs/vocabulary.md`, component spec |
-| `test-reviewer` | Test files, `.claude-plugin/refs/test-patterns.md` | Component spec, story files (when they exist) |
+| `test-reviewer` | Test files, `.claude-plugin/refs/test-patterns.md` | Component spec, story files (when they exist). **During `/build-elements`:** also inject the Step 2 test requirements list so the reviewer can verify all required test categories were written (dynamic registration, RTL, reparenting, composition, memory, event ordering). |
 | `security-reviewer` | All element files | Controller files |
 
 **Notes:**

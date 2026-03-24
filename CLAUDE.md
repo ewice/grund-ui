@@ -52,6 +52,8 @@ Use these — don't reinvent:
 
 Extract on second use: `data-open` toggle and ARIA ID linking are one-liners — extract to a shared controller when a second component needs the pattern.
 
+**Before using a shared controller:** run the abstraction fit check (lit-patterns Rule 35). If the controller doesn't cover a required behavior, classify the gap (Extend / Custom / Inline) and act on it before writing any element code. Do not work around a gap that belongs in the controller — that produces temporal coupling.
+
 Planned controllers (built when first component of that category is built): see `.claude-plugin/refs/component-shapes.md`.
 
 ### Pattern Extraction
@@ -85,7 +87,7 @@ One canonical mechanism per direction:
 
 ## Context Design
 
-See `.claude-plugin/refs/lit-patterns.md` Rules 14–16 for the full context contract.
+See `.claude-plugin/refs/lit-patterns.md` Rules 14–18 for the full context contract.
 
 ---
 
@@ -198,6 +200,7 @@ superpowers:brainstorming → superpowers:writing-plans
 ```
 /apg {pattern}              → WAI-ARIA contract
 /validate-build             → lint, build, test, CEM, exports, bundle size
+/smallest-diff              → audit diff for dead code, speculative additions, noise
 /diagnose-failure           → investigate persistent reviewer findings
 /extract-pattern            → promote inline pattern to shared controller
 /deprecate                  → mark API deprecated with migration path

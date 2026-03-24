@@ -19,8 +19,8 @@ The caller provides `refs/focus-management.md`, the component spec's ARIA sectio
 
 ### Required ARIA Attributes
 4. `aria-expanded` present and reflects open/closed state on triggers.
-5. `aria-controls` wired via inline ARIA binding — derive IDs from context and bind directly in templates (e.g., `aria-controls=${this._panelId}` where `_panelId` is derived from item context).
-6. `aria-labelledby` wired via inline ARIA binding — derive IDs from context and bind directly in templates where the APG requires.
+5. `aria-controls` relationship established. **Preferred:** Element Reference API (`ariaControlsElements = [panelEl]`) set in `updated()` after render — no IDs needed, works cross-shadow-root. See `refs/aria-linking.md`. **Legacy fallback:** IDREF binding in template (`aria-controls=${this._panelId}`), acceptable only when both elements share the same shadow root.
+6. `aria-labelledby` relationship established. **Preferred:** Element Reference API (`ariaLabelledByElements = [triggerEl]`) set in `updated()`. **Legacy fallback:** IDREF binding when same shadow root.
 7. `aria-disabled` reflects disabled state.
 8. `aria-orientation` present when component supports both axes.
 
@@ -30,26 +30,30 @@ The caller provides `refs/focus-management.md`, the component spec's ARIA sectio
 11. Home/End jump to first/last item.
 12. Tab exits the widget entirely — not trapped.
 13. Escape closes/dismisses where APG requires.
+14. Container-level `keydown` handlers that call `preventDefault()` or perform activation MUST verify the event originates from the expected interactive element (e.g., a tab button, not an unrelated input or link inside the container). Flag handlers that act on any descendant without target filtering.
 
 ### Focus Management
-14. `RovingFocusController` used on container — no manual tabindex manipulation.
-15. Exactly one item at `tabIndex=0` at a time; all others at `tabIndex=-1`.
-16. Focus placement after open/close follows APG guidance.
-17. RTL orientation: `ArrowLeft`/`ArrowRight` swap for horizontal widgets.
+15. `RovingFocusController` used on container — no manual tabindex manipulation.
+16. Exactly one item at `tabIndex=0` at a time; all others at `tabIndex=-1`.
+17. Focus placement after open/close follows APG guidance.
+18. RTL orientation: `ArrowLeft`/`ArrowRight` swap for horizontal widgets.
 
 ### Live Regions
-18. `role="alert"` (assertive) for errors; `role="status"` (polite) for informational.
-19. No more than one `aria-live` region declared within this component's own files.
+19. `role="alert"` (assertive) for errors; `role="status"` (polite) for informational.
+20. No more than one `aria-live` region declared within this component's own files.
 
 ### Forced Colors
-20. Forced colors support is either handled via `@media (forced-colors: active)` with `forced-color-adjust`, or states are communicated through `outline`, `border`, or `text-decoration` rather than color-only properties. If neither is present and the component has interactive states, flag as a warning.
+21. Forced colors support is either handled via `@media (forced-colors: active)` with `forced-color-adjust`, or states are communicated through `outline`, `border`, or `text-decoration` rather than color-only properties. If neither is present and the component has interactive states, flag as a warning.
 
 ### Screen Reader Behavior
-21. State changes (expanded/collapsed, selected, disabled) are announced via ARIA attribute updates — not via `aria-live` unless the APG specifies a live region.
-22. Interactive elements have a visible, descriptive accessible name — label matches what a screen reader would announce on focus.
+22. State changes (expanded/collapsed, selected, disabled) are announced via ARIA attribute updates — not via `aria-live` unless the APG specifies a live region.
+23. Interactive elements have a visible, descriptive accessible name — label matches what a screen reader would announce on focus.
+
+### Structural Roles
+24. Structural ARIA roles (`tabpanel`, `tablist`, `tab`, `listbox`, `option`, etc.) must persist regardless of the element's visibility state (`hidden`, `display: none`, `aria-hidden`). The `hidden` attribute already excludes elements from the accessibility tree — removing the role is redundant and breaks when consumers override `hidden` with CSS.
 
 ### Touch Targets
-23. Touch target sizing guidance: interactive elements (triggers, close buttons) should be at least 44×44 CSS pixels per WCAG 2.5.5. Flag elements that appear smaller without a note in the spec.
+25. Touch target sizing guidance: interactive elements (triggers, close buttons) should be at least 44×44 CSS pixels per WCAG 2.5.5. Flag elements that appear smaller without a note in the spec.
 
 ## Output Format
 

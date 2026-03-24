@@ -49,6 +49,10 @@ git add <changed files>
 git commit -m "fix(<component>): quality-gate fixes from post-plan-review"
 ```
 
+### Phase 4.5 — Smallest diff audit
+
+Run `/smallest-diff` on the patch-loop changes. If patches introduced dead code or diff noise, clean up before proceeding.
+
 ### Phase 5 — Build validation
 
 Run `/validate-build`.

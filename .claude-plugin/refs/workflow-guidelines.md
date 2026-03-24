@@ -62,12 +62,18 @@ security, lit) are more precise than a general-purpose review agent.
 
 ## 5. Smallest Diff Check
 
-Every change should be the minimum diff that achieves the goal. Reviewers should flag:
-- Unused imports or variables
-- Comments describing what the code does (rather than why)
+Every change should be the minimum diff that achieves the goal. Run `/smallest-diff` before committing to catch:
+- Dead code (unreachable paths, unused imports/variables)
 - Speculative code not required by the current task
-- Redundant abstractions or premature generalizations
+- Premature abstractions (helpers/utilities with a single call site)
+- Comments describing what the code does (rather than why)
 - Files touched but not meaningfully changed
+- Leftover debugging artifacts
+
+**Pipeline integration:**
+- After `/build-elements` Step 3 (before 6-reviewer dispatch) — catches dead code early
+- After `/post-plan-review` Phase 4 (after patches) — verifies patches didn't introduce noise
+- Before `/prepare-release` — final cleanliness gate
 
 ---
 
