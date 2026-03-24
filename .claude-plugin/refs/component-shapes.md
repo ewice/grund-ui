@@ -138,6 +138,46 @@ and planned shared controllers (built when the first component of that category 
 
 ---
 
+## Component Readiness Matrix
+
+Quick reference for which categories are buildable right now. Update this table whenever
+a planned controller is implemented (and update the Planned Controllers Registry below).
+
+| Category | Status | Blocker(s) — controllers that must be built first |
+|---|---|---|
+| **Composite widget** | ✅ Ready | — (`RovingFocusController` exists) |
+| **Simple** | ✅ Ready | — (no shared controllers needed) |
+| **Form control** | 🔴 Blocked | `FormController` — see `refs/form-participation.md` for full spec |
+| **Overlay (any)** | 🔴 Blocked | `PresenceController` (required for all overlays); additionally `FocusTrapController` (modal), `FocusRestorationController` (non-modal), `OutsideClickController` (dismissable), `ScrollLockController` (modal), `PositioningController` (anchor-relative) |
+| **Collection** | 🔴 Blocked | `VirtualFocusController` — required when a text input retains focus while options are navigated. If building a menu/listbox *without* a text input, `RovingFocusController` suffices (✅ exists). |
+| **Feedback** | 🔴 Blocked | `LiveRegionController` |
+
+### Controller Build Order
+
+When starting a new category for the first time, build its missing controllers **before** running
+`/scaffold`. Each controller should be built using `/build-controller` with its own spec in
+`refs/component-shapes.md` and the relevant `refs/` documents.
+
+Recommended build sequence when expanding into a new category:
+
+1. **First overlay (e.g., Disclosure, Popover):**
+   Build `PresenceController` + `FocusRestorationController` + `OutsideClickController` first.
+   Add `PositioningController` if the overlay is anchor-positioned.
+
+2. **First modal overlay (Dialog, Sheet):**
+   Build `FocusTrapController` + `ScrollLockController` first (in addition to the overlay set above).
+
+3. **First form control (Switch, Checkbox):**
+   Build `FormController` first — full spec in `refs/form-participation.md`.
+
+4. **First collection with retained input focus (Combobox, Autocomplete):**
+   Build `VirtualFocusController` first.
+
+5. **First feedback component (Toast, Alert):**
+   Build `LiveRegionController` first.
+
+---
+
 ## Planned Controllers Registry
 
 Track build status here as the library grows:
