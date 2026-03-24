@@ -22,12 +22,7 @@ import type { TabsRootContext } from '../context/tabs.context.js';
  */
 export class GrundTabsIndicator extends LitElement {
   static override styles = css`
-    /* Intentional exceptions: indicator cannot function without absolute positioning */
-    :host {
-      display: block;
-      position: absolute;
-      pointer-events: none;
-    }
+    :host { display: block; /* block: this element is a block-level container */ }
   `;
 
   @consume({ context: tabsRootContext, subscribe: true })

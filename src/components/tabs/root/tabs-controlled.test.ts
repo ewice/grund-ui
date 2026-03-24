@@ -16,7 +16,7 @@ function getTabButtons(el: GrundTabs): HTMLButtonElement[] {
 }
 
 describe('Tabs Controlled Mode', () => {
-  it('does not update internal state in controlled mode', async () => {
+  it('does not update internal state in controlled mode but fires grund-value-change', async () => {
     const el = await fixture<GrundTabs>(html`
       <grund-tabs .value=${'a'}>
         <grund-tabs-list>
@@ -29,11 +29,19 @@ describe('Tabs Controlled Mode', () => {
     `);
     await flush(el);
 
+    const events: CustomEvent[] = [];
+    el.addEventListener('grund-value-change', (e) => events.push(e as CustomEvent));
+
     const buttons = getTabButtons(el);
     buttons[1].click();
     await flush(el);
 
-    // Should still show tab A as active — controlled mode
+    // The event fires so consumers know to update value — they control the state
+    expect(events).to.have.length(1);
+    expect(events[0].detail.value).to.equal('b');
+    expect(events[0].detail.previousValue).to.equal('a');
+
+    // But internal state stays at A — consumer must set value prop to confirm
     const tabs = el.querySelectorAll('grund-tab');
     expect(tabs[0].hasAttribute('data-selected')).to.be.true;
     expect(tabs[1].hasAttribute('data-selected')).to.be.false;

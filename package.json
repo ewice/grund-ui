@@ -7,7 +7,8 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
-    "./accordion": "./dist/components/accordion/index.js"
+    "./accordion": "./dist/components/accordion/index.js",
+    "./tabs": "./dist/components/tabs/index.js"
   },
   "customElements": "custom-elements.json",
   "files": [

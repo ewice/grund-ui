@@ -157,6 +157,11 @@ export const WithIndicator: Story = {
       <grund-tabs-panel value="c"><p>Panel C</p></grund-tabs-panel>
     </grund-tabs>
     <style>
+      grund-tabs-indicator {
+        /* Consumers must provide positioning — the component exposes CSS custom properties only */
+        position: absolute;
+        pointer-events: none;
+      }
       grund-tabs-indicator::part(indicator) {
         width: var(--grund-tabs-indicator-width);
         height: 2px;
