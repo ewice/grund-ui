@@ -97,4 +97,18 @@ describe('Tabs Panel Visibility', () => {
     expect(panels[0].hasAttribute('data-selected')).to.be.true;
     expect(panels[1].hasAttribute('data-selected')).to.be.false;
   });
+
+  it('data-orientation and data-activation-direction are set on panel host', async () => {
+    const el = await setup(html`
+      <grund-tabs default-value="a" orientation="vertical">
+        <grund-tabs-list>
+          <grund-tab value="a">A</grund-tab>
+        </grund-tabs-list>
+        <grund-tabs-panel value="a">A</grund-tabs-panel>
+      </grund-tabs>
+    `);
+    const panel = el.querySelector('grund-tabs-panel')!;
+    expect(panel.dataset.orientation).to.equal('vertical');
+    expect(panel.dataset.activationDirection).to.equal('none');
+  });
 });
