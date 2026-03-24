@@ -28,6 +28,7 @@ export class GrundTab extends LitElement {
   @state()
   private ctx?: TabsRootContext;
 
+  /** Exposes the inner button for RovingFocusController on the list to manage tabindex. */
   get triggerElement(): HTMLButtonElement | null {
     return this.shadowRoot?.querySelector<HTMLButtonElement>('[part="tab"]') ?? null;
   }
@@ -62,13 +63,16 @@ export class GrundTab extends LitElement {
   override willUpdate(changed: Map<PropertyKey, unknown>): void {
     if (!this.ctx) return;
 
+    const wasRegistered = this.isRegistered;
+
     if (!this.isRegistered) {
       this.ctx.registerTab(this.value, this);
       this.ctx.setDisabled(this.value, this.disabled);
       this.isRegistered = true;
     }
 
-    if (changed.has('disabled') && this.isRegistered) {
+    // Only sync disabled change if it was already registered — avoids double-call on first render
+    if (changed.has('disabled') && wasRegistered) {
       this.ctx.setDisabled(this.value, this.disabled);
     }
 
@@ -83,8 +87,9 @@ export class GrundTab extends LitElement {
   }
 
   override updated(): void {
+    if (!this.ctx) return;
     const btn = this.shadowRoot?.querySelector<HTMLButtonElement>('[part="tab"]');
-    if (!btn || !this.ctx) return;
+    if (!btn) return;
 
     const panelEl = this.ctx.getPanelElement(this.value);
     (btn as any).ariaControlsElements = panelEl ? [panelEl] : [];
