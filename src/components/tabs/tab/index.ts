@@ -87,10 +87,16 @@ export class GrundTab extends LitElement {
   }
 
   override updated(): void {
-    if (!this.ctx) return;
+    if (!this.ctx) {
+      return;
+    }
+    
     const btn = this.shadowRoot?.querySelector<HTMLButtonElement>('[part="tab"]');
-    if (!btn) return;
-
+    
+    if (!btn) {
+      return;
+    }
+    
     const panelEl = this.ctx.getPanelElement(this.value);
     (btn as any).ariaControlsElements = panelEl ? [panelEl] : [];
   }

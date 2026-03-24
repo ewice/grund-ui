@@ -19,7 +19,7 @@ import type { AccordionOpenChangeDetail } from '../types.js';
  */
 export class GrundAccordionItem extends LitElement {
   static override styles = css`
-    :host { display: block; }
+    :host { display: block; /* block: this element is a block-level container */ }
   `;
 
   @property() value = '';
@@ -56,7 +56,6 @@ export class GrundAccordionItem extends LitElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.setAttribute('exportparts', 'trigger,panel');
     if (!this.value) {
       this.value = crypto.randomUUID().slice(0, 8);
       if (import.meta.env.DEV) {

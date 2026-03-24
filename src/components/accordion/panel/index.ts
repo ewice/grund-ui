@@ -16,7 +16,7 @@ import type { AccordionItemContext } from '../context/accordion.context.js';
  */
 export class GrundAccordionPanel extends LitElement {
   static override styles = css`
-    :host { display: block; }
+    :host { display: block; /* block: this element is a block-level container */ }
   `;
 
   @property({ type: Boolean, attribute: 'keep-mounted' }) keepMounted = false;
@@ -76,6 +76,9 @@ export class GrundAccordionPanel extends LitElement {
     return this.hiddenUntilFound || (this.itemCtx?.hiddenUntilFound ?? false);
   }
 
+  // TODO(aria-linking): Migrate aria-labelledby from legacy IDREF to Element Reference API
+  // (ariaLabelledByElements on the panel div) once the item context exposes a getTriggerElement()
+  // method. The current IDREF cannot resolve across shadow root boundaries (aria-linking.md).
   override render() {
     const ctx = this.itemCtx;
     if (!ctx) return nothing;

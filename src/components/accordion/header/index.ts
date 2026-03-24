@@ -14,7 +14,7 @@ import type { AccordionItemContext } from '../context/accordion.context.js';
  */
 export class GrundAccordionHeader extends LitElement {
   static override styles = css`
-    :host { display: block; }
+    :host { display: block; /* block: this element is a block-level container */ }
   `;
 
   @property({ type: Number }) level: 1 | 2 | 3 | 4 | 5 | 6 = 3;

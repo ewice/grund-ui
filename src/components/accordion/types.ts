@@ -12,7 +12,10 @@ export interface AccordionOpenChangeDetail {
   index: number;
 }
 
-/** Snapshot of host properties passed to AccordionController.syncFromHost(). */
+/**
+ * Snapshot of host properties passed to AccordionController.syncFromHost().
+ * @internal
+ */
 export interface AccordionHostSnapshot {
   value: string[] | undefined;
   defaultValue: string[] | undefined;

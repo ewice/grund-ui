@@ -19,7 +19,7 @@ import type { AccordionHostSnapshot, AccordionValueChangeDetail } from '../types
  */
 export class GrundAccordion extends LitElement {
   static override styles = css`
-    :host { display: block; }
+    :host { display: block; /* block: this element is a block-level container */ }
   `;
 
   @property({ type: Array, hasChanged: () => true })
@@ -41,18 +41,21 @@ export class GrundAccordion extends LitElement {
 
   private controller = new AccordionController();
   private registry = new AccordionRegistry();
-  private rovingFocus!: RovingFocusController;
+
+  // Class field initializer — ensures exactly one controller instance per element lifetime.
+  // Constructing in connectedCallback would create a new instance (and duplicate keydown
+  // listeners) on every disconnect+reconnect cycle. willUpdate syncs the live options.
+  private readonly rovingFocus = new RovingFocusController(this, {
+    orientation: 'vertical',
+    loop: true,
+    getItems: () =>
+      this.registry.items
+        .map((r) => r.trigger?.shadowRoot?.querySelector<HTMLElement>('[part="trigger"]') ?? null)
+        .filter((t): t is HTMLElement => t !== null),
+  });
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.rovingFocus = new RovingFocusController(this, {
-      orientation: this.orientation,
-      loop: this.loopFocus,
-      getItems: () =>
-        this.registry.items
-          .map((r) => r.trigger?.shadowRoot?.querySelector<HTMLElement>('[part="trigger"]') ?? null)
-          .filter((t): t is HTMLElement => t !== null),
-    });
   }
 
   override willUpdate(changed: Map<PropertyKey, unknown>): void {
