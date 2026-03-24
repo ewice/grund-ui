@@ -84,6 +84,7 @@ export class GrundTabsIndicator extends LitElement {
     // Swap the tab observer when the active tab changes
     if (activeTab !== this.observedTab) {
       this.tabObserver?.disconnect();
+      this.tabObserver = undefined;
       this.observedTab = activeTab;
 
       if (activeTab) {

@@ -60,7 +60,7 @@ describe('GrundTabsIndicator', () => {
       '--grund-tabs-indicator-bottom',
     ];
     for (const prop of props) {
-      expect(div.style.getPropertyValue(prop), prop).to.exist;
+      expect(div.style.getPropertyValue(prop), prop).to.not.equal('');
     }
   });
 });
