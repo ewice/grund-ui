@@ -78,6 +78,10 @@ Caller provides `refs/lit-patterns.md` and `refs/ssr-contract.md`. Cross-referen
 ### Member Ordering
 32. Order: static → `@property`/`@state` → private fields/controllers → constructor → connect/disconnect → lifecycle → public → private → `render()`.
 
+### Type Declaration Files
+33. Any `src/types/*.d.ts` file containing `declare global` MUST include a comment with: (a) a spec or MDN URL confirming the API is real, and (b) a TypeScript tracking issue URL. A `declare global` block without both citations is a fabricated type workaround — flag as a **blocker** and require the real fix (import, `instanceof` narrowing, or structural duck-type interface instead).
+34. Local interface declarations used only to avoid a type error (e.g., `interface Foo { bar: string }` redeclaring something already in the codebase) are a smell. Flag as a **warning** with a fix hint to find and import the canonical type instead.
+
 ## Output
 
 ```json

@@ -43,6 +43,19 @@ For each file found, determine if it applies to this component. Specifically:
 
 If a relevant utility exists, the component's registry or controller MUST extend or use it. Do not reimplement functionality already in `src/utils/` or `src/controllers/`.
 
+**TypeScript type errors — decision tree (required before any workaround):**
+
+When a TypeScript error appears due to a missing or unknown type, resolve it in this order:
+
+1. **Wrong import / too-broad type** → Fix the import or use `instanceof` narrowing. This is the most common cause.
+2. **Standard browser API not yet in TypeScript's DOM lib** → Create `src/types/{api-name}.d.ts` with a `declare global` augmentation. Requirements:
+   - The API must be real and shipping in target browsers
+   - The file MUST contain a comment citing the spec URL (MDN or W3C) and the TypeScript tracking issue
+   - Follow the pattern of `src/types/aria-element-reference.d.ts`
+3. **Framework type gap (e.g. `updateComplete`)** → Use a structural duck-type interface (`interface ReactiveElement { readonly updateComplete: Promise<boolean> }`) — never import the full framework class just to satisfy a type.
+
+**Never use `as any` or `as unknown as T` for any of these.** The linter enforces this — `@typescript-eslint/no-explicit-any` is set to `error` in the project. If you hit a type error, apply the decision tree above.
+
 **Abstraction fit check:** For each shared controller the spec requires (e.g., `RovingFocusController`, `FocusTrapController`), run the fit check from `lit-patterns.md` Rule 35:
 
 1. List all behaviors the spec demands from the controller
