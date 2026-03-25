@@ -73,6 +73,35 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/toggle/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundToggle",
+          "declaration": {
+            "name": "GrundToggle",
+            "module": "./root/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PressedChangeDetail",
+          "declaration": {
+            "name": "PressedChangeDetail",
+            "module": "./types.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/tabs/index.ts",
       "declarations": [],
       "exports": [
@@ -134,38 +163,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/accordion/context/accordion.context.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "accordionRootContext"
-        },
-        {
-          "kind": "variable",
-          "name": "accordionItemContext"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "accordionRootContext",
-          "declaration": {
-            "name": "accordionRootContext",
-            "module": "src/components/accordion/context/accordion.context.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "accordionItemContext",
-          "declaration": {
-            "name": "accordionItemContext",
-            "module": "src/components/accordion/context/accordion.context.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/components/accordion/header/index.ts",
       "declarations": [
         {
@@ -185,6 +182,7 @@
               "type": {
                 "text": "1 | 2 | 3 | 4 | 5 | 6"
               },
+              "privacy": "public",
               "default": "3",
               "attribute": "level"
             },
@@ -236,6 +234,38 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/accordion/context/accordion.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "accordionRootContext"
+        },
+        {
+          "kind": "variable",
+          "name": "accordionItemContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "accordionRootContext",
+          "declaration": {
+            "name": "accordionRootContext",
+            "module": "src/components/accordion/context/accordion.context.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "accordionItemContext",
+          "declaration": {
+            "name": "accordionItemContext",
+            "module": "src/components/accordion/context/accordion.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/accordion/item/index.ts",
       "declarations": [
         {
@@ -255,6 +285,7 @@
               "type": {
                 "text": "string"
               },
+              "privacy": "public",
               "default": "''",
               "attribute": "value"
             },
@@ -264,6 +295,7 @@
               "type": {
                 "text": "boolean"
               },
+              "privacy": "public",
               "default": "false",
               "attribute": "disabled"
             },
@@ -407,35 +439,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/accordion/registry/accordion.registry.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/registry/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "AccordionRegistry",
-          "declaration": {
-            "name": "AccordionRegistry",
-            "module": "./accordion.registry.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "AccordionItemRecord",
-          "declaration": {
-            "name": "AccordionItemRecord",
-            "module": "./accordion.registry.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/components/accordion/panel/index.ts",
       "declarations": [
         {
@@ -461,6 +464,7 @@
               "type": {
                 "text": "boolean"
               },
+              "privacy": "public",
               "default": "false",
               "attribute": "keep-mounted"
             },
@@ -470,6 +474,7 @@
               "type": {
                 "text": "boolean"
               },
+              "privacy": "public",
               "default": "false",
               "attribute": "hidden-until-found"
             },
@@ -561,6 +566,111 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/accordion/registry/accordion.registry.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/registry/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AccordionRegistry",
+          "declaration": {
+            "name": "AccordionRegistry",
+            "module": "./accordion.registry.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AccordionItemRecord",
+          "declaration": {
+            "name": "AccordionItemRecord",
+            "module": "./accordion.registry.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/trigger/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Button that toggles an accordion panel open/closed.",
+          "name": "GrundAccordionTrigger",
+          "cssParts": [
+            {
+              "description": "The inner button element",
+              "name": "trigger"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Trigger label content",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "itemCtx",
+              "type": {
+                "text": "AccordionItemContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isTriggerRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "handleClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion-trigger",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordionTrigger",
+          "declaration": {
+            "name": "GrundAccordionTrigger",
+            "module": "src/components/accordion/trigger/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion-trigger",
+          "declaration": {
+            "name": "GrundAccordionTrigger",
+            "module": "src/components/accordion/trigger/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/accordion/root/index.ts",
       "declarations": [
         {
@@ -580,6 +690,7 @@
               "type": {
                 "text": "string[] | undefined"
               },
+              "privacy": "public",
               "default": "undefined",
               "attribute": "value"
             },
@@ -589,6 +700,7 @@
               "type": {
                 "text": "string[] | undefined"
               },
+              "privacy": "public",
               "default": "undefined",
               "attribute": "default-value"
             },
@@ -598,6 +710,7 @@
               "type": {
                 "text": "boolean"
               },
+              "privacy": "public",
               "default": "false",
               "attribute": "multiple"
             },
@@ -607,6 +720,7 @@
               "type": {
                 "text": "boolean"
               },
+              "privacy": "public",
               "default": "false",
               "attribute": "disabled"
             },
@@ -616,6 +730,7 @@
               "type": {
                 "text": "'vertical' | 'horizontal'"
               },
+              "privacy": "public",
               "default": "'vertical'",
               "attribute": "orientation"
             },
@@ -625,6 +740,7 @@
               "type": {
                 "text": "boolean"
               },
+              "privacy": "public",
               "default": "true",
               "attribute": "loop-focus"
             },
@@ -634,6 +750,7 @@
               "type": {
                 "text": "boolean"
               },
+              "privacy": "public",
               "default": "false",
               "attribute": "keep-mounted"
             },
@@ -643,6 +760,7 @@
               "type": {
                 "text": "boolean"
               },
+              "privacy": "public",
               "default": "false",
               "attribute": "hidden-until-found"
             },
@@ -668,11 +786,64 @@
             },
             {
               "kind": "field",
+              "name": "_isExpanded",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_requestToggle",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_registerItem",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_unregisterItem",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_indexOf",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_attachTrigger",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_detachTrigger",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_attachPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_detachPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "rovingFocus",
-              "type": {
-                "text": "RovingFocusController"
-              },
-              "privacy": "private"
+              "privacy": "private",
+              "readonly": true,
+              "default": "new RovingFocusController(this, { orientation: 'vertical', loop: true, getItems: () => this.registry.items .map((r) => r.trigger?.shadowRoot?.querySelector<HTMLElement>('[part=\"trigger\"]') ?? null) .filter((t): t is HTMLElement => t !== null), })"
             },
             {
               "kind": "method",
@@ -813,36 +984,72 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/accordion/trigger/index.ts",
+      "path": "src/components/toggle/root/index.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Button that toggles an accordion panel open/closed.",
-          "name": "GrundAccordionTrigger",
+          "description": "A standalone pressable toggle button with `aria-pressed` state.\nAlso the primitive element used inside `<grund-toggle-group>`.",
+          "name": "GrundToggle",
           "cssParts": [
             {
               "description": "The inner button element",
-              "name": "trigger"
+              "name": "button"
             }
           ],
           "slots": [
             {
-              "description": "Trigger label content",
+              "description": "Button label content",
               "name": ""
             }
           ],
           "members": [
             {
               "kind": "field",
-              "name": "itemCtx",
+              "name": "pressed",
               "type": {
-                "text": "AccordionItemContext | undefined"
+                "text": "boolean | undefined"
               },
-              "privacy": "private"
+              "privacy": "public",
+              "default": "undefined",
+              "description": "Whether the toggle is pressed. Setting this enables controlled mode.\nIn controlled mode the element fires `grund-pressed-change` but does not\nupdate internal state — the consumer must reflect the new value back.",
+              "attribute": "pressed"
             },
             {
               "kind": "field",
-              "name": "isTriggerRegistered",
+              "name": "defaultPressed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "description": "Initial pressed state for uncontrolled mode. Ignored after the first render.",
+              "attribute": "default-pressed"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "''",
+              "description": "Identifier for this toggle. Has no effect on the standalone element;\nused by `<grund-toggle-group>` to identify which item is pressed.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "description": "Whether the toggle is disabled.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "_internalPressed",
               "type": {
                 "text": "boolean"
               },
@@ -850,8 +1057,17 @@
               "default": "false"
             },
             {
+              "kind": "field",
+              "name": "_effectivePressed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
               "kind": "method",
-              "name": "handleClick",
+              "name": "_handleClick",
               "privacy": "private",
               "return": {
                 "type": {
@@ -860,29 +1076,76 @@
               }
             }
           ],
+          "events": [
+            {
+              "name": "grund-pressed-change",
+              "type": {
+                "text": "CustomEvent<PressedChangeDetail>"
+              },
+              "description": "When pressed state changes"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "pressed",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "undefined",
+              "description": "Whether the toggle is pressed. Setting this enables controlled mode.\nIn controlled mode the element fires `grund-pressed-change` but does not\nupdate internal state — the consumer must reflect the new value back.",
+              "fieldName": "pressed"
+            },
+            {
+              "name": "default-pressed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Initial pressed state for uncontrolled mode. Ignored after the first render.",
+              "fieldName": "defaultPressed"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Identifier for this toggle. Has no effect on the standalone element;\nused by `<grund-toggle-group>` to identify which item is pressed.",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the toggle is disabled.",
+              "fieldName": "disabled"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
           },
-          "tagName": "grund-accordion-trigger",
+          "tagName": "grund-toggle",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "GrundAccordionTrigger",
+          "name": "GrundToggle",
           "declaration": {
-            "name": "GrundAccordionTrigger",
-            "module": "src/components/accordion/trigger/index.ts"
+            "name": "GrundToggle",
+            "module": "src/components/toggle/root/index.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "grund-accordion-trigger",
+          "name": "grund-toggle",
           "declaration": {
-            "name": "GrundAccordionTrigger",
-            "module": "src/components/accordion/trigger/index.ts"
+            "name": "GrundToggle",
+            "module": "src/components/toggle/root/index.ts"
           }
         }
       ]
@@ -903,6 +1166,151 @@
           "declaration": {
             "name": "tabsRootContext",
             "module": "src/components/tabs/context/tabs.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/list/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Container for tab triggers. Manages keyboard navigation via roving tabindex.",
+          "name": "GrundTabsList",
+          "cssParts": [
+            {
+              "description": "The tablist wrapper",
+              "name": "list"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Tab elements",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "activateOnFocus",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "true",
+              "attribute": "activate-on-focus"
+            },
+            {
+              "kind": "field",
+              "name": "loopFocus",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "true",
+              "attribute": "loop-focus"
+            },
+            {
+              "kind": "field",
+              "name": "ctx",
+              "type": {
+                "text": "TabsRootContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "rovingFocus",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new RovingFocusController(this, { orientation: 'horizontal', loop: true, getItems: () => this.getTabButtons(), })"
+            },
+            {
+              "kind": "field",
+              "name": "handleFocusin",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getTabButtons",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLButtonElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleSlotchange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onFocusin",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "FocusEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "activate-on-focus",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "activateOnFocus"
+            },
+            {
+              "name": "loop-focus",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "loopFocus"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-tabs-list",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabsList",
+          "declaration": {
+            "name": "GrundTabsList",
+            "module": "src/components/tabs/list/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-tabs-list",
+          "declaration": {
+            "name": "GrundTabsList",
+            "module": "src/components/tabs/list/index.ts"
           }
         }
       ]
@@ -1032,274 +1440,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/tabs/list/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Container for tab triggers. Manages keyboard navigation via roving tabindex.",
-          "name": "GrundTabsList",
-          "cssParts": [
-            {
-              "description": "The tablist wrapper",
-              "name": "list"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Tab elements",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "activateOnFocus",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "attribute": "activate-on-focus"
-            },
-            {
-              "kind": "field",
-              "name": "loopFocus",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "attribute": "loop-focus"
-            },
-            {
-              "kind": "field",
-              "name": "ctx",
-              "type": {
-                "text": "TabsRootContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "rovingFocus",
-              "type": {
-                "text": "RovingFocusController | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleFocusin",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "getTabButtons",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement[]"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "handleSlotchange",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "onFocusin",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "FocusEvent"
-                  }
-                }
-              ]
-            }
-          ],
-          "attributes": [
-            {
-              "name": "activate-on-focus",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "fieldName": "activateOnFocus"
-            },
-            {
-              "name": "loop-focus",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "fieldName": "loopFocus"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-tabs-list",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundTabsList",
-          "declaration": {
-            "name": "GrundTabsList",
-            "module": "src/components/tabs/list/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-tabs-list",
-          "declaration": {
-            "name": "GrundTabsList",
-            "module": "src/components/tabs/list/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/tabs/panel/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Content panel associated with a tab by matching value.",
-          "name": "GrundTabsPanel",
-          "cssParts": [
-            {
-              "description": "The panel container",
-              "name": "panel"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Panel content",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "keepMounted",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "keep-mounted"
-            },
-            {
-              "kind": "field",
-              "name": "hiddenUntilFound",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "hidden-until-found"
-            },
-            {
-              "kind": "field",
-              "name": "ctx",
-              "type": {
-                "text": "TabsRootContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "isRegistered",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "handleBeforematch",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "value"
-            },
-            {
-              "name": "keep-mounted",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "keepMounted"
-            },
-            {
-              "name": "hidden-until-found",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hiddenUntilFound"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-tabs-panel",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundTabsPanel",
-          "declaration": {
-            "name": "GrundTabsPanel",
-            "module": "src/components/tabs/panel/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-tabs-panel",
-          "declaration": {
-            "name": "GrundTabsPanel",
-            "module": "src/components/tabs/panel/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/components/tabs/registry/tabs.registry.ts",
       "declarations": [],
       "exports": []
@@ -1325,6 +1465,7 @@
               "type": {
                 "text": "string | null | undefined"
               },
+              "privacy": "public",
               "default": "undefined"
             },
             {
@@ -1333,6 +1474,7 @@
               "type": {
                 "text": "string | null"
               },
+              "privacy": "public",
               "default": "null",
               "attribute": "default-value"
             },
@@ -1342,6 +1484,7 @@
               "type": {
                 "text": "'horizontal' | 'vertical'"
               },
+              "privacy": "public",
               "default": "'horizontal'",
               "attribute": "orientation"
             },
@@ -1351,6 +1494,7 @@
               "type": {
                 "text": "boolean"
               },
+              "privacy": "public",
               "default": "false",
               "attribute": "disabled"
             },
@@ -1382,6 +1526,60 @@
               },
               "privacy": "private",
               "default": "'none'"
+            },
+            {
+              "kind": "field",
+              "name": "_registerTab",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_unregisterTab",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_registerPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_unregisterPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_setDisabled",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_requestActivation",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_getTabElement",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_getPanelElement",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_indexOf",
+              "privacy": "private",
+              "readonly": true
             },
             {
               "kind": "method",
@@ -1486,6 +1684,133 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/tabs/panel/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Content panel associated with a tab by matching value.",
+          "name": "GrundTabsPanel",
+          "cssParts": [
+            {
+              "description": "The panel container",
+              "name": "panel"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Panel content",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "keepMounted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "keep-mounted"
+            },
+            {
+              "kind": "field",
+              "name": "hiddenUntilFound",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "hidden-until-found"
+            },
+            {
+              "kind": "field",
+              "name": "ctx",
+              "type": {
+                "text": "TabsRootContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "handleBeforematch",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "keep-mounted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "keepMounted"
+            },
+            {
+              "name": "hidden-until-found",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hiddenUntilFound"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-tabs-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabsPanel",
+          "declaration": {
+            "name": "GrundTabsPanel",
+            "module": "src/components/tabs/panel/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-tabs-panel",
+          "declaration": {
+            "name": "GrundTabsPanel",
+            "module": "src/components/tabs/panel/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/tabs/tab/index.ts",
       "declarations": [
         {
@@ -1511,6 +1836,7 @@
               "type": {
                 "text": "string"
               },
+              "privacy": "public",
               "default": "''",
               "attribute": "value"
             },
@@ -1520,6 +1846,7 @@
               "type": {
                 "text": "boolean"
               },
+              "privacy": "public",
               "default": "false",
               "attribute": "disabled"
             },
@@ -1533,21 +1860,22 @@
             },
             {
               "kind": "field",
-              "name": "triggerElement",
-              "type": {
-                "text": "HTMLButtonElement | null"
-              },
-              "description": "Exposes the inner button for RovingFocusController on the list to manage tabindex.",
-              "readonly": true
-            },
-            {
-              "kind": "field",
               "name": "isRegistered",
               "type": {
                 "text": "boolean"
               },
               "privacy": "private",
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "triggerElement",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "privacy": "public",
+              "description": "Exposes the inner button for RovingFocusController on the list to manage tabindex.",
+              "readonly": true
             },
             {
               "kind": "method",

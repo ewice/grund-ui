@@ -1,4 +1,5 @@
 import { html } from 'lit';
+import { action } from 'storybook/actions';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { GrundAccordion } from '../src/components/accordion/index.js';
@@ -26,6 +27,8 @@ export const Default: Story = {
       ?disabled=${args.disabled}
       orientation=${args.orientation ?? 'vertical'}
       ?loop-focus=${args.loopFocus ?? true}
+      @grund-value-change=${action('grund-value-change')}
+      @grund-open-change=${action('grund-open-change')}
     >
       <grund-accordion-item value="item-1">
         <grund-accordion-header>
@@ -57,7 +60,11 @@ export const Default: Story = {
 
 export const WithDefaultOpen: Story = {
   render: () => html`
-    <grund-accordion .defaultValue=${['item-2']}>
+    <grund-accordion
+      .defaultValue=${['item-2']}
+      @grund-value-change=${action('grund-value-change')}
+      @grund-open-change=${action('grund-open-change')}
+    >
       <grund-accordion-item value="item-1">
         <grund-accordion-header>
           <grund-accordion-trigger>Section 1</grund-accordion-trigger>
@@ -76,7 +83,12 @@ export const WithDefaultOpen: Story = {
 
 export const Multiple: Story = {
   render: () => html`
-    <grund-accordion multiple .defaultValue=${['a', 'b']}>
+    <grund-accordion
+      multiple
+      .defaultValue=${['a', 'b']}
+      @grund-value-change=${action('grund-value-change')}
+      @grund-open-change=${action('grund-open-change')}
+    >
       <grund-accordion-item value="a">
         <grund-accordion-header>
           <grund-accordion-trigger>Section A</grund-accordion-trigger>
@@ -114,7 +126,10 @@ export const Disabled: Story = {
 
 export const ItemDisabled: Story = {
   render: () => html`
-    <grund-accordion>
+    <grund-accordion
+      @grund-value-change=${action('grund-value-change')}
+      @grund-open-change=${action('grund-open-change')}
+    >
       <grund-accordion-item value="a">
         <grund-accordion-header>
           <grund-accordion-trigger>Enabled</grund-accordion-trigger>

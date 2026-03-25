@@ -6,6 +6,7 @@ export default defineConfig({
       entry: {
         index: 'src/index.ts',
         accordion: 'src/components/accordion/index.ts',
+        toggle: 'src/components/toggle/index.ts',
       },
       formats: ['es'],
     },
