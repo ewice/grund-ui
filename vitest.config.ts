@@ -9,6 +9,13 @@ export default defineConfig({
     projects: [
       {
         extends: './vite.config.ts',
+        resolve: {
+          alias: {
+            '/__web-dev-server__web-socket.js': path.resolve(
+              './node_modules/@open-wc/testing/index.js',
+            ),
+          },
+        },
         test: {
           name: 'components',
           include: ['src/**/*.test.ts'],
@@ -18,6 +25,7 @@ export default defineConfig({
             headless: true,
             provider: playwright({}),
             instances: [{ browser: 'chromium' }],
+            screenshotFailures: false,
           },
         },
       },
@@ -37,7 +45,13 @@ export default defineConfig({
                 resolveScreenshotPath({ root, testFileName, arg, browserName, ext }) {
                   const component = testFileName.replace(/\.(visual\.)?test\.ts$/, '');
                   const os = process.platform;
-                  return path.join(root, '__screenshots__', component, os, `${arg}-${browserName}${ext}`);
+                  return path.join(
+                    root,
+                    '__screenshots__',
+                    component,
+                    os,
+                    `${arg}-${browserName}${ext}`,
+                  );
                 },
               },
             },

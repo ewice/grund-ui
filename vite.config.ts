@@ -15,4 +15,7 @@ export default defineConfig({
     target: 'es2021',
     outDir: 'dist',
   },
+  optimizeDeps: {
+    exclude: ['@open-wc/testing'],
+  },
 });

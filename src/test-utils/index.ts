@@ -1,19 +1,64 @@
-import { elementUpdated } from '@open-wc/testing-helpers/pure';
+import { aTimeout } from '@open-wc/testing';
+import { expect } from '@open-wc/testing';
+
+/** Structural type for Lit's reactive update lifecycle — avoids importing LitElement in test utils. */
+interface ReactiveElement {
+  readonly updateComplete: Promise<boolean>;
+}
 
 /**
- * Flushes Lit's async update queue and allows microtasks to settle.
- * Use after triggering state changes (clicks, property mutations) to
- * ensure Lit re-renders and context propagates before asserting.
- *
- * @param el - The root element to wait on. Child elements are also awaited.
+ * Settles async context propagation across multiple Lit render cycles.
+ * Call after any state change that should propagate through @provide/@consume.
  */
-export async function flush(el: Element): Promise<void> {
-  await elementUpdated(el);
-  const children = el.querySelectorAll(
-    'grund-accordion-item, grund-accordion-trigger, grund-accordion-panel',
-  );
-  for (const child of children) {
-    await elementUpdated(child);
+export async function flush(el: ReactiveElement): Promise<void> {
+  for (let i = 0; i < 3; i++) {
+    await el.updateComplete;
+    await aTimeout(0);
   }
-  await new Promise<void>((r) => setTimeout(r, 0));
+}
+
+/**
+ * Dispatches a KeyboardEvent on an element.
+ */
+export function simulateKeyboard(
+  el: Element,
+  key: string,
+  options?: Partial<KeyboardEventInit>,
+): void {
+  el.dispatchEvent(
+    new KeyboardEvent('keydown', {
+      key,
+      code: key,
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+      ...options,
+    }),
+  );
+}
+
+/**
+ * Queries the shadow root of an element for a matching CSS part.
+ */
+export function getByPart<T extends Element = HTMLElement>(
+  el: Element,
+  partName: string,
+): T {
+  const result = el.shadowRoot?.querySelector(`[part="${partName}"]`);
+  if (!result) {
+    throw new Error(`No element with part="${partName}" found in ${el.tagName}`);
+  }
+  return result as T;
+}
+
+/**
+ * Asserts an ARIA relationship between two elements.
+ */
+export function expectAriaRelationship(
+  source: Element,
+  target: Element,
+  type: 'controls' | 'labelledby',
+): void {
+  const attr = type === 'controls' ? 'aria-controls' : 'aria-labelledby';
+  expect(source.getAttribute(attr)).to.equal(target.id);
 }

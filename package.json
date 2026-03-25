@@ -7,7 +7,8 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
-    "./accordion": "./dist/components/accordion/index.js"
+    "./accordion": "./dist/components/accordion/index.js",
+    "./tabs": "./dist/components/tabs/index.js"
   },
   "customElements": "custom-elements.json",
   "files": [
@@ -47,24 +48,24 @@
     "lit": "^3.3.2"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^5.0.1",
+    "@chromatic-com/storybook": "^5.0.2",
     "@custom-elements-manifest/analyzer": "^0.11.0",
     "@eslint/js": "^10.0.1",
     "@open-wc/testing": "^4.0.0",
-    "@storybook/addon-a11y": "^10.2.19",
-    "@storybook/addon-docs": "^10.2.19",
-    "@storybook/addon-vitest": "^10.2.19",
-    "@storybook/web-components-vite": "^10.2.19",
+    "@storybook/addon-a11y": "^10.3.1",
+    "@storybook/addon-docs": "^10.3.1",
+    "@storybook/addon-vitest": "^10.3.1",
+    "@storybook/web-components-vite": "^10.3.1",
     "@vitest/browser": "^4.1.0",
     "@vitest/browser-playwright": "^4.1.0",
     "@vitest/coverage-v8": "^4.1.0",
     "eslint": "^10.0.3",
     "eslint-plugin-lit": "^2.2.1",
-    "eslint-plugin-storybook": "^10.2.19",
+    "eslint-plugin-storybook": "^10.3.1",
     "eslint-plugin-wc": "^3.1.0",
     "playwright": "^1.58.2",
     "prettier": "^3.8.1",
-    "storybook": "^10.2.19",
+    "storybook": "^10.3.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.57.0",
     "vite": "^8.0.0",
