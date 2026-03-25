@@ -1,4 +1,3 @@
-// src/components/toggle/root/index.ts
 import { LitElement, html, css, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
