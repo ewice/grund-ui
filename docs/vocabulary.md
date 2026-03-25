@@ -23,6 +23,7 @@ for the same semantic action.
 | `registerTab` / `unregisterTab` | Add/remove a tab from the tabs registry | `ctx.registerTab(value, this)` |
 | `registerPanel` / `unregisterPanel` | Add/remove a panel from the tabs registry | `ctx.registerPanel(value, this)` |
 | `setDisabled` | Sync disabled state from a tab to the registry | `ctx.setDisabled(value, disabled)` |
+| `registerToggle` / `unregisterToggle` | Add/remove a toggle child from the toggle-group registry | `ctx.registerToggle(this, value)` |
 
 ---
 
@@ -32,7 +33,7 @@ All events follow `grund-{action}` pattern, `bubbles: true`, `composed: false`.
 
 | Event | Detail type | Meaning |
 |---|---|---|
-| `grund-value-change` | `{ value: string[], itemValue: string, open: boolean }` (accordion) / `{ value: string \| null, previousValue: string \| null }` (tabs) | Full expanded values snapshot (accordion); active tab changed (tabs) |
+| `grund-value-change` | `{ value: string[], itemValue: string, open: boolean }` (accordion) / `{ value: string \| null, previousValue: string \| null }` (tabs) / `{ value: string[] }` (toggle-group) | Full expanded values snapshot (accordion); active tab changed (tabs); pressed toggles changed (toggle-group) |
 | `grund-open-change` | `{ value: string, open: boolean, index: number }` | An item opened or closed |
 | `grund-pressed-change` | `{ pressed: boolean }` | Toggle pressed state changed |
 
@@ -54,6 +55,7 @@ CSS `::part()` names. All lowercase, hyphenated nouns.
 | `label` | A text label element | Switch, Checkbox |
 | `input` | The underlying native or custom input | Switch, Checkbox, Input |
 | `button` | The inner button element | Toggle |
+| `group` | The inner container wrapping slotted toggle children | ToggleGroup |
 | `close-button` | Button that closes an overlay | Dialog, Sheet, Toast |
 | `overlay` | The backdrop/scrim behind a modal | Dialog, Sheet |
 
@@ -97,7 +99,7 @@ Context symbols follow the pattern `{ComponentName}Context` for the root context
 | `accordionRootContext` | Root-level context for accordion |
 | `accordionItemContext` | Per-item context for accordion |
 | `tabsRootContext` | Root-level context for tabs |
-| `toggleContext` | Root-level context for toggle-group (reserved — not yet built) |
+| `toggleGroupRootContext` | Root-level context for toggle-group |
 
 ---
 
@@ -118,6 +120,7 @@ All custom elements: `grund-{component-name}[-{sub-element}]`
 | Tabs panel | `grund-tabs-panel` |
 | Tabs indicator | `grund-tabs-indicator` |
 | Toggle | `grund-toggle` |
+| Toggle Group root | `grund-toggle-group` |
 
 ---
 

@@ -20,7 +20,7 @@ import type { ToggleGroupHostSnapshot, ToggleGroupValueChangeDetail } from '../t
  */
 export class GrundToggleGroup extends LitElement {
   public static override styles = css`
-    :host { display: inline-flex; }
+    :host { display: inline-flex; /* inline-flex: arranges toggle buttons as an inline row */ }
   `;
 
   /**
