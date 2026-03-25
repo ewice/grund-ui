@@ -4,6 +4,7 @@ import { consume } from '@lit/context';
 
 import { RovingFocusController } from '../../../controllers/roving-focus.controller.js';
 import { tabsRootContext } from '../context/tabs.context.js';
+import { GrundTab } from '../tab/index.js';
 
 import type { TabsRootContext } from '../context/tabs.context.js';
 
@@ -64,10 +65,11 @@ export class GrundTabsList extends LitElement {
     }
   }
 
-  private getTabButtons(): HTMLElement[] {
-    return Array.from(this.querySelectorAll<HTMLElement>('grund-tab'))
-      .map((tab) => (tab as any).triggerElement as HTMLElement | undefined)
-      .filter((el): el is HTMLElement => el != null);
+  private getTabButtons(): HTMLButtonElement[] {
+    return Array.from(this.querySelectorAll('grund-tab'))
+      .filter((el): el is GrundTab => el instanceof GrundTab)
+      .map((tab) => tab.triggerElement)
+      .filter((el): el is HTMLButtonElement => el != null);
   }
 
   private handleSlotchange(): void {
@@ -79,11 +81,11 @@ export class GrundTabsList extends LitElement {
     if (!this.activateOnFocus || !this.ctx) return;
 
     const tabEl = event.composedPath().find(
-      (el) => el instanceof HTMLElement && el.tagName === 'GRUND-TAB',
-    ) as HTMLElement | undefined;
+      (el): el is GrundTab => el instanceof GrundTab,
+    );
 
     if (tabEl) {
-      const value = (tabEl as any).value as string;
+      const { value } = tabEl;
       if (value && value !== this.ctx.activeValue) {
         this.ctx.requestActivation(value);
       }

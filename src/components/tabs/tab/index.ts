@@ -93,7 +93,7 @@ export class GrundTab extends LitElement {
     }
     
     const panelEl = this.ctx.getPanelElement(this.value);
-    (btn as any).ariaControlsElements = panelEl ? [panelEl] : [];
+    btn.ariaControlsElements = panelEl ? [panelEl] : [];
   }
 
   /** Exposes the inner button for RovingFocusController on the list to manage tabindex. */

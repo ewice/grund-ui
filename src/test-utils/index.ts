@@ -1,13 +1,18 @@
 import { aTimeout } from '@open-wc/testing';
 import { expect } from '@open-wc/testing';
 
+/** Structural type for Lit's reactive update lifecycle — avoids importing LitElement in test utils. */
+interface ReactiveElement {
+  readonly updateComplete: Promise<boolean>;
+}
+
 /**
  * Settles async context propagation across multiple Lit render cycles.
  * Call after any state change that should propagate through @provide/@consume.
  */
-export async function flush(el: Element): Promise<void> {
+export async function flush(el: ReactiveElement): Promise<void> {
   for (let i = 0; i < 3; i++) {
-    await (el as any).updateComplete;
+    await el.updateComplete;
     await aTimeout(0);
   }
 }

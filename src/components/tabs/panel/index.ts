@@ -87,7 +87,7 @@ export class GrundTabsPanel extends LitElement {
     // stale references pointing to disconnected elements — mirrors ariaControlsElements
     // clearing in <grund-tab>.
     const tabEl = this.ctx.getTabElement(this.value);
-    (panelDiv as any).ariaLabelledByElements = tabEl ? [tabEl] : [];
+    panelDiv.ariaLabelledByElements = tabEl ? [tabEl] : [];
   }
 
   override render() {
