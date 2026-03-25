@@ -19,7 +19,7 @@ describe('TabsRegistry', () => {
     registry.registerTab('a', tab);
     const record = registry.getRecord('a');
     expect(record).to.exist;
-    expect(record!.tab).to.equal(tab);
+    expect(record!.tab?.deref()).to.equal(tab);
     expect(record!.panel).to.be.null;
   });
 
@@ -29,7 +29,7 @@ describe('TabsRegistry', () => {
     registry.registerPanel('a', panel);
     const record = registry.getRecord('a');
     expect(record).to.exist;
-    expect(record!.panel).to.equal(panel);
+    expect(record!.panel?.deref()).to.equal(panel);
     expect(record!.tab).to.be.null;
   });
 
@@ -40,8 +40,8 @@ describe('TabsRegistry', () => {
     registry.registerTab('a', tab);
     registry.registerPanel('a', panel);
     const record = registry.getRecord('a');
-    expect(record!.tab).to.equal(tab);
-    expect(record!.panel).to.equal(panel);
+    expect(record!.tab?.deref()).to.equal(tab);
+    expect(record!.panel?.deref()).to.equal(panel);
   });
 
   it('unregisters a tab and clears tab reference, keeps panel', () => {
@@ -53,7 +53,7 @@ describe('TabsRegistry', () => {
     registry.unregisterTab('a');
     const record = registry.getRecord('a');
     expect(record!.tab).to.be.null;
-    expect(record!.panel).to.equal(panel);
+    expect(record!.panel?.deref()).to.equal(panel);
   });
 
   it('removes record entirely when both tab and panel are unregistered', () => {
@@ -73,7 +73,7 @@ describe('TabsRegistry', () => {
     registry.unregisterPanel('a');
     const record = registry.getRecord('a');
     expect(record!.panel).to.be.null;
-    expect(record!.tab).to.equal(tab);
+    expect(record!.tab?.deref()).to.equal(tab);
   });
 
   it('getOrderedValues returns values sorted by tab DOM order', () => {

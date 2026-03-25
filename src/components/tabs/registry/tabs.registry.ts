@@ -6,8 +6,8 @@
 
 export interface TabsRecord {
   value: string;
-  tab: HTMLElement | null;
-  panel: HTMLElement | null;
+  tab: WeakRef<HTMLElement> | null;
+  panel: WeakRef<HTMLElement> | null;
   disabled: boolean;
 }
 
@@ -22,11 +22,11 @@ export class TabsRegistry {
   public registerTab(value: string, tab: HTMLElement): void {
     const existing = this.records.get(value);
     if (existing) {
-      existing.tab = tab;
+      existing.tab = new WeakRef(tab);
     } else {
       this.records.set(value, {
         value,
-        tab,
+        tab: new WeakRef(tab),
         panel: null,
         disabled: false,
       });
@@ -48,12 +48,12 @@ export class TabsRegistry {
   public registerPanel(value: string, panel: HTMLElement): void {
     const existing = this.records.get(value);
     if (existing) {
-      existing.panel = panel;
+      existing.panel = new WeakRef(panel);
     } else {
       this.records.set(value, {
         value,
         tab: null,
-        panel,
+        panel: new WeakRef(panel),
         disabled: false,
       });
     }
@@ -83,16 +83,16 @@ export class TabsRegistry {
   }
 
   public getOrderedValues(): string[] {
-    // Filter records with non-null tab element, sort by DOM order
+    // Filter records where the tab WeakRef still resolves, sort by DOM order
     const withTabs = Array.from(this.records.values()).filter(
-      (r) => r.tab !== null,
+      (r) => r.tab?.deref() != null,
     );
 
     // Sort by tab element DOM position using compareDocumentPosition
     // DOCUMENT_POSITION_FOLLOWING (4) is set when a follows b
     withTabs.sort((a, b) => {
-      const aTab = a.tab!;
-      const bTab = b.tab!;
+      const aTab = a.tab!.deref()!;
+      const bTab = b.tab!.deref()!;
       const pos = aTab.compareDocumentPosition(bTab);
       return pos & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
     });
@@ -115,10 +115,10 @@ export class TabsRegistry {
   }
 
   public getTabElement(value: string): HTMLElement | null {
-    return this.records.get(value)?.tab ?? null;
+    return this.records.get(value)?.tab?.deref() ?? null;
   }
 
   public getPanelElement(value: string): HTMLElement | null {
-    return this.records.get(value)?.panel ?? null;
+    return this.records.get(value)?.panel?.deref() ?? null;
   }
 }

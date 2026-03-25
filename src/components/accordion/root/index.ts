@@ -42,6 +42,41 @@ export class GrundAccordion extends LitElement {
   private controller = new AccordionController();
   private registry = new AccordionRegistry();
 
+  // Stable bound callbacks — defined as class fields so object identity is preserved across
+  // createRootContext() calls. Lit context consumers re-render when context reference changes;
+  // stable callbacks avoid triggering unnecessary re-renders on unrelated state updates.
+  private readonly _isExpanded = (value: string) => this.controller.isExpanded(value);
+
+  private readonly _requestToggle = (itemValue: string, itemDisabled: boolean): void => {
+    this.handleToggle(itemValue, itemDisabled);
+  };
+
+  private readonly _registerItem = (item: HTMLElement, value: string): void => {
+    this.registry.registerItem(item, value);
+  };
+
+  private readonly _unregisterItem = (item: HTMLElement): void => {
+    this.registry.unregisterItem(item);
+  };
+
+  private readonly _indexOf = (item: HTMLElement) => this.registry.indexOf(item);
+
+  private readonly _attachTrigger = (item: HTMLElement, trigger: HTMLElement): void => {
+    this.registry.attachTrigger(item, trigger);
+  };
+
+  private readonly _detachTrigger = (item: HTMLElement): void => {
+    this.registry.detachTrigger(item);
+  };
+
+  private readonly _attachPanel = (item: HTMLElement, panel: HTMLElement): void => {
+    this.registry.attachPanel(item, panel);
+  };
+
+  private readonly _detachPanel = (item: HTMLElement): void => {
+    this.registry.detachPanel(item);
+  };
+
   // Class field initializer — ensures exactly one controller instance per element lifetime.
   // Constructing in connectedCallback would create a new instance (and duplicate keydown
   // listeners) on every disconnect+reconnect cycle. willUpdate syncs the live options.
@@ -93,33 +128,19 @@ export class GrundAccordion extends LitElement {
 
   private createRootContext(): AccordionRootContext {
     return {
-      isExpanded: (value: string) => this.controller.isExpanded(value),
+      isExpanded: this._isExpanded,
       disabled: this.disabled,
       orientation: this.orientation,
       keepMounted: this.keepMounted,
       hiddenUntilFound: this.hiddenUntilFound,
-      requestToggle: (itemValue: string, itemDisabled: boolean) => {
-        this.handleToggle(itemValue, itemDisabled);
-      },
-      registerItem: (item: HTMLElement, value: string) => {
-        this.registry.registerItem(item, value);
-      },
-      unregisterItem: (item: HTMLElement) => {
-        this.registry.unregisterItem(item);
-      },
-      indexOf: (item: HTMLElement) => this.registry.indexOf(item),
-      attachTrigger: (item: HTMLElement, trigger: HTMLElement) => {
-        this.registry.attachTrigger(item, trigger);
-      },
-      detachTrigger: (item: HTMLElement) => {
-        this.registry.detachTrigger(item);
-      },
-      attachPanel: (item: HTMLElement, panel: HTMLElement) => {
-        this.registry.attachPanel(item, panel);
-      },
-      detachPanel: (item: HTMLElement) => {
-        this.registry.detachPanel(item);
-      },
+      requestToggle: this._requestToggle,
+      registerItem: this._registerItem,
+      unregisterItem: this._unregisterItem,
+      indexOf: this._indexOf,
+      attachTrigger: this._attachTrigger,
+      detachTrigger: this._detachTrigger,
+      attachPanel: this._attachPanel,
+      detachPanel: this._detachPanel,
     };
   }
 

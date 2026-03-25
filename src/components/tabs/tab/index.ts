@@ -28,11 +28,6 @@ export class GrundTab extends LitElement {
   @state()
   private ctx?: TabsRootContext;
 
-  /** Exposes the inner button for RovingFocusController on the list to manage tabindex. */
-  get triggerElement(): HTMLButtonElement | null {
-    return this.shadowRoot?.querySelector<HTMLButtonElement>('[part="tab"]') ?? null;
-  }
-
   private isRegistered = false;
 
   override connectedCallback(): void {
@@ -99,6 +94,11 @@ export class GrundTab extends LitElement {
     
     const panelEl = this.ctx.getPanelElement(this.value);
     (btn as any).ariaControlsElements = panelEl ? [panelEl] : [];
+  }
+
+  /** Exposes the inner button for RovingFocusController on the list to manage tabindex. */
+  get triggerElement(): HTMLButtonElement | null {
+    return this.shadowRoot?.querySelector<HTMLButtonElement>('[part="tab"]') ?? null;
   }
 
   private handleClick(): void {
