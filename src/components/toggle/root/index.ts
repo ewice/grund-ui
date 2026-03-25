@@ -83,6 +83,7 @@ export class GrundToggle extends LitElement {
     return html`
       <button
         part="button"
+        type="button"
         ?disabled=${this.disabled}
         aria-pressed=${String(this.effectivePressed)}
         @click=${this.handleClick}

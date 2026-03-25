@@ -66,6 +66,7 @@ export class GrundAccordionTrigger extends LitElement {
     return html`
       <button
         part="trigger"
+        type="button"
         id="${ctx?.triggerId ?? ''}"
         aria-expanded="${ctx?.expanded ?? false}"
         aria-controls="${ctx?.panelId ?? ''}"
