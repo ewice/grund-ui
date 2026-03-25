@@ -1,4 +1,5 @@
 import { html } from 'lit';
+import { action } from 'storybook/actions';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { GrundTabs } from '../src/components/tabs/index.js';
@@ -22,6 +23,7 @@ export const Default: Story = {
     <grund-tabs
       orientation=${args.orientation ?? 'horizontal'}
       ?disabled=${args.disabled}
+      @grund-value-change=${action('grund-value-change')}
     >
       <grund-tabs-list>
         <grund-tab value="account">Account</grund-tab>
@@ -39,20 +41,11 @@ export const Default: Story = {
       </grund-tabs-panel>
     </grund-tabs>
   `,
-  // play function omitted: @storybook/test is not installed in this project.
-  // To add interaction tests, install @storybook/test and implement:
-  //   play: async ({ canvasElement }) => {
-  //     const canvas = within(canvasElement);
-  //     const passwordTab = canvas.getByText('Password');
-  //     await userEvent.click(passwordTab);
-  //     const tabHost = passwordTab.closest('grund-tab');
-  //     await expect(tabHost).to.have.attribute('data-selected');
-  //   },
 };
 
 export const Vertical: Story = {
   render: () => html`
-    <grund-tabs orientation="vertical">
+    <grund-tabs orientation="vertical" @grund-value-change=${action('grund-value-change')}>
       <grund-tabs-list>
         <grund-tab value="a">Tab A</grund-tab>
         <grund-tab value="b">Tab B</grund-tab>
@@ -69,8 +62,10 @@ export const Controlled: Story = {
   render: () => {
     let activeTab = 'first';
     return html`
-      <grund-tabs .value=${activeTab}
+      <grund-tabs
+        .value=${activeTab}
         @grund-value-change=${(e: CustomEvent) => {
+          action('grund-value-change')(e);
           activeTab = e.detail.value;
         }}
       >
@@ -87,7 +82,7 @@ export const Controlled: Story = {
 
 export const DefaultValue: Story = {
   render: () => html`
-    <grund-tabs default-value="second">
+    <grund-tabs default-value="second" @grund-value-change=${action('grund-value-change')}>
       <grund-tabs-list>
         <grund-tab value="first">First</grund-tab>
         <grund-tab value="second">Second (default)</grund-tab>
@@ -102,7 +97,7 @@ export const DefaultValue: Story = {
 
 export const DisabledTab: Story = {
   render: () => html`
-    <grund-tabs>
+    <grund-tabs @grund-value-change=${action('grund-value-change')}>
       <grund-tabs-list>
         <grund-tab value="a">Enabled</grund-tab>
         <grund-tab value="b" disabled>Disabled</grund-tab>
@@ -130,7 +125,7 @@ export const DisabledRoot: Story = {
 
 export const ManualActivation: Story = {
   render: () => html`
-    <grund-tabs>
+    <grund-tabs @grund-value-change=${action('grund-value-change')}>
       <grund-tabs-list .activateOnFocus=${false}>
         <grund-tab value="a">Tab A</grund-tab>
         <grund-tab value="b">Tab B</grund-tab>
@@ -145,7 +140,7 @@ export const ManualActivation: Story = {
 
 export const WithIndicator: Story = {
   render: () => html`
-    <grund-tabs>
+    <grund-tabs @grund-value-change=${action('grund-value-change')}>
       <grund-tabs-list style="position: relative;">
         <grund-tab value="a">Tab A</grund-tab>
         <grund-tab value="b">Tab B</grund-tab>
@@ -175,7 +170,7 @@ export const WithIndicator: Story = {
 
 export const KeepMounted: Story = {
   render: () => html`
-    <grund-tabs>
+    <grund-tabs @grund-value-change=${action('grund-value-change')}>
       <grund-tabs-list>
         <grund-tab value="a">Tab A</grund-tab>
         <grund-tab value="b">Tab B</grund-tab>
@@ -202,7 +197,7 @@ export const DynamicTabs: Story = {
         panel.innerHTML = `<p>Dynamic panel ${count}</p>`;
         tabs.appendChild(panel);
       }}>Add Tab</button>
-      <grund-tabs id="dynamic-tabs">
+      <grund-tabs id="dynamic-tabs" @grund-value-change=${action('grund-value-change')}>
         <grund-tabs-list>
           <grund-tab value="tab-1">Tab 1</grund-tab>
           <grund-tab value="tab-2">Tab 2</grund-tab>
@@ -218,7 +213,7 @@ export const ManyTabs: Story = {
   render: () => {
     const tabs = Array.from({ length: 20 }, (_, i) => i + 1);
     return html`
-      <grund-tabs>
+      <grund-tabs @grund-value-change=${action('grund-value-change')}>
         <grund-tabs-list>
           ${tabs.map((n) => html`<grund-tab value="t${n}">Tab ${n}</grund-tab>`)}
         </grund-tabs-list>
@@ -232,7 +227,7 @@ export const ManyTabs: Story = {
 
 export const NoLoop: Story = {
   render: () => html`
-    <grund-tabs>
+    <grund-tabs @grund-value-change=${action('grund-value-change')}>
       <grund-tabs-list .loopFocus=${false}>
         <grund-tab value="a">Tab A</grund-tab>
         <grund-tab value="b">Tab B</grund-tab>

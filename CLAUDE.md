@@ -170,7 +170,7 @@ superpowers:brainstorming → /component-spec → /scaffold → /build-controlle
     → /build-elements → /build-stories → /validate-build → superpowers:finishing-a-development-branch
 ```
 
-### New component (simple, no state)
+### New component (simple — single element, state lives in the element)
 ```
 /component-spec → /scaffold → /build-elements → /build-stories → /validate-build → superpowers:finishing-a-development-branch
 ```

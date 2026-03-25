@@ -8,7 +8,8 @@
   "exports": {
     ".": "./dist/index.js",
     "./accordion": "./dist/components/accordion/index.js",
-    "./tabs": "./dist/components/tabs/index.js"
+    "./tabs": "./dist/components/tabs/index.js",
+    "./toggle": "./dist/components/toggle/index.js"
   },
   "customElements": "custom-elements.json",
   "files": [
@@ -38,7 +39,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/henningraetz/grund-ui"
+    "url": "https://github.com/ewice/grund-ui"
   },
   "engines": {
     "node": ">=20"

@@ -34,6 +34,7 @@ All events follow `grund-{action}` pattern, `bubbles: true`, `composed: false`.
 |---|---|---|
 | `grund-value-change` | `{ value: string[], itemValue: string, open: boolean }` (accordion) / `{ value: string \| null, previousValue: string \| null }` (tabs) | Full expanded values snapshot (accordion); active tab changed (tabs) |
 | `grund-open-change` | `{ value: string, open: boolean, index: number }` | An item opened or closed |
+| `grund-pressed-change` | `{ pressed: boolean }` | Toggle pressed state changed |
 
 ---
 
@@ -52,6 +53,7 @@ CSS `::part()` names. All lowercase, hyphenated nouns.
 | `indicator` | Visual expand/collapse chevron or icon (Accordion); position tracker for active tab (Tabs) | Accordion, Select, Tabs |
 | `label` | A text label element | Switch, Checkbox |
 | `input` | The underlying native or custom input | Switch, Checkbox, Input |
+| `button` | The inner button element | Toggle |
 | `close-button` | Button that closes an overlay | Dialog, Sheet, Toast |
 | `overlay` | The backdrop/scrim behind a modal | Dialog, Sheet |
 
@@ -79,6 +81,7 @@ Standard data attributes set by controllers or elements as public API.
 | `data-disabled` | boolean presence | Host element in `willUpdate` | — |
 | `data-orientation` | `"vertical"` / `"horizontal"` | Root and sub-parts in `willUpdate` | — |
 | `data-index` | string integer | Item element in `willUpdate` | — |
+| `data-pressed` | boolean presence | Host in `willUpdate` | Toggle button pressed state. Use for toggle / toggle-group components. |
 | `data-selected` | boolean presence | Host in `willUpdate` | Active in a selection group. Standard for single- and multi-select components (tabs, radio group, listbox, combobox, select, toggle group, menu). Distinct from `data-open` — use `data-open` for disclosure/expand patterns (accordion, collapsible, dialog, popover). |
 | `data-activation-direction` | `'start'` / `'end'` / `'none'` | Root + all sub-elements in `willUpdate` | Direction of the last activation relative to list order. Logical, not physical — consumers combine with `data-orientation` to derive the physical direction for animations. `none` on the initial activation. |
 
@@ -94,6 +97,7 @@ Context symbols follow the pattern `{ComponentName}Context` for the root context
 | `accordionRootContext` | Root-level context for accordion |
 | `accordionItemContext` | Per-item context for accordion |
 | `tabsRootContext` | Root-level context for tabs |
+| `toggleContext` | Root-level context for toggle-group (reserved — not yet built) |
 
 ---
 
@@ -113,6 +117,7 @@ All custom elements: `grund-{component-name}[-{sub-element}]`
 | Tab | `grund-tab` |
 | Tabs panel | `grund-tabs-panel` |
 | Tabs indicator | `grund-tabs-indicator` |
+| Toggle | `grund-toggle` |
 
 ---
 
