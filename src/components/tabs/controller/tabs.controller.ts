@@ -6,14 +6,14 @@ import type { TabsHostSnapshot } from '../types.js';
  * @internal
  */
 export class TabsController {
-  activeValue: string | null = null;
-  previousValue: string | null = null;
+  public activeValue: string | null = null;
+  public previousValue: string | null = null;
 
   private isControlled = false;
   private isSeeded = false;
   private disabled = false;
 
-  syncFromHost(snapshot: TabsHostSnapshot): void {
+  public syncFromHost(snapshot: TabsHostSnapshot): void {
     this.disabled = snapshot.disabled;
     this.isControlled = snapshot.value !== undefined;
 
@@ -32,13 +32,13 @@ export class TabsController {
    * disabled blocks user interaction, not initial state seeding.
    * @internal
    */
-  seed(value: string): void {
+  public seed(value: string): void {
     this.previousValue = null;
     this.activeValue = value;
     this.isSeeded = true;
   }
 
-  requestActivation(value: string): string | null {
+  public requestActivation(value: string): string | null {
     if (this.disabled) {
       return null;
     }
@@ -51,7 +51,7 @@ export class TabsController {
     return value;
   }
 
-  isActive(value: string): boolean {
+  public isActive(value: string): boolean {
     return this.activeValue === value;
   }
 }

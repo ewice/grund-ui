@@ -12,14 +12,14 @@ export interface AccordionAction {
  * @internal
  */
 export class AccordionController {
-  expandedValues = new Set<string>();
+  public expandedValues = new Set<string>();
 
   private isControlled = false;
   private isSeeded = false;
   private multiple = false;
   private disabled = false;
 
-  syncFromHost(snapshot: AccordionHostSnapshot): void {
+  public syncFromHost(snapshot: AccordionHostSnapshot): void {
     this.multiple = snapshot.multiple;
     this.disabled = snapshot.disabled;
     this.isControlled = snapshot.value !== undefined;
@@ -32,7 +32,7 @@ export class AccordionController {
     }
   }
 
-  requestToggle(action: AccordionAction): string[] | null {
+  public requestToggle(action: AccordionAction): string[] | null {
     if (this.disabled || action.itemDisabled) {
       return null;
     }
@@ -59,7 +59,7 @@ export class AccordionController {
     return Array.from(nextValues);
   }
 
-  isExpanded(itemValue: string): boolean {
+  public isExpanded(itemValue: string): boolean {
     return this.expandedValues.has(itemValue);
   }
 }

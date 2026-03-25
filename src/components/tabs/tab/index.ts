@@ -14,15 +14,15 @@ import type { TabsRootContext } from '../context/tabs.context.js';
  * @csspart tab - The inner button element
  */
 export class GrundTab extends LitElement {
-  static override styles = css`
+  public static override styles = css`
     :host { display: block; /* block: this element is a block-level container */ }
   `;
 
   @property()
-  value: string = '';
+  public value: string = '';
 
   @property({ type: Boolean })
-  disabled: boolean = false;
+  public disabled: boolean = false;
 
   @consume({ context: tabsRootContext, subscribe: true })
   @state()
@@ -30,7 +30,7 @@ export class GrundTab extends LitElement {
 
   private isRegistered = false;
 
-  override connectedCallback(): void {
+  public override connectedCallback(): void {
     super.connectedCallback();
 
     if (import.meta.env.DEV) {
@@ -47,7 +47,7 @@ export class GrundTab extends LitElement {
     }
   }
 
-  override disconnectedCallback(): void {
+  public override disconnectedCallback(): void {
     super.disconnectedCallback();
     if (this.isRegistered) {
       this.ctx?.unregisterTab(this.value);
@@ -55,7 +55,7 @@ export class GrundTab extends LitElement {
     }
   }
 
-  override willUpdate(changed: Map<PropertyKey, unknown>): void {
+  protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
     if (!this.ctx) return;
 
     const wasRegistered = this.isRegistered;
@@ -81,7 +81,7 @@ export class GrundTab extends LitElement {
     this.dataset.index = String(this.ctx.indexOf(this.value));
   }
 
-  override updated(): void {
+  protected override updated(): void {
     if (!this.ctx) {
       return;
     }
@@ -97,7 +97,7 @@ export class GrundTab extends LitElement {
   }
 
   /** Exposes the inner button for RovingFocusController on the list to manage tabindex. */
-  get triggerElement(): HTMLButtonElement | null {
+  public get triggerElement(): HTMLButtonElement | null {
     return this.shadowRoot?.querySelector<HTMLButtonElement>('[part="tab"]') ?? null;
   }
 
@@ -106,7 +106,7 @@ export class GrundTab extends LitElement {
     this.ctx?.requestActivation(this.value);
   }
 
-  override render() {
+  protected override render() {
     const isActive = this.ctx?.activeValue === this.value;
     const mergedDisabled = (this.ctx?.disabled ?? false) || this.disabled;
 

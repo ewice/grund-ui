@@ -57,9 +57,25 @@ if (import.meta.env.DEV) {
 }
 ```
 
+### Accessibility Modifiers
+
+22. Every class member in a Lit element or controller MUST have an explicit accessibility modifier (`public`, `protected`, or `private`). Use the narrowest scope that satisfies the contract:
+
+    | Member | Modifier | Reason |
+    |---|---|---|
+    | `@property()` fields | `public` | Part of the element's public JS/HTML API |
+    | `static styles` | `public static` | Read by Lit framework infrastructure |
+    | `connectedCallback`, `disconnectedCallback`, `attributeChangedCallback` | `public override` | Defined as `public` in `HTMLElement` |
+    | `render()`, `willUpdate()`, `updated()`, `firstUpdated()` | `protected override` | Defined as `protected` in `LitElement` / `ReactiveElement` |
+    | `hostConnected()`, `hostDisconnected()`, `hostUpdate()`, `hostUpdated()` on controllers | `public` | Defined as `public` in the `ReactiveController` interface |
+    | `@state()` fields | `private` | Internal reactive state — never part of the public API |
+    | `@consume()` context subscriptions | `private` | Always private (Rule 16) |
+    | Internal helpers, computed fields | `private` | Not part of any external contract |
+    | Methods shared with subclasses | `protected` | Rare in this codebase — document why |
+
 ### File Organization
 
-22. Class member ordering within a Lit element:
+23. Class member ordering within a Lit element:
     1. Static properties / `static formAssociated`
     2. `@property()` / `@state()` decorated fields
     3. Private fields and controllers
@@ -70,13 +86,13 @@ if (import.meta.env.DEV) {
     8. Private methods
     9. `render()`
 
-23. Extract a `_renderX()` helper from `render()` when the template exceeds ~30 lines or contains a distinct logical section (e.g., the open vs closed state branches).
-24. Import organization: (a) framework imports (`lit`, `@lit/context`), (b) internal imports (`../../controllers/...`), (c) type-only imports (`import type ...`). Blank line between groups.
+24. Extract a `_renderX()` helper from `render()` when the template exceeds ~30 lines or contains a distinct logical section (e.g., the open vs closed state branches).
+25. Import organization: (a) framework imports (`lit`, `@lit/context`), (b) internal imports (`../../controllers/...`), (c) type-only imports (`import type ...`). Blank line between groups.
 
 ### Define Timing and Upgrade Ordering
 
-25. Components MUST work regardless of the order custom elements are defined. Never assume a parent element is already upgraded in `connectedCallback` — use context subscription to detect when the provider becomes available.
-26. Wrap `customElements.define()` with a registration guard to prevent duplicate-definition errors (e.g., when two versions of the library are loaded):
+26. Components MUST work regardless of the order custom elements are defined. Never assume a parent element is already upgraded in `connectedCallback` — use context subscription to detect when the provider becomes available.
+27. Wrap `customElements.define()` with a registration guard to prevent duplicate-definition errors (e.g., when two versions of the library are loaded):
 
 ```ts
 if (!customElements.get('grund-accordion')) {
@@ -86,13 +102,13 @@ if (!customElements.get('grund-accordion')) {
 
 ### Memory Management
 
-27. Every `addEventListener` added in `connectedCallback` or `hostConnected` MUST have a corresponding `removeEventListener` in `disconnectedCallback` or `hostDisconnected`. No exceptions.
-28. Every `ResizeObserver`, `MutationObserver`, or `IntersectionObserver` created in a controller MUST call `.disconnect()` in `hostDisconnected`.
-29. Registries that store references to child elements SHOULD use `WeakRef<T>` to prevent memory leaks when elements are removed from the DOM without explicit unregistration.
+28. Every `addEventListener` added in `connectedCallback` or `hostConnected` MUST have a corresponding `removeEventListener` in `disconnectedCallback` or `hostDisconnected`. No exceptions.
+29. Every `ResizeObserver`, `MutationObserver`, or `IntersectionObserver` created in a controller MUST call `.disconnect()` in `hostDisconnected`.
+30. Registries that store references to child elements SHOULD use `WeakRef<T>` to prevent memory leaks when elements are removed from the DOM without explicit unregistration.
 
 ### Context Propagation Timing
 
-30. In compound components using `@provide` / `@consume`, the parent's `firstUpdated()` fires **before** any child's `willUpdate()`. Context propagation triggers `requestUpdate` on consumers (microtask), so children register in their `willUpdate` one or more microtask cycles after the parent completes its first render. Never place logic that depends on child registration in `firstUpdated()` — the registry will always be empty at that point. Use registration callbacks on the context interface instead.
+31. In compound components using `@provide` / `@consume`, the parent's `firstUpdated()` fires **before** any child's `willUpdate()`. Context propagation triggers `requestUpdate` on consumers (microtask), so children register in their `willUpdate` one or more microtask cycles after the parent completes its first render. Never place logic that depends on child registration in `firstUpdated()` — the registry will always be empty at that point. Use registration callbacks on the context interface instead.
 
 ```ts
 // ❌ Dead code — registry is empty when firstUpdated fires
@@ -111,16 +127,16 @@ registerTab: (tab: HTMLElement) => {
 },
 ```
 
-31. Corollary: dev-mode warnings about missing siblings (e.g., "no matching panel found") must not fire in `firstUpdated()` — sibling elements have not registered yet. Delay the check via `requestAnimationFrame`, `queueMicrotask`, or a settled guard in `updated()` that skips the first N render cycles.
+32. Corollary: dev-mode warnings about missing siblings (e.g., "no matching panel found") must not fire in `firstUpdated()` — sibling elements have not registered yet. Delay the check via `requestAnimationFrame`, `queueMicrotask`, or a settled guard in `updated()` that skips the first N render cycles.
 
 ### Error Boundaries
 
-32. Controller methods that process user-provided data or call external APIs MUST wrap risky operations in try/catch. On error: emit a dev-mode warning and either recover to a safe state or do nothing (fail silently in production).
+33. Controller methods that process user-provided data or call external APIs MUST wrap risky operations in try/catch. On error: emit a dev-mode warning and either recover to a safe state or do nothing (fail silently in production).
 
 ### State Machines (Complex Lifecycle Only)
 
-33. Use explicit state machines only for components with multi-step lifecycle where impossible states cause real bugs (Dialog, Sheet, multi-step wizard). Simple and composite widgets use pure resolver functions (see accordion's `resolveAccordionAction` as the canonical pattern).
-34. Explicit state machine pattern when needed:
+34. Use explicit state machines only for components with multi-step lifecycle where impossible states cause real bugs (Dialog, Sheet, multi-step wizard). Simple and composite widgets use pure resolver functions (see accordion's `resolveAccordionAction` as the canonical pattern).
+35. Explicit state machine pattern when needed:
 
 ```ts
 type DialogState = 'closed' | 'opening' | 'open' | 'closing';
@@ -145,7 +161,7 @@ transition(from: DialogState, to: DialogState): DialogState {
 
 ### Shared Controller / Abstraction Fit
 
-35. Before attaching a shared controller, run the abstraction fit check:
+36. Before attaching a shared controller, run the abstraction fit check:
 
     **Step 1 — List required behaviors.** Write down every behavior the spec demands that the controller is expected to handle.
 
@@ -180,7 +196,7 @@ transition(from: DialogState, to: DialogState): DialogState {
 | `customElements.define()` without guard | Throws on duplicate definition (micro-frontends) | Wrap with `if (!customElements.get(...))` |
 | `addEventListener` without cleanup | Memory leak, stale handler on reconnect | Symmetric cleanup in `disconnectedCallback` |
 | `display: contents` on element with ARIA role | Strips element box, breaks accessibility tree | Use `display: block` or `display: inline` |
-| Auto-selection or registry validation in `firstUpdated()` | Registry is always empty — children register asynchronously after context propagation | Use registration callbacks on the context interface (Rule 30) |
-| Dev warning about missing siblings in `firstUpdated()` | Siblings haven't registered yet — always a false positive | Delay via `requestAnimationFrame` or settled guard in `updated()` (Rule 31) |
+| Auto-selection or registry validation in `firstUpdated()` | Registry is always empty — children register asynchronously after context propagation | Use registration callbacks on the context interface (Rule 31) |
+| Dev warning about missing siblings in `firstUpdated()` | Siblings haven't registered yet — always a false positive | Delay via `requestAnimationFrame` or settled guard in `updated()` (Rule 32) |
 | Context interface exposing mutable registry | Consumers can corrupt state; violates principle of least privilege | Expose read-only query methods instead (Rule 18) |
-| Working around a shared controller gap without classifying it | Temporal coupling, global state reads, and event-timing hacks are symptoms of a missing abstraction fit check | Run Rule 35 fit check; if gap is "Extend," add the hook rather than working around it |
+| Working around a shared controller gap without classifying it | Temporal coupling, global state reads, and event-timing hacks are symptoms of a missing abstraction fit check | Run Rule 36 fit check; if gap is "Extend," add the hook rather than working around it |

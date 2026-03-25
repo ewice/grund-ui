@@ -14,7 +14,7 @@ export default [
     rules: {
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'error',
-      'no-console': 'error',
+      'no-console': ['error', { allow: ['warn'] }],
       '@typescript-eslint/consistent-type-imports': [
         'error',
         { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
@@ -46,9 +46,11 @@ export default [
     },
   },
   {
-    files: ['src/**/*.test.ts', 'src/**/*.visual.test.ts'],
+    files: ['src/**/*.test.ts', 'src/**/*.visual.test.ts', 'src/test-utils/**'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/explicit-member-accessibility': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
     },
   },
   {

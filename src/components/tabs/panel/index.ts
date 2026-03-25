@@ -15,18 +15,18 @@ import type { TabsRootContext } from '../context/tabs.context.js';
  * @csspart panel - The panel container
  */
 export class GrundTabsPanel extends LitElement {
-  static override styles = css`
+  public static override styles = css`
     :host { display: block; /* block: this element is a block-level container */ }
   `;
 
   @property()
-  value: string = '';
+  public value: string = '';
 
   @property({ type: Boolean, attribute: 'keep-mounted' })
-  keepMounted: boolean = false;
+  public keepMounted: boolean = false;
 
   @property({ type: Boolean, attribute: 'hidden-until-found' })
-  hiddenUntilFound: boolean = false;
+  public hiddenUntilFound: boolean = false;
 
   @consume({ context: tabsRootContext, subscribe: true })
   @state()
@@ -38,7 +38,7 @@ export class GrundTabsPanel extends LitElement {
     this.ctx?.requestActivation(this.value);
   };
 
-  override connectedCallback(): void {
+  public override connectedCallback(): void {
     super.connectedCallback();
     this.addEventListener('beforematch', this.handleBeforematch);
 
@@ -56,7 +56,7 @@ export class GrundTabsPanel extends LitElement {
     }
   }
 
-  override disconnectedCallback(): void {
+  public override disconnectedCallback(): void {
     super.disconnectedCallback();
     if (this.isRegistered) {
       this.ctx?.unregisterPanel(this.value);
@@ -65,7 +65,7 @@ export class GrundTabsPanel extends LitElement {
     this.removeEventListener('beforematch', this.handleBeforematch);
   }
 
-  override willUpdate(): void {
+  protected override willUpdate(): void {
     if (!this.ctx) return;
 
     if (!this.isRegistered) {
@@ -79,7 +79,7 @@ export class GrundTabsPanel extends LitElement {
     this.dataset.activationDirection = this.ctx.activationDirection;
   }
 
-  override updated(): void {
+  protected override updated(): void {
     const panelDiv = this.shadowRoot?.querySelector<HTMLElement>('[part="panel"]');
     if (!this.ctx || !panelDiv) return;
 
@@ -90,7 +90,7 @@ export class GrundTabsPanel extends LitElement {
     panelDiv.ariaLabelledByElements = tabEl ? [tabEl] : [];
   }
 
-  override render() {
+  protected override render() {
     if (!this.ctx) return nothing;
 
     const isActive = this.ctx.activeValue === this.value;

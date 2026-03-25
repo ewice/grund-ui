@@ -21,7 +21,7 @@ import type { TabsRootContext } from '../context/tabs.context.js';
  * @cssproperty --grund-tabs-indicator-bottom - Distance from list bottom edge to active tab bottom edge
  */
 export class GrundTabsIndicator extends LitElement {
-  static override styles = css`
+  public static override styles = css`
     :host { display: block; /* block: this element is a block-level container */ }
   `;
 
@@ -38,7 +38,7 @@ export class GrundTabsIndicator extends LitElement {
   /** The active tab element being observed, used to detect when the active tab changes. */
   private observedTab: HTMLElement | null = null;
 
-  override connectedCallback(): void {
+  public override connectedCallback(): void {
     super.connectedCallback();
 
     this.listEl = this.closest('grund-tabs-list');
@@ -55,7 +55,7 @@ export class GrundTabsIndicator extends LitElement {
     }
   }
 
-  override disconnectedCallback(): void {
+  public override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.listObserver?.disconnect();
     this.tabObserver?.disconnect();
@@ -64,13 +64,13 @@ export class GrundTabsIndicator extends LitElement {
     this.observedTab = null;
   }
 
-  override willUpdate(): void {
+  protected override willUpdate(): void {
     if (!this.ctx) return;
     this.dataset.orientation = this.ctx.orientation;
     this.dataset.activationDirection = this.ctx.activationDirection;
   }
 
-  override updated(): void {
+  protected override updated(): void {
     if (!this.ctx) return;
 
     const activeValue = this.ctx.activeValue;
@@ -109,7 +109,7 @@ export class GrundTabsIndicator extends LitElement {
     indicatorDiv.style.setProperty('--grund-tabs-indicator-bottom', `${listRect.bottom - tabRect.bottom}px`);
   }
 
-  override render() {
+  protected override render() {
     return html`<div part="indicator"></div>`;
   }
 }

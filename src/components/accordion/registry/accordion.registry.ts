@@ -14,43 +14,43 @@ export interface AccordionItemRecord extends OrderedRecord {
  */
 export class AccordionRegistry extends OrderedRegistry<AccordionItemRecord> {
   /** Alias for `entries` — preserves existing public API. */
-  get items(): readonly AccordionItemRecord[] {
+  public get items(): readonly AccordionItemRecord[] {
     return this.entries;
   }
 
-  registerItem(item: HTMLElement, value: string): void {
+  public registerItem(item: HTMLElement, value: string): void {
     this.insert({ element: item, item, value, trigger: null, panel: null });
   }
 
-  unregisterItem(item: HTMLElement): void {
+  public unregisterItem(item: HTMLElement): void {
     this.remove((r) => r.item === item);
   }
 
-  attachTrigger(item: HTMLElement, trigger: HTMLElement): void {
+  public attachTrigger(item: HTMLElement, trigger: HTMLElement): void {
     const record = this.getRecord(item);
     if (record) record.trigger = trigger;
   }
 
-  attachPanel(item: HTMLElement, panel: HTMLElement): void {
+  public attachPanel(item: HTMLElement, panel: HTMLElement): void {
     const record = this.getRecord(item);
     if (record) record.panel = panel;
   }
 
-  detachTrigger(item: HTMLElement): void {
+  public detachTrigger(item: HTMLElement): void {
     const record = this.getRecord(item);
     if (record) record.trigger = null;
   }
 
-  detachPanel(item: HTMLElement): void {
+  public detachPanel(item: HTMLElement): void {
     const record = this.getRecord(item);
     if (record) record.panel = null;
   }
 
-  getRecord(item: HTMLElement): AccordionItemRecord | undefined {
+  public getRecord(item: HTMLElement): AccordionItemRecord | undefined {
     return this.find((r) => r.item === item);
   }
 
-  indexOf(item: HTMLElement): number {
+  public indexOf(item: HTMLElement): number {
     return this.findIndex((r) => r.item === item);
   }
 }

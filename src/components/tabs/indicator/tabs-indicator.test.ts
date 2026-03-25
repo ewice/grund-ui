@@ -49,7 +49,7 @@ describe('GrundTabsIndicator', () => {
   it('sets all 6 CSS custom properties from active tab geometry', async () => {
     const el = await setup();
     const indicator = el.querySelector('grund-tabs-indicator')!;
-    const div = indicator.shadowRoot?.querySelector<HTMLElement>('[part="indicator"]')!;
+    const div = indicator.shadowRoot!.querySelector<HTMLElement>('[part="indicator"]')!;
     // Values will be numeric pixel strings (may be "0px" in JSDOM — still truthy)
     const props = [
       '--grund-tabs-indicator-width',

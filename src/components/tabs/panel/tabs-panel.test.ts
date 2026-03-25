@@ -42,7 +42,7 @@ describe('Tabs Panel Visibility', () => {
       </grund-tabs>
     `);
     const panel = el.querySelector('grund-tabs-panel')!;
-    const panelDiv = panel.shadowRoot?.querySelector('[part="panel"]')!;
+    const panelDiv = panel.shadowRoot!.querySelector('[part="panel"]')!;
     expect(panelDiv.getAttribute('role')).to.equal('tabpanel');
     expect(panelDiv.getAttribute('tabindex')).to.equal('0');
   });

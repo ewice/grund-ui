@@ -17,23 +17,23 @@ import type { TabsHostSnapshot, TabsValueChangeDetail } from '../types.js';
  * @fires {CustomEvent<TabsValueChangeDetail>} grund-value-change - When the active tab changes
  */
 export class GrundTabs extends LitElement {
-  static override styles = css`
+  public static override styles = css`
     :host { display: block; /* block: this element is a block-level container */ }
   `;
 
   // Not attribute-reflected: null requires property binding, string | null | undefined
   // cannot be safely round-tripped through an attribute.
   @property({ attribute: false })
-  value: string | null | undefined = undefined;
+  public value: string | null | undefined = undefined;
 
   @property({ attribute: 'default-value' })
-  defaultValue: string | null = null;
+  public defaultValue: string | null = null;
 
   @property()
-  orientation: 'horizontal' | 'vertical' = 'horizontal';
+  public orientation: 'horizontal' | 'vertical' = 'horizontal';
 
   @property({ type: Boolean })
-  disabled = false;
+  public disabled = false;
 
   @provide({ context: tabsRootContext })
   @state()
@@ -93,7 +93,7 @@ export class GrundTabs extends LitElement {
   private readonly _getPanelElement = (value: string) => this.registry.getPanelElement(value);
   private readonly _indexOf = (value: string) => this.registry.indexOf(value);
 
-  override willUpdate(changed: Map<PropertyKey, unknown>): void {
+  protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
     const snapshot: TabsHostSnapshot = {
       value: this.value,
       defaultValue: this.defaultValue,
@@ -168,7 +168,7 @@ export class GrundTabs extends LitElement {
     this.rootCtx = this.createRootContext();
   }
 
-  override render() {
+  protected override render() {
     return html`<slot></slot>`;
   }
 }

@@ -15,12 +15,12 @@ import type { AccordionItemContext } from '../context/accordion.context.js';
  * @csspart panel - The panel container
  */
 export class GrundAccordionPanel extends LitElement {
-  static override styles = css`
+  public static override styles = css`
     :host { display: block; /* block: this element is a block-level container */ }
   `;
 
-  @property({ type: Boolean, attribute: 'keep-mounted' }) keepMounted = false;
-  @property({ type: Boolean, attribute: 'hidden-until-found' }) hiddenUntilFound = false;
+  @property({ type: Boolean, attribute: 'keep-mounted' }) public keepMounted = false;
+  @property({ type: Boolean, attribute: 'hidden-until-found' }) public hiddenUntilFound = false;
 
   @consume({ context: accordionItemContext, subscribe: true })
   @state()
@@ -32,19 +32,19 @@ export class GrundAccordionPanel extends LitElement {
     this.itemCtx?.toggle();
   };
 
-  override connectedCallback(): void {
+  public override connectedCallback(): void {
     super.connectedCallback();
     this.addEventListener('beforematch', this.handleBeforematch);
   }
 
-  override disconnectedCallback(): void {
+  public override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.itemCtx?.detachPanel(this);
     this.isPanelRegistered = false;
     this.removeEventListener('beforematch', this.handleBeforematch);
   }
 
-  override willUpdate(): void {
+  protected override willUpdate(): void {
     if (import.meta.env.DEV) {
       if (!this.itemCtx) {
         console.warn(
@@ -79,7 +79,7 @@ export class GrundAccordionPanel extends LitElement {
   // TODO(aria-linking): Migrate aria-labelledby from legacy IDREF to Element Reference API
   // (ariaLabelledByElements on the panel div) once the item context exposes a getTriggerElement()
   // method. The current IDREF cannot resolve across shadow root boundaries (aria-linking.md).
-  override render() {
+  protected override render() {
     const ctx = this.itemCtx;
     if (!ctx) return nothing;
 

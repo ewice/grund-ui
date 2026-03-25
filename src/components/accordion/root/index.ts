@@ -18,22 +18,22 @@ import type { AccordionHostSnapshot, AccordionValueChangeDetail } from '../types
  * @fires {CustomEvent<AccordionValueChangeDetail>} grund-value-change - When the expanded set changes
  */
 export class GrundAccordion extends LitElement {
-  static override styles = css`
+  public static override styles = css`
     :host { display: block; /* block: this element is a block-level container */ }
   `;
 
   @property({ type: Array, hasChanged: () => true })
-  value: string[] | undefined = undefined;
+  public value: string[] | undefined = undefined;
 
   @property({ type: Array, attribute: 'default-value', hasChanged: () => true })
-  defaultValue: string[] | undefined = undefined;
+  public defaultValue: string[] | undefined = undefined;
 
-  @property({ type: Boolean }) multiple = false;
-  @property({ type: Boolean }) disabled = false;
-  @property() orientation: 'vertical' | 'horizontal' = 'vertical';
-  @property({ type: Boolean, attribute: 'loop-focus' }) loopFocus = true;
-  @property({ type: Boolean, attribute: 'keep-mounted' }) keepMounted = false;
-  @property({ type: Boolean, attribute: 'hidden-until-found' }) hiddenUntilFound = false;
+  @property({ type: Boolean }) public multiple = false;
+  @property({ type: Boolean }) public disabled = false;
+  @property() public orientation: 'vertical' | 'horizontal' = 'vertical';
+  @property({ type: Boolean, attribute: 'loop-focus' }) public loopFocus = true;
+  @property({ type: Boolean, attribute: 'keep-mounted' }) public keepMounted = false;
+  @property({ type: Boolean, attribute: 'hidden-until-found' }) public hiddenUntilFound = false;
 
   @provide({ context: accordionRootContext })
   @state()
@@ -89,11 +89,11 @@ export class GrundAccordion extends LitElement {
         .filter((t): t is HTMLElement => t !== null),
   });
 
-  override connectedCallback(): void {
+  public override connectedCallback(): void {
     super.connectedCallback();
   }
 
-  override willUpdate(changed: Map<PropertyKey, unknown>): void {
+  protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
     const snapshot: AccordionHostSnapshot = {
       value: this.value,
       defaultValue: this.defaultValue,
@@ -169,7 +169,7 @@ export class GrundAccordion extends LitElement {
     this.rootCtx = this.createRootContext();
   }
 
-  override render() {
+  protected override render() {
     return html`<slot></slot>`;
   }
 }

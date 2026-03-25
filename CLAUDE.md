@@ -52,7 +52,7 @@ Use these — don't reinvent:
 
 Extract on second use: `data-open` toggle and ARIA ID linking are one-liners — extract to a shared controller when a second component needs the pattern.
 
-**Before using a shared controller:** run the abstraction fit check (lit-patterns Rule 35). If the controller doesn't cover a required behavior, classify the gap (Extend / Custom / Inline) and act on it before writing any element code. Do not work around a gap that belongs in the controller — that produces temporal coupling.
+**Before using a shared controller:** run the abstraction fit check (lit-patterns Rule 36). If the controller doesn't cover a required behavior, classify the gap (Extend / Custom / Inline) and act on it before writing any element code. Do not work around a gap that belongs in the controller — that produces temporal coupling.
 
 Planned controllers (built when first component of that category is built): see `.claude-plugin/refs/component-shapes.md`.
 
@@ -167,12 +167,12 @@ See `.claude-plugin/refs/workflow-guidelines.md` for subagent pipeline guideline
 ### New component (complex)
 ```
 superpowers:brainstorming → /component-spec → /scaffold → /build-controller
-    → /build-elements → /build-stories → /validate-build
+    → /build-elements → /build-stories → /validate-build → superpowers:finishing-a-development-branch
 ```
 
 ### New component (simple, no state)
 ```
-/component-spec → /scaffold → /build-elements → /build-stories → /validate-build
+/component-spec → /scaffold → /build-elements → /build-stories → /validate-build → superpowers:finishing-a-development-branch
 ```
 
 ### New component (trivial — single element, no state, no keyboard, no events)
@@ -185,7 +185,7 @@ keyboard contract, or dispatched events, use the simple pipeline above instead.
 ### Modify existing (planned)
 ```
 superpowers:brainstorming → superpowers:writing-plans
-    → superpowers:executing-plans → /post-plan-review → /validate-build
+    → superpowers:executing-plans → /post-plan-review → /validate-build → superpowers:finishing-a-development-branch
 ```
 
 ### Modify existing (ad-hoc)
@@ -202,6 +202,9 @@ superpowers:brainstorming → superpowers:writing-plans
 ```
 /rebuild-component {name}
 ```
+
+**Note:** `superpowers:finishing-a-development-branch` requires `/validate-build` to have passed first.
+Its Step 1 only runs tests — lint, build, CEM, and export checks are covered by `/validate-build`.
 
 ### Supporting skills
 ```

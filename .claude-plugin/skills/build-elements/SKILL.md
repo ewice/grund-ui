@@ -56,7 +56,7 @@ When a TypeScript error appears due to a missing or unknown type, resolve it in 
 
 **Never use `as any` or `as unknown as T` for any of these.** The linter enforces this — `@typescript-eslint/no-explicit-any` is set to `error` in the project. If you hit a type error, apply the decision tree above.
 
-**Abstraction fit check:** For each shared controller the spec requires (e.g., `RovingFocusController`, `FocusTrapController`), run the fit check from `lit-patterns.md` Rule 35:
+**Abstraction fit check:** For each shared controller the spec requires (e.g., `RovingFocusController`, `FocusTrapController`), run the fit check from `lit-patterns.md` Rule 36:
 
 1. List all behaviors the spec demands from the controller
 2. Identify any gaps — behaviors the controller does not cover
@@ -96,10 +96,10 @@ For each element in the spec:
 - Category-specific: `FormController` (form), `FocusTrapController` / `FocusRestorationController` (overlay)
 - Set `data-*` attributes in `willUpdate` (not in `updated` or event handlers)
 - `exportparts` on every compound layer wrapping shadow elements with `part` attributes
-- Dev-mode warning in `connectedCallback` when element is used outside its required parent: `if (import.meta.env.DEV) { ... }`. Warnings about missing siblings (e.g., "no matching panel") must NOT go in `firstUpdated()` — siblings register asynchronously via context and are not available yet. See `lit-patterns.md` Rules 30–31.
+- Dev-mode warning in `connectedCallback` when element is used outside its required parent: `if (import.meta.env.DEV) { ... }`. Warnings about missing siblings (e.g., "no matching panel") must NOT go in `firstUpdated()` — siblings register asynchronously via context and are not available yet. See `lit-patterns.md` Rules 31–32.
 - `customElements.define()` with `if (!customElements.get(...))` registration guard
 - `HostSnapshot` packaged in root's `willUpdate`, passed to controller via `syncFromHost()`
-- Auto-selection logic (e.g., "select first non-disabled item") belongs in registration callbacks on the context interface — not in `firstUpdated()`. Children register asynchronously after context propagation; the registry is always empty when the parent's `firstUpdated()` fires. See `lit-patterns.md` Rules 30–31.
+- Auto-selection logic (e.g., "select first non-disabled item") belongs in registration callbacks on the context interface — not in `firstUpdated()`. Children register asynchronously after context propagation; the registry is always empty when the parent's `firstUpdated()` fires. See `lit-patterns.md` Rules 31–32.
 
 Run tests — confirm they pass.
 

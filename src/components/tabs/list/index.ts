@@ -16,12 +16,12 @@ import type { TabsRootContext } from '../context/tabs.context.js';
  * @csspart list - The tablist wrapper
  */
 export class GrundTabsList extends LitElement {
-  static override styles = css`
+  public static override styles = css`
     :host { display: block; /* block: this element is a block-level container */ }
   `;
 
-  @property({ type: Boolean, attribute: 'activate-on-focus' }) activateOnFocus = true;
-  @property({ type: Boolean, attribute: 'loop-focus' }) loopFocus = true;
+  @property({ type: Boolean, attribute: 'activate-on-focus' }) public activateOnFocus = true;
+  @property({ type: Boolean, attribute: 'loop-focus' }) public loopFocus = true;
 
   @consume({ context: tabsRootContext, subscribe: true })
   @state()
@@ -38,7 +38,7 @@ export class GrundTabsList extends LitElement {
 
   private handleFocusin = this.onFocusin.bind(this);
 
-  override connectedCallback(): void {
+  public override connectedCallback(): void {
     super.connectedCallback();
     this.addEventListener('focusin', this.handleFocusin);
 
@@ -47,12 +47,12 @@ export class GrundTabsList extends LitElement {
     }
   }
 
-  override disconnectedCallback(): void {
+  public override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener('focusin', this.handleFocusin);
   }
 
-  override willUpdate(_changed: Map<PropertyKey, unknown>): void {
+  protected override willUpdate(_changed: Map<PropertyKey, unknown>): void {
     this.rovingFocus?.update({
       orientation: this.ctx?.orientation ?? 'horizontal',
       loop: this.loopFocus,
@@ -92,7 +92,7 @@ export class GrundTabsList extends LitElement {
     }
   }
 
-  override render() {
+  protected override render() {
     return html`
       <div
         part="list"

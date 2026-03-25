@@ -13,17 +13,17 @@ import type { AccordionItemContext } from '../context/accordion.context.js';
  * @slot - Trigger element
  */
 export class GrundAccordionHeader extends LitElement {
-  static override styles = css`
+  public static override styles = css`
     :host { display: block; /* block: this element is a block-level container */ }
   `;
 
-  @property({ type: Number }) level: 1 | 2 | 3 | 4 | 5 | 6 = 3;
+  @property({ type: Number }) public level: 1 | 2 | 3 | 4 | 5 | 6 = 3;
 
   @consume({ context: accordionItemContext, subscribe: true })
   @state()
   private itemCtx?: AccordionItemContext;
 
-  override willUpdate(): void {
+  protected override willUpdate(): void {
     this.setAttribute('role', 'heading');
     this.setAttribute('aria-level', String(this.level));
 
@@ -37,7 +37,7 @@ export class GrundAccordionHeader extends LitElement {
     }
   }
 
-  override render() {
+  protected override render() {
     return html`<slot></slot>`;
   }
 }

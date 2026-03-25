@@ -14,7 +14,7 @@ import type { AccordionItemContext } from '../context/accordion.context.js';
  * @csspart trigger - The inner button element
  */
 export class GrundAccordionTrigger extends LitElement {
-  static override styles = css`
+  public static override styles = css`
     :host { display: block; /* block: this element is a block-level container */ }
   `;
 
@@ -24,13 +24,13 @@ export class GrundAccordionTrigger extends LitElement {
 
   private isTriggerRegistered = false;
 
-  override disconnectedCallback(): void {
+  public override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.itemCtx?.detachTrigger(this);
     this.isTriggerRegistered = false;
   }
 
-  override willUpdate(): void {
+  protected override willUpdate(): void {
     if (import.meta.env.DEV) {
       if (!this.itemCtx) {
         console.warn(
@@ -61,7 +61,7 @@ export class GrundAccordionTrigger extends LitElement {
   // TODO(aria-linking): Migrate aria-controls from legacy IDREF to Element Reference API
   // (ariaControlsElements) once the item context exposes a getPanelElement() method.
   // The current IDREF cannot resolve across shadow root boundaries (aria-linking.md).
-  override render() {
+  protected override render() {
     const ctx = this.itemCtx;
     return html`
       <button

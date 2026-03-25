@@ -25,23 +25,23 @@ export class RovingFocusController implements ReactiveController {
     host.addController(this);
   }
 
-  hostConnected(): void {
+  public hostConnected(): void {
     this.host.addEventListener('keydown', this.handleKeydown);
     this.syncTabIndexes();
   }
 
-  hostDisconnected(): void {
+  public hostDisconnected(): void {
     this.host.removeEventListener('keydown', this.handleKeydown);
   }
 
-  update(options: Partial<RovingFocusOptions>): void {
+  public update(options: Partial<RovingFocusOptions>): void {
     const defined = Object.fromEntries(
       Object.entries(options).filter(([, v]) => v !== undefined),
     );
     Object.assign(this.options, defined);
   }
 
-  sync(): void {
+  public sync(): void {
     this.syncTabIndexes();
   }
 

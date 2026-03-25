@@ -11,11 +11,11 @@ export interface OrderedRecord {
 export class OrderedRegistry<TRecord extends OrderedRecord> {
   private _entries: TRecord[] = [];
 
-  get entries(): readonly TRecord[] {
+  public get entries(): readonly TRecord[] {
     return [...this._entries];
   }
 
-  insert(record: TRecord): void {
+  public insert(record: TRecord): void {
     const idx = this._entries.findIndex(
       (existing) =>
         existing.element.compareDocumentPosition(record.element) &
@@ -28,15 +28,15 @@ export class OrderedRegistry<TRecord extends OrderedRecord> {
     }
   }
 
-  remove(predicate: (record: TRecord) => boolean): void {
+  public remove(predicate: (record: TRecord) => boolean): void {
     this._entries = this._entries.filter((r) => !predicate(r));
   }
 
-  find(predicate: (record: TRecord) => boolean): TRecord | undefined {
+  public find(predicate: (record: TRecord) => boolean): TRecord | undefined {
     return this._entries.find(predicate);
   }
 
-  findIndex(predicate: (record: TRecord) => boolean): number {
+  public findIndex(predicate: (record: TRecord) => boolean): number {
     return this._entries.findIndex(predicate);
   }
 }

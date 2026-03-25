@@ -43,7 +43,7 @@ Caller provides `refs/lit-patterns.md` and `refs/ssr-contract.md`. Cross-referen
 14. Guard every warning with `if (import.meta.env.DEV)`.
 15. Every compound element warns when missing a required parent.
 16. Format: `[grund-{element}] {what is wrong}. {how to fix it}.`
-17. Dev warnings about missing siblings (e.g., "no matching panel") must NOT fire in `firstUpdated()` — sibling elements register asynchronously and are not available yet. Delay via `requestAnimationFrame` or a settled guard in `updated()`. See `lit-patterns.md` Rules 30–31.
+17. Dev warnings about missing siblings (e.g., "no matching panel") must NOT fire in `firstUpdated()` — sibling elements register asynchronously and are not available yet. Delay via `requestAnimationFrame` or a settled guard in `updated()`. See `lit-patterns.md` Rules 31–32.
 
 ### SSR Safety
 18. No `document`, `window`, or `navigator` in constructors or field initializers.

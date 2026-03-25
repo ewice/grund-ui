@@ -18,12 +18,12 @@ import type { AccordionOpenChangeDetail } from '../types.js';
  * @fires {CustomEvent<AccordionOpenChangeDetail>} grund-open-change - When this item's open state changes (after initial mount)
  */
 export class GrundAccordionItem extends LitElement {
-  static override styles = css`
+  public static override styles = css`
     :host { display: block; /* block: this element is a block-level container */ }
   `;
 
-  @property() value = '';
-  @property({ type: Boolean }) disabled = false;
+  @property() public value = '';
+  @property({ type: Boolean }) public disabled = false;
 
   @consume({ context: accordionRootContext, subscribe: true })
   @state()
@@ -54,7 +54,7 @@ export class GrundAccordionItem extends LitElement {
     this.rootCtx?.detachPanel(this);
   };
 
-  override connectedCallback(): void {
+  public override connectedCallback(): void {
     super.connectedCallback();
     if (!this.value) {
       this.value = crypto.randomUUID().slice(0, 8);
@@ -69,7 +69,7 @@ export class GrundAccordionItem extends LitElement {
     // Registration is handled in willUpdate when rootCtx first becomes available.
   }
 
-  override disconnectedCallback(): void {
+  public override disconnectedCallback(): void {
     super.disconnectedCallback();
     if (this.isRegistered) {
       this.rootCtx?.unregisterItem(this);
@@ -78,7 +78,7 @@ export class GrundAccordionItem extends LitElement {
     this.hasSettled = false;
   }
 
-  override willUpdate(changed: Map<PropertyKey, unknown>): void {
+  protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
     if (!this.rootCtx) return;
 
     // Register on first availability of rootCtx
@@ -115,7 +115,7 @@ export class GrundAccordionItem extends LitElement {
     }
   }
 
-  override updated(_changed: Map<PropertyKey, unknown>): void {
+  protected override updated(_changed: Map<PropertyKey, unknown>): void {
     const expanded = this.rootCtx?.isExpanded(this.value) ?? false;
 
     if (this.hasSettled && this.prevExpanded !== expanded) {
@@ -158,7 +158,7 @@ export class GrundAccordionItem extends LitElement {
     };
   }
 
-  override render() {
+  protected override render() {
     return html`<slot></slot>`;
   }
 }

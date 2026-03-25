@@ -44,7 +44,7 @@ List the affected files explicitly. Do not touch unaffected files.
 
 ### Phase 2.5 — Abstraction fit check (if shared controller is involved)
 
-If the change affects a shared controller (adding a new behavior that a shared controller partially handles), run the fit check from `lit-patterns.md` Rule 35:
+If the change affects a shared controller (adding a new behavior that a shared controller partially handles), run the fit check from `lit-patterns.md` Rule 36:
 
 1. Does the existing controller cover the new behavior?
 2. If not, classify the gap: **Extend** / **Custom** / **Inline workaround**
