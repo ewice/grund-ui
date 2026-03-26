@@ -18,6 +18,7 @@ and inject the context files listed below alongside the changed/generated file c
 | `api-reviewer` | All element files, `types.ts` | `docs/vocabulary.md`, component spec |
 | `test-reviewer` | Test files, `workflow/refs/test-patterns.md` | Component spec, story files (when they exist). **During `/build-elements`:** also inject the Step 2 test requirements list so the reviewer can verify all required test categories were written (dynamic registration, RTL, reparenting, composition, memory, event ordering). |
 | `security-reviewer` | All element files | Controller files |
+| `code-quality-reviewer` | All element files, engine files | Controller files |
 
 **Notes:**
 - "All element files" = every `.ts` file under `src/components/{name}/` excluding test files.
@@ -30,9 +31,9 @@ and inject the context files listed below alongside the changed/generated file c
 
 Use these tables to determine which reviewers to run based on what changed.
 
-### Full fleet (all 6 reviewers)
+### Full fleet (all 7 reviewers)
 
-Run all 6 when:
+Run all 7 when:
 - Building a new component (`/build-elements`)
 - Adding a new sub-part element to an existing component
 - Plan touches files across 3+ change types or modifies more than 5 files
@@ -41,12 +42,12 @@ Run all 6 when:
 
 | Change type | Reviewers |
 |---|---|
-| API change (new/changed property, event, type, export) | `api-reviewer`, `lit-reviewer`, `headless-reviewer`, `test-reviewer`, `security-reviewer` |
-| Structural change (new/changed element, compound structure) | `lit-reviewer`, `headless-reviewer`, `accessibility-reviewer`, `test-reviewer`, `security-reviewer` |
+| API change (new/changed property, event, type, export) | `api-reviewer`, `lit-reviewer`, `headless-reviewer`, `test-reviewer`, `security-reviewer`, `code-quality-reviewer` |
+| Structural change (new/changed element, compound structure) | `lit-reviewer`, `headless-reviewer`, `accessibility-reviewer`, `test-reviewer`, `security-reviewer`, `code-quality-reviewer` |
 | Accessibility or keyboard change | `accessibility-reviewer`, `lit-reviewer`, `test-reviewer`, `security-reviewer` |
-| Bug fix | `lit-reviewer`, `test-reviewer`, `security-reviewer` |
-| Refactor or rename | `lit-reviewer`, `test-reviewer`, `security-reviewer` |
-| Internal (controller, context, lifecycle) | `lit-reviewer`, `security-reviewer` |
+| Bug fix | `lit-reviewer`, `test-reviewer`, `security-reviewer`, `code-quality-reviewer` |
+| Refactor or rename | `lit-reviewer`, `test-reviewer`, `security-reviewer`, `code-quality-reviewer` |
+| Internal (controller, context, lifecycle) | `lit-reviewer`, `security-reviewer`, `code-quality-reviewer` |
 
 ### Keyword-to-change-type mapping (for `/post-plan-review`)
 

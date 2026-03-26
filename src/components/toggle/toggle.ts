@@ -47,7 +47,7 @@ export class GrundToggle extends LitElement {
     return this.ancestorDisabled || this.disabled;
   }
 
-  protected override willUpdate(_changed: Map<PropertyKey, unknown>): void {
+  protected override willUpdate(): void {
     if (!this.hasUpdated && !this._groupCtx) {
       this.internalPressed = this.defaultPressed;
     }
@@ -59,28 +59,50 @@ export class GrundToggle extends LitElement {
   protected override updated(changed: Map<PropertyKey, unknown>): void {
     if (changed.has('_groupCtx')) {
       const prev = changed.get('_groupCtx') as ToggleGroupRootContext | undefined;
+
       if (prev && this._isRegistered) {
         prev.unregisterToggle(this);
         this._isRegistered = false;
       }
-      if (this._groupCtx) {
-        this._groupCtx.registerToggle(this, this.value);
-        this._isRegistered = true;
-      }
+
+      this.registerWithGroup();
     }
 
-    if (changed.has('value') && this._groupCtx && this._isRegistered) {
-      this._groupCtx.unregisterToggle(this);
-      this._groupCtx.registerToggle(this, this.value);
+    if (changed.has('value') && this._isRegistered) {
+      this.reregisterWithGroup();
     }
   }
 
   public override disconnectedCallback(): void {
     super.disconnectedCallback();
-    if (this._isRegistered && this._groupCtx) {
-      this._groupCtx.unregisterToggle(this);
-      this._isRegistered = false;
+    this.unregisterFromGroup();
+  }
+
+  private registerWithGroup(): void {
+    if (!this._groupCtx) {
+      return;
     }
+
+    this._groupCtx.registerToggle(this, this.value);
+    this._isRegistered = true;
+  }
+
+  private unregisterFromGroup(): void {
+    if (!this._isRegistered || !this._groupCtx) {
+      return;
+    }
+
+    this._groupCtx.unregisterToggle(this);
+    this._isRegistered = false;
+  }
+
+  private reregisterWithGroup(): void {
+    if (!this._isRegistered || !this._groupCtx) {
+      return;
+    }
+
+    this._groupCtx.unregisterToggle(this);
+    this._groupCtx.registerToggle(this, this.value);
   }
 
   private handleClick(): void {
@@ -89,31 +111,34 @@ export class GrundToggle extends LitElement {
     }
 
     if (this._groupCtx) {
-      const resolvedPressed = this._groupCtx.requestToggle(this.value, this.disabled);
-
-      if (resolvedPressed === null) {
-        return;
-      }
-
-      this.dispatchEvent(
-        new CustomEvent<PressedChangeDetail>('grund-pressed-change', {
-          detail: { pressed: resolvedPressed },
-          bubbles: true,
-          composed: false,
-        }),
-      );
-
-      return;
+      this.pressInGroup(this._groupCtx);
+    } else {
+      this.pressStandalone();
     }
+  }
 
+  private pressInGroup(ctx: ToggleGroupRootContext): void {
+    const resolvedPressed = ctx.requestToggle(this.value, this.disabled);
+
+    if (resolvedPressed !== null) {
+      this.emitPressedChange(resolvedPressed);
+    }
+  }
+
+  private pressStandalone(): void {
     const newPressed = !this.effectivePressed;
+
     if (this.pressed === undefined) {
       this.internalPressed = newPressed;
     }
 
+    this.emitPressedChange(newPressed);
+  }
+
+  private emitPressedChange(pressed: boolean): void {
     this.dispatchEvent(
       new CustomEvent<PressedChangeDetail>('grund-pressed-change', {
-        detail: { pressed: newPressed },
+        detail: { pressed },
         bubbles: true,
         composed: false,
       }),

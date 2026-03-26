@@ -57,7 +57,9 @@ export class SelectionEngine {
 
   /** Returns the new selected-values array, or null if the action was blocked. */
   public requestToggle(value: string, itemDisabled: boolean): string[] | null {
-    if (this.disabled || itemDisabled) return null;
+    if (this.disabled || itemDisabled) {
+      return null;
+    }
 
     const wasSelected = this._selectedValues.has(value);
     let nextValues: Set<string>;

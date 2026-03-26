@@ -1,10 +1,12 @@
 import { createContext } from '@lit/context';
 
+import type { GrundToggle } from '../toggle';
+
 export interface ToggleGroupRootContext {
   isPressed: (value: string) => boolean;
   requestToggle: (value: string, itemDisabled: boolean) => boolean | null;
-  registerToggle: (toggle: HTMLElement, value: string) => void;
-  unregisterToggle: (toggle: HTMLElement) => void;
+  registerToggle: (toggle: GrundToggle, value: string) => void;
+  unregisterToggle: (toggle: GrundToggle) => void;
 }
 
 export const toggleGroupRootContext =

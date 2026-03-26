@@ -5,7 +5,7 @@ description: "Use after /build-controller to implement all custom elements: root
 
 ## Overview
 
-Implements root, item, and all sub-part elements. Wires context, shared controllers, ARIA relationships, lifecycle, dev-mode warnings, and `exportparts`. All 6 reviewers run in parallel — this is the main quality gate.
+Implements root, item, and all sub-part elements. Wires context, shared controllers, ARIA relationships, lifecycle, dev-mode warnings, and `exportparts`. All 7 reviewers run in parallel — this is the main quality gate.
 
 ## Usage
 
@@ -128,10 +128,11 @@ Run `/smallest-diff` to catch dead code, speculative additions, and diff noise b
 
 Read `workflow/refs/reviewer-dispatch.md` for the canonical context injection table and patch loop rules.
 
-Read each of the following reviewer SKILL.md files. Use each file's content as the Agent prompt. Dispatch all 6 as simultaneous Agent calls, injecting context files per the dispatch table:
+Read each of the following reviewer SKILL.md files. Use each file's content as the Agent prompt. Dispatch all 7 as simultaneous Agent calls, injecting context files per the dispatch table:
 
 - `workflow/reviewers/accessibility-reviewer/SKILL.md`
 - `workflow/reviewers/api-reviewer/SKILL.md`
+- `workflow/reviewers/code-quality-reviewer/SKILL.md`
 - `workflow/reviewers/headless-reviewer/SKILL.md`
 - `workflow/reviewers/lit-reviewer/SKILL.md`
 - `workflow/reviewers/security-reviewer/SKILL.md`

@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 
@@ -54,7 +54,7 @@ export class GrundToggleGroup extends LitElement {
         .filter((btn): btn is HTMLElement => btn !== null),
   });
 
-  protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
+  protected override willUpdate(changed: PropertyValues<this>): void {
     const snapshot: ToggleGroupHostSnapshot = {
       value: this.value,
       defaultValue: this.defaultValue,
@@ -73,21 +73,25 @@ export class GrundToggleGroup extends LitElement {
     this.disabledCtx = this.disabled;
     this.toggleAttribute('data-multiple', this.multiple);
 
-    if (
+    if (this.shouldRefreshContext(changed)) {
+      this.rootCtx = this.createRootContext();
+    }
+  }
+
+  private shouldRefreshContext(changed: PropertyValues<this>): boolean {
+    return (
       !this.hasUpdated ||
       changed.has('value') ||
       changed.has('defaultValue') ||
       changed.has('multiple') ||
       changed.has('disabled')
-    ) {
-      this.rootCtx = this.createRootContext();
-    }
+    );
   }
 
   private createRootContext(): ToggleGroupRootContext {
     return {
       isPressed: (value) => this.engine.isPressed(value),
-      requestToggle: (value, toggleDisabled) => this.handleToggle(value, toggleDisabled),
+      requestToggle: (value, toggleDisabled) => this.resolveToggle(value, toggleDisabled),
       registerToggle: (toggle, value) => {
         this.registry.register(toggle, value);
         this.rovingFocus.sync();
@@ -99,23 +103,27 @@ export class GrundToggleGroup extends LitElement {
     };
   }
 
-  private handleToggle(value: string, toggleDisabled: boolean): boolean | null {
+  private resolveToggle(value: string, toggleDisabled: boolean): boolean | null {
     const result = this.engine.requestToggle(value, toggleDisabled);
-    if (result === null) return null;
 
-    const newPressed = result.includes(value);
+    if (result === null) {
+      return null;
+    }
 
+    this.emitValueChange(result);
+    this.rootCtx = this.createRootContext();
+
+    return result.includes(value);
+  }
+
+  private emitValueChange(value: string[]): void {
     this.dispatchEvent(
       new CustomEvent<ToggleGroupValueChangeDetail>('grund-value-change', {
-        detail: { value: result },
+        detail: { value },
         bubbles: true,
         composed: false,
       }),
     );
-
-    this.rootCtx = this.createRootContext();
-
-    return newPressed;
   }
 
   protected override render() {
