@@ -21,7 +21,7 @@ Caller provides `refs/lit-patterns.md` and `refs/ssr-contract.md`. Cross-referen
 ### Lifecycle
 1. `willUpdate` derives state. `updated` for post-render side effects. `firstUpdated` for one-time DOM setup.
 2. Never call `requestUpdate()` inside `updated()`.
-3. Root passes `HostSnapshot` via `syncFromHost()` in `willUpdate`. Controller reads no host props.
+3. Root passes `HostSnapshot` via `syncFromHost()` in `willUpdate`. Engine reads no host props directly.
 
 ### Reactive Properties
 4. `@property()` for public API; `@state()` for internal-only state.
@@ -38,6 +38,7 @@ Caller provides `refs/lit-patterns.md` and `refs/ssr-contract.md`. Cross-referen
 11. With `@provide`: context object recreation is acceptable (required for consumer notification) but only when state fields actually changed. Guard recreation with `!this.hasUpdated || changed.has('relevantProp')` — recreating on every `willUpdate` call causes consumers to re-render on every host update even when nothing changed. Flag any context recreation inside `willUpdate` that lacks such a guard. With `ContextProvider` directly: prefer in-place mutation with `setValue(ref, true)`. Action callbacks used with `ContextProvider` MUST be stable references (class field arrow functions) because the same object is reused — unstable callbacks cause stale closures. With `@provide`, the entire context object is replaced on every update so consumers react to the object reference change, not individual property identity — flag missing stable callbacks as a **warning** (recommended practice), not a blocker. Flag any context recreation inside `willUpdate` that lacks a guard as a **blocker**.
 12. Context subscriptions declared `private`.
 13. Context interfaces should expose query methods rather than mutable data structures. Prefer `getRecordByValue(value): ReadonlyRecord | null` over `getRegistry(): Registry`. If consumers need registry data for DOM queries (ARIA linking, geometry measurement), provide read-only projections that prevent mutation. Flag any context method that returns a mutable collection or class instance with write methods.
+13a. Context interface raw state audit: any boolean, string, or number field in a root context interface that a consumer would need to combine with their own local state to make a decision is a raw state leak. The canonical case is `disabled: boolean` — any consumer must write `ctx.disabled || this.disabled`, duplicating the composition rule. Flag as a **warning** and suggest a query method: `isEffectivelyDisabled(itemDisabled: boolean) => boolean` (lit-patterns#38).
 
 ### Dev-Mode Warnings
 14. Guard every warning with `if (import.meta.env.DEV)`.

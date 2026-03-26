@@ -12,7 +12,7 @@ Reference for generation skills and the `lit-reviewer`. All rules are numbered a
 2. Use `updated(changedProperties)` only for post-render side effects (e.g., restoring focus, measuring DOM). Dispatch `grund-*` events from the controller action method that causes the state change. **Exception:** per-item derived events that depend on context propagation (e.g., `grund-open-change` on an item element) may be dispatched in `updated()` because the item cannot determine its new state until context settles in `willUpdate`. Guard with a `hasSettled` flag to suppress the initial-render event.
 3. Use `firstUpdated()` only for one-time DOM setup (e.g., a controller that needs a DOM reference). Never use it for logic that must run on every update.
 4. Never call `this.requestUpdate()` inside `updated()`. This creates an infinite render loop.
-5. The root element packages its reactive properties into a `HostSnapshot` plain object in `willUpdate` and passes it to the controller via `syncFromHost()`. The controller never reads reactive properties directly from the host — this decouples it from Lit and keeps it independently testable.
+5. The root element packages its reactive properties into a `HostSnapshot` plain object in `willUpdate` and passes it to the Engine via `syncFromHost()`. The Engine never reads reactive properties directly from the host — this decouples it from Lit and keeps it independently testable with plain `new Engine()` instantiation.
 
 ### Reactive Properties
 
@@ -131,7 +131,7 @@ registerTab: (tab: HTMLElement) => {
 
 ### Error Boundaries
 
-33. Controller methods that process user-provided data or call external APIs MUST wrap risky operations in try/catch. On error: emit a dev-mode warning and either recover to a safe state or do nothing (fail silently in production).
+33. Engine methods that process user-provided data or call external APIs MUST wrap risky operations in try/catch. On error: emit a dev-mode warning and either recover to a safe state or do nothing (fail silently in production).
 
 ### State Machines (Complex Lifecycle Only)
 
@@ -159,9 +159,34 @@ transition(from: DialogState, to: DialogState): DialogState {
 }
 ```
 
-### Shared Controller / Abstraction Fit
+### Selection State
 
-36. Before attaching a shared controller, run the abstraction fit check:
+36. Any component that manages a **set of selected / active / pressed values** MUST delegate to `SelectionEngine` (`src/controllers/selection.engine.ts`) rather than reimplementing the logic. Wrap it in a domain-specific Engine with component-appropriate names:
+
+    ```ts
+    // ✅ Correct — ToggleGroupEngine wraps SelectionEngine
+    export class ToggleGroupEngine {
+      private readonly selection = new SelectionEngine();
+      public get pressedValues(): ReadonlySet<string> { return this.selection.selectedValues; }
+      public isPressed(value: string): boolean { return this.selection.isSelected(value); }
+      public requestToggle(value: string, disabled: boolean): string[] | null {
+        return this.selection.requestToggle(value, disabled);
+      }
+    }
+
+    // ❌ Wrong — reimplementing Set-based state from scratch
+    export class RadioGroupEngine {
+      private selectedValues = new Set<string>();
+      private isControlled = false;
+      // ... (copy-paste of SelectionEngine logic)
+    }
+    ```
+
+    `SelectionEngine` covers: single/multiple mode, controlled/uncontrolled, disabled gating, defaultValue seeding. If you need behaviour it does not cover, classify the gap (Rule 37) before writing inline code.
+
+### Shared Controller / Engine / Abstraction Fit
+
+37. Before attaching a shared controller, run the abstraction fit check:
 
     **Step 1 — List required behaviors.** Write down every behavior the spec demands that the controller is expected to handle.
 
@@ -183,6 +208,55 @@ transition(from: DialogState, to: DialogState): DialogState {
     - Wrong action: read `document.activeElement` after the controller moves focus (temporal coupling)
     - Correct action: add `onFocusMove(element: HTMLElement) => void` callback to `RovingFocusController`
 
+### Disabled Composition
+
+38. Any engine whose `HostSnapshot` includes `disabled: boolean` MUST expose `isEffectivelyDisabled(itemDisabled: boolean): boolean`. This is the single authoritative implementation of group+item disabled composition. Context interfaces carry this as a stable callback, never as a raw boolean:
+
+    ```ts
+    // ✅ Correct — context exposes a query, not raw state
+    export interface ToggleGroupRootContext {
+      isEffectivelyDisabled: (toggleDisabled: boolean) => boolean;
+      // ...
+    }
+
+    // ❌ Wrong — context leaks raw group state; consumers re-implement composition
+    export interface ToggleGroupRootContext {
+      disabled: boolean; // forces every consumer to write: ctx.disabled || this.disabled
+      // ...
+    }
+    ```
+
+    Engine implementation (delegate to `SelectionEngine` if applicable):
+
+    ```ts
+    public isEffectivelyDisabled(itemDisabled: boolean): boolean {
+      return this.selection.isEffectivelyDisabled(itemDisabled);
+    }
+    ```
+
+    Root element provides it as a stable bound callback:
+
+    ```ts
+    private readonly _isEffectivelyDisabled = (itemDisabled: boolean) =>
+      this.engine.isEffectivelyDisabled(itemDisabled);
+    ```
+
+    Consumer calls it — never reimplements:
+
+    ```ts
+    // ✅ Correct — delegate to context
+    private get effectiveDisabled(): boolean {
+      if (this._groupCtx) return this._groupCtx.isEffectivelyDisabled(this.disabled);
+      return this.disabled;
+    }
+
+    // ❌ Wrong — reimplements the composition rule
+    private get effectiveDisabled(): boolean {
+      if (this._groupCtx) return this._groupCtx.disabled || this.disabled;
+      return this.disabled;
+    }
+    ```
+
 ---
 
 ## Anti-Patterns
@@ -192,11 +266,13 @@ transition(from: DialogState, to: DialogState): DialogState {
 | Dispatching events in `updated()` without a settled guard | Can fire during initial render or cause cascading re-renders | Dispatch from controller action method; use `updated()` only for context-derived events with a `hasSettled` guard (see Rule 2) |
 | `requestUpdate()` inside `updated()` | Infinite render loop | Compute in `willUpdate`, not `updated` |
 | Recreating context object on every `willUpdate` when nothing changed | Unnecessary re-renders in all consumers | With `@provide`: recreate only when state fields change. With `ContextProvider`: mutate in place + `setValue(ref, true)` (see Rule 15) |
-| Reading host reactive props in controller | Tight coupling, not independently testable | Use `HostSnapshot` pattern via `syncFromHost()` |
+| Reading host reactive props in Engine | Tight coupling, not independently testable | Use `HostSnapshot` pattern via `syncFromHost()` |
 | `customElements.define()` without guard | Throws on duplicate definition (micro-frontends) | Wrap with `if (!customElements.get(...))` |
 | `addEventListener` without cleanup | Memory leak, stale handler on reconnect | Symmetric cleanup in `disconnectedCallback` |
 | `display: contents` on element with ARIA role | Strips element box, breaks accessibility tree | Use `display: block` or `display: inline` |
 | Auto-selection or registry validation in `firstUpdated()` | Registry is always empty — children register asynchronously after context propagation | Use registration callbacks on the context interface (Rule 31) |
 | Dev warning about missing siblings in `firstUpdated()` | Siblings haven't registered yet — always a false positive | Delay via `requestAnimationFrame` or settled guard in `updated()` (Rule 32) |
 | Context interface exposing mutable registry | Consumers can corrupt state; violates principle of least privilege | Expose read-only query methods instead (Rule 18) |
-| Working around a shared controller gap without classifying it | Temporal coupling, global state reads, and event-timing hacks are symptoms of a missing abstraction fit check | Run Rule 36 fit check; if gap is "Extend," add the hook rather than working around it |
+| Context interface with raw `disabled: boolean` | Every consumer must reimplement group+item disabled composition and can get it wrong | Expose `isEffectivelyDisabled(itemDisabled: boolean) => boolean` (Rule 38) |
+| Reimplementing Set-based selection state | Duplicates `SelectionEngine`; diverges on edge cases (controlled mode, disabled gating, seeding) | Wrap `SelectionEngine` in a domain Engine (Rule 36) |
+| Working around a shared controller gap without classifying it | Temporal coupling, global state reads, and event-timing hacks are symptoms of a missing abstraction fit check | Run Rule 37 fit check; if gap is "Extend," add the hook rather than working around it |

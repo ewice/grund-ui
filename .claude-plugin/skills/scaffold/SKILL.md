@@ -96,6 +96,16 @@ Create `src/components/{name}/context/{name}.context.ts`:
 - Context interface: state fields (read-only) and action callbacks (use vocabulary registry names)
 - Export both from `{name}.context.ts`
 
+**Context interface design rules (apply before writing any field):**
+
+| Field type | Rule | Example |
+|---|---|---|
+| Computed boolean (group + item state) | Must be a query method, never a raw value | `isEffectivelyDisabled: (itemDisabled: boolean) => boolean` — never `disabled: boolean` |
+| Configuration pass-through | Raw value is acceptable — items cannot derive it independently | `orientation: 'horizontal' \| 'vertical'` |
+| Selection state | Query method over current values | `isExpanded: (value: string) => boolean` |
+| Actions | Stable bound callback | `requestToggle: (value: string, itemDisabled: boolean) => void` |
+| Registry data | Read-only projection only | `indexOf: (item: HTMLElement) => number` — never `getRegistry(): Registry` |
+
 ### Step 5 — Write element stubs
 
 For each element directory in the spec (e.g., `root/`, `item/`, `trigger/`, `panel/`), create a minimal stub file `src/components/{name}/{part}/index.ts`:
