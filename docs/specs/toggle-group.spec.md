@@ -88,7 +88,7 @@ all toggles are disabled regardless of their own `disabled` prop.
 
 | Layer | Responsibility |
 |---|---|
-| **Controller** | Owns `pressedValues` set, resolves toggle actions (single/multiple logic), controlled/uncontrolled |
+| **Engine** | Owns `pressedValues` set, resolves toggle actions (single/multiple logic), controlled/uncontrolled. Delegates to `SelectionEngine`. |
 | **Registry** | Ordered child tracking for `RovingFocusController` focus targets |
 | **Context** | Single context interface (no item context needed — toggles consume root context directly) |
 

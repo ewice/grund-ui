@@ -1,10 +1,10 @@
 import { expect, describe, it } from 'vitest';
-import { SelectionController } from './selection.controller.js';
-import type { SelectionSnapshot } from './selection.controller.js';
+import { SelectionEngine } from './selection.engine.js';
+import type { SelectionSnapshot } from './selection.engine.js';
 
-describe('SelectionController', () => {
-  function create(overrides?: Partial<SelectionSnapshot>): SelectionController {
-    const ctrl = new SelectionController();
+describe('SelectionEngine', () => {
+  function create(overrides?: Partial<SelectionSnapshot>): SelectionEngine {
+    const ctrl = new SelectionEngine();
     ctrl.syncFromHost({
       value: undefined,
       defaultValue: undefined,
@@ -119,6 +119,28 @@ describe('SelectionController', () => {
       const ctrl = create({ defaultValue: ['a'] });
       const result = ctrl.requestToggle('a', true);
       expect(result).to.be.null;
+    });
+  });
+
+  describe('isEffectivelyDisabled', () => {
+    it('returns false when neither group nor item is disabled', () => {
+      const ctrl = create();
+      expect(ctrl.isEffectivelyDisabled(false)).to.be.false;
+    });
+
+    it('returns true when group is disabled', () => {
+      const ctrl = create({ disabled: true });
+      expect(ctrl.isEffectivelyDisabled(false)).to.be.true;
+    });
+
+    it('returns true when item is disabled', () => {
+      const ctrl = create();
+      expect(ctrl.isEffectivelyDisabled(true)).to.be.true;
+    });
+
+    it('returns true when both group and item are disabled', () => {
+      const ctrl = create({ disabled: true });
+      expect(ctrl.isEffectivelyDisabled(true)).to.be.true;
     });
   });
 

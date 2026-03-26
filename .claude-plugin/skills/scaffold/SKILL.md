@@ -28,6 +28,7 @@ already implemented. Proceeding without them leads to a broken build deep into
 | Category | Required shared controllers | File to check |
 |---|---|---|
 | composite-widget | `RovingFocusController` | `src/controllers/roving-focus.controller.ts` |
+| composite-widget (with set selection) | `SelectionEngine` | `src/controllers/selection.engine.ts` |
 | form-control | `FormController` | `src/controllers/form.controller.ts` |
 | overlay | `PresenceController` | `src/controllers/presence.controller.ts` |
 | overlay (modal) | `FocusTrapController` | `src/controllers/focus-trap.controller.ts` |
@@ -69,11 +70,11 @@ Based on category from the spec:
 
 | Category | Directories to create |
 |---|---|
-| composite-widget | `root/`, `item/`, `controller/`, `registry/`, `context/`, plus each sub-part from spec |
-| form-control | `root/`, `controller/`, `context/` |
-| overlay | `root/`, `trigger/`, `content/`, `controller/`, `context/` |
-| collection | `root/`, `item/`, `controller/`, `context/` |
-| feedback | `root/`, `controller/`, `context/` |
+| composite-widget | `root/`, `item/`, `engine/`, `registry/`, `context/`, plus each sub-part from spec |
+| form-control | `root/`, `engine/`, `context/` |
+| overlay | `root/`, `trigger/`, `content/`, `engine/`, `context/` |
+| collection | `root/`, `item/`, `engine/`, `context/` |
+| feedback | `root/`, `engine/`, `context/` |
 | simple | `root/` only |
 
 All under `src/components/{name}/`.
@@ -90,10 +91,10 @@ Create `src/components/{name}/types.ts`:
 
 ### Step 4 — Write context interfaces
 
-Create `src/components/{name}/context/index.ts`:
+Create `src/components/{name}/context/{name}.context.ts`:
 - Context key (`Symbol`)
 - Context interface: state fields (read-only) and action callbacks (use vocabulary registry names)
-- Export both from `context/index.ts`
+- Export both from `{name}.context.ts`
 
 ### Step 5 — Write element stubs
 
@@ -135,7 +136,7 @@ Create `src/components/{name}/index.ts`:
 Verify before committing:
 - All directories from the spec's category exist
 - `types.ts` exports all event detail interfaces and `HostSnapshot`
-- `context/index.ts` exports the context key and interface
+- `context/{name}.context.ts` exports the context key and interface
 - Barrel `index.ts` re-exports all element classes and public types
 - Every element stub has the `customElements.define()` guard
 - All names in `types.ts` and `context/index.ts` match vocabulary registry entries
@@ -149,4 +150,4 @@ git add src/components/{name}/
 git commit -m "feat({name}): scaffold — types, context interfaces, directory structure"
 ```
 
-**Next step: `/build-controller {name}`.**
+**Next step: `/build-engine {name}`.**

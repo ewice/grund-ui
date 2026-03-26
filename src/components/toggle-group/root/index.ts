@@ -1,9 +1,9 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 
 import { RovingFocusController } from '../../../controllers/roving-focus.controller.js';
-import { ToggleGroupController } from '../controller/toggle-group.controller.js';
+import { ToggleGroupEngine } from '../engine/toggle-group.engine.js';
 import { ToggleGroupRegistry } from '../registry/toggle-group.registry.js';
 import { toggleGroupRootContext } from '../context/toggle-group.context.js';
 
@@ -17,6 +17,11 @@ import type { ToggleGroupHostSnapshot, ToggleGroupValueChangeDetail } from '../t
  * @slot - `<grund-toggle>` children
  * @fires {CustomEvent<ToggleGroupValueChangeDetail>} grund-value-change - When the set of pressed toggles changes
  * @csspart group - The inner container element
+ *
+ * Accessibility: provide an accessible name via the `label` property
+ * (`aria-label` on the inner group container). External `aria-labelledby`
+ * cannot cross shadow-root boundaries to reach the inner container — use
+ * the `label` prop instead.
  */
 export class GrundToggleGroup extends LitElement {
   public static override styles = css`
@@ -28,10 +33,12 @@ export class GrundToggleGroup extends LitElement {
    * Setting this enables controlled mode — the element fires `grund-value-change`
    * but does not update internal state; the consumer must reflect the new value back.
    */
+  // hasChanged: () => true — ensures Lit re-runs when a mutated array reference is re-set.
   @property({ type: Array, hasChanged: () => true })
   public value: string[] | undefined = undefined;
 
   /** Initial pressed values for uncontrolled mode. Ignored after the first render. */
+  // hasChanged: () => true — ensures Lit re-runs when a mutated array reference is re-set.
   @property({ type: Array, attribute: 'default-value', hasChanged: () => true })
   public defaultValue: string[] = [];
 
@@ -47,11 +54,18 @@ export class GrundToggleGroup extends LitElement {
   /** Whether keyboard navigation wraps from last to first and vice versa. */
   @property({ type: Boolean }) public loop = true;
 
+  /**
+   * Accessible name for the group container, applied as `aria-label` on the
+   * inner `role="group"` element. Required for screen-reader users unless the
+   * group is labelled by a visible heading via `aria-labelledby` on the host.
+   */
+  @property() public label = '';
+
   @provide({ context: toggleGroupRootContext })
   @state()
   protected rootCtx!: ToggleGroupRootContext;
 
-  private readonly controller = new ToggleGroupController();
+  private readonly engine = new ToggleGroupEngine();
   private readonly registry = new ToggleGroupRegistry();
 
   // rovingFocus declared before callbacks so `this.rovingFocus` is initialized when
@@ -67,7 +81,9 @@ export class GrundToggleGroup extends LitElement {
 
   // Stable bound callbacks — defined as class fields so object identity is preserved across
   // createRootContext() calls, preventing unnecessary consumer re-renders.
-  private readonly _isPressed = (value: string) => this.controller.isPressed(value);
+  private readonly _isPressed = (value: string) => this.engine.isPressed(value);
+  private readonly _isEffectivelyDisabled = (toggleDisabled: boolean) =>
+    this.engine.isEffectivelyDisabled(toggleDisabled);
 
   private readonly _requestToggle = (value: string, toggleDisabled: boolean): boolean | null => {
     return this.handleToggle(value, toggleDisabled);
@@ -103,7 +119,7 @@ export class GrundToggleGroup extends LitElement {
       multiple: this.multiple,
       disabled: this.disabled,
     };
-    this.controller.syncFromHost(snapshot);
+    this.engine.syncFromHost(snapshot);
 
     this.rovingFocus.update({
       orientation: this.orientation,
@@ -119,8 +135,7 @@ export class GrundToggleGroup extends LitElement {
       changed.has('value') ||
       changed.has('defaultValue') ||
       changed.has('multiple') ||
-      changed.has('disabled') ||
-      changed.has('orientation')
+      changed.has('disabled')
     ) {
       this.rootCtx = this.createRootContext();
     }
@@ -129,7 +144,7 @@ export class GrundToggleGroup extends LitElement {
   private createRootContext(): ToggleGroupRootContext {
     return {
       isPressed: this._isPressed,
-      disabled: this.disabled,
+      isEffectivelyDisabled: this._isEffectivelyDisabled,
       requestToggle: this._requestToggle,
       registerToggle: this._registerToggle,
       unregisterToggle: this._unregisterToggle,
@@ -138,7 +153,7 @@ export class GrundToggleGroup extends LitElement {
 
   /** Returns the resolved pressed state for the toggled item, or null if blocked. */
   private handleToggle(value: string, toggleDisabled: boolean): boolean | null {
-    const result = this.controller.requestToggle(value, toggleDisabled);
+    const result = this.engine.requestToggle(value, toggleDisabled);
     if (result === null) return null;
 
     const newPressed = result.includes(value);
@@ -158,7 +173,11 @@ export class GrundToggleGroup extends LitElement {
   }
 
   protected override render() {
-    return html`<div part="group" role="group"><slot></slot></div>`;
+    // role="group" chosen over role="toolbar": toggle-group is a general-purpose
+    // grouping primitive (settings panels, filter chips, etc.), not exclusively a
+    // toolbar. role="toolbar" carries an implicit toolbar affordance that would
+    // mislead screen-reader users in non-toolbar contexts.
+    return html`<div part="group" role="group" aria-label=${this.label || nothing}><slot></slot></div>`;
   }
 }
 

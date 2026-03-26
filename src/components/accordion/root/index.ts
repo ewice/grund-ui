@@ -3,7 +3,7 @@ import { property, state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 
 import { RovingFocusController } from '../../../controllers/roving-focus.controller.js';
-import { AccordionController } from '../controller/accordion.controller.js';
+import { AccordionEngine } from '../engine/accordion.engine.js';
 import { AccordionRegistry } from '../registry/accordion.registry.js';
 import { accordionRootContext } from '../context/accordion.context.js';
 
@@ -22,9 +22,11 @@ export class GrundAccordion extends LitElement {
     :host { display: block; /* block: this element is a block-level container */ }
   `;
 
+  // hasChanged: () => true — ensures Lit re-runs when a mutated array reference is re-set.
   @property({ type: Array, hasChanged: () => true })
   public value: string[] | undefined = undefined;
 
+  // hasChanged: () => true — ensures Lit re-runs when a mutated array reference is re-set.
   @property({ type: Array, attribute: 'default-value', hasChanged: () => true })
   public defaultValue: string[] | undefined = undefined;
 
@@ -39,13 +41,15 @@ export class GrundAccordion extends LitElement {
   @state()
   protected rootCtx!: AccordionRootContext;
 
-  private controller = new AccordionController();
-  private registry = new AccordionRegistry();
+  private readonly engine = new AccordionEngine();
+  private readonly registry = new AccordionRegistry();
 
   // Stable bound callbacks — defined as class fields so object identity is preserved across
   // createRootContext() calls. Lit context consumers re-render when context reference changes;
   // stable callbacks avoid triggering unnecessary re-renders on unrelated state updates.
-  private readonly _isExpanded = (value: string) => this.controller.isExpanded(value);
+  private readonly _isExpanded = (value: string) => this.engine.isExpanded(value);
+  private readonly _isEffectivelyDisabled = (itemDisabled: boolean) =>
+    this.engine.isEffectivelyDisabled(itemDisabled);
 
   private readonly _requestToggle = (itemValue: string, itemDisabled: boolean): void => {
     this.handleToggle(itemValue, itemDisabled);
@@ -89,10 +93,6 @@ export class GrundAccordion extends LitElement {
         .filter((t): t is HTMLElement => t !== null),
   });
 
-  public override connectedCallback(): void {
-    super.connectedCallback();
-  }
-
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
     const snapshot: AccordionHostSnapshot = {
       value: this.value,
@@ -100,7 +100,7 @@ export class GrundAccordion extends LitElement {
       multiple: this.multiple,
       disabled: this.disabled,
     };
-    this.controller.syncFromHost(snapshot);
+    this.engine.syncFromHost(snapshot);
 
     this.rovingFocus?.update({
       orientation: this.orientation,
@@ -129,7 +129,7 @@ export class GrundAccordion extends LitElement {
   private createRootContext(): AccordionRootContext {
     return {
       isExpanded: this._isExpanded,
-      disabled: this.disabled,
+      isEffectivelyDisabled: this._isEffectivelyDisabled,
       orientation: this.orientation,
       keepMounted: this.keepMounted,
       hiddenUntilFound: this.hiddenUntilFound,
@@ -145,11 +145,7 @@ export class GrundAccordion extends LitElement {
   }
 
   private handleToggle(itemValue: string, itemDisabled: boolean): void {
-    const result = this.controller.requestToggle({
-      type: 'toggle',
-      itemValue,
-      itemDisabled,
-    });
+    const result = this.engine.requestToggle(itemValue, itemDisabled);
 
     if (result === null) return;
 

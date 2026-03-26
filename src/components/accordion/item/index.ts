@@ -94,7 +94,7 @@ export class GrundAccordionItem extends LitElement {
     }
 
     const expanded = this.rootCtx.isExpanded(this.value);
-    const mergedDisabled = this.rootCtx.disabled || this.disabled;
+    const mergedDisabled = this.rootCtx.isEffectivelyDisabled(this.disabled);
     const index = this.rootCtx.indexOf(this);
 
     this.toggleAttribute('data-open', expanded);
@@ -138,7 +138,7 @@ export class GrundAccordionItem extends LitElement {
 
   private createItemContext(): AccordionItemContext {
     const expanded = this.rootCtx?.isExpanded(this.value) ?? false;
-    const mergedDisabled = (this.rootCtx?.disabled ?? false) || this.disabled;
+    const mergedDisabled = this.rootCtx?.isEffectivelyDisabled(this.disabled) ?? this.disabled;
 
     return {
       value: this.value,

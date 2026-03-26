@@ -1,5 +1,5 @@
 /**
- * Snapshot of host properties passed to SelectionController.syncFromHost().
+ * Snapshot of host properties passed to SelectionEngine.syncFromHost().
  * Normalised across all composite widgets — accordion, toggle-group, radio-group, etc.
  * @internal
  */
@@ -24,14 +24,18 @@ export interface SelectionSnapshot {
  * controlled/uncontrolled behaviour, and disabled gating.
  * No DOM access, no Lit dependency — independently testable.
  *
- * Consumers (AccordionController, ToggleGroupController) wrap this with
+ * Consumers (AccordionEngine, ToggleGroupEngine) wrap this with
  * domain-specific method names and delegate all state resolution here.
  * Add a new consumer here instead of duplicating the logic.
  *
  * @internal
  */
-export class SelectionController {
-  public selectedValues = new Set<string>();
+export class SelectionEngine {
+  private _selectedValues = new Set<string>();
+
+  public get selectedValues(): ReadonlySet<string> {
+    return this._selectedValues;
+  }
 
   private isControlled = false;
   private isSeeded = false;
@@ -44,9 +48,9 @@ export class SelectionController {
     this.isControlled = snapshot.value !== undefined;
 
     if (this.isControlled) {
-      this.selectedValues = new Set(snapshot.value);
+      this._selectedValues = new Set(snapshot.value);
     } else if (!this.isSeeded && snapshot.defaultValue != null && snapshot.defaultValue.length > 0) {
-      this.selectedValues = new Set(snapshot.defaultValue);
+      this._selectedValues = new Set(snapshot.defaultValue);
       this.isSeeded = true;
     }
   }
@@ -55,26 +59,30 @@ export class SelectionController {
   public requestToggle(value: string, itemDisabled: boolean): string[] | null {
     if (this.disabled || itemDisabled) return null;
 
-    const wasSelected = this.selectedValues.has(value);
+    const wasSelected = this._selectedValues.has(value);
     let nextValues: Set<string>;
 
     if (wasSelected) {
-      nextValues = new Set(this.selectedValues);
+      nextValues = new Set(this._selectedValues);
       nextValues.delete(value);
     } else {
       nextValues = this.multiple
-        ? new Set([...this.selectedValues, value])
+        ? new Set([...this._selectedValues, value])
         : new Set([value]);
     }
 
     if (!this.isControlled) {
-      this.selectedValues = nextValues;
+      this._selectedValues = nextValues;
     }
 
     return Array.from(nextValues);
   }
 
   public isSelected(value: string): boolean {
-    return this.selectedValues.has(value);
+    return this._selectedValues.has(value);
+  }
+
+  public isEffectivelyDisabled(itemDisabled: boolean): boolean {
+    return this.disabled || itemDisabled;
   }
 }
