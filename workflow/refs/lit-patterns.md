@@ -167,7 +167,6 @@ transition(from: DialogState, to: DialogState): DialogState {
     // ✅ Correct — ToggleGroupEngine wraps SelectionEngine
     export class ToggleGroupEngine {
       private readonly selection = new SelectionEngine();
-      public get pressedValues(): ReadonlySet<string> { return this.selection.selectedValues; }
       public isPressed(value: string): boolean { return this.selection.isSelected(value); }
       public requestToggle(value: string, disabled: boolean): string[] | null {
         return this.selection.requestToggle(value, disabled);

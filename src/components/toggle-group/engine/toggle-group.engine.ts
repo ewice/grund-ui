@@ -4,10 +4,6 @@ import type { ToggleGroupHostSnapshot } from '../types.js';
 export class ToggleGroupEngine {
   private readonly selection = new SelectionEngine();
 
-  public get pressedValues(): ReadonlySet<string> {
-    return this.selection.selectedValues;
-  }
-
   public syncFromHost(snapshot: ToggleGroupHostSnapshot): void {
     this.selection.syncFromHost({
       value: snapshot.value,
