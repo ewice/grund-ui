@@ -6,6 +6,7 @@ import {
   accordionRootContext,
   accordionItemContext,
 } from '../context/accordion.context.js';
+import { disabledContext } from '../../../context/disabled.context.js';
 
 import type { AccordionRootContext, AccordionItemContext } from '../context/accordion.context.js';
 import type { AccordionOpenChangeDetail } from '../types.js';
@@ -29,9 +30,17 @@ export class GrundAccordionItem extends LitElement {
   @state()
   private rootCtx?: AccordionRootContext;
 
+  @consume({ context: disabledContext, subscribe: true })
+  @state()
+  private ancestorDisabled = false;
+
   @provide({ context: accordionItemContext })
   @state()
   protected itemCtx: AccordionItemContext = this.createItemContext();
+
+  @provide({ context: disabledContext })
+  @state()
+  protected disabledCtx = false;
 
   private hasSettled = false;
   private prevExpanded: boolean | undefined = undefined;
@@ -94,11 +103,12 @@ export class GrundAccordionItem extends LitElement {
     }
 
     const expanded = this.rootCtx.isExpanded(this.value);
-    const mergedDisabled = this.rootCtx.isEffectivelyDisabled(this.disabled);
+    const mergedDisabled = this.ancestorDisabled || this.disabled;
     const index = this.rootCtx.indexOf(this);
 
     this.toggleAttribute('data-open', expanded);
     this.toggleAttribute('data-disabled', mergedDisabled);
+    this.disabledCtx = mergedDisabled;
     this.dataset.index = String(index);
 
     // Only recreate item context when relevant state changes.
@@ -108,6 +118,7 @@ export class GrundAccordionItem extends LitElement {
     if (
       !this.hasUpdated ||
       changed.has('rootCtx') ||
+      changed.has('ancestorDisabled') ||
       changed.has('value') ||
       changed.has('disabled')
     ) {
@@ -138,7 +149,7 @@ export class GrundAccordionItem extends LitElement {
 
   private createItemContext(): AccordionItemContext {
     const expanded = this.rootCtx?.isExpanded(this.value) ?? false;
-    const mergedDisabled = this.rootCtx?.isEffectivelyDisabled(this.disabled) ?? this.disabled;
+    const mergedDisabled = this.ancestorDisabled || this.disabled;
 
     return {
       value: this.value,

@@ -4,6 +4,7 @@ import { consume } from '@lit/context';
 
 import type { ToggleGroupRootContext } from '../toggle-group/toggle-group.context';
 import { toggleGroupRootContext } from '../toggle-group/toggle-group.context';
+import { disabledContext } from '../../context/disabled.context';
 import type { PressedChangeDetail } from './types';
 
 export class GrundToggle extends LitElement {
@@ -32,6 +33,10 @@ export class GrundToggle extends LitElement {
   @state()
   private readonly _groupCtx: ToggleGroupRootContext | undefined = undefined;
 
+  @consume({ context: disabledContext, subscribe: true })
+  @state()
+  private ancestorDisabled = false;
+
   private _isRegistered = false;
 
   private get effectivePressed(): boolean {
@@ -39,7 +44,7 @@ export class GrundToggle extends LitElement {
   }
 
   private get effectiveDisabled(): boolean {
-    return this._groupCtx?.isDisabled(this.disabled) ?? this.disabled;
+    return this.ancestorDisabled || this.disabled;
   }
 
   protected override willUpdate(_changed: Map<PropertyKey, unknown>): void {

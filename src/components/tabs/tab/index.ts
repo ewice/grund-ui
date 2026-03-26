@@ -3,6 +3,7 @@ import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
 import { tabsRootContext } from '../context/tabs.context.js';
+import { disabledContext } from '../../../context/disabled.context.js';
 
 import type { TabsRootContext } from '../context/tabs.context.js';
 
@@ -27,6 +28,10 @@ export class GrundTab extends LitElement {
   @consume({ context: tabsRootContext, subscribe: true })
   @state()
   private ctx?: TabsRootContext;
+
+  @consume({ context: disabledContext, subscribe: true })
+  @state()
+  private ancestorDisabled = false;
 
   private isRegistered = false;
 
@@ -72,7 +77,7 @@ export class GrundTab extends LitElement {
     }
 
     const isActive = this.ctx.activeValue === this.value;
-    const mergedDisabled = this.ctx.isEffectivelyDisabled(this.disabled);
+    const mergedDisabled = this.ancestorDisabled || this.disabled;
 
     this.toggleAttribute('data-selected', isActive);
     this.toggleAttribute('data-disabled', mergedDisabled);
@@ -102,13 +107,13 @@ export class GrundTab extends LitElement {
   }
 
   private handleClick(): void {
-    if (this.ctx?.isEffectivelyDisabled(this.disabled) ?? this.disabled) return;
+    if (this.ancestorDisabled || this.disabled) return;
     this.ctx?.requestActivation(this.value);
   }
 
   protected override render() {
     const isActive = this.ctx?.activeValue === this.value;
-    const mergedDisabled = this.ctx?.isEffectivelyDisabled(this.disabled) ?? this.disabled;
+    const mergedDisabled = this.ancestorDisabled || this.disabled;
 
     return html`
       <button

@@ -6,6 +6,7 @@ import { RovingFocusController } from '../../../controllers/roving-focus.control
 import { AccordionEngine } from '../engine/accordion.engine.js';
 import { AccordionRegistry } from '../registry/accordion.registry.js';
 import { accordionRootContext } from '../context/accordion.context.js';
+import { disabledContext } from '../../../context/disabled.context.js';
 
 import type { AccordionRootContext } from '../context/accordion.context.js';
 import type { AccordionHostSnapshot, AccordionValueChangeDetail } from '../types.js';
@@ -41,6 +42,10 @@ export class GrundAccordion extends LitElement {
   @state()
   protected rootCtx!: AccordionRootContext;
 
+  @provide({ context: disabledContext })
+  @state()
+  protected disabledCtx = false;
+
   private readonly engine = new AccordionEngine();
   private readonly registry = new AccordionRegistry();
 
@@ -48,8 +53,6 @@ export class GrundAccordion extends LitElement {
   // createRootContext() calls. Lit context consumers re-render when context reference changes;
   // stable callbacks avoid triggering unnecessary re-renders on unrelated state updates.
   private readonly _isExpanded = (value: string) => this.engine.isExpanded(value);
-  private readonly _isEffectivelyDisabled = (itemDisabled: boolean) =>
-    this.engine.isEffectivelyDisabled(itemDisabled);
 
   private readonly _requestToggle = (itemValue: string, itemDisabled: boolean): void => {
     this.handleToggle(itemValue, itemDisabled);
@@ -108,6 +111,7 @@ export class GrundAccordion extends LitElement {
     });
 
     this.dataset.orientation = this.orientation;
+    this.disabledCtx = this.disabled;
 
     // Recreate context on first render or when state-bearing properties change.
     // Note: handleToggle() also recreates context directly because internal
@@ -129,7 +133,6 @@ export class GrundAccordion extends LitElement {
   private createRootContext(): AccordionRootContext {
     return {
       isExpanded: this._isExpanded,
-      isEffectivelyDisabled: this._isEffectivelyDisabled,
       orientation: this.orientation,
       keepMounted: this.keepMounted,
       hiddenUntilFound: this.hiddenUntilFound,

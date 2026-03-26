@@ -4,7 +4,6 @@ export interface TabsRootContext {
   activeValue: string | null;
   activationDirection: 'start' | 'end' | 'none';
   orientation: 'horizontal' | 'vertical';
-  isEffectivelyDisabled: (tabDisabled: boolean) => boolean;
   registerTab(value: string, tab: HTMLElement): void;
   unregisterTab(value: string): void;
   registerPanel(value: string, panel: HTMLElement): void;

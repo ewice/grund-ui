@@ -7,6 +7,7 @@ import { ToggleGroupEngine } from './toggle-group.engine';
 import { ToggleGroupRegistry } from './toggle-group.registry';
 import type { ToggleGroupRootContext } from './toggle-group.context';
 import { toggleGroupRootContext } from './toggle-group.context';
+import { disabledContext } from '../../context/disabled.context';
 import type { ToggleGroupHostSnapshot, ToggleGroupValueChangeDetail } from './types';
 
 export class GrundToggleGroup extends LitElement {
@@ -38,6 +39,10 @@ export class GrundToggleGroup extends LitElement {
   @state()
   protected rootCtx!: ToggleGroupRootContext;
 
+  @provide({ context: disabledContext })
+  @state()
+  protected disabledCtx = false;
+
   private readonly engine = new ToggleGroupEngine();
   private readonly registry = new ToggleGroupRegistry();
   private readonly rovingFocus = new RovingFocusController(this, {
@@ -65,6 +70,7 @@ export class GrundToggleGroup extends LitElement {
 
     this.dataset.orientation = this.orientation;
     this.toggleAttribute('data-disabled', this.disabled);
+    this.disabledCtx = this.disabled;
     this.toggleAttribute('data-multiple', this.multiple);
 
     if (
@@ -81,7 +87,6 @@ export class GrundToggleGroup extends LitElement {
   private createRootContext(): ToggleGroupRootContext {
     return {
       isPressed: (value) => this.engine.isPressed(value),
-      isDisabled: (toggleDisabled) => this.engine.isDisabled(toggleDisabled),
       requestToggle: (value, toggleDisabled) => this.handleToggle(value, toggleDisabled),
       registerToggle: (toggle, value) => {
         this.registry.register(toggle, value);

@@ -5,6 +5,7 @@ import { provide } from '@lit/context';
 import { TabsEngine } from '../engine/tabs.engine.js';
 import { TabsRegistry } from '../registry/tabs.registry.js';
 import { tabsRootContext } from '../context/tabs.context.js';
+import { disabledContext } from '../../../context/disabled.context.js';
 
 import type { TabsRootContext } from '../context/tabs.context.js';
 import type { TabsHostSnapshot, TabsValueChangeDetail } from '../types.js';
@@ -38,6 +39,10 @@ export class GrundTabs extends LitElement {
   @provide({ context: tabsRootContext })
   @state()
   protected rootCtx!: TabsRootContext;
+
+  @provide({ context: disabledContext })
+  @state()
+  protected disabledCtx = false;
 
   private controller = new TabsEngine();
   private registry = new TabsRegistry();
@@ -89,9 +94,6 @@ export class GrundTabs extends LitElement {
     this.handleActivation(value);
   };
 
-  private readonly _isEffectivelyDisabled = (tabDisabled: boolean): boolean =>
-    this.controller.isEffectivelyDisabled(tabDisabled);
-
   private readonly _getTabElement = (value: string) => this.registry.getTabElement(value);
   private readonly _getPanelElement = (value: string) => this.registry.getPanelElement(value);
   private readonly _indexOf = (value: string) => this.registry.indexOf(value);
@@ -105,6 +107,7 @@ export class GrundTabs extends LitElement {
     this.controller.syncFromHost(snapshot);
 
     this.dataset.orientation = this.orientation;
+    this.disabledCtx = this.disabled;
     this.activationDirection = this.computeActivationDirection();
     this.dataset.activationDirection = this.activationDirection;
 
@@ -136,7 +139,6 @@ export class GrundTabs extends LitElement {
       activeValue: this.controller.activeValue,
       activationDirection: this.activationDirection,
       orientation: this.orientation,
-      isEffectivelyDisabled: this._isEffectivelyDisabled,
       registerTab: this._registerTab,
       unregisterTab: this._unregisterTab,
       registerPanel: this._registerPanel,

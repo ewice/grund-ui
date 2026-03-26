@@ -4,6 +4,7 @@ import { consume } from '@lit/context';
 
 import { RovingFocusController } from '../../../controllers/roving-focus.controller.js';
 import { tabsRootContext } from '../context/tabs.context.js';
+import { disabledContext } from '../../../context/disabled.context.js';
 import { GrundTab } from '../tab/index.js';
 
 import type { TabsRootContext } from '../context/tabs.context.js';
@@ -26,6 +27,10 @@ export class GrundTabsList extends LitElement {
   @consume({ context: tabsRootContext, subscribe: true })
   @state()
   private ctx?: TabsRootContext;
+
+  @consume({ context: disabledContext, subscribe: true })
+  @state()
+  private ancestorDisabled = false;
 
   // Class field initializer — ensures exactly one controller instance per element lifetime.
   // Constructing in connectedCallback would create a new instance (and duplicate keydown
@@ -60,8 +65,7 @@ export class GrundTabsList extends LitElement {
 
     if (this.ctx) {
       this.dataset.orientation = this.ctx.orientation;
-      // The list itself has no per-item disabled state; pass false to read only the root disabled flag.
-      this.toggleAttribute('data-disabled', this.ctx.isEffectivelyDisabled(false));
+      this.toggleAttribute('data-disabled', this.ancestorDisabled);
       this.dataset.activationDirection = this.ctx.activationDirection;
     }
   }
