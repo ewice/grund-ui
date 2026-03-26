@@ -122,28 +122,6 @@ describe('SelectionEngine', () => {
     });
   });
 
-  describe('isEffectivelyDisabled', () => {
-    it('returns false when neither group nor item is disabled', () => {
-      const ctrl = create();
-      expect(ctrl.isDisabled(false)).to.be.false;
-    });
-
-    it('returns true when group is disabled', () => {
-      const ctrl = create({ disabled: true });
-      expect(ctrl.isDisabled(false)).to.be.true;
-    });
-
-    it('returns true when item is disabled', () => {
-      const ctrl = create();
-      expect(ctrl.isDisabled(true)).to.be.true;
-    });
-
-    it('returns true when both group and item are disabled', () => {
-      const ctrl = create({ disabled: true });
-      expect(ctrl.isDisabled(true)).to.be.true;
-    });
-  });
-
   describe('controlled mode', () => {
     it('reflects the provided value array', () => {
       const ctrl = create({ value: ['a', 'b'] });

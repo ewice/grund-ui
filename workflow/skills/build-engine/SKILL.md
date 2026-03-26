@@ -95,7 +95,7 @@ Rules:
 - Actions return results — they do **not** dispatch events. The root element dispatches events after calling the engine.
 - No DOM access — must be testable without a browser
 - Use `SelectionEngine` for any set-based selection state (Rule 36 in `refs/lit-patterns.md`)
-- **Disabled composition (Rule 38):** if `HostSnapshot` includes `disabled: boolean`, expose `isEffectivelyDisabled(itemDisabled: boolean): boolean`. Delegate to `SelectionEngine.isEffectivelyDisabled` when `SelectionEngine` is used. Add 4 tests: both-false → false, group-only → true, item-only → true, both → true.
+- **Disabled composition (Rule 38):** if `HostSnapshot` includes `disabled: boolean`, the engine uses it for action gating (e.g., `requestToggle` returns `null`). Do NOT add `isEffectivelyDisabled` methods — disabled propagation to children is handled by the shared `disabledContext` in the element layer.
 
 If the spec requires a registry: write `src/components/{name}/registry/{name}.registry.ts` for ordered child tracking.
 

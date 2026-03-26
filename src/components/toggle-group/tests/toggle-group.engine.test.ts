@@ -78,21 +78,6 @@ describe('ToggleGroupEngine', () => {
       const result = ctrl.requestToggle('a', true);
       expect(result).to.be.null;
     });
-
-    it('isEffectivelyDisabled returns false when neither is disabled', () => {
-      const ctrl = create();
-      expect(ctrl.isDisabled(false)).to.be.false;
-    });
-
-    it('isEffectivelyDisabled returns true when group is disabled', () => {
-      const ctrl = create({ disabled: true });
-      expect(ctrl.isDisabled(false)).to.be.true;
-    });
-
-    it('isEffectivelyDisabled returns true when toggle is disabled', () => {
-      const ctrl = create();
-      expect(ctrl.isDisabled(true)).to.be.true;
-    });
   });
 
   describe('controlled mode', () => {

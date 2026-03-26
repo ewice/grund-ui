@@ -87,21 +87,6 @@ describe('AccordionEngine', () => {
       expect(result).to.be.null;
       expect(ctrl.isExpanded('a')).to.be.false;
     });
-
-    it('isEffectivelyDisabled returns false when neither is disabled', () => {
-      const ctrl = create();
-      expect(ctrl.isEffectivelyDisabled(false)).to.be.false;
-    });
-
-    it('isEffectivelyDisabled returns true when root is disabled', () => {
-      const ctrl = create({ disabled: true });
-      expect(ctrl.isEffectivelyDisabled(false)).to.be.true;
-    });
-
-    it('isEffectivelyDisabled returns true when item is disabled', () => {
-      const ctrl = create();
-      expect(ctrl.isEffectivelyDisabled(true)).to.be.true;
-    });
   });
 
   describe('controlled mode', () => {

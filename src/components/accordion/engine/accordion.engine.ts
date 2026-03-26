@@ -32,8 +32,4 @@ export class AccordionEngine {
   public isExpanded(itemValue: string): boolean {
     return this.selection.isSelected(itemValue);
   }
-
-  public isEffectivelyDisabled(itemDisabled: boolean): boolean {
-    return this.selection.isDisabled(itemDisabled);
-  }
 }

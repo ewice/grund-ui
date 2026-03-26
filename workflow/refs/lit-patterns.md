@@ -209,52 +209,55 @@ transition(from: DialogState, to: DialogState): DialogState {
 
 ### Disabled Composition
 
-38. Any engine whose `HostSnapshot` includes `disabled: boolean` MUST expose `isEffectivelyDisabled(itemDisabled: boolean): boolean`. This is the single authoritative implementation of group+item disabled composition. Context interfaces carry this as a stable callback, never as a raw boolean:
+38. Disabled state propagates through the tree via a shared `disabledContext` (`src/context/disabled.context.ts`). This replaces per-component `isEffectivelyDisabled` callbacks with a single, composable boolean context.
+
+    **Provider pattern** — every element with a `disabled` prop that provides context to children:
 
     ```ts
-    // ✅ Correct — context exposes a query, not raw state
-    export interface ToggleGroupRootContext {
-      isEffectivelyDisabled: (toggleDisabled: boolean) => boolean;
-      // ...
-    }
+    import { disabledContext } from '../../../context/disabled.context.js';
 
-    // ❌ Wrong — context leaks raw group state; consumers re-implement composition
-    export interface ToggleGroupRootContext {
-      disabled: boolean; // forces every consumer to write: ctx.disabled || this.disabled
-      // ...
-    }
+    // Root elements only provide (no ancestor to consume from):
+    @provide({ context: disabledContext })
+    @state()
+    protected disabledCtx = false;
+
+    // In willUpdate:
+    this.disabledCtx = this.disabled;
     ```
 
-    Engine implementation (delegate to `SelectionEngine` if applicable):
+    **Bridge pattern** — mid-level elements (e.g., accordion-item) that have their own `disabled` prop and sit between root and leaves:
 
     ```ts
-    public isEffectivelyDisabled(itemDisabled: boolean): boolean {
-      return this.selection.isEffectivelyDisabled(itemDisabled);
-    }
+    // Consume from ancestor, compose, and re-provide:
+    @consume({ context: disabledContext, subscribe: true })
+    @state()
+    private ancestorDisabled = false;
+
+    @provide({ context: disabledContext })
+    @state()
+    protected disabledCtx = false;
+
+    // In willUpdate:
+    const mergedDisabled = this.ancestorDisabled || this.disabled;
+    this.disabledCtx = mergedDisabled;
     ```
 
-    Root element provides it as a stable bound callback:
+    **Consumer pattern** — leaf elements read the boolean directly:
 
     ```ts
-    private readonly _isEffectivelyDisabled = (itemDisabled: boolean) =>
-      this.engine.isEffectivelyDisabled(itemDisabled);
-    ```
+    @consume({ context: disabledContext, subscribe: true })
+    @state()
+    private ancestorDisabled = false;
 
-    Consumer calls it — never reimplements:
-
-    ```ts
-    // ✅ Correct — delegate to context
+    // Leaves with their own disabled prop compose locally:
     private get effectiveDisabled(): boolean {
-      if (this._groupCtx) return this._groupCtx.isEffectivelyDisabled(this.disabled);
-      return this.disabled;
+      return this.ancestorDisabled || this.disabled;
     }
 
-    // ❌ Wrong — reimplements the composition rule
-    private get effectiveDisabled(): boolean {
-      if (this._groupCtx) return this._groupCtx.disabled || this.disabled;
-      return this.disabled;
-    }
+    // Leaves without a disabled prop use ancestorDisabled directly.
     ```
+
+    Engines retain `disabled` in their `HostSnapshot` for action gating (`requestToggle`, `requestActivation` return `null` when disabled). They do NOT expose `isEffectivelyDisabled` — that concern is handled entirely by `disabledContext`.
 
 ### Event Composition
 

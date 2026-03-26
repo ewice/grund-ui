@@ -100,7 +100,7 @@ Create `src/components/{name}/context/{name}.context.ts`:
 
 | Field type | Rule | Example |
 |---|---|---|
-| Computed boolean (group + item state) | Must be a query method, never a raw value | `isEffectivelyDisabled: (itemDisabled: boolean) => boolean` — never `disabled: boolean` |
+| Disabled state | Handled by shared `disabledContext` — do NOT add to component-specific context interfaces | See Rule 38 in `refs/lit-patterns.md` |
 | Configuration pass-through | Raw value is acceptable — items cannot derive it independently | `orientation: 'horizontal' \| 'vertical'` |
 | Selection state | Query method over current values | `isExpanded: (value: string) => boolean` |
 | Actions | Stable bound callback | `requestToggle: (value: string, itemDisabled: boolean) => void` |

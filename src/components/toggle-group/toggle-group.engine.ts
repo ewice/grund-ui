@@ -21,8 +21,4 @@ export class ToggleGroupEngine {
   public isPressed(value: string): boolean {
     return this.selection.isSelected(value);
   }
-
-  public isDisabled(toggleDisabled: boolean): boolean {
-    return this.selection.isDisabled(toggleDisabled);
-  }
 }

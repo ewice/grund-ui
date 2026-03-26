@@ -44,7 +44,7 @@ Derive the APG pattern name from component name and category. Follow the `/apg` 
 
 | Category | Key questions |
 |---|---|
-| composite-widget | Item registry needed? Multiple open items? `defaultValue`/`value`/`multiple` props? Group-level `disabled` + item-level `disabled` — how do they compose? (Always: `isEffectivelyDisabled(itemDisabled) = groupDisabled \|\| itemDisabled` — confirm this is correct for the component, then note it in the spec so `/build-engine` generates the method.) |
+| composite-widget | Item registry needed? Multiple open items? `defaultValue`/`value`/`multiple` props? Group-level `disabled` + item-level `disabled`? (Disabled composition is handled by the shared `disabledContext` — root provides, items bridge, leaves consume. See Rule 38. No engine method needed.) |
 | form-control | Input type? Indeterminate state? Validation strategy? |
 | overlay | Trigger strategy? Focus trapping? Outside-click dismiss? |
 | collection | Filtering? Typeahead? Virtual scroll? Multi-select? |

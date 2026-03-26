@@ -81,8 +81,4 @@ export class SelectionEngine {
   public isSelected(value: string): boolean {
     return this._selectedValues.has(value);
   }
-
-  public isDisabled(itemDisabled: boolean): boolean {
-    return this.disabled || itemDisabled;
-  }
 }

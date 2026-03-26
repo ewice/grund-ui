@@ -54,12 +54,4 @@ export class TabsEngine {
   public isActive(value: string): boolean {
     return this.activeValue === value;
   }
-
-  /**
-   * Single source of truth for group+item disabled composition.
-   * Returns true if the root is disabled or the individual tab is disabled.
-   */
-  public isEffectivelyDisabled(itemDisabled: boolean): boolean {
-    return this.disabled || itemDisabled;
-  }
 }
