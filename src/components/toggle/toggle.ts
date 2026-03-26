@@ -1,9 +1,9 @@
-import { LitElement, html, css, nothing } from 'lit';
+import { css, html, LitElement, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
-import { toggleGroupRootContext } from '../toggle-group/toggle-group.context';
 import type { ToggleGroupRootContext } from '../toggle-group/toggle-group.context';
+import { toggleGroupRootContext } from '../toggle-group/toggle-group.context';
 import type { PressedChangeDetail } from './types';
 
 export class GrundToggle extends LitElement {
@@ -35,19 +35,11 @@ export class GrundToggle extends LitElement {
   private _isRegistered = false;
 
   private get effectivePressed(): boolean {
-    if (this._groupCtx) {
-      return this._groupCtx.isPressed(this.value);
-    }
-
-    return this.pressed ?? this.internalPressed;
+    return this._groupCtx?.isPressed(this.value) ?? this.pressed ?? this.internalPressed;
   }
 
   private get effectiveDisabled(): boolean {
-    if (this._groupCtx) {
-      return this._groupCtx.isDisabled(this.disabled);
-    }
-
-    return this.disabled;
+    return this._groupCtx?.isDisabled(this.disabled) ?? this.disabled;
   }
 
   protected override willUpdate(_changed: Map<PropertyKey, unknown>): void {

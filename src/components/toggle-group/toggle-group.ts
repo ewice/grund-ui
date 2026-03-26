@@ -1,13 +1,12 @@
-import { LitElement, html, css, nothing } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 
 import { RovingFocusController } from '../../controllers/roving-focus.controller';
 import { ToggleGroupEngine } from './toggle-group.engine';
 import { ToggleGroupRegistry } from './toggle-group.registry';
-import { toggleGroupRootContext } from './toggle-group.context';
-
 import type { ToggleGroupRootContext } from './toggle-group.context';
+import { toggleGroupRootContext } from './toggle-group.context';
 import type { ToggleGroupHostSnapshot, ToggleGroupValueChangeDetail } from './types';
 
 export class GrundToggleGroup extends LitElement {
@@ -34,9 +33,6 @@ export class GrundToggleGroup extends LitElement {
 
   @property({ type: Boolean })
   public loop = true;
-
-  @property()
-  public label = '';
 
   @provide({ context: toggleGroupRootContext })
   @state()
@@ -87,8 +83,14 @@ export class GrundToggleGroup extends LitElement {
       isPressed: (value) => this.engine.isPressed(value),
       isDisabled: (toggleDisabled) => this.engine.isDisabled(toggleDisabled),
       requestToggle: (value, toggleDisabled) => this.handleToggle(value, toggleDisabled),
-      registerToggle: (toggle, value) => { this.registry.register(toggle, value); this.rovingFocus.sync(); },
-      unregisterToggle: (toggle) => { this.registry.unregister(toggle); this.rovingFocus.sync(); },
+      registerToggle: (toggle, value) => {
+        this.registry.register(toggle, value);
+        this.rovingFocus.sync();
+      },
+      unregisterToggle: (toggle) => {
+        this.registry.unregister(toggle);
+        this.rovingFocus.sync();
+      },
     };
   }
 
@@ -112,9 +114,11 @@ export class GrundToggleGroup extends LitElement {
   }
 
   protected override render() {
-    return html`<div part="group" role="group" aria-label=${this.label || nothing}>
-      <slot></slot>
-    </div>`;
+    return html`
+      <div part="group" role="group">
+        <slot></slot>
+      </div>
+    `;
   }
 }
 
