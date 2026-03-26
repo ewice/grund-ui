@@ -1,5 +1,5 @@
 import { expect, describe, it, beforeEach } from 'vitest';
-import { ToggleGroupRegistry } from './toggle-group.registry.js';
+import { ToggleGroupRegistry } from '../toggle-group.registry.js';
 
 describe('ToggleGroupRegistry', () => {
   let registry: ToggleGroupRegistry;

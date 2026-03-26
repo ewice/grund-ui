@@ -1,12 +1,12 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
-import { flush, simulateKeyboard, getByPart } from '../../../test-utils/index.js';
+import { flush, simulateKeyboard, getByPart } from '../../../test-utils';
 
-import '../../../components/toggle-group/root/index.js';
-import '../../../components/toggle/root/index.js';
+import '../toggle-group';
+import '../../toggle/toggle';
 
-import type { GrundToggleGroup } from './index.js';
-import type { GrundToggle } from '../../toggle/root/index.js';
+import type { GrundToggleGroup } from '../toggle-group';
+import type { GrundToggle } from '../../toggle';
 
 function getToggleButtons(el: GrundToggleGroup): HTMLButtonElement[] {
   return Array.from(el.querySelectorAll<GrundToggle>('grund-toggle')).map((t) =>

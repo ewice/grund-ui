@@ -1,14 +1,7 @@
-import { OrderedRegistry } from '../../../utils/ordered-registry.js';
-import type { OrderedRecord } from '../../../utils/ordered-registry.js';
+import { OrderedRegistry } from '../../utils/ordered-registry';
 
-export interface ToggleGroupRecord extends OrderedRecord {
-  value: string;
-}
+import type { ToggleGroupRecord } from './types';
 
-/**
- * Ordered child tracking for registered `<grund-toggle>` elements.
- * @internal
- */
 export class ToggleGroupRegistry extends OrderedRegistry<ToggleGroupRecord> {
   public get toggles(): readonly ToggleGroupRecord[] {
     return this.entries;

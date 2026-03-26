@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'vitest';
-import { ToggleGroupEngine } from './toggle-group.engine.js';
+import { ToggleGroupEngine } from '../toggle-group.engine.js';
 import type { ToggleGroupHostSnapshot } from '../types.js';
 
 describe('ToggleGroupEngine', () => {
@@ -81,17 +81,17 @@ describe('ToggleGroupEngine', () => {
 
     it('isEffectivelyDisabled returns false when neither is disabled', () => {
       const ctrl = create();
-      expect(ctrl.isEffectivelyDisabled(false)).to.be.false;
+      expect(ctrl.isDisabled(false)).to.be.false;
     });
 
     it('isEffectivelyDisabled returns true when group is disabled', () => {
       const ctrl = create({ disabled: true });
-      expect(ctrl.isEffectivelyDisabled(false)).to.be.true;
+      expect(ctrl.isDisabled(false)).to.be.true;
     });
 
     it('isEffectivelyDisabled returns true when toggle is disabled', () => {
       const ctrl = create();
-      expect(ctrl.isEffectivelyDisabled(true)).to.be.true;
+      expect(ctrl.isDisabled(true)).to.be.true;
     });
   });
 

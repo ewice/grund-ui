@@ -82,7 +82,7 @@ export class SelectionEngine {
     return this._selectedValues.has(value);
   }
 
-  public isEffectivelyDisabled(itemDisabled: boolean): boolean {
+  public isDisabled(itemDisabled: boolean): boolean {
     return this.disabled || itemDisabled;
   }
 }

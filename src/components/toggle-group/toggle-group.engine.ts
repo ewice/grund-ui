@@ -1,5 +1,6 @@
-import { SelectionEngine } from '../../../controllers/selection.engine.js';
-import type { ToggleGroupHostSnapshot } from '../types.js';
+import { SelectionEngine } from '../../controllers/selection.engine';
+
+import type { ToggleGroupHostSnapshot } from './types';
 
 export class ToggleGroupEngine {
   private readonly selection = new SelectionEngine();
@@ -21,7 +22,7 @@ export class ToggleGroupEngine {
     return this.selection.isSelected(value);
   }
 
-  public isEffectivelyDisabled(toggleDisabled: boolean): boolean {
-    return this.selection.isEffectivelyDisabled(toggleDisabled);
+  public isDisabled(toggleDisabled: boolean): boolean {
+    return this.selection.isDisabled(toggleDisabled);
   }
 }

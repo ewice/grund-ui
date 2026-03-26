@@ -1,2 +1,2 @@
-export { GrundToggleGroup } from './root/index.js';
-export type { ToggleGroupValueChangeDetail } from './types.js';
+export { GrundToggleGroup } from './toggle-group';
+export type { ToggleGroupValueChangeDetail } from './types';

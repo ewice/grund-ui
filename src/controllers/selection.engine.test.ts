@@ -125,22 +125,22 @@ describe('SelectionEngine', () => {
   describe('isEffectivelyDisabled', () => {
     it('returns false when neither group nor item is disabled', () => {
       const ctrl = create();
-      expect(ctrl.isEffectivelyDisabled(false)).to.be.false;
+      expect(ctrl.isDisabled(false)).to.be.false;
     });
 
     it('returns true when group is disabled', () => {
       const ctrl = create({ disabled: true });
-      expect(ctrl.isEffectivelyDisabled(false)).to.be.true;
+      expect(ctrl.isDisabled(false)).to.be.true;
     });
 
     it('returns true when item is disabled', () => {
       const ctrl = create();
-      expect(ctrl.isEffectivelyDisabled(true)).to.be.true;
+      expect(ctrl.isDisabled(true)).to.be.true;
     });
 
     it('returns true when both group and item are disabled', () => {
       const ctrl = create({ disabled: true });
-      expect(ctrl.isEffectivelyDisabled(true)).to.be.true;
+      expect(ctrl.isDisabled(true)).to.be.true;
     });
   });
 

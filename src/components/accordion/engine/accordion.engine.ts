@@ -34,6 +34,6 @@ export class AccordionEngine {
   }
 
   public isEffectivelyDisabled(itemDisabled: boolean): boolean {
-    return this.selection.isEffectivelyDisabled(itemDisabled);
+    return this.selection.isDisabled(itemDisabled);
   }
 }
