@@ -13,7 +13,7 @@ export interface AccordionOpenChangeDetail {
 }
 
 /**
- * Snapshot of host properties passed to AccordionController.syncFromHost().
+ * Snapshot of host properties passed to AccordionEngine.syncFromHost().
  * @internal
  */
 export interface AccordionHostSnapshot {

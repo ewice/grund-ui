@@ -16,6 +16,7 @@ const meta: Meta<GrundToggleGroup> = {
   component: 'grund-toggle-group',
   tags: ['autodocs'],
   argTypes: {
+    label: { control: 'text' },
     multiple: { control: 'boolean' },
     disabled: { control: 'boolean' },
     orientation: { control: 'radio', options: ['horizontal', 'vertical'] },
@@ -27,9 +28,10 @@ type Story = StoryObj<GrundToggleGroup>;
 
 export const Default: Story = {
   name: 'Default (single, uncontrolled)',
-  args: { multiple: false, disabled: false, orientation: 'horizontal', loop: true },
+  args: { label: 'Text formatting', multiple: false, disabled: false, orientation: 'horizontal', loop: true },
   render: (args) => html`
     <grund-toggle-group
+      label=${args.label}
       ?multiple=${args.multiple}
       ?disabled=${args.disabled}
       orientation=${args.orientation}

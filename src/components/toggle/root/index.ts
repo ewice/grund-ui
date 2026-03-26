@@ -63,7 +63,7 @@ export class GrundToggle extends LitElement {
   }
 
   private get effectiveDisabled(): boolean {
-    if (this._groupCtx) return this.disabled || this._groupCtx.disabled;
+    if (this._groupCtx) return this._groupCtx.isEffectivelyDisabled(this.disabled);
     return this.disabled;
   }
 

@@ -4,7 +4,7 @@ export interface ToggleGroupValueChangeDetail {
 }
 
 /**
- * Snapshot of host properties passed to ToggleGroupController.syncFromHost().
+ * Snapshot of host properties passed to ToggleGroupEngine.syncFromHost().
  * @internal
  */
 export interface ToggleGroupHostSnapshot {

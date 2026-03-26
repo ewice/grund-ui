@@ -130,6 +130,38 @@ describe('GrundToggleGroup', () => {
     expect(toggles[1].hasAttribute('data-pressed')).to.be.true;
   });
 
+  it('pressing the already-pressed toggle deselects it in single mode', async () => {
+    const el = await setup(html`
+      <grund-toggle-group .defaultValue=${['a']}>
+        <grund-toggle value="a">A</grund-toggle>
+        <grund-toggle value="b">B</grund-toggle>
+      </grund-toggle-group>
+    `);
+    const toggles = el.querySelectorAll<GrundToggle>('grund-toggle');
+    await flush(el);
+
+    toggles[0].shadowRoot!.querySelector('button')!.click();
+    await flush(el);
+
+    expect(toggles[0].hasAttribute('data-pressed')).to.be.false;
+  });
+
+  it('sets aria-label on the group container when label is set', async () => {
+    const el = await setup(html`
+      <grund-toggle-group label="Text formatting">
+        <grund-toggle value="a">A</grund-toggle>
+      </grund-toggle-group>
+    `);
+    const group = el.shadowRoot!.querySelector('[part="group"]')!;
+    expect(group.getAttribute('aria-label')).to.equal('Text formatting');
+  });
+
+  it('omits aria-label when label is empty', async () => {
+    const el = await setup();
+    const group = el.shadowRoot!.querySelector('[part="group"]')!;
+    expect(group.hasAttribute('aria-label')).to.be.false;
+  });
+
   it('warns in dev mode when a child toggle has no value', async () => {
     const warns: unknown[] = [];
     const orig = console.warn;

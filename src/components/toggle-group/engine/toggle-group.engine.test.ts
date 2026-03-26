@@ -1,10 +1,10 @@
 import { expect, describe, it } from 'vitest';
-import { ToggleGroupController } from './toggle-group.controller.js';
+import { ToggleGroupEngine } from './toggle-group.engine.js';
 import type { ToggleGroupHostSnapshot } from '../types.js';
 
-describe('ToggleGroupController', () => {
-  function createController(snapshot?: Partial<ToggleGroupHostSnapshot>) {
-    const ctrl = new ToggleGroupController();
+describe('ToggleGroupEngine', () => {
+  function create(snapshot?: Partial<ToggleGroupHostSnapshot>) {
+    const ctrl = new ToggleGroupEngine();
     ctrl.syncFromHost({
       value: undefined,
       defaultValue: [],
@@ -17,31 +17,31 @@ describe('ToggleGroupController', () => {
 
   describe('uncontrolled mode', () => {
     it('starts with no items pressed', () => {
-      const ctrl = createController();
+      const ctrl = create();
       expect(ctrl.isPressed('a')).to.be.false;
     });
 
     it('seeds from defaultValue', () => {
-      const ctrl = createController({ defaultValue: ['a'] });
+      const ctrl = create({ defaultValue: ['a'] });
       expect(ctrl.isPressed('a')).to.be.true;
     });
 
     it('seeds defaultValue only once', () => {
-      const ctrl = createController({ defaultValue: ['a'] });
+      const ctrl = create({ defaultValue: ['a'] });
       ctrl.syncFromHost({ value: undefined, defaultValue: ['b'], multiple: false, disabled: false });
       expect(ctrl.isPressed('a')).to.be.true;
       expect(ctrl.isPressed('b')).to.be.false;
     });
 
     it('requestToggle presses an item', () => {
-      const ctrl = createController();
+      const ctrl = create();
       const result = ctrl.requestToggle('a', false);
       expect(result).to.deep.equal(['a']);
       expect(ctrl.isPressed('a')).to.be.true;
     });
 
     it('requestToggle unpresses an already-pressed item', () => {
-      const ctrl = createController({ defaultValue: ['a'] });
+      const ctrl = create({ defaultValue: ['a'] });
       const result = ctrl.requestToggle('a', false);
       expect(result).to.deep.equal([]);
       expect(ctrl.isPressed('a')).to.be.false;
@@ -50,7 +50,7 @@ describe('ToggleGroupController', () => {
 
   describe('single mode', () => {
     it('unpresses the previously pressed item when pressing a new one', () => {
-      const ctrl = createController({ defaultValue: ['a'] });
+      const ctrl = create({ defaultValue: ['a'] });
       ctrl.requestToggle('b', false);
       expect(ctrl.isPressed('a')).to.be.false;
       expect(ctrl.isPressed('b')).to.be.true;
@@ -59,7 +59,7 @@ describe('ToggleGroupController', () => {
 
   describe('multiple mode', () => {
     it('allows multiple items pressed simultaneously', () => {
-      const ctrl = createController({ multiple: true, defaultValue: ['a'] });
+      const ctrl = create({ multiple: true, defaultValue: ['a'] });
       ctrl.requestToggle('b', false);
       expect(ctrl.isPressed('a')).to.be.true;
       expect(ctrl.isPressed('b')).to.be.true;
@@ -68,34 +68,49 @@ describe('ToggleGroupController', () => {
 
   describe('disabled', () => {
     it('blocks toggle when root is disabled', () => {
-      const ctrl = createController({ disabled: true });
+      const ctrl = create({ disabled: true });
       const result = ctrl.requestToggle('a', false);
       expect(result).to.be.null;
     });
 
     it('blocks toggle when individual toggle is disabled', () => {
-      const ctrl = createController();
+      const ctrl = create();
       const result = ctrl.requestToggle('a', true);
       expect(result).to.be.null;
+    });
+
+    it('isEffectivelyDisabled returns false when neither is disabled', () => {
+      const ctrl = create();
+      expect(ctrl.isEffectivelyDisabled(false)).to.be.false;
+    });
+
+    it('isEffectivelyDisabled returns true when group is disabled', () => {
+      const ctrl = create({ disabled: true });
+      expect(ctrl.isEffectivelyDisabled(false)).to.be.true;
+    });
+
+    it('isEffectivelyDisabled returns true when toggle is disabled', () => {
+      const ctrl = create();
+      expect(ctrl.isEffectivelyDisabled(true)).to.be.true;
     });
   });
 
   describe('controlled mode', () => {
     it('does not update internal state on toggle', () => {
-      const ctrl = createController({ value: [] });
+      const ctrl = create({ value: [] });
       ctrl.requestToggle('a', false);
       expect(ctrl.isPressed('a')).to.be.false;
     });
 
     it('reflects externally set value', () => {
-      const ctrl = createController({ value: ['a', 'b'] });
+      const ctrl = create({ value: ['a', 'b'] });
       expect(ctrl.isPressed('a')).to.be.true;
       expect(ctrl.isPressed('b')).to.be.true;
       expect(ctrl.isPressed('c')).to.be.false;
     });
 
     it('requestToggle returns the new value set without persisting', () => {
-      const ctrl = createController({ value: [] });
+      const ctrl = create({ value: [] });
       const result = ctrl.requestToggle('a', false);
       expect(result).to.deep.equal(['a']);
       expect(ctrl.isPressed('a')).to.be.false;

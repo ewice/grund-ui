@@ -1,65 +1,39 @@
-import type { AccordionHostSnapshot } from '../types.js';
+import { SelectionEngine } from '../../../controllers/selection.engine.js';
 
-export interface AccordionAction {
-  type: 'toggle';
-  itemValue: string;
-  itemDisabled: boolean;
-}
+import type { AccordionHostSnapshot } from '../types.js';
 
 /**
  * Pure state and action resolution for the accordion.
+ * Delegates selection-state management to SelectionEngine.
  * No DOM access, no Lit dependency.
  * @internal
  */
-export class AccordionController {
-  public expandedValues = new Set<string>();
+export class AccordionEngine {
+  private readonly selection = new SelectionEngine();
 
-  private isControlled = false;
-  private isSeeded = false;
-  private multiple = false;
-  private disabled = false;
-
-  public syncFromHost(snapshot: AccordionHostSnapshot): void {
-    this.multiple = snapshot.multiple;
-    this.disabled = snapshot.disabled;
-    this.isControlled = snapshot.value !== undefined;
-
-    if (this.isControlled) {
-      this.expandedValues = new Set(snapshot.value);
-    } else if (!this.isSeeded && snapshot.defaultValue !== undefined) {
-      this.expandedValues = new Set(snapshot.defaultValue);
-      this.isSeeded = true;
-    }
+  // Getter so callers always read the live Set without caching a stale reference.
+  public get expandedValues(): ReadonlySet<string> {
+    return this.selection.selectedValues;
   }
 
-  public requestToggle(action: AccordionAction): string[] | null {
-    if (this.disabled || action.itemDisabled) {
-      return null;
-    }
+  public syncFromHost(snapshot: AccordionHostSnapshot): void {
+    this.selection.syncFromHost({
+      value: snapshot.value,
+      defaultValue: snapshot.defaultValue,
+      multiple: snapshot.multiple,
+      disabled: snapshot.disabled,
+    });
+  }
 
-    const isCurrentlyExpanded = this.expandedValues.has(action.itemValue);
-    let nextValues: Set<string>;
-
-    if (isCurrentlyExpanded) {
-      nextValues = new Set(this.expandedValues);
-      nextValues.delete(action.itemValue);
-    } else {
-      if (this.multiple) {
-        nextValues = new Set(this.expandedValues);
-        nextValues.add(action.itemValue);
-      } else {
-        nextValues = new Set([action.itemValue]);
-      }
-    }
-
-    if (!this.isControlled) {
-      this.expandedValues = nextValues;
-    }
-
-    return Array.from(nextValues);
+  public requestToggle(itemValue: string, itemDisabled: boolean): string[] | null {
+    return this.selection.requestToggle(itemValue, itemDisabled);
   }
 
   public isExpanded(itemValue: string): boolean {
-    return this.expandedValues.has(itemValue);
+    return this.selection.isSelected(itemValue);
+  }
+
+  public isEffectivelyDisabled(itemDisabled: boolean): boolean {
+    return this.selection.isEffectivelyDisabled(itemDisabled);
   }
 }

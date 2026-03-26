@@ -73,6 +73,38 @@ describe('ToggleGroup Keyboard Navigation (horizontal)', () => {
     expect(getActiveShadowButton()).to.equal(buttons[0]);
   });
 
+  it('does not loop when loop=false and focus is on the last toggle', async () => {
+    // Use property binding (.loop) not attribute binding (?loop) — boolean default is true,
+    // so removing the attribute leaves the property at its default value.
+    const el = await fixture<GrundToggleGroup>(html`
+      <grund-toggle-group .loop=${false}>
+        <grund-toggle value="a">A</grund-toggle>
+        <grund-toggle value="b">B</grund-toggle>
+        <grund-toggle value="c">C</grund-toggle>
+      </grund-toggle-group>
+    `);
+    await flush(el);
+    const buttons = getToggleButtons(el);
+    buttons[2].focus();
+    simulateKeyboard(buttons[2], 'ArrowRight');
+    expect(getActiveShadowButton()).to.equal(buttons[2]);
+  });
+
+  it('does not loop when loop=false and focus is on the first toggle', async () => {
+    const el = await fixture<GrundToggleGroup>(html`
+      <grund-toggle-group .loop=${false}>
+        <grund-toggle value="a">A</grund-toggle>
+        <grund-toggle value="b">B</grund-toggle>
+        <grund-toggle value="c">C</grund-toggle>
+      </grund-toggle-group>
+    `);
+    await flush(el);
+    const buttons = getToggleButtons(el);
+    buttons[0].focus();
+    simulateKeyboard(buttons[0], 'ArrowLeft');
+    expect(getActiveShadowButton()).to.equal(buttons[0]);
+  });
+
   it('skips disabled toggles', async () => {
     const el = await fixture<GrundToggleGroup>(html`
       <grund-toggle-group>

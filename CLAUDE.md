@@ -4,7 +4,7 @@ Grund UI is a headless, accessible Web Component library built with Lit. "Headle
 zero visual styles — Shadow DOM is used for `<slot>` and `::part()` support, not removed.
 The reference implementation is the accordion. When in doubt, follow its structure.
 
-Detailed patterns and rules live in `.claude-plugin/refs/`. This file contains the
+Detailed patterns and rules live in `workflow/refs/`. This file contains the
 authoritative architecture and the rules that apply to every change in the codebase.
 
 ---
@@ -14,17 +14,19 @@ authoritative architecture and the rules that apply to every change in the codeb
 Three layers, strictly separated:
 
 1. **Utilities** (`src/utils/`) — pure functions, zero framework dependency
-2. **Reactive Controllers** (`src/controllers/`, `src/components/*/controller/`) — `ReactiveController` implementations, reusable across components
+2. **Reactive Controllers** (`src/controllers/`) — `ReactiveController` implementations; hook into host lifecycle for DOM-dependent concerns (focus, event listeners, observers)
 3. **Custom Elements** (`src/components/*/`) — Lit elements, compound component pattern
+
+Each compound component also contains an **Engine** — a plain class (not a `ReactiveController`) that owns all state and action resolution with zero DOM or Lit dependency. Engines live in the component's `engine/` directory.
 
 ### Compound Component Structure
 
 ```
 component/
-├── root/          → Provider element (@provide, controller, roving focus)
+├── root/          → Provider element (@provide, RovingFocusController, engine instantiation)
 ├── item/          → Grouping element — only when a repeating container is needed
 ├── [sub-parts]/   → Leaf elements (trigger, panel, header, etc.)
-├── controller/    → ReactiveController owning all state and actions
+├── engine/        → Pure state machine (Engine class) — no DOM, no Lit, independently testable
 ├── registry/      → Ordered child tracking and sub-part attachment (omit if unneeded)
 ├── context/       → Context interfaces and context symbols
 ├── types.ts       → Public types, event detail types, snapshot interfaces
@@ -37,29 +39,54 @@ public interfaces) live in `types.ts`, separate from element implementations.
 
 **Each layer has one job:**
 
-- **Controller** — owns state, resolves actions, dispatches events through the host. No DOM access.
+- **Engine** — owns state, resolves actions, returns results. No DOM access. No Lit dependency. Independently testable with `new Engine()` and plain assertions.
 - **Registry** — ordered child tracking, sub-part attachment (trigger↔panel). No Lit runtime dependency.
 - **Context** — carries reactive state down, action callbacks up. Interfaces designed per consumer role.
 - **Elements** — read context, render templates, delegate actions via context callbacks.
 
-### Shared Controllers
+### Reactive Controllers vs Engines
+
+Two distinct things share the word "controller" in Lit's ecosystem. This project keeps them strictly separate:
+
+| | Reactive Controller | Engine |
+|---|---|---|
+| Location | `src/controllers/` | `src/components/{name}/engine/` |
+| Implements | `ReactiveController` | Plain class — no interface |
+| Constructor | `host.addController(this)` | `new EngineClass()` |
+| Lifecycle hooks | `hostConnected`, `hostDisconnected`, `hostUpdated` | None |
+| DOM access | Yes (event listeners, tabindex, observers) | Never |
+| Lit dependency | Yes | Never |
+| Test setup | Requires mock host or fixture | `new Engine()` — no setup needed |
+| Examples | `RovingFocusController`, `FocusTrapController` | `AccordionEngine`, `TabsEngine`, `SelectionEngine` |
+
+**Rule:** If it touches the DOM, attaches listeners, or needs lifecycle hooks → `ReactiveController` in `src/controllers/`. If it owns state and resolves actions → Engine in `{component}/engine/`.
+
+### Shared Reactive Controllers
 
 Use these — don't reinvent:
 
 | Controller | Purpose | Attach to |
 |---|---|---|
-| `RovingFocusController` | Keyboard-driven roving tabindex | Container element |
+| `RovingFocusController` | Keyboard-driven roving tabindex | Container element (root) |
 
-Extract on second use: `data-open` toggle and ARIA ID linking are one-liners — extract to a shared controller when a second component needs the pattern.
+Planned controllers (built when first component of that category is built): see `workflow/refs/component-shapes.md`.
 
-**Before using a shared controller:** run the abstraction fit check (lit-patterns Rule 36). If the controller doesn't cover a required behavior, classify the gap (Extend / Custom / Inline) and act on it before writing any element code. Do not work around a gap that belongs in the controller — that produces temporal coupling.
+### Shared Engines
 
-Planned controllers (built when first component of that category is built): see `.claude-plugin/refs/component-shapes.md`.
+Use these — don't reinvent:
+
+| Engine | Purpose | Used by |
+|---|---|---|
+| `SelectionEngine` | Set-based selection state — single/multiple, controlled/uncontrolled, disabled gating | `AccordionEngine`, `ToggleGroupEngine` |
+
+**`SelectionEngine` usage:** Wrap it in a domain-specific Engine (e.g., `AccordionEngine`) that exposes component-appropriate method names. Never consume `SelectionEngine` directly from a root element.
+
+**Before using any shared controller or engine:** run the abstraction fit check (lit-patterns Rule 37). If it doesn't cover a required behaviour, classify the gap (Extend / Custom / Inline) and act on it before writing element code.
 
 ### Pattern Extraction
 
 **Extract on second use, flag on first.** Implement inline for the first component. Extract to a
-shared utility or controller when a second component needs it. Use `/extract-pattern` skill.
+shared utility, Reactive Controller, or Engine when a second component needs it. Use `/extract-pattern` skill.
 
 ---
 
@@ -79,7 +106,7 @@ One canonical mechanism per direction:
 - Discovery: registration via context callbacks only. Never `querySelectorAll` to find child components.
 - Show/hide: `data-open` boolean attribute set in `willUpdate`. Exception: `hidden="until-found"` for browser-native find-in-page.
 - Event naming: `grund-{action}` with `bubbles: true, composed: false`.
-- ARIA linking: use the Element Reference API (`ariaControlsElements`, `ariaLabelledByElements`) for cross-shadow relationships. Set in `updated()` after render. See `.claude-plugin/refs/aria-linking.md` for the full pattern. Legacy IDREF approach (`aria-controls`, `aria-labelledby`) does not resolve across shadow root boundaries.
+- ARIA linking: use the Element Reference API (`ariaControlsElements`, `ariaLabelledByElements`) for cross-shadow relationships. Set in `updated()` after render. See `workflow/refs/aria-linking.md` for the full pattern. Legacy IDREF approach (`aria-controls`, `aria-labelledby`) does not resolve across shadow root boundaries.
 - Keyboard navigation: `RovingFocusController` on the container element.
 - No duplicate paths: a registration or state mutation happens through exactly one mechanism.
 
@@ -87,19 +114,19 @@ One canonical mechanism per direction:
 
 ## Context Design
 
-See `.claude-plugin/refs/lit-patterns.md` Rules 14–18 for the full context contract.
+See `workflow/refs/lit-patterns.md` Rules 14–18 for the full context contract.
 
 ---
 
 ## Controlled / Uncontrolled Values
 
-See `.claude-plugin/refs/lit-patterns.md` Rule 5 for the HostSnapshot and controlled/uncontrolled contract.
+See `workflow/refs/lit-patterns.md` Rule 5 for the HostSnapshot and controlled/uncontrolled contract.
 
 ---
 
 ## Data Attributes
 
-See `.claude-plugin/refs/headless-contract.md` Rules 21–24 for the canonical data attribute table and rules.
+See `workflow/refs/headless-contract.md` Rules 21–24 for the canonical data attribute table and rules.
 
 ---
 
@@ -108,8 +135,8 @@ See `.claude-plugin/refs/headless-contract.md` Rules 21–24 for the canonical d
 - Element prefix: `grund-`
 - Each WAI-ARIA role maps to its own custom element — do not merge compound sub-elements for brevity
 - Shadow DOM on every element, zero visual styles
-- **IDs:** Accept optional `id` prop from consumers. Derive deterministic IDs from `value` prop where possible. Use `crypto.randomUUID().slice(0, 8)` only inside `connectedCallback` or later — never in constructors or field initializers. See `.claude-plugin/refs/ssr-contract.md` for the full strategy.
-- Use `ElementInternals` for form-associated components. See `.claude-plugin/refs/form-participation.md`.
+- **IDs:** Accept optional `id` prop from consumers. Derive deterministic IDs from `value` prop where possible. Use `crypto.randomUUID().slice(0, 8)` only inside `connectedCallback` or later — never in constructors or field initializers. See `workflow/refs/ssr-contract.md` for the full strategy.
+- Use `ElementInternals` for form-associated components. See `workflow/refs/form-participation.md`.
 - **Dev-mode warnings:** Every compound element that can be structurally misused MUST emit a dev-mode warning. Guard with `if (import.meta.env.DEV)`. Format: `console.warn('[grund-{element}] {problem}. {fix}.')`.
 - Wrap `customElements.define()` with a registration guard: `if (!customElements.get('...'))`.
 - **Comments:** Non-JSDoc comments explain WHY, not WHAT. Code needing a WHAT-comment should be refactored to be self-explanatory.
@@ -127,7 +154,7 @@ Every component needs:
 - `@csspart` on every interactive and structural shadow element
 - Keyboard contract covered by tests and documented in Storybook
 
-See `.claude-plugin/refs/focus-management.md` for focus management patterns.
+See `workflow/refs/focus-management.md` for focus management patterns.
 
 ---
 
@@ -160,13 +187,13 @@ JSDoc serves IDE tooltips and the Custom Elements Manifest. Use JSDoc syntax, no
 
 ## Skills — Workflow Reference
 
-Skills live in `.claude-plugin/skills/`. Reviewer agents in `.claude-plugin/reviewers/`.
-Reference docs in `.claude-plugin/refs/`. Superpowers is the orchestrator.
-See `.claude-plugin/refs/workflow-guidelines.md` for subagent pipeline guidelines.
+Skills live in `workflow/skills/`. Reviewer agents in `workflow/reviewers/`.
+Reference docs in `workflow/refs/`. Superpowers is the orchestrator.
+See `workflow/refs/workflow-guidelines.md` for subagent pipeline guidelines.
 
 ### New component (complex)
 ```
-superpowers:brainstorming → /component-spec → /scaffold → /build-controller
+superpowers:brainstorming → /component-spec → /scaffold → /build-engine
     → /build-elements → /build-stories → /validate-build → superpowers:finishing-a-development-branch
 ```
 
@@ -213,7 +240,7 @@ Its Step 1 only runs tests — lint, build, CEM, and export checks are covered b
 /smallest-diff              → audit diff for dead code, speculative additions, noise
 /diagnose-failure           → investigate persistent reviewer findings
 /quick-component {name}     → trivial single-element components (Separator, VisuallyHidden)
-/extract-pattern            → promote inline pattern to shared controller
+/extract-pattern            → promote inline pattern to shared engine, controller, or utility
 /deprecate                  → mark API deprecated with migration path
 /audit-cross-component      → check if a bug/pattern affects multiple components
 /update-dependency          → safe dependency version bump with migration
