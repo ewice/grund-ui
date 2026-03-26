@@ -61,6 +61,7 @@ The caller provides `refs/test-patterns.md` and the component spec. Use test-pat
 19. `flush(el)` imported from `test-utils/index.ts` and called after every state-triggering action.
 20. Context consumer tests use a minimal `LitElement` wrapper — not raw DOM fixtures.
 21. Test descriptions read as plain English specifications, not implementation notes.
+22. Element-level tests assert only on user-observable behavior: ARIA attributes, `data-*` attributes, dispatched events, and rendered DOM structure. Never assert on internal component properties, engine state, or context interface values directly.
 
 ## Output Format
 

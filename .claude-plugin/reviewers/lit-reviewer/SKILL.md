@@ -76,6 +76,12 @@ Caller provides `refs/lit-patterns.md` and `refs/ssr-contract.md`. Cross-referen
 ### Error Boundaries
 31. Risky calls in `try/catch` — dev-mode warning on error, safe fallback in production.
 
+### Event Composition
+35. Every `CustomEvent` dispatch must include `composed: false`. Flag any dispatch where `composed` is omitted or set to `true`. See `lit-patterns#39`.
+
+### Component Discovery
+36. Component discovery must use context registration callbacks only. Flag any `querySelectorAll`, `querySelector`, or `closest` call that targets a custom element (e.g., `'grund-'` prefix). See `lit-patterns#40`.
+
 ### Member Ordering
 32. Order: static → `@property`/`@state` → private fields/controllers → constructor → connect/disconnect → lifecycle → public → private → `render()`.
 

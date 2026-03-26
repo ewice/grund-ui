@@ -22,6 +22,7 @@ Always read:
 - `docs/vocabulary.md`
 - `.claude-plugin/refs/lit-patterns.md`
 - `.claude-plugin/refs/headless-contract.md`
+- `.claude-plugin/refs/aria-linking.md`
 - `.claude-plugin/refs/consumer-dx.md` (implementation guidance only — not passed to reviewers)
 
 Read conditionally based on category:

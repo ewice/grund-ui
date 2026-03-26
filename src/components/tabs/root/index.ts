@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 
-import { TabsController } from '../controller/tabs.controller.js';
+import { TabsEngine } from '../engine/tabs.engine.js';
 import { TabsRegistry } from '../registry/tabs.registry.js';
 import { tabsRootContext } from '../context/tabs.context.js';
 
@@ -39,7 +39,7 @@ export class GrundTabs extends LitElement {
   @state()
   protected rootCtx!: TabsRootContext;
 
-  private controller = new TabsController();
+  private controller = new TabsEngine();
   private registry = new TabsRegistry();
   private activationDirection: 'start' | 'end' | 'none' = 'none';
 
@@ -89,6 +89,9 @@ export class GrundTabs extends LitElement {
     this.handleActivation(value);
   };
 
+  private readonly _isEffectivelyDisabled = (tabDisabled: boolean): boolean =>
+    this.controller.isEffectivelyDisabled(tabDisabled);
+
   private readonly _getTabElement = (value: string) => this.registry.getTabElement(value);
   private readonly _getPanelElement = (value: string) => this.registry.getPanelElement(value);
   private readonly _indexOf = (value: string) => this.registry.indexOf(value);
@@ -133,7 +136,7 @@ export class GrundTabs extends LitElement {
       activeValue: this.controller.activeValue,
       activationDirection: this.activationDirection,
       orientation: this.orientation,
-      disabled: this.disabled,
+      isEffectivelyDisabled: this._isEffectivelyDisabled,
       registerTab: this._registerTab,
       unregisterTab: this._unregisterTab,
       registerPanel: this._registerPanel,

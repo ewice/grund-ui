@@ -60,7 +60,8 @@ export class GrundTabsList extends LitElement {
 
     if (this.ctx) {
       this.dataset.orientation = this.ctx.orientation;
-      this.toggleAttribute('data-disabled', this.ctx.disabled);
+      // The list itself has no per-item disabled state; pass false to read only the root disabled flag.
+      this.toggleAttribute('data-disabled', this.ctx.isEffectivelyDisabled(false));
       this.dataset.activationDirection = this.ctx.activationDirection;
     }
   }

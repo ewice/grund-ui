@@ -72,7 +72,7 @@ export class GrundTab extends LitElement {
     }
 
     const isActive = this.ctx.activeValue === this.value;
-    const mergedDisabled = this.ctx.disabled || this.disabled;
+    const mergedDisabled = this.ctx.isEffectivelyDisabled(this.disabled);
 
     this.toggleAttribute('data-selected', isActive);
     this.toggleAttribute('data-disabled', mergedDisabled);
@@ -102,13 +102,13 @@ export class GrundTab extends LitElement {
   }
 
   private handleClick(): void {
-    if (this.ctx?.disabled || this.disabled) return;
+    if (this.ctx?.isEffectivelyDisabled(this.disabled) ?? this.disabled) return;
     this.ctx?.requestActivation(this.value);
   }
 
   protected override render() {
     const isActive = this.ctx?.activeValue === this.value;
-    const mergedDisabled = (this.ctx?.disabled ?? false) || this.disabled;
+    const mergedDisabled = this.ctx?.isEffectivelyDisabled(this.disabled) ?? this.disabled;
 
     return html`
       <button

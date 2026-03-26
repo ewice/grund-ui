@@ -257,6 +257,40 @@ transition(from: DialogState, to: DialogState): DialogState {
     }
     ```
 
+### Event Composition
+
+39. Every `CustomEvent` dispatched from a Grund UI element MUST use `composed: false`. Shadow DOM boundaries are an implementation detail — events must not leak into ancestor shadow roots or the document. Consumers listen on the host element in the light DOM; `bubbles: true, composed: false` is sufficient for them to receive the event:
+
+    ```ts
+    // ✅ Correct — does not cross shadow root boundaries
+    this.dispatchEvent(new CustomEvent('grund-change', {
+      detail: { value },
+      bubbles: true,
+      composed: false,
+    }));
+
+    // ❌ Wrong — event leaks into ancestor shadow roots and the document
+    this.dispatchEvent(new CustomEvent('grund-change', {
+      detail: { value },
+      bubbles: true,
+      composed: true,
+    }));
+    ```
+
+### Component Discovery
+
+40. Child components MUST be discovered via context registration callbacks only. Never use `querySelectorAll`, `querySelector`, or `closest` to find sibling or child custom elements. These approaches cannot cross shadow root boundaries and create brittle DOM-structure coupling:
+
+    ```ts
+    // ✅ Correct — child registers itself via context callback on connect
+    registerItem: (item: HTMLElement, value: string) => {
+      this.registry.register(item, value);
+    }
+
+    // ❌ Wrong — parent queries for children directly
+    const items = this.querySelectorAll('grund-accordion-item');
+    ```
+
 ---
 
 ## Anti-Patterns
@@ -276,3 +310,5 @@ transition(from: DialogState, to: DialogState): DialogState {
 | Context interface with raw `disabled: boolean` | Every consumer must reimplement group+item disabled composition and can get it wrong | Expose `isEffectivelyDisabled(itemDisabled: boolean) => boolean` (Rule 38) |
 | Reimplementing Set-based selection state | Duplicates `SelectionEngine`; diverges on edge cases (controlled mode, disabled gating, seeding) | Wrap `SelectionEngine` in a domain Engine (Rule 36) |
 | Working around a shared controller gap without classifying it | Temporal coupling, global state reads, and event-timing hacks are symptoms of a missing abstraction fit check | Run Rule 37 fit check; if gap is "Extend," add the hook rather than working around it |
+| `composed: true` on dispatched events | Event leaks into ancestor shadow roots and the document; consumers only need `bubbles: true` | Use `composed: false` on every dispatched event (Rule 39) |
+| `querySelectorAll` / `querySelector` to find child custom elements | Cannot cross shadow roots; breaks on any structural change | Context registration callbacks only (Rule 40) |
