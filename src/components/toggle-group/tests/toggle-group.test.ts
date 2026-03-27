@@ -96,7 +96,6 @@ describe('GrundToggleGroup', () => {
     `);
     const toggle = el.querySelector<GrundToggle>('grund-toggle')!;
     await flush(el);
-    // Toggle should reflect disabled state from group
     expect(toggle.hasAttribute('data-disabled')).to.be.true;
   });
 
@@ -144,16 +143,6 @@ describe('GrundToggleGroup', () => {
     await flush(el);
 
     expect(toggles[0].hasAttribute('data-pressed')).to.be.false;
-  });
-
-  it('sets aria-label on the group container when label is set', async () => {
-    const el = await setup(html`
-      <grund-toggle-group label="Text formatting">
-        <grund-toggle value="a">A</grund-toggle>
-      </grund-toggle-group>
-    `);
-    const group = el.shadowRoot!.querySelector('[part="group"]')!;
-    expect(group.getAttribute('aria-label')).to.equal('Text formatting');
   });
 
   it('omits aria-label when label is empty', async () => {

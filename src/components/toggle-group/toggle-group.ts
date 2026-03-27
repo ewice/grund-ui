@@ -93,6 +93,7 @@ export class GrundToggleGroup extends LitElement {
       isPressed: (value) => this.engine.isPressed(value),
       requestToggle: (value, toggleDisabled) => this.resolveToggle(value, toggleDisabled),
       registerToggle: (toggle, value) => {
+        this.warnOnInvalidToggleRegistration(value);
         this.registry.register(toggle, value);
         this.rovingFocus.sync();
       },
@@ -124,6 +125,25 @@ export class GrundToggleGroup extends LitElement {
         composed: false,
       }),
     );
+  }
+
+  private warnOnInvalidToggleRegistration(value: string): void {
+    if (!import.meta.env.DEV) {
+      return;
+    }
+
+    if (!value) {
+      console.warn(
+        '[grund-toggle] value is required when used inside <grund-toggle-group>. Set value="..." on this element.',
+      );
+      return;
+    }
+
+    if (this.registry.find((record) => record.value === value)) {
+      console.warn(
+        `[grund-toggle-group] Duplicate toggle value "${value}" detected. Values within a group must be unique.`,
+      );
+    }
   }
 
   protected override render() {
