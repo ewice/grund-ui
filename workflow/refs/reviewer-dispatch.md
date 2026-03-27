@@ -12,7 +12,7 @@ and inject the context files listed below alongside the changed/generated file c
 
 | Reviewer | Always inject | Inject when available |
 |---|---|---|
-| `accessibility-reviewer` | All element files, `workflow/refs/focus-management.md`, `workflow/refs/aria-linking.md` | Component spec (`docs/specs/{name}.spec.md`) |
+| `accessibility-reviewer` | All element files, `workflow/refs/accessibility-contract.md`, `workflow/refs/focus-management.md`, `workflow/refs/aria-linking.md` | Component spec (`docs/specs/{name}.spec.md`) |
 | `lit-reviewer` | All element files, `workflow/refs/lit-patterns.md`, `workflow/refs/ssr-contract.md` | Controller files |
 | `headless-reviewer` | All element files, `workflow/refs/headless-contract.md` | `docs/vocabulary.md` |
 | `api-reviewer` | All element files, `types.ts` | `docs/vocabulary.md`, component spec |

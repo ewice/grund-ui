@@ -261,17 +261,30 @@ transition(from: DialogState, to: DialogState): DialogState {
 
 ### Event Composition
 
-39. Every `CustomEvent` dispatched from a Grund UI element MUST use `composed: false`. Shadow DOM boundaries are an implementation detail — events must not leak into ancestor shadow roots or the document. Consumers listen on the host element in the light DOM; `bubbles: true, composed: false` is sufficient for them to receive the event:
+39. Every `CustomEvent` dispatched from a Grund UI element MUST set `composed` explicitly, and the chosen value MUST match the intended consumer boundary. Default library events that consumers handle on the host element will usually use `bubbles: true, composed: false`. Use `composed: true` only when the event intentionally needs to cross an ancestor shadow root boundary:
 
     ```ts
-    // ✅ Correct — does not cross shadow root boundaries
+    // ✅ Correct — host-level consumer event stays inside the current shadow boundary
     this.dispatchEvent(new CustomEvent('grund-change', {
       detail: { value },
       bubbles: true,
       composed: false,
     }));
 
-    // ❌ Wrong — event leaks into ancestor shadow roots and the document
+    // ✅ Correct — boundary crossing is intentional and explicit
+    this.dispatchEvent(new CustomEvent('grund-overlay-request-close', {
+      detail: { source: 'escape-key' },
+      bubbles: true,
+      composed: true,
+    }));
+
+    // ❌ Wrong — boundary behavior is implicit
+    this.dispatchEvent(new CustomEvent('grund-change', {
+      detail: { value },
+      bubbles: true,
+    }));
+
+    // ❌ Wrong — crosses shadow boundaries without an intentional consumer need
     this.dispatchEvent(new CustomEvent('grund-change', {
       detail: { value },
       bubbles: true,
@@ -293,6 +306,24 @@ transition(from: DialogState, to: DialogState): DialogState {
     const items = this.querySelectorAll('grund-accordion-item');
     ```
 
+### Render Purity
+
+41. `render()` MUST be pure. It may compute template output from current reactive state, but it must not mutate class state, dispatch events, perform imperative DOM work, or read unstable live DOM state. DOM reads and writes belong in lifecycle hooks, not in `render()`:
+
+    ```ts
+    // ✅ Correct — render derives output from reactive state only
+    render() {
+      return html`<button ?disabled=${this.disabled}>${this.label}</button>`;
+    }
+
+    // ❌ Wrong — render mutates state and reads live DOM
+    render() {
+      this._isEmpty = this.items.length === 0;
+      const width = this.getBoundingClientRect().width;
+      return html`<div data-width=${width}></div>`;
+    }
+    ```
+
 ---
 
 ## Anti-Patterns
@@ -312,5 +343,6 @@ transition(from: DialogState, to: DialogState): DialogState {
 | Context interface with raw `disabled: boolean` | Every consumer must reimplement group+item disabled composition and can get it wrong | Expose `isEffectivelyDisabled(itemDisabled: boolean) => boolean` (Rule 38) |
 | Reimplementing Set-based selection state | Duplicates `SelectionEngine`; diverges on edge cases (controlled mode, disabled gating, seeding) | Wrap `SelectionEngine` in a domain Engine (Rule 36) |
 | Working around a shared controller gap without classifying it | Temporal coupling, global state reads, and event-timing hacks are symptoms of a missing abstraction fit check | Run Rule 37 fit check; if gap is "Extend," add the hook rather than working around it |
-| `composed: true` on dispatched events | Event leaks into ancestor shadow roots and the document; consumers only need `bubbles: true` | Use `composed: false` on every dispatched event (Rule 39) |
+| Omitting `composed` or choosing the wrong value on dispatched events | Event boundary behavior becomes implicit or leaks across shadow roots unexpectedly | Set `composed` explicitly and match it to the intended consumer boundary (Rule 39) |
 | `querySelectorAll` / `querySelector` to find child custom elements | Cannot cross shadow roots; breaks on any structural change | Context registration callbacks only (Rule 40) |
+| State mutation or live DOM reads in `render()` | Render output becomes unstable and can create self-triggering update paths | Keep `render()` pure and move work to lifecycle hooks (Rule 41) |
