@@ -142,10 +142,16 @@ Example: a parent uses `querySelectorAll('grund-*')` to find children instead of
 30. Never assume parent upgrade order; context subscription must handle provider discovery.
 31. `customElements.define()` is guarded with `if (!customElements.get(...))`.
 
+### Member Visibility
+
+32. Class members in Lit elements and controllers use explicit visibility modifiers and the narrowest scope that satisfies the contract.
+33. `@property()` fields are public API; `@state()` fields and `@consume()` subscriptions are not left public accidentally.
+34. `protected` members are used only for intentional subclass extension points, not as a default for internal helpers.
+
 ### Type Declaration Files
 
-32. Any `src/types/*.d.ts` file containing `declare global` includes both a real platform reference and a TypeScript tracking issue reference.
-33. Local interface declarations used only to silence a type error are warnings unless there is no canonical type to import or narrow to.
+35. Any `src/types/*.d.ts` file containing `declare global` includes both a real platform reference and a TypeScript tracking issue reference.
+36. Local interface declarations used only to silence a type error are warnings unless there is no canonical type to import or narrow to.
 
 ## Output
 

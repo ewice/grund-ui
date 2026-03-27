@@ -15,7 +15,7 @@ and inject the context files listed below alongside the changed/generated file c
 | `accessibility-reviewer` | All element files, `workflow/refs/accessibility-contract.md`, `workflow/refs/focus-management.md`, `workflow/refs/aria-linking.md` | Component spec (`docs/specs/{name}.spec.md`) |
 | `lit-reviewer` | All element files, `workflow/refs/lit-patterns.md`, `workflow/refs/ssr-contract.md` | Controller files |
 | `headless-reviewer` | All element files, `workflow/refs/headless-contract.md` | `docs/vocabulary.md` |
-| `api-reviewer` | All element files, `types.ts` | `docs/vocabulary.md`, component spec |
+| `api-reviewer` | All element files, `types.ts`, `workflow/refs/api-contract.md` | `docs/vocabulary.md`, component spec, `workflow/refs/consumer-dx.md` |
 | `test-reviewer` | Test files, `workflow/refs/test-patterns.md` | Component spec, story files (when they exist). **During `/build-elements`:** also inject the Step 2 test requirements list so the reviewer can verify all required test categories were written (dynamic registration, RTL, reparenting, composition, memory, event ordering). |
 | `security-reviewer` | All element files | Controller files |
 | `code-quality-reviewer` | All element files, engine files | Controller files |

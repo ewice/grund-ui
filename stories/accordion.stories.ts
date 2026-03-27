@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { action } from 'storybook/actions';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
-import type { GrundAccordion } from '../src/components/accordion/index.js';
+import type { GrundAccordion } from '../src/components/accordion';
 
 import '../src/components/accordion/index.js';
 

@@ -3,7 +3,9 @@
 Cross-component naming consistency registry. Updated by `/component-spec` (new names),
 `/extract-pattern` (new shared patterns), and `/review-system-health` (audits).
 
-Validated by `api-reviewer` during every component review.
+Used by generation skills for shared naming decisions. Validated by:
+- `api-reviewer` for public event naming consistency
+- `headless-reviewer` for part, slot, and public `data-*` naming consistency
 
 ---
 
@@ -29,7 +31,8 @@ for the same semantic action.
 
 ## Event Names
 
-All events follow `grund-{action}` pattern, `bubbles: true`, `composed: false`.
+Public event names follow the `grund-{action}` pattern. Event boundary behavior such as `composed`
+is reviewed separately from the naming registry.
 
 | Event | Detail type | Meaning |
 |---|---|---|

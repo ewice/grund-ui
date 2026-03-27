@@ -41,7 +41,7 @@ For each item, check both components and note the current state:
 | `RovingFocusController` init | lit-patterns#27 | ? | ? | Class field initializer |
 | Registry extends `OrderedRegistry` | lit-patterns#29 | ? | ? | Extend shared utility |
 | `exportparts` on slotted layers | lit-patterns#11 | ? | ? | Only if element renders sub-elements in own shadow template |
-| `@internal` on `HostSnapshot` | api-reviewer#11 | ? | ? | Required |
+| `@internal` on `HostSnapshot` | api-contract#2 | ? | ? | Required |
 | Controller is not `ReactiveController` | CLAUDE.md | ? | ? | Plain class acceptable if no lifecycle hooks needed |
 
 Fill in the actual state for each component. Mark each as ✅ (matches correct approach) or ❌ (diverges).
