@@ -2,7 +2,6 @@ import { createContext } from '@lit/context';
 
 export interface AccordionRootContext {
   isExpanded: (value: string) => boolean;
-  disabled: boolean;
   orientation: 'vertical' | 'horizontal';
   keepMounted: boolean;
   hiddenUntilFound: boolean;

@@ -2,9 +2,10 @@ import { LitElement, html, css } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 
-import { TabsController } from '../controller/tabs.controller.js';
+import { TabsEngine } from '../engine/tabs.engine.js';
 import { TabsRegistry } from '../registry/tabs.registry.js';
 import { tabsRootContext } from '../context/tabs.context.js';
+import { disabledContext } from '../../../context/disabled.context.js';
 
 import type { TabsRootContext } from '../context/tabs.context.js';
 import type { TabsHostSnapshot, TabsValueChangeDetail } from '../types.js';
@@ -39,7 +40,11 @@ export class GrundTabs extends LitElement {
   @state()
   protected rootCtx!: TabsRootContext;
 
-  private controller = new TabsController();
+  @provide({ context: disabledContext })
+  @state()
+  protected disabledCtx = false;
+
+  private controller = new TabsEngine();
   private registry = new TabsRegistry();
   private activationDirection: 'start' | 'end' | 'none' = 'none';
 
@@ -102,6 +107,7 @@ export class GrundTabs extends LitElement {
     this.controller.syncFromHost(snapshot);
 
     this.dataset.orientation = this.orientation;
+    this.disabledCtx = this.disabled;
     this.activationDirection = this.computeActivationDirection();
     this.dataset.activationDirection = this.activationDirection;
 
@@ -133,7 +139,6 @@ export class GrundTabs extends LitElement {
       activeValue: this.controller.activeValue,
       activationDirection: this.activationDirection,
       orientation: this.orientation,
-      disabled: this.disabled,
       registerTab: this._registerTab,
       unregisterTab: this._unregisterTab,
       registerPanel: this._registerPanel,

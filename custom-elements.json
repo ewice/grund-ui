@@ -73,35 +73,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/toggle/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundToggle",
-          "declaration": {
-            "name": "GrundToggle",
-            "module": "./root/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "PressedChangeDetail",
-          "declaration": {
-            "name": "PressedChangeDetail",
-            "module": "./types.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/toggle/types.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/components/tabs/index.ts",
       "declarations": [],
       "exports": [
@@ -158,6 +129,102 @@
     {
       "kind": "javascript-module",
       "path": "src/components/tabs/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundToggle",
+          "declaration": {
+            "name": "GrundToggle",
+            "module": "./root/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "PressedChangeDetail",
+          "declaration": {
+            "name": "PressedChangeDetail",
+            "module": "./types.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle-group/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundToggleGroup",
+          "declaration": {
+            "name": "GrundToggleGroup",
+            "module": "./root/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ToggleGroupValueChangeDetail",
+          "declaration": {
+            "name": "ToggleGroupValueChangeDetail",
+            "module": "./types.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle-group/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/context/accordion.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "accordionRootContext"
+        },
+        {
+          "kind": "variable",
+          "name": "accordionItemContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "accordionRootContext",
+          "declaration": {
+            "name": "accordionRootContext",
+            "module": "src/components/accordion/context/accordion.context.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "accordionItemContext",
+          "declaration": {
+            "name": "accordionItemContext",
+            "module": "src/components/accordion/context/accordion.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/engine/accordion.engine.ts",
       "declarations": [],
       "exports": []
     },
@@ -228,38 +295,6 @@
           "declaration": {
             "name": "GrundAccordionHeader",
             "module": "src/components/accordion/header/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/context/accordion.context.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "accordionRootContext"
-        },
-        {
-          "kind": "variable",
-          "name": "accordionItemContext"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "accordionRootContext",
-          "declaration": {
-            "name": "accordionRootContext",
-            "module": "src/components/accordion/context/accordion.context.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "accordionItemContext",
-          "declaration": {
-            "name": "accordionItemContext",
-            "module": "src/components/accordion/context/accordion.context.ts"
           }
         }
       ]
@@ -595,82 +630,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/accordion/trigger/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Button that toggles an accordion panel open/closed.",
-          "name": "GrundAccordionTrigger",
-          "cssParts": [
-            {
-              "description": "The inner button element",
-              "name": "trigger"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Trigger label content",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "itemCtx",
-              "type": {
-                "text": "AccordionItemContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "isTriggerRegistered",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "method",
-              "name": "handleClick",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-accordion-trigger",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundAccordionTrigger",
-          "declaration": {
-            "name": "GrundAccordionTrigger",
-            "module": "src/components/accordion/trigger/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-accordion-trigger",
-          "declaration": {
-            "name": "GrundAccordionTrigger",
-            "module": "src/components/accordion/trigger/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/components/accordion/root/index.ts",
       "declarations": [
         {
@@ -774,19 +733,27 @@
             },
             {
               "kind": "field",
-              "name": "controller",
+              "name": "engine",
               "privacy": "private",
-              "default": "new AccordionController()"
+              "readonly": true,
+              "default": "new AccordionEngine()"
             },
             {
               "kind": "field",
               "name": "registry",
               "privacy": "private",
+              "readonly": true,
               "default": "new AccordionRegistry()"
             },
             {
               "kind": "field",
               "name": "_isExpanded",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_isEffectivelyDisabled",
               "privacy": "private",
               "readonly": true
             },
@@ -984,72 +951,36 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/toggle/root/index.ts",
+      "path": "src/components/accordion/trigger/index.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "A standalone pressable toggle button with `aria-pressed` state.\nAlso the primitive element used inside `<grund-toggle-group>`.",
-          "name": "GrundToggle",
+          "description": "Button that toggles an accordion panel open/closed.",
+          "name": "GrundAccordionTrigger",
           "cssParts": [
             {
               "description": "The inner button element",
-              "name": "button"
+              "name": "trigger"
             }
           ],
           "slots": [
             {
-              "description": "Button label content",
+              "description": "Trigger label content",
               "name": ""
             }
           ],
           "members": [
             {
               "kind": "field",
-              "name": "pressed",
+              "name": "itemCtx",
               "type": {
-                "text": "boolean | undefined"
+                "text": "AccordionItemContext | undefined"
               },
-              "privacy": "public",
-              "default": "undefined",
-              "description": "Whether the toggle is pressed. Setting this enables controlled mode.\nIn controlled mode the element fires `grund-pressed-change` but does not\nupdate internal state — the consumer must reflect the new value back.",
-              "attribute": "pressed"
+              "privacy": "private"
             },
             {
               "kind": "field",
-              "name": "defaultPressed",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "description": "Initial pressed state for uncontrolled mode. Ignored after the first render.",
-              "attribute": "default-pressed"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "public",
-              "default": "''",
-              "description": "Identifier for this toggle. Has no effect on the standalone element;\nused by `<grund-toggle-group>` to identify which item is pressed.",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "description": "Whether the toggle is disabled.",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "_internalPressed",
+              "name": "isTriggerRegistered",
               "type": {
                 "text": "boolean"
               },
@@ -1057,17 +988,8 @@
               "default": "false"
             },
             {
-              "kind": "field",
-              "name": "_effectivePressed",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
               "kind": "method",
-              "name": "_handleClick",
+              "name": "handleClick",
               "privacy": "private",
               "return": {
                 "type": {
@@ -1076,76 +998,29 @@
               }
             }
           ],
-          "events": [
-            {
-              "name": "grund-pressed-change",
-              "type": {
-                "text": "CustomEvent<PressedChangeDetail>"
-              },
-              "description": "When pressed state changes"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "pressed",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "default": "undefined",
-              "description": "Whether the toggle is pressed. Setting this enables controlled mode.\nIn controlled mode the element fires `grund-pressed-change` but does not\nupdate internal state — the consumer must reflect the new value back.",
-              "fieldName": "pressed"
-            },
-            {
-              "name": "default-pressed",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Initial pressed state for uncontrolled mode. Ignored after the first render.",
-              "fieldName": "defaultPressed"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Identifier for this toggle. Has no effect on the standalone element;\nused by `<grund-toggle-group>` to identify which item is pressed.",
-              "fieldName": "value"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the toggle is disabled.",
-              "fieldName": "disabled"
-            }
-          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
           },
-          "tagName": "grund-toggle",
+          "tagName": "grund-accordion-trigger",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "GrundToggle",
+          "name": "GrundAccordionTrigger",
           "declaration": {
-            "name": "GrundToggle",
-            "module": "src/components/toggle/root/index.ts"
+            "name": "GrundAccordionTrigger",
+            "module": "src/components/accordion/trigger/index.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "grund-toggle",
+          "name": "grund-accordion-trigger",
           "declaration": {
-            "name": "GrundToggle",
-            "module": "src/components/toggle/root/index.ts"
+            "name": "GrundAccordionTrigger",
+            "module": "src/components/accordion/trigger/index.ts"
           }
         }
       ]
@@ -1166,6 +1041,135 @@
           "declaration": {
             "name": "tabsRootContext",
             "module": "src/components/tabs/context/tabs.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/engine/tabs.engine.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/indicator/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Visual indicator that tracks the active tab's position via CSS custom properties.\nPosition inside `<grund-tabs-list>`. Consumer uses the exposed custom properties\nto animate or style the indicator relative to the active tab.",
+          "name": "GrundTabsIndicator",
+          "cssProperties": [
+            {
+              "description": "Width of the active tab",
+              "name": "--grund-tabs-indicator-width"
+            },
+            {
+              "description": "Height of the active tab",
+              "name": "--grund-tabs-indicator-height"
+            },
+            {
+              "description": "Distance from list left edge to active tab left edge",
+              "name": "--grund-tabs-indicator-left"
+            },
+            {
+              "description": "Distance from list top edge to active tab top edge",
+              "name": "--grund-tabs-indicator-top"
+            },
+            {
+              "description": "Distance from list right edge to active tab right edge",
+              "name": "--grund-tabs-indicator-right"
+            },
+            {
+              "description": "Distance from list bottom edge to active tab bottom edge",
+              "name": "--grund-tabs-indicator-bottom"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The indicator element",
+              "name": "indicator"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "ctx",
+              "type": {
+                "text": "TabsRootContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "listObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "tabObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "listEl",
+              "type": {
+                "text": "Element | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The `<grund-tabs-list>` this indicator is inside. Located in connectedCallback."
+            },
+            {
+              "kind": "field",
+              "name": "observedTab",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The active tab element being observed, used to detect when the active tab changes."
+            },
+            {
+              "kind": "method",
+              "name": "measure",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-tabs-indicator",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabsIndicator",
+          "declaration": {
+            "name": "GrundTabsIndicator",
+            "module": "src/components/tabs/indicator/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-tabs-indicator",
+          "declaration": {
+            "name": "GrundTabsIndicator",
+            "module": "src/components/tabs/indicator/index.ts"
           }
         }
       ]
@@ -1317,373 +1321,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/tabs/indicator/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Visual indicator that tracks the active tab's position via CSS custom properties.\nPosition inside `<grund-tabs-list>`. Consumer uses the exposed custom properties\nto animate or style the indicator relative to the active tab.",
-          "name": "GrundTabsIndicator",
-          "cssProperties": [
-            {
-              "description": "Width of the active tab",
-              "name": "--grund-tabs-indicator-width"
-            },
-            {
-              "description": "Height of the active tab",
-              "name": "--grund-tabs-indicator-height"
-            },
-            {
-              "description": "Distance from list left edge to active tab left edge",
-              "name": "--grund-tabs-indicator-left"
-            },
-            {
-              "description": "Distance from list top edge to active tab top edge",
-              "name": "--grund-tabs-indicator-top"
-            },
-            {
-              "description": "Distance from list right edge to active tab right edge",
-              "name": "--grund-tabs-indicator-right"
-            },
-            {
-              "description": "Distance from list bottom edge to active tab bottom edge",
-              "name": "--grund-tabs-indicator-bottom"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The indicator element",
-              "name": "indicator"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "ctx",
-              "type": {
-                "text": "TabsRootContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "listObserver",
-              "type": {
-                "text": "ResizeObserver | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "tabObserver",
-              "type": {
-                "text": "ResizeObserver | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "listEl",
-              "type": {
-                "text": "Element | null"
-              },
-              "privacy": "private",
-              "default": "null",
-              "description": "The `<grund-tabs-list>` this indicator is inside. Located in connectedCallback."
-            },
-            {
-              "kind": "field",
-              "name": "observedTab",
-              "type": {
-                "text": "HTMLElement | null"
-              },
-              "privacy": "private",
-              "default": "null",
-              "description": "The active tab element being observed, used to detect when the active tab changes."
-            },
-            {
-              "kind": "method",
-              "name": "measure",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-tabs-indicator",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundTabsIndicator",
-          "declaration": {
-            "name": "GrundTabsIndicator",
-            "module": "src/components/tabs/indicator/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-tabs-indicator",
-          "declaration": {
-            "name": "GrundTabsIndicator",
-            "module": "src/components/tabs/indicator/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/tabs/registry/tabs.registry.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/tabs/root/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Root tabs container. Provides context to tab list, tabs, and panels.",
-          "name": "GrundTabs",
-          "slots": [
-            {
-              "description": "Tab list and panel elements",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string | null | undefined"
-              },
-              "privacy": "public",
-              "default": "undefined"
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "string | null"
-              },
-              "privacy": "public",
-              "default": "null",
-              "attribute": "default-value"
-            },
-            {
-              "kind": "field",
-              "name": "orientation",
-              "type": {
-                "text": "'horizontal' | 'vertical'"
-              },
-              "privacy": "public",
-              "default": "'horizontal'",
-              "attribute": "orientation"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "rootCtx",
-              "type": {
-                "text": "TabsRootContext"
-              },
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "controller",
-              "privacy": "private",
-              "default": "new TabsController()"
-            },
-            {
-              "kind": "field",
-              "name": "registry",
-              "privacy": "private",
-              "default": "new TabsRegistry()"
-            },
-            {
-              "kind": "field",
-              "name": "activationDirection",
-              "type": {
-                "text": "'start' | 'end' | 'none'"
-              },
-              "privacy": "private",
-              "default": "'none'"
-            },
-            {
-              "kind": "field",
-              "name": "_registerTab",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_unregisterTab",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_registerPanel",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_unregisterPanel",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_setDisabled",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_requestActivation",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_getTabElement",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_getPanelElement",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_indexOf",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "computeActivationDirection",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "'start' | 'end' | 'none'"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "createRootContext",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "TabsRootContext"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "handleActivation",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "name": "grund-value-change",
-              "type": {
-                "text": "CustomEvent<TabsValueChangeDetail>"
-              },
-              "description": "When the active tab changes"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "default-value",
-              "type": {
-                "text": "string | null"
-              },
-              "default": "null",
-              "fieldName": "defaultValue"
-            },
-            {
-              "name": "orientation",
-              "type": {
-                "text": "'horizontal' | 'vertical'"
-              },
-              "default": "'horizontal'",
-              "fieldName": "orientation"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-tabs",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundTabs",
-          "declaration": {
-            "name": "GrundTabs",
-            "module": "src/components/tabs/root/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-tabs",
-          "declaration": {
-            "name": "GrundTabs",
-            "module": "src/components/tabs/root/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/components/tabs/panel/index.ts",
       "declarations": [
         {
@@ -1811,6 +1448,256 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/tabs/registry/tabs.registry.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/root/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Root tabs container. Provides context to tab list, tabs, and panels.",
+          "name": "GrundTabs",
+          "slots": [
+            {
+              "description": "Tab list and panel elements",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | null | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "privacy": "public",
+              "default": "'horizontal'",
+              "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "rootCtx",
+              "type": {
+                "text": "TabsRootContext"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "privacy": "private",
+              "default": "new TabsEngine()"
+            },
+            {
+              "kind": "field",
+              "name": "registry",
+              "privacy": "private",
+              "default": "new TabsRegistry()"
+            },
+            {
+              "kind": "field",
+              "name": "activationDirection",
+              "type": {
+                "text": "'start' | 'end' | 'none'"
+              },
+              "privacy": "private",
+              "default": "'none'"
+            },
+            {
+              "kind": "field",
+              "name": "_registerTab",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_unregisterTab",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_registerPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_unregisterPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_setDisabled",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_requestActivation",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_isEffectivelyDisabled",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_getTabElement",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_getPanelElement",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_indexOf",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "computeActivationDirection",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "'start' | 'end' | 'none'"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "createRootContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TabsRootContext"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleActivation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-value-change",
+              "type": {
+                "text": "CustomEvent<TabsValueChangeDetail>"
+              },
+              "description": "When the active tab changes"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "default-value",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "defaultValue"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'",
+              "fieldName": "orientation"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-tabs",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabs",
+          "declaration": {
+            "name": "GrundTabs",
+            "module": "src/components/tabs/root/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-tabs",
+          "declaration": {
+            "name": "GrundTabs",
+            "module": "src/components/tabs/root/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/tabs/tab/index.ts",
       "declarations": [
         {
@@ -1929,6 +1816,550 @@
           "declaration": {
             "name": "GrundTab",
             "module": "src/components/tabs/tab/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle/root/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A standalone pressable toggle button with `aria-pressed` state.\nAlso the primitive element used inside `<grund-toggle-group>`.",
+          "name": "GrundToggle",
+          "cssParts": [
+            {
+              "description": "The inner button element",
+              "name": "button"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Button label content",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "pressed",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined",
+              "description": "Whether the toggle is pressed. Setting this enables controlled mode.\nIn controlled mode the element fires `grund-pressed-change` but does not\nupdate internal state — the consumer must reflect the new value back.\nHas no effect when inside `<grund-toggle-group>` (group owns pressed state).",
+              "attribute": "pressed"
+            },
+            {
+              "kind": "field",
+              "name": "defaultPressed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "description": "Initial pressed state for uncontrolled mode. Ignored after the first render.\nHas no effect when inside `<grund-toggle-group>`.",
+              "attribute": "default-pressed"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "''",
+              "description": "Identifier for this toggle. Has no effect on the standalone element;\nused by `<grund-toggle-group>` to identify which item is pressed.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "description": "Whether the toggle is disabled.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "internalPressed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_groupCtx",
+              "type": {
+                "text": "ToggleGroupRootContext | undefined"
+              },
+              "privacy": "private",
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "_isRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "effectivePressed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "effectiveDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "handleClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-pressed-change",
+              "type": {
+                "text": "CustomEvent<PressedChangeDetail>"
+              },
+              "description": "When pressed state changes"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "pressed",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "undefined",
+              "description": "Whether the toggle is pressed. Setting this enables controlled mode.\nIn controlled mode the element fires `grund-pressed-change` but does not\nupdate internal state — the consumer must reflect the new value back.\nHas no effect when inside `<grund-toggle-group>` (group owns pressed state).",
+              "fieldName": "pressed"
+            },
+            {
+              "name": "default-pressed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Initial pressed state for uncontrolled mode. Ignored after the first render.\nHas no effect when inside `<grund-toggle-group>`.",
+              "fieldName": "defaultPressed"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Identifier for this toggle. Has no effect on the standalone element;\nused by `<grund-toggle-group>` to identify which item is pressed.",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the toggle is disabled.",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-toggle",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundToggle",
+          "declaration": {
+            "name": "GrundToggle",
+            "module": "src/components/toggle/root/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-toggle",
+          "declaration": {
+            "name": "GrundToggle",
+            "module": "src/components/toggle/root/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle-group/context/toggle-group.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "toggleGroupRootContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "toggleGroupRootContext",
+          "declaration": {
+            "name": "toggleGroupRootContext",
+            "module": "src/components/toggle-group/context/toggle-group.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle-group/engine/toggle-group.engine.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle-group/registry/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ToggleGroupRegistry",
+          "declaration": {
+            "name": "ToggleGroupRegistry",
+            "module": "./toggle-group.registry.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ToggleGroupRecord",
+          "declaration": {
+            "name": "ToggleGroupRecord",
+            "module": "./toggle-group.registry.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle-group/registry/toggle-group.registry.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle-group/root/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Root toggle group container. Manages selection state across child `<grund-toggle>` elements.",
+          "name": "GrundToggleGroup",
+          "cssParts": [
+            {
+              "description": "The inner container element Accessibility: provide an accessible name via the `label` property (`aria-label` on the inner group container). External `aria-labelledby` cannot cross shadow-root boundaries to reach the inner container — use the `label` prop instead.",
+              "name": "group"
+            }
+          ],
+          "slots": [
+            {
+              "description": "`<grund-toggle>` children",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined",
+              "description": "The controlled set of pressed toggle values.\nSetting this enables controlled mode — the element fires `grund-value-change`\nbut does not update internal state; the consumer must reflect the new value back.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "public",
+              "default": "[]",
+              "description": "Initial pressed values for uncontrolled mode. Ignored after the first render.",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "description": "Whether multiple toggles can be pressed simultaneously.",
+              "attribute": "multiple"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "description": "Whether all toggles in the group are disabled.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "privacy": "public",
+              "default": "'horizontal'",
+              "description": "Orientation used for keyboard navigation arrow keys.",
+              "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "true",
+              "description": "Whether keyboard navigation wraps from last to first and vice versa.",
+              "attribute": "loop"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "''",
+              "description": "Accessible name for the group container, applied as `aria-label` on the\ninner `role=\"group\"` element. Required for screen-reader users unless the\ngroup is labelled by a visible heading via `aria-labelledby` on the host.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "rootCtx",
+              "type": {
+                "text": "ToggleGroupRootContext"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "engine",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ToggleGroupEngine()"
+            },
+            {
+              "kind": "field",
+              "name": "registry",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ToggleGroupRegistry()"
+            },
+            {
+              "kind": "field",
+              "name": "rovingFocus",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new RovingFocusController(this, { orientation: 'horizontal', loop: true, getItems: () => this.registry.toggles .map((r) => r.element.shadowRoot?.querySelector<HTMLElement>('[part=\"button\"]') ?? null) .filter((btn): btn is HTMLElement => btn !== null), })"
+            },
+            {
+              "kind": "field",
+              "name": "_isPressed",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_isEffectivelyDisabled",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_requestToggle",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_registerToggle",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_unregisterToggle",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "createRootContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ToggleGroupRootContext"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleToggle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "toggleDisabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Returns the resolved pressed state for the toggled item, or null if blocked."
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-value-change",
+              "type": {
+                "text": "CustomEvent<ToggleGroupValueChangeDetail>"
+              },
+              "description": "When the set of pressed toggles changes"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "default": "undefined",
+              "description": "The controlled set of pressed toggle values.\nSetting this enables controlled mode — the element fires `grund-value-change`\nbut does not update internal state; the consumer must reflect the new value back.",
+              "fieldName": "value"
+            },
+            {
+              "name": "default-value",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]",
+              "description": "Initial pressed values for uncontrolled mode. Ignored after the first render.",
+              "fieldName": "defaultValue"
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether multiple toggles can be pressed simultaneously.",
+              "fieldName": "multiple"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether all toggles in the group are disabled.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'",
+              "description": "Orientation used for keyboard navigation arrow keys.",
+              "fieldName": "orientation"
+            },
+            {
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Whether keyboard navigation wraps from last to first and vice versa.",
+              "fieldName": "loop"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible name for the group container, applied as `aria-label` on the\ninner `role=\"group\"` element. Required for screen-reader users unless the\ngroup is labelled by a visible heading via `aria-labelledby` on the host.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-toggle-group",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundToggleGroup",
+          "declaration": {
+            "name": "GrundToggleGroup",
+            "module": "src/components/toggle-group/root/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-toggle-group",
+          "declaration": {
+            "name": "GrundToggleGroup",
+            "module": "src/components/toggle-group/root/index.ts"
           }
         }
       ]
