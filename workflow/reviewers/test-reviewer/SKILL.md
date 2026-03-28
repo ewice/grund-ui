@@ -35,6 +35,7 @@ The caller provides `refs/test-patterns.md` and the component spec. Use test-pat
 4. Every APG keyboard key tested: Enter/Space, Arrow keys, Home/End, Tab exit, Escape (where applicable).
 5. Keyboard events simulate real browser input — not dispatched via bare `new KeyboardEvent()` on the element. The project provides `simulateKeyboard(el, key)` from `test-utils/index.ts` for this purpose; use it unless using a testing library (e.g. `@testing-library/user-event`) that provides equivalent real-browser-input semantics.
 6. Assertions follow `await flush(el)` — never asserted before the flush.
+23. When a component has two or more interacting boolean properties (e.g., `checked` × `indeterminate`, `disabled` × `readOnly`), tests must cover at least the pairwise combinations that produce distinct observable behavior. Verify the spec/design doc for any explicit behavioral contract for each combination (e.g., "clicking an indeterminate checkbox always fires `checked: true`").
 
 ### Dynamic Registration (Edge Cases)
 7. Child element added after initial render registers correctly.
@@ -61,6 +62,7 @@ The caller provides `refs/test-patterns.md` and the component spec. Use test-pat
 
 ### Form Integration (Form Controls Only)
 18. If form-associated (`static formAssociated = true` in the element class): tests cover `formResetCallback`, `formDisabledCallback`, `<label for>` association, and `FormData` submission in a `<form>`.
+24. Form controls must test FormData submission for each modifier state: `disabled` (excluded from FormData), `readOnly` (included in FormData), and any visual-only state that does not affect form submission (e.g., `indeterminate`).
 
 ### Test Mechanics
 19. `flush(el)` imported from `test-utils/index.ts` and called after every state-triggering action.

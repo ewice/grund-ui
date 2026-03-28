@@ -74,6 +74,31 @@ After collecting reviewer findings:
 4. If the *same* finding recurs after 2 genuine fix attempts (the fix didn't take): invoke
    `/diagnose-failure` and surface to the engineer.
 
+## Reviewer Feedback Loop
+
+When a bug or anti-pattern is fixed after all reviewers passed (e.g., during `/validate-build`, manual review, or post-merge):
+
+1. **Classify the fix:**
+   - **Correctness** — pre-fix code produces wrong observable behavior. Proof required: a failing test or spec/design doc contradiction. Rule severity: **blocker**.
+   - **Quality** — pre-fix code works but is redundant, fragile, or misleading. Proof required: a concrete description of the cost (performance, maintainability, developer confusion). Rule severity: **warning**.
+   - If you can't articulate either a behavioral failure or a concrete cost, don't write a rule — it's a preference, not a fix.
+
+2. **Identify which reviewer** should have caught it (match the concern to reviewer scope boundaries).
+
+3. **Check whether an existing rule covers the concern.** If it does, the reviewer missed an application of its own rule — no rule change needed, but note the miss for `/review-system-health`.
+
+4. **If no existing rule covers it:** draft a new rule in the reviewer's checklist. The rule must be:
+   - **Generic** — not component-specific. Name the anti-pattern, not the instance.
+   - **Concrete** — include a one-sentence example of the mistake and the fix.
+   - **Citable** — numbered sequentially after the reviewer's last rule.
+   - **Severity matches classification** — correctness fixes produce blocker rules, quality fixes produce warning rules.
+
+5. **Validate the rule:** re-dispatch the reviewer against the pre-fix file(s) (use `git show HEAD~1:path/to/file`). The reviewer must produce a finding citing the new rule. If it doesn't, reword until it does — the phrasing isn't concrete enough for the reviewer agent to act on.
+
+6. **Commit the reviewer update alongside the code fix**, not in a separate PR. This keeps the rule addition traceable to the bug that motivated it.
+
+---
+
 ## Dispute Protocol
 
 When the implementer believes a reviewer finding is incorrect:
