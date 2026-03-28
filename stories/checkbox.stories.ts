@@ -11,6 +11,10 @@ import '../src/components/checkbox/index.js';
 const onCheckedChange = (e: CustomEvent<CheckedChangeDetail>) =>
   action('grund-checked-change')(e.detail.checked);
 
+const indicatorStyle = `
+  grund-checkbox-indicator[data-unchecked] { display: none; }
+`;
+
 const meta: Meta<GrundCheckbox> = {
   title: 'Components/Checkbox',
   component: 'grund-checkbox',
@@ -25,6 +29,7 @@ const meta: Meta<GrundCheckbox> = {
     name: { control: 'text' },
     value: { control: 'text' },
   },
+  decorators: [(story) => html`<style>${indicatorStyle}</style>${story()}`],
 };
 export default meta;
 type Story = StoryObj<GrundCheckbox>;
