@@ -8,7 +8,6 @@
   "exports": {
     ".": "./dist/index.js",
     "./accordion": "./dist/components/accordion/index.js",
-    "./checkbox": "./dist/components/checkbox/index.js",
     "./tabs": "./dist/components/tabs/index.js",
     "./toggle": "./dist/components/toggle/index.js",
     "./toggle-group": "./dist/components/toggle-group/index.js"
