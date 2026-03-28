@@ -115,15 +115,23 @@ export class GrundCheckbox extends LitElement {
       this._form.setValue(checked ? this.value : null);
     }
 
-    // Validation
+    // Validation (flags and message only — anchor set in updated)
     if (this.required && !checked) {
+      this._form.setValidity({ valueMissing: true }, 'Please check this box.');
+    } else {
+      this._form.setValidity({}, '');
+    }
+  }
+
+  protected override updated(): void {
+    // Re-set validity with anchor now that the shadow DOM is rendered
+    if (this.required && !this._effectiveChecked) {
+      const anchor = this.shadowRoot?.querySelector('button') ?? undefined;
       this._form.setValidity(
         { valueMissing: true },
         'Please check this box.',
-        this.shadowRoot?.querySelector('button') ?? undefined,
+        anchor,
       );
-    } else {
-      this._form.setValidity({}, '');
     }
   }
 
