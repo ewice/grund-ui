@@ -7,10 +7,7 @@
  * @internal
  */
 export class FormController {
-  constructor(
-    _host: HTMLElement,
-    private readonly _internals: ElementInternals,
-  ) {}
+  constructor(private readonly _internals: ElementInternals) {}
 
   /** Submit a value to the owning form. Call in `willUpdate`. */
   public setValue(value: string | FormData | null): void {

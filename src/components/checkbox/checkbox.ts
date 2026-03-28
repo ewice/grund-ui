@@ -76,7 +76,7 @@ export class GrundCheckbox extends LitElement {
   // Form-associated elements are inherently client-only — attachInternals()
   // requires a real DOM element and cannot run during SSR.
   private _internals = this.attachInternals();
-  private _form = new FormController(this, this._internals);
+  private _form = new FormController(this._internals);
 
   private get _effectiveChecked(): boolean {
     return this.checked ?? this._internalChecked;
