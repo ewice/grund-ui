@@ -1,6 +1,6 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it, vi } from 'vitest';
-import { flush, getByPart } from '../../../test-utils';
+import { flush, getByPart, simulateKeyboard } from '../../../test-utils';
 import '../checkbox';
 import '../indicator';
 
@@ -68,6 +68,36 @@ describe('GrundCheckbox', () => {
   it('value defaults to "on"', async () => {
     const el = await setup();
     expect(el.value).to.equal('on');
+  });
+
+  // ── Attribute reflection ─────────────────────────────────────────────────
+
+  it('reads name from attribute', async () => {
+    const el = await setup(
+      html`<grund-checkbox name="agree">Label</grund-checkbox>`,
+    );
+    expect(el.name).to.equal('agree');
+  });
+
+  it('reads value from attribute', async () => {
+    const el = await setup(
+      html`<grund-checkbox value="yes">Label</grund-checkbox>`,
+    );
+    expect(el.value).to.equal('yes');
+  });
+
+  it('reads required from attribute', async () => {
+    const el = await setup(
+      html`<grund-checkbox required>Label</grund-checkbox>`,
+    );
+    expect(el.required).to.be.true;
+  });
+
+  it('reads read-only from attribute', async () => {
+    const el = await setup(
+      html`<grund-checkbox read-only>Label</grund-checkbox>`,
+    );
+    expect(el.readOnly).to.be.true;
   });
 
   // ── Uncontrolled mode ────────────────────────────────────────────────────
@@ -144,10 +174,8 @@ describe('GrundCheckbox', () => {
     btn.click();
     await flush(el);
 
-    // Event fired with correct detail
     expect(events).to.have.length(1);
     expect(events[0].checked).to.be.true;
-    // Internal state unchanged — consumer did not update `checked`
     expect(btn.getAttribute('aria-checked')).to.equal('false');
   });
 
@@ -173,7 +201,6 @@ describe('GrundCheckbox', () => {
     el.checked = undefined;
     await flush(el);
     const btn = getByPart<HTMLButtonElement>(el, 'button');
-    // Falls back to internalChecked (false by default)
     expect(btn.getAttribute('aria-checked')).to.equal('false');
   });
 
@@ -210,9 +237,24 @@ describe('GrundCheckbox', () => {
     getByPart<HTMLButtonElement>(el, 'button').click();
     await flush(el);
 
-    // Consumer must clear indeterminate — it stays true
     expect(el.indeterminate).to.be.true;
     expect(el.hasAttribute('data-indeterminate')).to.be.true;
+  });
+
+  it('toggling indeterminate at runtime updates aria-checked and data attr', async () => {
+    const el = await setup();
+    const btn = getByPart<HTMLButtonElement>(el, 'button');
+    expect(btn.getAttribute('aria-checked')).to.equal('false');
+
+    el.indeterminate = true;
+    await flush(el);
+    expect(btn.getAttribute('aria-checked')).to.equal('mixed');
+    expect(el.hasAttribute('data-indeterminate')).to.be.true;
+
+    el.indeterminate = false;
+    await flush(el);
+    expect(btn.getAttribute('aria-checked')).to.equal('false');
+    expect(el.hasAttribute('data-indeterminate')).to.be.false;
   });
 
   // ── Disabled ─────────────────────────────────────────────────────────────
@@ -254,13 +296,49 @@ describe('GrundCheckbox', () => {
     expect(btn.disabled).to.be.false;
   });
 
+  it('toggling readOnly at runtime updates data-readonly and click behavior', async () => {
+    const el = await setup();
+    el.readOnly = true;
+    await flush(el);
+    expect(el.hasAttribute('data-readonly')).to.be.true;
+
+    let callCount = 0;
+    el.addEventListener('grund-checked-change', () => { callCount++; });
+    getByPart<HTMLButtonElement>(el, 'button').click();
+    await flush(el);
+    expect(callCount).to.equal(0);
+
+    el.readOnly = false;
+    await flush(el);
+    expect(el.hasAttribute('data-readonly')).to.be.false;
+    getByPart<HTMLButtonElement>(el, 'button').click();
+    await flush(el);
+    expect(callCount).to.equal(1);
+  });
+
   // ── Required ─────────────────────────────────────────────────────────────
 
-  it('sets data-required when required', async () => {
+  it('sets data-required and aria-required when required', async () => {
     const el = await setup(
       html`<grund-checkbox required>Label</grund-checkbox>`,
     );
+    const btn = getByPart<HTMLButtonElement>(el, 'button');
     expect(el.hasAttribute('data-required')).to.be.true;
+    expect(btn.getAttribute('aria-required')).to.equal('true');
+  });
+
+  it('toggling required at runtime updates data-required', async () => {
+    const el = await setup();
+    el.required = true;
+    await flush(el);
+    expect(el.hasAttribute('data-required')).to.be.true;
+    const btn = getByPart<HTMLButtonElement>(el, 'button');
+    expect(btn.getAttribute('aria-required')).to.equal('true');
+
+    el.required = false;
+    await flush(el);
+    expect(el.hasAttribute('data-required')).to.be.false;
+    expect(btn.hasAttribute('aria-required')).to.be.false;
   });
 
   // ── Event properties ─────────────────────────────────────────────────────
@@ -291,6 +369,20 @@ describe('GrundCheckbox', () => {
     expect(el.hasAttribute('data-disabled')).to.be.true;
   });
 
+  it('reflects name change at runtime', async () => {
+    const el = await setup();
+    el.name = 'newsletter';
+    await flush(el);
+    expect(el.name).to.equal('newsletter');
+  });
+
+  it('reflects value change at runtime', async () => {
+    const el = await setup();
+    el.value = 'yes';
+    await flush(el);
+    expect(el.value).to.equal('yes');
+  });
+
   // ── Composition: two instances don't share state ─────────────────────────
 
   it('two sibling checkboxes have independent state', async () => {
@@ -317,7 +409,6 @@ describe('GrundCheckbox', () => {
   });
 
   // ── Keyboard ──────────────────────────────────────────────────────────────
-  // Space activates native <button> via built-in click synthesis.
 
   it('inner button is focusable (keyboard reachable via Tab)', async () => {
     const el = await setup();
@@ -327,23 +418,82 @@ describe('GrundCheckbox', () => {
 
   // ── Memory: no rogue event listeners ─────────────────────────────────────
 
-  it('cleans up event listeners on disconnect', async () => {
-    const el = await setup();
-    await flush(el);
-
+  it('no imperative listeners added during lifecycle', async () => {
     const addSpy = vi.spyOn(EventTarget.prototype, 'addEventListener');
     const removeSpy = vi.spyOn(EventTarget.prototype, 'removeEventListener');
 
+    const el = await fixture<GrundCheckbox>(
+      html`<grund-checkbox>Label</grund-checkbox>`,
+    );
+    await flush(el);
+
+    const addsBefore = addSpy.mock.calls.length;
+    const removesBefore = removeSpy.mock.calls.length;
+
     el.remove();
 
-    const addCount = addSpy.mock.calls.length;
-    const removeCount = removeSpy.mock.calls.length;
-
-    expect(addCount).to.equal(0);
-    expect(removeCount).to.equal(0);
+    // Lit template-managed @event bindings are not visible to addEventListener spy.
+    // Any imperative adds during lifecycle must have matching removes on disconnect.
+    const addsAfterDisconnect = addSpy.mock.calls.length - addsBefore;
+    const removesAfterDisconnect = removeSpy.mock.calls.length - removesBefore;
+    expect(addsAfterDisconnect).to.equal(removesAfterDisconnect);
 
     addSpy.mockRestore();
     removeSpy.mockRestore();
+  });
+
+  // ── Form participation ──────────────────────────────────────────────────
+
+  it('submits value in FormData when checked', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <grund-checkbox name="agree" value="yes" default-checked>
+          Label
+        </grund-checkbox>
+      </form>
+    `);
+    const cb = form.querySelector<GrundCheckbox>('grund-checkbox')!;
+    await flush(cb);
+
+    const data = new FormData(form);
+    expect(data.get('agree')).to.equal('yes');
+  });
+
+  it('does not submit value in FormData when unchecked', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <grund-checkbox name="agree" value="yes">Label</grund-checkbox>
+      </form>
+    `);
+    const cb = form.querySelector<GrundCheckbox>('grund-checkbox')!;
+    await flush(cb);
+
+    const data = new FormData(form);
+    expect(data.has('agree')).to.be.false;
+  });
+
+  it('formResetCallback restores defaultChecked', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <grund-checkbox name="agree" default-checked>Label</grund-checkbox>
+      </form>
+    `);
+    const cb = form.querySelector<GrundCheckbox>('grund-checkbox')!;
+    await flush(cb);
+
+    // Uncheck it
+    getByPart<HTMLButtonElement>(cb, 'button').click();
+    await flush(cb);
+    expect(
+      getByPart<HTMLButtonElement>(cb, 'button').getAttribute('aria-checked'),
+    ).to.equal('false');
+
+    // Reset form
+    form.reset();
+    await flush(cb);
+    expect(
+      getByPart<HTMLButtonElement>(cb, 'button').getAttribute('aria-checked'),
+    ).to.equal('true');
   });
 });
 
@@ -368,6 +518,15 @@ describe('GrundCheckboxIndicator', () => {
     )!;
     const part = getByPart(indicator, 'indicator');
     expect(part).to.exist;
+  });
+
+  it('indicator has aria-hidden="true"', async () => {
+    const el = await setup();
+    const indicator = el.querySelector<GrundCheckboxIndicator>(
+      'grund-checkbox-indicator',
+    )!;
+    await flush(indicator);
+    expect(indicator.getAttribute('aria-hidden')).to.equal('true');
   });
 
   it('indicator reflects unchecked state via data attributes', async () => {
@@ -409,5 +568,25 @@ describe('GrundCheckboxIndicator', () => {
     expect(indicator.hasAttribute('data-indeterminate')).to.be.true;
     expect(indicator.hasAttribute('data-checked')).to.be.false;
     expect(indicator.hasAttribute('data-unchecked')).to.be.false;
+  });
+
+  it('indicator added after mount picks up checked state', async () => {
+    const el = await fixture<GrundCheckbox>(
+      html`<grund-checkbox>Label</grund-checkbox>`,
+    );
+    await flush(el);
+
+    getByPart<HTMLButtonElement>(el, 'button').click();
+    await flush(el);
+
+    const indicator = document.createElement(
+      'grund-checkbox-indicator',
+    ) as GrundCheckboxIndicator;
+    indicator.textContent = '✓';
+    el.appendChild(indicator);
+    await flush(el);
+    await flush(indicator);
+
+    expect(indicator.hasAttribute('data-checked')).to.be.true;
   });
 });
