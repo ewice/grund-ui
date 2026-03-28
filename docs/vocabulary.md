@@ -39,6 +39,7 @@ is reviewed separately from the naming registry.
 | `grund-value-change` | `{ value: string[], itemValue: string, open: boolean }` (accordion) / `{ value: string \| null, previousValue: string \| null }` (tabs) / `{ value: string[] }` (toggle-group) | Full expanded values snapshot (accordion); active tab changed (tabs); pressed toggles changed (toggle-group) |
 | `grund-open-change` | `{ value: string, open: boolean, index: number }` | An item opened or closed |
 | `grund-pressed-change` | `{ pressed: boolean }` | Toggle pressed state changed |
+| `grund-checked-change` | `{ checked: boolean }` | Checkbox checked state changed |
 
 ---
 
@@ -54,10 +55,10 @@ CSS `::part()` names. All lowercase, hyphenated nouns.
 | `list` | The tablist container | Tabs |
 | `header` | The heading wrapper element | (reserved — no component uses it yet) |
 | `content` | Inner content wrapper within a panel | Dialog |
-| `indicator` | Visual expand/collapse chevron or icon (Accordion); position tracker for active tab (Tabs) | Accordion, Select, Tabs |
-| `label` | A text label element | Switch, Checkbox |
-| `input` | The underlying native or custom input | Switch, Checkbox, Input |
-| `button` | The inner button element | Toggle |
+| `indicator` | Visual expand/collapse chevron or icon (Accordion); position tracker for active tab (Tabs); checked/indeterminate visual (Checkbox) | Accordion, Checkbox, Select, Tabs |
+| `label` | A text label element | Switch |
+| `input` | The underlying native or custom input | Switch, Input |
+| `button` | The inner button element | Toggle, Checkbox |
 | `group` | The inner container wrapping slotted toggle children | ToggleGroup |
 | `close-button` | Button that closes an overlay | Dialog, Sheet, Toast |
 | `overlay` | The backdrop/scrim behind a modal | Dialog, Sheet |
@@ -89,6 +90,11 @@ Standard data attributes set by controllers or elements as public API.
 | `data-pressed` | boolean presence | Host in `willUpdate` | Toggle button pressed state. Use for toggle / toggle-group components. |
 | `data-selected` | boolean presence | Host in `willUpdate` | Active in a selection group. Standard for single- and multi-select components (tabs, radio group, listbox, combobox, select, toggle group, menu). Distinct from `data-open` — use `data-open` for disclosure/expand patterns (accordion, collapsible, dialog, popover). |
 | `data-activation-direction` | `'start'` / `'end'` / `'none'` | Root + all sub-elements in `willUpdate` | Direction of the last activation relative to list order. Logical, not physical — consumers combine with `data-orientation` to derive the physical direction for animations. `none` on the initial activation. |
+| `data-checked` | boolean presence | Host in `willUpdate` | Checked state for checkbox/switch. Mutually exclusive with `data-unchecked` and `data-indeterminate`. |
+| `data-unchecked` | boolean presence | Host in `willUpdate` | Unchecked state for checkbox/switch. Present when neither checked nor indeterminate. |
+| `data-indeterminate` | boolean presence | Host in `willUpdate` | Indeterminate (mixed) state for checkbox. |
+| `data-required` | boolean presence | Host in `willUpdate` | Form control is required. |
+| `data-readonly` | boolean presence | Host in `willUpdate` | Form control is read-only. |
 
 ---
 
@@ -103,6 +109,7 @@ Context symbols follow the pattern `{ComponentName}Context` for the root context
 | `accordionItemContext` | Per-item context for accordion |
 | `tabsRootContext` | Root-level context for tabs |
 | `toggleGroupRootContext` | Root-level context for toggle-group |
+| `checkboxContext` | Checkbox state for indicator |
 
 ---
 
@@ -124,6 +131,8 @@ All custom elements: `grund-{component-name}[-{sub-element}]`
 | Tabs indicator | `grund-tabs-indicator` |
 | Toggle | `grund-toggle` |
 | Toggle Group root | `grund-toggle-group` |
+| Checkbox | `grund-checkbox` |
+| Checkbox indicator | `grund-checkbox-indicator` |
 
 ---
 
