@@ -11,12 +11,17 @@ import type { CheckedChangeDetail } from './types';
 /**
  * A form-associated checkbox control with checked, unchecked, and indeterminate states.
  *
+ * Set `checked` for controlled mode; omit it (or set `undefined`) for uncontrolled
+ * mode seeded by `defaultChecked`. In controlled mode, update `checked` in your
+ * `grund-checked-change` handler.
+ *
  * @element grund-checkbox
  * @slot - Label content and optional `<grund-checkbox-indicator>`
  * @fires {CustomEvent<CheckedChangeDetail>} grund-checked-change - Checked state changes on interaction
  * @csspart button - The inner `<button role="checkbox">`
  */
 export class GrundCheckbox extends LitElement {
+  /** @internal */
   public static formAssociated = true;
 
   public static override readonly styles = css`
@@ -111,13 +116,13 @@ export class GrundCheckbox extends LitElement {
     }
   }
 
-  /** Called when the parent `<form>` is reset. */
+  /** @internal Called when the parent `<form>` is reset. */
   public formResetCallback(): void {
     this._internalChecked = this.defaultChecked;
     this.requestUpdate();
   }
 
-  /** Called for browser autofill or bfcache restore. */
+  /** @internal Called for browser autofill or bfcache restore. */
   public formStateRestoreCallback(state: string | File | FormData): void {
     if (typeof state === 'string') {
       this._internalChecked = state === this.value;
@@ -125,7 +130,7 @@ export class GrundCheckbox extends LitElement {
     }
   }
 
-  /** Called when ancestor `<fieldset disabled>` changes. */
+  /** @internal Called when ancestor `<fieldset disabled>` changes. */
   public formDisabledCallback(disabled: boolean): void {
     this._ancestorDisabled = disabled;
   }
