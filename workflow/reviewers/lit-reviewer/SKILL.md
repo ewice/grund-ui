@@ -97,6 +97,8 @@ Example: a parent uses `querySelectorAll('grund-*')` to find children instead of
 3. `firstUpdated()` is used only for one-time DOM setup.
 4. Never call `requestUpdate()` inside `updated()`.
 5. DOM-dependent work such as measurement, focus restoration, or DOM-based sync waits until the relevant DOM is rendered and stable.
+37. `requestUpdate()` must not be called when assigning to an `@state()` or `@property()` field — the reactive setter already schedules an update. Redundant calls are a warning; inside `updated()` they are a blocker (infinite loop risk per rule 4).
+38. `querySelector`/`querySelectorAll` on `shadowRoot` must not appear in `willUpdate()` or field initializers — the shadow DOM has not rendered yet on the first update. Move DOM lookups to `updated()`, `firstUpdated()`, or event handlers.
 
 ### Render Purity and Reactive Inputs
 
@@ -147,6 +149,10 @@ Example: a parent uses `querySelectorAll('grund-*')` to find children instead of
 32. Class members in Lit elements and controllers use explicit visibility modifiers and the narrowest scope that satisfies the contract.
 33. `@property()` fields are public API; `@state()` fields and `@consume()` subscriptions are not left public accidentally.
 34. `protected` members are used only for intentional subclass extension points, not as a default for internal helpers.
+
+### Static vs Dynamic Host Attributes
+
+39. Host attributes that never change (e.g. `aria-hidden="true"`) must be set once in `connectedCallback()`, not re-set on every `willUpdate()` cycle. Dynamic attributes driven by reactive state remain in `willUpdate()`.
 
 ### Type Declaration Files
 

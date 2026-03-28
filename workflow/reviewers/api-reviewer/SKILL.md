@@ -111,6 +111,7 @@ Example: the component emits a change-request event in controlled mode, but the 
 8. `@fires {CustomEvent<T>} grund-{action}` is present for every public event.
 9. `@deprecated` includes a migration path.
 10. Non-public exports are marked `@internal`.
+22. `@internal` must not appear on members that are part of the component's public contract, even if consumers never call them directly. `static formAssociated`, public properties, and exported types are public API signals — marking them `@internal` hides them from CEM/docs and misleads consumers. `@internal` is for browser-called lifecycle hooks (e.g. `formResetCallback`) and implementation helpers.
 11. Public docs describe consumer-observable behavior rather than implementation detail.
 
 ### Event Contracts

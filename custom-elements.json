@@ -142,7 +142,7 @@
           "name": "GrundToggle",
           "declaration": {
             "name": "GrundToggle",
-            "module": "./root/index.js"
+            "module": "./toggle"
           }
         },
         {
@@ -151,6 +151,266 @@
           "declaration": {
             "name": "PressedChangeDetail",
             "module": "./types.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle/toggle.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundToggle",
+          "members": [
+            {
+              "kind": "field",
+              "name": "pressed",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined",
+              "attribute": "pressed"
+            },
+            {
+              "kind": "field",
+              "name": "defaultPressed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "default-pressed"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "internalPressed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_groupCtx",
+              "type": {
+                "text": "ToggleGroupRootContext | undefined"
+              },
+              "privacy": "private",
+              "readonly": true,
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "ancestorDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_isRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "effectivePressed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "effectiveDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "registerWithGroup",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "unregisterFromGroup",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reregisterWithGroup",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "pressInGroup",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "ctx",
+                  "type": {
+                    "text": "ToggleGroupRootContext"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "pressStandalone",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitPressedChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "pressed",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-pressed-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "pressed",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "pressed"
+            },
+            {
+              "name": "default-pressed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "defaultPressed"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-toggle",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundToggle",
+          "declaration": {
+            "name": "GrundToggle",
+            "module": "src/components/toggle/toggle.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-toggle",
+          "declaration": {
+            "name": "GrundToggle",
+            "module": "src/components/toggle/toggle.ts"
           }
         }
       ]
@@ -171,7 +431,7 @@
           "name": "GrundToggleGroup",
           "declaration": {
             "name": "GrundToggleGroup",
-            "module": "./root/index.js"
+            "module": "./toggle-group"
           }
         },
         {
@@ -179,7 +439,476 @@
           "name": "ToggleGroupValueChangeDetail",
           "declaration": {
             "name": "ToggleGroupValueChangeDetail",
-            "module": "./types.js"
+            "module": "./types"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle-group/toggle-group.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "toggleGroupRootContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "toggleGroupRootContext",
+          "declaration": {
+            "name": "toggleGroupRootContext",
+            "module": "src/components/toggle-group/toggle-group.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle-group/toggle-group.engine.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ToggleGroupEngine",
+          "members": [
+            {
+              "kind": "field",
+              "name": "selection",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new SelectionEngine()"
+            },
+            {
+              "kind": "method",
+              "name": "syncFromHost",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "snapshot",
+                  "type": {
+                    "text": "ToggleGroupHostSnapshot"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "requestToggle",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "string[] | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "toggleDisabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "isPressed",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ToggleGroupEngine",
+          "declaration": {
+            "name": "ToggleGroupEngine",
+            "module": "src/components/toggle-group/toggle-group.engine.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle-group/toggle-group.registry.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ToggleGroupRegistry",
+          "members": [
+            {
+              "kind": "field",
+              "name": "toggles",
+              "type": {
+                "text": "readonly ToggleGroupRecord[]"
+              },
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "register",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "toggle",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "unregister",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "toggle",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "OrderedRegistry",
+            "module": "/src/utils/ordered-registry"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ToggleGroupRegistry",
+          "declaration": {
+            "name": "ToggleGroupRegistry",
+            "module": "src/components/toggle-group/toggle-group.registry.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toggle-group/toggle-group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundToggleGroup",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "public",
+              "default": "[]",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "multiple"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "privacy": "public",
+              "default": "'horizontal'",
+              "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "true",
+              "attribute": "loop"
+            },
+            {
+              "kind": "field",
+              "name": "rootCtx",
+              "type": {
+                "text": "ToggleGroupRootContext"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "disabledCtx",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "engine",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ToggleGroupEngine()"
+            },
+            {
+              "kind": "field",
+              "name": "registry",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ToggleGroupRegistry()"
+            },
+            {
+              "kind": "field",
+              "name": "rovingFocus",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new RovingFocusController(this, { orientation: 'horizontal', loop: true, getItems: () => this.registry.toggles .map((r) => r.element.shadowRoot?.querySelector<HTMLElement>('[part=\"button\"]') ?? null) .filter((btn): btn is HTMLElement => btn !== null), })"
+            },
+            {
+              "kind": "method",
+              "name": "shouldRefreshContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "PropertyValues<this>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "createRootContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ToggleGroupRootContext"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveToggle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "toggleDisabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "emitValueChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "warnOnInvalidToggleRegistration",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-value-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "value"
+            },
+            {
+              "name": "default-value",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]",
+              "fieldName": "defaultValue"
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "multiple"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'",
+              "fieldName": "orientation"
+            },
+            {
+              "name": "loop",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "loop"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-toggle-group",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundToggleGroup",
+          "declaration": {
+            "name": "GrundToggleGroup",
+            "module": "src/components/toggle-group/toggle-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-toggle-group",
+          "declaration": {
+            "name": "GrundToggleGroup",
+            "module": "src/components/toggle-group/toggle-group.ts"
           }
         }
       ]
@@ -344,11 +1073,29 @@
             },
             {
               "kind": "field",
+              "name": "ancestorDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "itemCtx",
               "type": {
                 "text": "AccordionItemContext"
               },
               "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "disabledCtx",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
             },
             {
               "kind": "field",
@@ -733,6 +1480,15 @@
             },
             {
               "kind": "field",
+              "name": "disabledCtx",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "engine",
               "privacy": "private",
               "readonly": true,
@@ -748,12 +1504,6 @@
             {
               "kind": "field",
               "name": "_isExpanded",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_isEffectivelyDisabled",
               "privacy": "private",
               "readonly": true
             },
@@ -1225,6 +1975,15 @@
             },
             {
               "kind": "field",
+              "name": "ancestorDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "rovingFocus",
               "privacy": "private",
               "readonly": true,
@@ -1516,6 +2275,15 @@
             },
             {
               "kind": "field",
+              "name": "disabledCtx",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "controller",
               "privacy": "private",
               "default": "new TabsEngine()"
@@ -1568,12 +2336,6 @@
             {
               "kind": "field",
               "name": "_requestActivation",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_isEffectivelyDisabled",
               "privacy": "private",
               "readonly": true
             },
@@ -1747,6 +2509,15 @@
             },
             {
               "kind": "field",
+              "name": "ancestorDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "isRegistered",
               "type": {
                 "text": "boolean"
@@ -1816,550 +2587,6 @@
           "declaration": {
             "name": "GrundTab",
             "module": "src/components/tabs/tab/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/toggle/root/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "A standalone pressable toggle button with `aria-pressed` state.\nAlso the primitive element used inside `<grund-toggle-group>`.",
-          "name": "GrundToggle",
-          "cssParts": [
-            {
-              "description": "The inner button element",
-              "name": "button"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Button label content",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "pressed",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "privacy": "public",
-              "default": "undefined",
-              "description": "Whether the toggle is pressed. Setting this enables controlled mode.\nIn controlled mode the element fires `grund-pressed-change` but does not\nupdate internal state — the consumer must reflect the new value back.\nHas no effect when inside `<grund-toggle-group>` (group owns pressed state).",
-              "attribute": "pressed"
-            },
-            {
-              "kind": "field",
-              "name": "defaultPressed",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "description": "Initial pressed state for uncontrolled mode. Ignored after the first render.\nHas no effect when inside `<grund-toggle-group>`.",
-              "attribute": "default-pressed"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "public",
-              "default": "''",
-              "description": "Identifier for this toggle. Has no effect on the standalone element;\nused by `<grund-toggle-group>` to identify which item is pressed.",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "description": "Whether the toggle is disabled.",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "internalPressed",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_groupCtx",
-              "type": {
-                "text": "ToggleGroupRootContext | undefined"
-              },
-              "privacy": "private",
-              "default": "undefined"
-            },
-            {
-              "kind": "field",
-              "name": "_isRegistered",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "effectivePressed",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "effectiveDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "handleClick",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            }
-          ],
-          "events": [
-            {
-              "name": "grund-pressed-change",
-              "type": {
-                "text": "CustomEvent<PressedChangeDetail>"
-              },
-              "description": "When pressed state changes"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "pressed",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "default": "undefined",
-              "description": "Whether the toggle is pressed. Setting this enables controlled mode.\nIn controlled mode the element fires `grund-pressed-change` but does not\nupdate internal state — the consumer must reflect the new value back.\nHas no effect when inside `<grund-toggle-group>` (group owns pressed state).",
-              "fieldName": "pressed"
-            },
-            {
-              "name": "default-pressed",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Initial pressed state for uncontrolled mode. Ignored after the first render.\nHas no effect when inside `<grund-toggle-group>`.",
-              "fieldName": "defaultPressed"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Identifier for this toggle. Has no effect on the standalone element;\nused by `<grund-toggle-group>` to identify which item is pressed.",
-              "fieldName": "value"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the toggle is disabled.",
-              "fieldName": "disabled"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-toggle",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundToggle",
-          "declaration": {
-            "name": "GrundToggle",
-            "module": "src/components/toggle/root/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-toggle",
-          "declaration": {
-            "name": "GrundToggle",
-            "module": "src/components/toggle/root/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/toggle-group/context/toggle-group.context.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "toggleGroupRootContext"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "toggleGroupRootContext",
-          "declaration": {
-            "name": "toggleGroupRootContext",
-            "module": "src/components/toggle-group/context/toggle-group.context.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/toggle-group/engine/toggle-group.engine.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/toggle-group/registry/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ToggleGroupRegistry",
-          "declaration": {
-            "name": "ToggleGroupRegistry",
-            "module": "./toggle-group.registry.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "ToggleGroupRecord",
-          "declaration": {
-            "name": "ToggleGroupRecord",
-            "module": "./toggle-group.registry.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/toggle-group/registry/toggle-group.registry.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/toggle-group/root/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Root toggle group container. Manages selection state across child `<grund-toggle>` elements.",
-          "name": "GrundToggleGroup",
-          "cssParts": [
-            {
-              "description": "The inner container element Accessibility: provide an accessible name via the `label` property (`aria-label` on the inner group container). External `aria-labelledby` cannot cross shadow-root boundaries to reach the inner container — use the `label` prop instead.",
-              "name": "group"
-            }
-          ],
-          "slots": [
-            {
-              "description": "`<grund-toggle>` children",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "privacy": "public",
-              "default": "undefined",
-              "description": "The controlled set of pressed toggle values.\nSetting this enables controlled mode — the element fires `grund-value-change`\nbut does not update internal state; the consumer must reflect the new value back.",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "string[]"
-              },
-              "privacy": "public",
-              "default": "[]",
-              "description": "Initial pressed values for uncontrolled mode. Ignored after the first render.",
-              "attribute": "default-value"
-            },
-            {
-              "kind": "field",
-              "name": "multiple",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "description": "Whether multiple toggles can be pressed simultaneously.",
-              "attribute": "multiple"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "description": "Whether all toggles in the group are disabled.",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "orientation",
-              "type": {
-                "text": "'horizontal' | 'vertical'"
-              },
-              "privacy": "public",
-              "default": "'horizontal'",
-              "description": "Orientation used for keyboard navigation arrow keys.",
-              "attribute": "orientation"
-            },
-            {
-              "kind": "field",
-              "name": "loop",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "true",
-              "description": "Whether keyboard navigation wraps from last to first and vice versa.",
-              "attribute": "loop"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "public",
-              "default": "''",
-              "description": "Accessible name for the group container, applied as `aria-label` on the\ninner `role=\"group\"` element. Required for screen-reader users unless the\ngroup is labelled by a visible heading via `aria-labelledby` on the host.",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "rootCtx",
-              "type": {
-                "text": "ToggleGroupRootContext"
-              },
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "engine",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ToggleGroupEngine()"
-            },
-            {
-              "kind": "field",
-              "name": "registry",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ToggleGroupRegistry()"
-            },
-            {
-              "kind": "field",
-              "name": "rovingFocus",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new RovingFocusController(this, { orientation: 'horizontal', loop: true, getItems: () => this.registry.toggles .map((r) => r.element.shadowRoot?.querySelector<HTMLElement>('[part=\"button\"]') ?? null) .filter((btn): btn is HTMLElement => btn !== null), })"
-            },
-            {
-              "kind": "field",
-              "name": "_isPressed",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_isEffectivelyDisabled",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_requestToggle",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_registerToggle",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_unregisterToggle",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "createRootContext",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "ToggleGroupRootContext"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "handleToggle",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "boolean | null"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "toggleDisabled",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "description": "Returns the resolved pressed state for the toggled item, or null if blocked."
-            }
-          ],
-          "events": [
-            {
-              "name": "grund-value-change",
-              "type": {
-                "text": "CustomEvent<ToggleGroupValueChangeDetail>"
-              },
-              "description": "When the set of pressed toggles changes"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "default": "undefined",
-              "description": "The controlled set of pressed toggle values.\nSetting this enables controlled mode — the element fires `grund-value-change`\nbut does not update internal state; the consumer must reflect the new value back.",
-              "fieldName": "value"
-            },
-            {
-              "name": "default-value",
-              "type": {
-                "text": "string[]"
-              },
-              "default": "[]",
-              "description": "Initial pressed values for uncontrolled mode. Ignored after the first render.",
-              "fieldName": "defaultValue"
-            },
-            {
-              "name": "multiple",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether multiple toggles can be pressed simultaneously.",
-              "fieldName": "multiple"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether all toggles in the group are disabled.",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "orientation",
-              "type": {
-                "text": "'horizontal' | 'vertical'"
-              },
-              "default": "'horizontal'",
-              "description": "Orientation used for keyboard navigation arrow keys.",
-              "fieldName": "orientation"
-            },
-            {
-              "name": "loop",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Whether keyboard navigation wraps from last to first and vice versa.",
-              "fieldName": "loop"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Accessible name for the group container, applied as `aria-label` on the\ninner `role=\"group\"` element. Required for screen-reader users unless the\ngroup is labelled by a visible heading via `aria-labelledby` on the host.",
-              "fieldName": "label"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-toggle-group",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundToggleGroup",
-          "declaration": {
-            "name": "GrundToggleGroup",
-            "module": "src/components/toggle-group/root/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-toggle-group",
-          "declaration": {
-            "name": "GrundToggleGroup",
-            "module": "src/components/toggle-group/root/index.ts"
           }
         }
       ]

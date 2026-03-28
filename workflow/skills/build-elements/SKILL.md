@@ -75,6 +75,8 @@ Do not proceed to Step 2 with an unresolved **Extend** gap — working around it
 
 Run the smoke test immediately: `npm run test:run -- src/components/{name}/{name}.test.ts`. It must fail (RED) — if it passes, the scaffold is broken or context wiring was already correct.
 
+**Spec-contract mapping (required before remaining tests):** After the smoke test, read the component spec/design doc line by line. Every behavioral statement (e.g., "clicking an indeterminate checkbox fires `checked: true`") becomes a named test before any implementation code is written. This ensures the RED phase locks in the spec contract, not just structural wiring.
+
 **Then write the remaining tests:**
 - Every public property: initial default, dynamic change, attribute reflection
 - Every event: detail shape, controlled mode (state unchanged), uncontrolled mode (state changes)
