@@ -25,6 +25,11 @@ export class GrundCheckboxIndicator extends LitElement {
 
   private _warnedMissingContext = false;
 
+  public override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute('aria-hidden', 'true');
+  }
+
   protected override willUpdate(): void {
     if (import.meta.env.DEV && !this._ctx && !this._warnedMissingContext) {
       this._warnedMissingContext = true;
@@ -43,9 +48,6 @@ export class GrundCheckboxIndicator extends LitElement {
     this.toggleAttribute('data-checked', checked && !indeterminate);
     this.toggleAttribute('data-unchecked', !checked && !indeterminate);
     this.toggleAttribute('data-indeterminate', indeterminate);
-
-    // Prevent indicator content from polluting the checkbox's accessible name
-    this.setAttribute('aria-hidden', 'true');
   }
 
   protected override render() {

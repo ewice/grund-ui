@@ -230,6 +230,21 @@ describe('GrundCheckbox', () => {
     expect(events[0].checked).to.be.true;
   });
 
+  it('clicking indeterminate+checked resolves to checked=true', async () => {
+    const el = await setup(
+      html`<grund-checkbox .checked=${true} .indeterminate=${true}>Label</grund-checkbox>`,
+    );
+    const events: CheckedChangeDetail[] = [];
+    el.addEventListener('grund-checked-change', (e) => {
+      events.push((e as CustomEvent<CheckedChangeDetail>).detail);
+    });
+
+    getByPart<HTMLButtonElement>(el, 'button').click();
+    await flush(el);
+
+    expect(events[0].checked).to.be.true;
+  });
+
   it('indeterminate is not automatically cleared on click', async () => {
     const el = await setup(
       html`<grund-checkbox .indeterminate=${true}>Label</grund-checkbox>`,
@@ -448,6 +463,36 @@ describe('GrundCheckbox', () => {
     const form = await fixture<HTMLFormElement>(html`
       <form>
         <grund-checkbox name="agree" value="yes" default-checked>
+          Label
+        </grund-checkbox>
+      </form>
+    `);
+    const cb = form.querySelector<GrundCheckbox>('grund-checkbox')!;
+    await flush(cb);
+
+    const data = new FormData(form);
+    expect(data.get('agree')).to.equal('yes');
+  });
+
+  it('submits value in FormData when read-only and checked', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <grund-checkbox name="agree" value="yes" default-checked read-only>
+          Label
+        </grund-checkbox>
+      </form>
+    `);
+    const cb = form.querySelector<GrundCheckbox>('grund-checkbox')!;
+    await flush(cb);
+
+    const data = new FormData(form);
+    expect(data.get('agree')).to.equal('yes');
+  });
+
+  it('indeterminate checkbox submits based on checked state', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <grund-checkbox name="agree" value="yes" default-checked .indeterminate=${true}>
           Label
         </grund-checkbox>
       </form>

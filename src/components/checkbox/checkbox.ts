@@ -137,14 +137,12 @@ export class GrundCheckbox extends LitElement {
   /** @internal Called when the parent `<form>` is reset. */
   public formResetCallback(): void {
     this._internalChecked = this.defaultChecked;
-    this.requestUpdate();
   }
 
   /** @internal Called for browser autofill or bfcache restore. */
   public formStateRestoreCallback(state: string | File | FormData): void {
     if (typeof state === 'string') {
       this._internalChecked = state === this.value;
-      this.requestUpdate();
     }
   }
 
@@ -158,7 +156,7 @@ export class GrundCheckbox extends LitElement {
       return;
     }
 
-    const newChecked = !this._effectiveChecked;
+    const newChecked = this.indeterminate ? true : !this._effectiveChecked;
 
     if (this.checked === undefined) {
       this._internalChecked = newChecked;

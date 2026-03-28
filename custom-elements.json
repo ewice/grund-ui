@@ -4,6 +4,75 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "src/components/accordion/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordion",
+          "declaration": {
+            "name": "GrundAccordion",
+            "module": "./root/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundAccordionItem",
+          "declaration": {
+            "name": "GrundAccordionItem",
+            "module": "./item/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundAccordionHeader",
+          "declaration": {
+            "name": "GrundAccordionHeader",
+            "module": "./header/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundAccordionTrigger",
+          "declaration": {
+            "name": "GrundAccordionTrigger",
+            "module": "./trigger/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundAccordionPanel",
+          "declaration": {
+            "name": "GrundAccordionPanel",
+            "module": "./panel/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AccordionValueChangeDetail",
+          "declaration": {
+            "name": "AccordionValueChangeDetail",
+            "module": "./types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AccordionOpenChangeDetail",
+          "declaration": {
+            "name": "AccordionOpenChangeDetail",
+            "module": "./types.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/checkbox/checkbox.ts",
       "declarations": [
         {
@@ -402,75 +471,6 @@
     {
       "kind": "javascript-module",
       "path": "src/components/checkbox/types.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundAccordion",
-          "declaration": {
-            "name": "GrundAccordion",
-            "module": "./root/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundAccordionItem",
-          "declaration": {
-            "name": "GrundAccordionItem",
-            "module": "./item/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundAccordionHeader",
-          "declaration": {
-            "name": "GrundAccordionHeader",
-            "module": "./header/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundAccordionTrigger",
-          "declaration": {
-            "name": "GrundAccordionTrigger",
-            "module": "./trigger/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundAccordionPanel",
-          "declaration": {
-            "name": "GrundAccordionPanel",
-            "module": "./panel/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "AccordionValueChangeDetail",
-          "declaration": {
-            "name": "AccordionValueChangeDetail",
-            "module": "./types.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "AccordionOpenChangeDetail",
-          "declaration": {
-            "name": "AccordionOpenChangeDetail",
-            "module": "./types.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/types.ts",
       "declarations": [],
       "exports": []
     },
@@ -1319,12 +1319,6 @@
     {
       "kind": "javascript-module",
       "path": "src/components/toggle-group/types.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/checkbox/context/checkbox.context.ts",
       "declarations": [],
       "exports": []
     },
@@ -2183,6 +2177,12 @@
           }
         }
       ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/context/checkbox.context.ts",
+      "declarations": [],
+      "exports": []
     },
     {
       "kind": "javascript-module",
