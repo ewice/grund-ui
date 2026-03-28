@@ -28,6 +28,9 @@ export class GrundCheckboxIndicator extends LitElement {
     this.toggleAttribute('data-checked', checked && !indeterminate);
     this.toggleAttribute('data-unchecked', !checked && !indeterminate);
     this.toggleAttribute('data-indeterminate', indeterminate);
+
+    // Prevent indicator content from polluting the checkbox's accessible name
+    this.setAttribute('aria-hidden', 'true');
   }
 
   protected override render() {

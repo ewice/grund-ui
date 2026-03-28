@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { consume, provide } from '@lit/context';
 
@@ -161,8 +161,8 @@ export class GrundCheckbox extends LitElement {
         role="checkbox"
         aria-checked=${ariaChecked}
         ?disabled=${this._effectiveDisabled}
-        aria-required=${this.required ? 'true' : 'false'}
-        aria-readonly=${this.readOnly ? 'true' : 'false'}
+        aria-required=${this.required || nothing}
+        aria-readonly=${this.readOnly || nothing}
         @click=${this._handleClick}
       >
         <slot></slot>
