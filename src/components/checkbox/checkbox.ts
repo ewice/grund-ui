@@ -21,7 +21,6 @@ import type { CheckedChangeDetail } from './types';
  * @csspart button - The inner `<button role="checkbox">`
  */
 export class GrundCheckbox extends LitElement {
-  /** @internal */
   public static formAssociated = true;
 
   public static override shadowRootOptions: ShadowRootInit = {

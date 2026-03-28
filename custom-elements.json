@@ -25,6 +25,16 @@
           "members": [
             {
               "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
               "name": "shadowRootOptions",
               "type": {
                 "text": "ShadowRootInit"
