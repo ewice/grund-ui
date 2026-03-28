@@ -24,6 +24,11 @@ export class GrundCheckbox extends LitElement {
   /** @internal */
   public static formAssociated = true;
 
+  public static override shadowRootOptions: ShadowRootInit = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true,
+  };
+
   public static override readonly styles = css`
     :host {
       display: inline; /* inline: checkbox is an inline control */
@@ -61,10 +66,15 @@ export class GrundCheckbox extends LitElement {
   @state()
   private _ancestorDisabled = false;
 
+  @state()
+  private _fieldsetDisabled = false;
+
   @provide({ context: checkboxContext })
   @state()
   protected _checkboxCtx: CheckboxContext = { checked: false, indeterminate: false };
 
+  // Form-associated elements are inherently client-only — attachInternals()
+  // requires a real DOM element and cannot run during SSR.
   private _internals = this.attachInternals();
   private _form = new FormController(this, this._internals);
 
@@ -73,11 +83,7 @@ export class GrundCheckbox extends LitElement {
   }
 
   private get _effectiveDisabled(): boolean {
-    return this._ancestorDisabled || this.disabled;
-  }
-
-  protected override createRenderRoot() {
-    return this.attachShadow({ mode: 'open', delegatesFocus: true });
+    return this._ancestorDisabled || this._fieldsetDisabled || this.disabled;
   }
 
   protected override willUpdate(): void {
@@ -96,8 +102,13 @@ export class GrundCheckbox extends LitElement {
     this.toggleAttribute('data-required', this.required);
     this.toggleAttribute('data-readonly', this.readOnly);
 
-    // Context for indicator
-    this._checkboxCtx = { checked, indeterminate: this.indeterminate };
+    // Context for indicator — only recreate when values change
+    if (
+      this._checkboxCtx.checked !== checked ||
+      this._checkboxCtx.indeterminate !== this.indeterminate
+    ) {
+      this._checkboxCtx = { checked, indeterminate: this.indeterminate };
+    }
 
     // Form value — set in willUpdate per form-participation Rule 2
     if (this.name) {
@@ -132,7 +143,7 @@ export class GrundCheckbox extends LitElement {
 
   /** @internal Called when ancestor `<fieldset disabled>` changes. */
   public formDisabledCallback(disabled: boolean): void {
-    this._ancestorDisabled = disabled;
+    this._fieldsetDisabled = disabled;
   }
 
   private _handleClick(): void {
