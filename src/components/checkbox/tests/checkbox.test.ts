@@ -1,6 +1,6 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it, vi } from 'vitest';
-import { flush, getByPart, simulateKeyboard } from '../../../test-utils';
+import { flush, getByPart } from '../../../test-utils';
 import '../checkbox';
 import '../indicator';
 
