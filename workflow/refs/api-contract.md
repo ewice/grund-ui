@@ -9,7 +9,7 @@ This contract focuses on the consumer-facing surface: exported elements, public 
 
 ### Public Surface and Exports
 
-1. Every public custom element exported from `src/components/*/index.ts` must have a corresponding public entry in `package.json` exports. Internal implementation paths must not be part of the public surface.
+1. Every public custom element exported from `src/components/*/checkbox.ts` must have a corresponding public entry in `package.json` exports. Internal implementation paths must not be part of the public surface.
 2. Public exports must be intentionally public. Non-public exports must be marked `@internal` and must not appear as consumer-facing API in generated docs.
 3. Public API review covers consumer-facing properties, events, slots, methods, tags, and exported types. Internal controllers, engines, context objects, and helper types are not public API unless they are explicitly exported for consumers.
 4. Public methods, getters, and fields on exported element classes must be intentionally part of the consumer contract. Accidental public helpers are API leaks even if they are undocumented.

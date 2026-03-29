@@ -73,67 +73,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/tabs/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundTabs",
-          "declaration": {
-            "name": "GrundTabs",
-            "module": "./root/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundTabsList",
-          "declaration": {
-            "name": "GrundTabsList",
-            "module": "./list/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundTab",
-          "declaration": {
-            "name": "GrundTab",
-            "module": "./tab/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundTabsPanel",
-          "declaration": {
-            "name": "GrundTabsPanel",
-            "module": "./panel/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundTabsIndicator",
-          "declaration": {
-            "name": "GrundTabsIndicator",
-            "module": "./indicator/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TabsValueChangeDetail",
-          "declaration": {
-            "name": "TabsValueChangeDetail",
-            "module": "./types.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/tabs/types.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/components/toggle/index.ts",
       "declarations": [],
       "exports": [
@@ -418,6 +357,104 @@
     {
       "kind": "javascript-module",
       "path": "src/components/toggle/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCheckbox",
+          "declaration": {
+            "name": "GrundCheckbox",
+            "module": "./root/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundCheckboxIndicator",
+          "declaration": {
+            "name": "GrundCheckboxIndicator",
+            "module": "./indicator/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CheckedChangeDetail",
+          "declaration": {
+            "name": "CheckedChangeDetail",
+            "module": "./types.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabs",
+          "declaration": {
+            "name": "GrundTabs",
+            "module": "./root/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundTabsList",
+          "declaration": {
+            "name": "GrundTabsList",
+            "module": "./list/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundTab",
+          "declaration": {
+            "name": "GrundTab",
+            "module": "./tab/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundTabsPanel",
+          "declaration": {
+            "name": "GrundTabsPanel",
+            "module": "./panel/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundTabsIndicator",
+          "declaration": {
+            "name": "GrundTabsIndicator",
+            "module": "./indicator/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TabsValueChangeDetail",
+          "declaration": {
+            "name": "TabsValueChangeDetail",
+            "module": "./types.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/types.ts",
       "declarations": [],
       "exports": []
     },
@@ -1777,6 +1814,381 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/checkbox/context/checkbox.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "checkboxContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "checkboxContext",
+          "declaration": {
+            "name": "checkboxContext",
+            "module": "src/components/checkbox/context/checkbox.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/indicator/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Visual indicator for <grund-checkbox>. Place inside <grund-checkbox> to slot a\ncustom checkmark or dash icon. Visibility is controlled by consumers via CSS\non the reflected data-checked, data-unchecked, and data-indeterminate attributes.",
+          "name": "GrundCheckboxIndicator",
+          "cssParts": [
+            {
+              "description": "The wrapper span element",
+              "name": "indicator"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Custom checkmark or dash icon",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_ctx",
+              "type": {
+                "text": "CheckboxContext | undefined"
+              },
+              "privacy": "private",
+              "default": "undefined"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-checkbox-indicator",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCheckboxIndicator",
+          "declaration": {
+            "name": "GrundCheckboxIndicator",
+            "module": "src/components/checkbox/indicator/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-checkbox-indicator",
+          "declaration": {
+            "name": "GrundCheckboxIndicator",
+            "module": "src/components/checkbox/indicator/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/root/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A headless form-associated checkbox with checked, unchecked, and indeterminate states.\nSupports controlled mode (`checked` prop) and uncontrolled mode (`defaultChecked` prop).\nIn controlled mode, `grund-checked-change` fires but the displayed state does not change\nautomatically — the consumer must update the `checked` property.",
+          "name": "GrundCheckbox",
+          "cssParts": [
+            {
+              "description": "The inner <button role=\"checkbox\"> element",
+              "name": "button"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Label text and optional <grund-checkbox-indicator> child",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "privacy": "public",
+              "static": true,
+              "readonly": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "checked",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined",
+              "description": "Controlled checked value. `undefined` enables uncontrolled mode.",
+              "attribute": "checked"
+            },
+            {
+              "kind": "field",
+              "name": "defaultChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "description": "Seeds uncontrolled checked state on first render only.",
+              "attribute": "default-checked"
+            },
+            {
+              "kind": "field",
+              "name": "indeterminate",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "description": "Whether the checkbox is in the indeterminate (mixed) state. Always controlled.",
+              "attribute": "indeterminate"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "''",
+              "description": "Form field name.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "'on'",
+              "description": "Form submission value when checked.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "description": "Whether the checkbox is disabled.",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "description": "Whether the checkbox is required for form submission.",
+              "attribute": "required"
+            },
+            {
+              "kind": "field",
+              "name": "readOnly",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "description": "Whether the checkbox is read-only (visible but not interactable).",
+              "attribute": "read-only"
+            },
+            {
+              "kind": "field",
+              "name": "_internalChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_ctx",
+              "type": {
+                "text": "CheckboxContext"
+              },
+              "privacy": "protected",
+              "default": "{ checked: false, indeterminate: false }"
+            },
+            {
+              "kind": "field",
+              "name": "_internals",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_form",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormController(this, this._internals)"
+            },
+            {
+              "kind": "field",
+              "name": "_handleHostClick",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_effectiveChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_handleClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-checked-change",
+              "type": {
+                "text": "CustomEvent<CheckedChangeDetail>"
+              },
+              "description": "When checked state changes via user interaction. In controlled mode, also update the `checked` property to reflect the new value."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "checked",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "undefined",
+              "description": "Controlled checked value. `undefined` enables uncontrolled mode.",
+              "fieldName": "checked"
+            },
+            {
+              "name": "default-checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Seeds uncontrolled checked state on first render only.",
+              "fieldName": "defaultChecked"
+            },
+            {
+              "name": "indeterminate",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the checkbox is in the indeterminate (mixed) state. Always controlled.",
+              "fieldName": "indeterminate"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Form field name.",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "'on'",
+              "description": "Form submission value when checked.",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the checkbox is disabled.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the checkbox is required for form submission.",
+              "fieldName": "required"
+            },
+            {
+              "name": "read-only",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the checkbox is read-only (visible but not interactable).",
+              "fieldName": "readOnly"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-checkbox",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCheckbox",
+          "declaration": {
+            "name": "GrundCheckbox",
+            "module": "src/components/checkbox/root/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-checkbox",
+          "declaration": {
+            "name": "GrundCheckbox",
+            "module": "src/components/checkbox/root/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/tabs/context/tabs.context.ts",
       "declarations": [
         {
@@ -1807,7 +2219,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Visual indicator that tracks the active tab's position via CSS custom properties.\nPosition inside `<grund-tabs-list>`. Consumer uses the exposed custom properties\nto animate or style the indicator relative to the active tab.",
+          "description": "Visual indicator that tracks the active tab's position via CSS custom properties.\r\nPosition inside `<grund-tabs-list>`. Consumer uses the exposed custom properties\r\nto animate or style the indicator relative to the active tab.",
           "name": "GrundTabsIndicator",
           "cssProperties": [
             {

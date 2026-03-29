@@ -71,13 +71,13 @@ If the CEM has drifted from the committed version: report the diff as a failure.
 
 Verify structural integrity of all components. These are fast grep checks — no AI needed.
 
-**Barrel export completeness:** Every element class under `src/components/*/` must be re-exported from its component's `index.ts`.
+**Barrel export completeness:** Every element class under `src/components/*/` must be re-exported from its component's `checkbox.ts`.
 
 ```bash
 # List all customElements.define() tags
 grep -rh "customElements.define(" src/components/ --include="*.ts" | grep -oP "'grund-[^']+'" | sort > /tmp/defined-tags.txt
 # List all exports from barrel files
-grep -rh "export" src/components/*/index.ts --include="*.ts" | sort > /tmp/barrel-exports.txt
+grep -rh "export" src/components/*/checkbox.ts --include="*.ts" | sort > /tmp/barrel-exports.txt
 ```
 
 Report any element that is defined but not exported from its barrel.
@@ -90,12 +90,12 @@ grep -rn "customElements.define(" src/components/ --include="*.ts" | sort -t"'" 
 
 Report duplicates as blockers.
 
-**Package.json exports map completeness:** Every component directory under `src/components/*/` with a barrel `index.ts` must have a corresponding `"./name"` entry in `package.json` `exports`.
+**Package.json exports map completeness:** Every component directory under `src/components/*/` with a barrel `checkbox.ts` must have a corresponding `"./name"` entry in `package.json` `exports`.
 
 ```bash
 for dir in src/components/*/; do
   name=$(basename "$dir")
-  if [ -f "$dir/index.ts" ]; then
+  if [ -f "$dir/checkbox.ts" ]; then
     grep -q "\"\./$name\"" package.json || echo "MISSING exports entry: ./$name"
   fi
 done
@@ -127,10 +127,33 @@ CROSS-BROWSER: SKIP | PASS | FAIL
 RESULT: ALL PASS | BLOCKED (list failing steps)
 ```
 
-If ALL PASS: component is ready for commit or handoff.
+If ALL PASS: proceed to Step 8.
 If BLOCKED: list failing steps with enough detail to diagnose. Do not fix — report and stop.
 
 **System health reminder:** After every 3rd new component (count `src/components/` directories), append to the summary: `💡 Consider running /review-system-health — 3+ components since last audit.`
+
+### Step 8 — Reviewer Feedback Loop
+
+```bash
+test -f workflow/.feedback-queue.md && echo "QUEUE_EXISTS" || echo "QUEUE_EMPTY"
+```
+
+**If `QUEUE_EMPTY`:** no post-reviewer fixes were recorded — proceed to `superpowers:finishing-a-development-branch`.
+
+**If `QUEUE_EXISTS`:** dispatch a subagent with the following prompt:
+
+> Read `workflow/.feedback-queue.md` and `workflow/refs/reviewer-dispatch.md`.
+> For each entry in the queue, execute the Reviewer Feedback Loop (Step 2) from
+> reviewer-dispatch.md. After processing each entry, delete it from the queue file.
+> Delete the file entirely when all entries are cleared.
+> Work through entries one at a time. For each:
+> - classify (correctness / quality)
+> - identify the reviewer scope
+> - check whether an existing rule covers it; if so, note the miss
+> - if no rule covers it, draft and validate a new rule
+> Report what was done for each entry.
+
+Do not proceed to `superpowers:finishing-a-development-branch` until the subagent completes and the queue file is gone.
 
 ## Common Mistakes
 

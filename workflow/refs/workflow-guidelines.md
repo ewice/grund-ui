@@ -59,6 +59,16 @@ dispatch them per `workflow/refs/reviewer-dispatch.md` instead of a generic code
 quality review. The project's domain-specific reviewers (accessibility, headless, API, test,
 security, lit) are more precise than a general-purpose review agent.
 
+Every skill that dispatches reviewers must follow the **complete reviewer lifecycle** defined in
+`workflow/refs/reviewer-dispatch.md` — not just the dispatch table. This includes:
+
+1. **Context injection** (Section 1) — always inject the listed ref files alongside changed file contents
+2. **Patch loop** (Patch Loop section) — fix blockers, re-run only flagged reviewers, max 2 iterations
+3. **Post-Reviewer Protocol** (Post-Reviewer Protocol section) — once all reviewers pass, any subsequent fix must be recorded in `workflow/.feedback-queue.md` immediately; do not rely on memory or deferred recording
+4. **Reviewer Feedback Loop** (Reviewer Feedback Loop section) — processed by a subagent in `/validate-build` Step 8; individual skills only write entries, never process them
+
+The Post-Reviewer Protocol is the critical gate between "reviewers passed" and "branch done". Skipping it breaks the rule-improvement pipeline and allows systemic issues to go uncaught.
+
 ---
 
 ## 5. Smallest Diff Check

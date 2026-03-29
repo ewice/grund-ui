@@ -55,6 +55,10 @@ Read `workflow/refs/reviewer-dispatch.md` for the change-type selection table an
 
 Read each selected reviewer's SKILL.md from `workflow/reviewers/{name}/SKILL.md`. Use its content as the Agent prompt. Dispatch as Agent calls, injecting context per the dispatch table.
 
+Follow the patch loop rules in `workflow/refs/reviewer-dispatch.md`: fix all blockers, re-run only the reviewers that flagged blockers, max 2 patch iterations per reviewer.
+
+Once all reviewers pass, follow the Post-Reviewer Protocol in `workflow/refs/reviewer-dispatch.md`: any fix applied after reviewers passed must be written to `workflow/.feedback-queue.md` immediately.
+
 ### Step 5 — Cross-component audit
 
 If the bug could exist in other components (same pattern, shared controller, or common idiom): run `/audit-cross-component -- {one-sentence description of the pattern}`. Fix all affected components before proceeding.

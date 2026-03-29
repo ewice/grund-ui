@@ -44,8 +44,8 @@ Aggregate results:
 ## Cross-Component Audit: {issue description}
 
 ### Affected
-- `accordion`: src/components/accordion/root/index.ts:42 — {description}
-- `tabs`: src/components/tabs/trigger/index.ts:17 — {description}
+- `accordion`: src/components/accordion/root/checkbox.ts:42 — {description}
+- `tabs`: src/components/tabs/trigger/checkbox.ts:17 — {description}
 
 ### Clean
 - `dialog`, `switch`, `separator`

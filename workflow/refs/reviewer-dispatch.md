@@ -24,6 +24,7 @@ and inject the context files listed below alongside the changed/generated file c
 - "All element files" = every `.ts` file under `src/components/{name}/` excluding test files.
 - Story files do not exist during `/build-elements` — `test-reviewer` defers story coverage items to `/build-stories`.
 - `security-reviewer` runs for **every** change type. Event listener leaks and XSS vectors appear in refactors and bug fixes.
+- Controllers created as part of the same changeset (e.g., `FormController` built as a pre-flight for a new component) are **always** injected — treat them as element files, not as optional context.
 
 ---
 
@@ -74,9 +75,64 @@ After collecting reviewer findings:
 4. If the *same* finding recurs after 2 genuine fix attempts (the fix didn't take): invoke
    `/diagnose-failure` and surface to the engineer.
 
+---
+
+## Post-Reviewer Protocol
+
+**Applies to every skill that dispatches reviewers.** Once the patch loop completes and all
+reviewers return PASS, the pipeline enters post-reviewer mode for the remainder of the branch.
+
+**Rule:** Any fix applied after reviewers have passed — whether during a subsequent pipeline
+step, a `/validate-build` run, or a manual audit — must be written to
+`workflow/.feedback-queue.md` immediately. Do not wait; the record must survive context
+compression.
+
+**Entry format:**
+
+```markdown
+## Entry: <one-line description>
+
+**Fixed file:** `path/to/file.ts`
+**Pre-fix state:** <what was wrong — enough detail for a fresh agent to understand without session context>
+**Fix applied:** <what was changed>
+**Reviewer scope:** <reviewer-name>
+**Classification:** quality | correctness
+**Reasoning:** <the concrete cost or behavioral failure that justifies the fix>
+```
+
+The queue is processed by `/validate-build` Step 8 via a dedicated subagent. No individual
+skill needs to process it — just write and continue.
+
+---
+
 ## Reviewer Feedback Loop
 
-When a bug or anti-pattern is fixed after all reviewers passed (e.g., during `/validate-build`, manual review, or post-merge):
+### Step 1 — Write to the queue immediately
+
+The moment you apply a fix after all reviewers have passed, append an entry to
+`workflow/.feedback-queue.md` (create the file if it doesn't exist). Do not wait
+until `/validate-build` — write immediately so the record survives context compression.
+
+**Entry format:**
+
+```markdown
+## Entry: <one-line description>
+
+**Fixed file:** `path/to/file.ts`
+**Pre-fix state:** <what was wrong — enough detail for a fresh agent to understand>
+**Fix applied:** <what was changed>
+**Reviewer scope:** <reviewer-name>
+**Classification:** quality | correctness
+**Reasoning:** <the concrete cost or behavioral failure that justifies the fix>
+```
+
+This applies to fixes made anywhere after reviewers passed: during `/validate-build`,
+during a manual audit, or in response to a user question.
+
+### Step 2 — Processing (dispatched by `/validate-build` Step 8)
+
+`/validate-build` Step 8 dispatches a subagent to process the queue. The subagent
+runs the following loop for each entry:
 
 1. **Classify the fix:**
    - **Correctness** — pre-fix code produces wrong observable behavior. Proof required: a failing test or spec/design doc contradiction. Rule severity: **blocker**.
@@ -96,6 +152,8 @@ When a bug or anti-pattern is fixed after all reviewers passed (e.g., during `/v
 5. **Validate the rule:** re-dispatch the reviewer against the pre-fix file(s) (use `git show HEAD~1:path/to/file`). The reviewer must produce a finding citing the new rule. If it doesn't, reword until it does — the phrasing isn't concrete enough for the reviewer agent to act on.
 
 6. **Commit the reviewer update alongside the code fix**, not in a separate PR. This keeps the rule addition traceable to the bug that motivated it.
+
+7. **Delete the processed entry** from `workflow/.feedback-queue.md`. Delete the file entirely when all entries are cleared.
 
 ---
 

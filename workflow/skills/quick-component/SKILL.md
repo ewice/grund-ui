@@ -49,11 +49,11 @@ Create `src/components/{name}/` with:
 
 ```
 {name}/
-├── index.ts       ← element implementation
-└── index.ts       ← barrel (re-exports element; this IS the barrel)
+├── checkbox.ts       ← element implementation
+└── checkbox.ts       ← barrel (re-exports element; this IS the barrel)
 ```
 
-A single `index.ts` file is the element and the barrel export. No `types.ts` unless there are
+A single `checkbox.ts` file is the element and the barrel export. No `types.ts` unless there are
 public event detail types or exported interfaces that consumers will import directly.
 
 **Element implementation requirements:**

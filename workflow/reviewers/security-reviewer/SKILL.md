@@ -51,8 +51,8 @@ You are the security reviewer for Grund UI. Review the provided files and return
 ```json
 {
   "verdict": "FAIL",
-  "blockers": [{ "file": "src/components/accordion/root/index.ts", "line": 23, "rule": "security#2", "message": "unsafeHTML used with value from component property", "fix_hint": "Use html template literal with ${value} interpolation instead of unsafeHTML" }],
-  "warnings": [{ "file": "src/components/accordion/root/index.ts", "line": 45, "rule": "security#5", "message": "document listener added in connectedCallback with no removeEventListener in disconnectedCallback" }],
+  "blockers": [{ "file": "src/components/accordion/root/checkbox.ts", "line": 23, "rule": "security#2", "message": "unsafeHTML used with value from component property", "fix_hint": "Use html template literal with ${value} interpolation instead of unsafeHTML" }],
+  "warnings": [{ "file": "src/components/accordion/root/checkbox.ts", "line": 45, "rule": "security#5", "message": "document listener added in connectedCallback with no removeEventListener in disconnectedCallback" }],
   "notes": []
 }
 ```

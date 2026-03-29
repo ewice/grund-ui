@@ -21,20 +21,20 @@
 | `src/components/toggle-group/controller/toggle-group.controller.test.ts` | Unit tests for the controller |
 | `src/components/toggle-group/registry/toggle-group.registry.ts` | Ordered child tracking for registered `<grund-toggle>` elements |
 | `src/components/toggle-group/registry/toggle-group.registry.test.ts` | Unit tests for the registry |
-| `src/components/toggle-group/registry/index.ts` | Registry barrel export |
-| `src/components/toggle-group/root/index.ts` | `GrundToggleGroup` element — provider, controller, RovingFocusController |
+| `src/components/toggle-group/registry/checkbox.ts` | Registry barrel export |
+| `src/components/toggle-group/root/checkbox.ts` | `GrundToggleGroup` element — provider, controller, RovingFocusController |
 | `src/components/toggle-group/root/toggle-group.test.ts` | Element tests: render, data attributes, events, disabled |
 | `src/components/toggle-group/root/toggle-group-keyboard.test.ts` | Keyboard navigation tests |
 | `src/components/toggle-group/root/toggle-group-controlled.test.ts` | Controlled mode and multiple mode tests |
-| `src/components/toggle-group/index.ts` | Barrel export |
+| `src/components/toggle-group/checkbox.ts` | Barrel export |
 | `stories/toggle-group.stories.ts` | Storybook stories |
 
 ### Modified files
 | File | Change |
 |---|---|
-| `src/components/toggle/root/index.ts` | Add optional context consumption; delegate to group when present |
+| `src/components/toggle/root/checkbox.ts` | Add optional context consumption; delegate to group when present |
 | `src/components/toggle/types.ts` | No change needed (existing `PressedChangeDetail` is sufficient) |
-| `src/index.ts` | Add `export * from './components/toggle-group/index.js'` |
+| `src/checkbox.ts` | Add `export * from './components/toggle-group/index.js'` |
 
 ---
 
@@ -406,7 +406,7 @@ Expected: All PASS
 - [ ] **Step 5: Write the registry barrel**
 
 ```ts
-// src/components/toggle-group/registry/index.ts
+// src/components/toggle-group/registry/checkbox.ts
 export { ToggleGroupRegistry } from './toggle-group.registry.js';
 export type { ToggleGroupRecord } from './toggle-group.registry.js';
 ```
@@ -423,7 +423,7 @@ git commit -m "feat(toggle-group): add registry"
 ## Task 5: Root Element
 
 **Files:**
-- Create: `src/components/toggle-group/root/index.ts`
+- Create: `src/components/toggle-group/root/checkbox.ts`
 - Create: `src/components/toggle-group/root/toggle-group.test.ts`
 
 - [ ] **Step 1: Write the failing tests**
@@ -611,7 +611,7 @@ Expected: FAIL (module not found)
 - [ ] **Step 3: Write the root element**
 
 ```ts
-// src/components/toggle-group/root/index.ts
+// src/components/toggle-group/root/checkbox.ts
 import { LitElement, html, css } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
@@ -792,7 +792,7 @@ Expected: All PASS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/components/toggle-group/root/index.ts src/components/toggle-group/root/toggle-group.test.ts
+git add src/components/toggle-group/root/checkbox.ts src/components/toggle-group/root/toggle-group.test.ts
 git commit -m "feat(toggle-group): add root element with controller, registry, and context"
 ```
 
@@ -891,7 +891,7 @@ git commit -m "test(toggle-group): add controlled mode and multiple mode tests"
 This is the most significant modification. `<grund-toggle>` needs to optionally consume `ToggleGroupRootContext` and delegate to the group when present.
 
 **Files:**
-- Modify: `src/components/toggle/root/index.ts`
+- Modify: `src/components/toggle/root/checkbox.ts`
 
 **Key behavioral changes when inside a group:**
 - `effectivePressed` reads from `ctx.isPressed(this.value)` instead of internal state
@@ -903,7 +903,7 @@ This is the most significant modification. `<grund-toggle>` needs to optionally 
 - [ ] **Step 1: Write the modified file**
 
 ```ts
-// src/components/toggle/root/index.ts
+// src/components/toggle/root/checkbox.ts
 import { LitElement, html, css, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
@@ -1097,7 +1097,7 @@ Expected: All PASS
 - [ ] **Step 4: Commit**
 
 ```bash
-git add src/components/toggle/root/index.ts
+git add src/components/toggle/root/checkbox.ts
 git commit -m "feat(toggle): add optional toggle-group context consumption for group support"
 ```
 
@@ -1253,20 +1253,20 @@ git commit -m "test(toggle-group): add keyboard navigation tests"
 ## Task 9: Barrel Export and Package Index
 
 **Files:**
-- Create: `src/components/toggle-group/index.ts`
-- Modify: `src/index.ts`
+- Create: `src/components/toggle-group/checkbox.ts`
+- Modify: `src/checkbox.ts`
 
 - [ ] **Step 1: Write the barrel**
 
 ```ts
-// src/components/toggle-group/index.ts
+// src/components/toggle-group/checkbox.ts
 export { GrundToggleGroup } from './root/index.js';
 export type { ToggleGroupValueChangeDetail } from './types.js';
 ```
 
 - [ ] **Step 2: Add to package index**
 
-Edit `src/index.ts` to add:
+Edit `src/checkbox.ts` to add:
 ```ts
 export * from './components/toggle-group/index.js';
 ```
@@ -1274,7 +1274,7 @@ export * from './components/toggle-group/index.js';
 - [ ] **Step 3: Commit**
 
 ```bash
-git add src/components/toggle-group/index.ts src/index.ts
+git add src/components/toggle-group/checkbox.ts src/checkbox.ts
 git commit -m "feat(toggle-group): export from package index"
 ```
 

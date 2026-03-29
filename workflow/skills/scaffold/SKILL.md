@@ -5,7 +5,7 @@ description: "Use after /component-spec to create directory structure, types.ts,
 
 ## Overview
 
-Creates the file skeleton: directories, `types.ts` with all public interfaces, `context/` interfaces, and barrel `index.ts` files. No logic — just structure and types. Structural validation only — full reviewer gates run in `/build-elements` where there is real code to review.
+Creates the file skeleton: directories, `types.ts` with all public interfaces, `context/` interfaces, and barrel `checkbox.ts` files. No logic — just structure and types. Structural validation only — full reviewer gates run in `/build-elements` where there is real code to review.
 
 ## Usage
 
@@ -108,7 +108,7 @@ Create `src/components/{name}/context/{name}.context.ts`:
 
 ### Step 5 — Write element stubs
 
-For each element directory in the spec (e.g., `root/`, `item/`, `trigger/`, `panel/`), create a minimal stub file `src/components/{name}/{part}/index.ts`:
+For each element directory in the spec (e.g., `root/`, `item/`, `trigger/`, `panel/`), create a minimal stub file `src/components/{name}/{part}/checkbox.ts`:
 
 ```ts
 import { LitElement, html, css } from 'lit';
@@ -135,9 +135,9 @@ if (!customElements.get('grund-{name}-{part}')) {
 
 These stubs are replaced by `/build-elements`. Their only purpose is to give TypeScript a resolvable import target and ensure `customElements.define()` is guarded.
 
-### Step 6 — Write barrel `index.ts`
+### Step 6 — Write barrel `checkbox.ts`
 
-Create `src/components/{name}/index.ts`:
+Create `src/components/{name}/checkbox.ts`:
 - Re-export all element classes from their stub files
 - Re-export all public types from `types.ts`
 
@@ -147,9 +147,9 @@ Verify before committing:
 - All directories from the spec's category exist
 - `types.ts` exports all event detail interfaces and `HostSnapshot`
 - `context/{name}.context.ts` exports the context key and interface
-- Barrel `index.ts` re-exports all element classes and public types
+- Barrel `checkbox.ts` re-exports all element classes and public types
 - Every element stub has the `customElements.define()` guard
-- All names in `types.ts` and `context/index.ts` match vocabulary registry entries
+- All names in `types.ts` and `context/checkbox.ts` match vocabulary registry entries
 
 No reviewer agents run at this step — element stubs have no logic to review. Full reviewer gates run in `/build-elements`.
 

@@ -30,10 +30,10 @@ component/
 ├── registry/      → Ordered child tracking and sub-part attachment (omit if unneeded)
 ├── context/       → Context interfaces and context symbols
 ├── types.ts       → Public types, event detail types, snapshot interfaces
-└── index.ts       → Barrel export
+└── checkbox.ts       → Barrel export
 ```
 
-Element files use `index.ts` inside their part directory. Test files use descriptive names
+Element files use `checkbox.ts` inside their part directory. Test files use descriptive names
 (e.g., `accordion.test.ts`). Component type definitions (event details, host snapshots,
 public interfaces) live in `types.ts`, separate from element implementations.
 
@@ -193,14 +193,16 @@ See `workflow/refs/workflow-guidelines.md` for subagent pipeline guidelines.
 
 ### New component (complex)
 ```
-superpowers:brainstorming → /component-spec → /scaffold → /build-engine
-    → /build-elements → /build-stories → /validate-build → superpowers:finishing-a-development-branch
+superpowers:brainstorming → /component-spec → /scaffold [→ /build-controller if needed]
+    → /build-engine → /build-elements → /build-stories → /validate-build → superpowers:finishing-a-development-branch
 ```
 
 ### New component (simple — single element, state lives in the element)
 ```
 /component-spec → /scaffold → /build-elements → /build-stories → /validate-build → superpowers:finishing-a-development-branch
 ```
+
+**Note:** `/validate-build` Step 8 runs the Reviewer Feedback Loop for any fixes applied after reviewers passed. This is a required gate — do not skip to `finishing-a-development-branch` without completing it. Fixes are tracked in `workflow/.feedback-queue.md` (gitignored): append an entry the moment a post-reviewer fix is applied so the record survives context compression.
 
 ### New component (trivial — single element, no state, no keyboard, no events)
 ```
@@ -240,6 +242,7 @@ Its Step 1 only runs tests — lint, build, CEM, and export checks are covered b
 /smallest-diff              → audit diff for dead code, speculative additions, noise
 /diagnose-failure           → investigate persistent reviewer findings
 /quick-component {name}     → trivial single-element components (Separator, VisuallyHidden)
+/build-controller {name}    → build a shared ReactiveController in src/controllers/
 /extract-pattern            → promote inline pattern to shared engine, controller, or utility
 /deprecate                  → mark API deprecated with migration path
 /audit-cross-component      → check if a bug/pattern affects multiple components

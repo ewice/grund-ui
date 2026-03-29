@@ -70,8 +70,8 @@ The caller provides `refs/headless-contract.md`. Cross-reference rule numbers in
 ```json
 {
   "verdict": "FAIL",
-  "blockers": [{ "file": "src/components/accordion/trigger/index.ts", "line": 12, "rule": "headless-contract#2", "message": "Shadow DOM stylesheet includes color property", "fix_hint": "Remove the color rule — consumers own all visual styles" }],
-  "warnings": [{ "file": "src/components/accordion/trigger/index.ts", "line": 8, "rule": "headless-contract#9", "message": "Part name 'open-panel' is a state adjective, not a noun" }],
+  "blockers": [{ "file": "src/components/accordion/trigger/checkbox.ts", "line": 12, "rule": "headless-contract#2", "message": "Shadow DOM stylesheet includes color property", "fix_hint": "Remove the color rule — consumers own all visual styles" }],
+  "warnings": [{ "file": "src/components/accordion/trigger/checkbox.ts", "line": 8, "rule": "headless-contract#9", "message": "Part name 'open-panel' is a state adjective, not a noun" }],
   "notes": []
 }
 ```

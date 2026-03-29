@@ -7,7 +7,7 @@ All test files use Vitest + `@open-wc/testing-helpers` + Playwright browser mode
 
 ## Shared Test Utilities
 
-These utilities live in `src/test-utils/index.ts`. Add new utilities here as patterns emerge.
+These utilities live in `src/test-utils/checkbox.ts`. Add new utilities here as patterns emerge.
 
 ### `flush(el)`
 
@@ -22,7 +22,7 @@ await flush(el); // settles 3 render passes + microtask
 
 ### `simulateKeyboard(el, key, options?)`
 
-**Add to `src/test-utils/index.ts` when first needed.** Dispatches a `KeyboardEvent` on `el` with correct `key`, `code`, and `bubbles: true`.
+**Add to `src/test-utils/checkbox.ts` when first needed.** Dispatches a `KeyboardEvent` on `el` with correct `key`, `code`, and `bubbles: true`.
 
 ```ts
 import { simulateKeyboard } from '../../test-utils/index.js';
@@ -33,7 +33,7 @@ simulateKeyboard(trigger, 'Enter', { shiftKey: true });
 
 ### `getByPart(el, partName)`
 
-**Add to `src/test-utils/index.ts` when first needed.** Queries the shadow root of `el` for an element with a matching `part` attribute.
+**Add to `src/test-utils/checkbox.ts` when first needed.** Queries the shadow root of `el` for an element with a matching `part` attribute.
 
 ```ts
 const btn = getByPart(trigger, 'trigger'); // → HTMLButtonElement
@@ -41,7 +41,7 @@ const btn = getByPart(trigger, 'trigger'); // → HTMLButtonElement
 
 ### `expectAriaRelationship(source, target, type)`
 
-**Add to `src/test-utils/index.ts` when first needed.** Asserts that `source` has the correct ARIA attribute linking it to `target`.
+**Add to `src/test-utils/checkbox.ts` when first needed.** Asserts that `source` has the correct ARIA attribute linking it to `target`.
 
 ```ts
 expectAriaRelationship(trigger, panel, 'controls');

@@ -60,7 +60,9 @@ Edit the affected files. Follow existing patterns in the component. Reference th
 
 Read `workflow/refs/reviewer-dispatch.md` for the change-type selection table and context injection rules. Select reviewers based on the change type identified in Phase 2. Read each selected reviewer's SKILL.md from `workflow/reviewers/{name}/SKILL.md`. Use its content as the Agent prompt. Dispatch as Agent calls, injecting context per the dispatch table.
 
-Fix blockers inline. The patch loop (multiple subagents) is for `/build-elements` bulk generation — for focused changes, fix directly.
+Follow the patch loop rules in `workflow/refs/reviewer-dispatch.md`: fix all blockers, re-run only the reviewers that flagged blockers, max 2 patch iterations per reviewer. For focused changes, fixes may be applied in-context rather than via a separate subagent — the re-run step still applies.
+
+Once all reviewers pass, follow the Post-Reviewer Protocol in `workflow/refs/reviewer-dispatch.md`: any fix applied after reviewers passed must be written to `workflow/.feedback-queue.md` immediately.
 
 ### Phase 4.5 — Smallest diff audit
 

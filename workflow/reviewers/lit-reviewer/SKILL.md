@@ -146,7 +146,7 @@ Example: a parent uses `querySelectorAll('grund-*')` to find children instead of
 
 ### Member Visibility
 
-32. Class members in Lit elements and controllers use explicit visibility modifiers and the narrowest scope that satisfies the contract.
+32. Class members in Lit elements and controllers use explicit visibility modifiers and the narrowest scope that satisfies the contract. This includes lifecycle overrides: a `public override updated()` on a class where `LitElement.updated()` is `protected` widens the API surface unnecessarily — use `protected override updated()`. Applies equally to shared controllers: every method and getter on a `ReactiveController` must carry an explicit `public`/`private` modifier.
 33. `@property()` fields are public API; `@state()` fields and `@consume()` subscriptions are not left public accidentally.
 34. `protected` members are used only for intentional subclass extension points, not as a default for internal helpers.
 
@@ -166,7 +166,7 @@ Example: a parent uses `querySelectorAll('grund-*')` to find children instead of
   "verdict": "FAIL",
   "blockers": [
     {
-      "file": "src/components/accordion/root/index.ts",
+      "file": "src/components/accordion/root/checkbox.ts",
       "line": 42,
       "rule": "lit-patterns#4",
       "message": "updated() calls requestUpdate(), creating an infinite re-render path",
@@ -175,7 +175,7 @@ Example: a parent uses `querySelectorAll('grund-*')` to find children instead of
   ],
   "warnings": [
     {
-      "file": "src/components/accordion/root/index.ts",
+      "file": "src/components/accordion/root/checkbox.ts",
       "line": 42,
       "rule": "lit-patterns#8",
       "message": "reflect: true on an array would serialize to an unstable attribute value",

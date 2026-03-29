@@ -149,7 +149,7 @@ Example: the component emits a change-request event in controlled mode, but the 
   ],
   "warnings": [
     {
-      "file": "src/components/accordion/root/index.ts",
+      "file": "src/components/accordion/root/checkbox.ts",
       "line": 14,
       "rule": "api-contract#18",
       "message": "Controlled versus uncontrolled behavior is not obvious from the public docs, so consumers cannot tell whether the component owns state updates",
