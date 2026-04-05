@@ -164,7 +164,6 @@ Skills in `vollgas/skills/`, reviewers in `vollgas/reviewers/`, refs in `vollgas
 |---|---|
 | `/apg {pattern}` | WAI-ARIA contract lookup |
 | `/validate-build` | Lint, build, test, CEM, exports, bundle size |
-| `vollgas:smallest-diff` | Audit diff for dead code, speculative additions, noise |
 | `/quick-component` | Trivial single-element components |
 | `/extract-pattern` | Promote inline pattern to shared engine/controller/utility |
 | `/deprecate` | Mark API deprecated with migration path |
