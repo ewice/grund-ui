@@ -2,51 +2,63 @@
 
 Grund UI is a headless, accessible Web Component library built with Lit. "Headless" means
 zero visual styles — Shadow DOM is used for `<slot>` and `::part()` support, not removed.
-The reference implementation is the accordion. When in doubt, follow its structure.
+The reference implementation is the accordion at `src/components/accordion/`. When in doubt,
+follow its structure.
 
-Detailed patterns and rules live in `workflow/refs/`. This file contains the
-authoritative architecture and the rules that apply to every change in the codebase.
+This file holds the authoritative architecture and rules that apply to every change.
+Detailed patterns live in `vollgas/refs/`.
+
+## Refs Index
+
+| File | Purpose |
+|---|---|
+| `accessibility-contract.md` | WCAG/APG conformance rules |
+| `api-contract.md` | Public property, event, and type conventions |
+| `aria-linking.md` | Cross-shadow ARIA with Element Reference API |
+| `component-shapes.md` | Category definitions + planned shared controllers |
+| `consumer-dx.md` | Public DX rules for library consumers |
+| `focus-management.md` | Focus patterns per component category |
+| `form-participation.md` | `ElementInternals` and form-association |
+| `headless-contract.md` | `::part`, `data-*`, `exportparts` rules |
+| `jsdoc-contract.md` | Required JSDoc on every custom element |
+| `lit-patterns.md` | Lit element authoring rules |
+| `positioning-strategy.md` | Overlay positioning |
+| `reviewer-dispatch.md` | Which reviewers run for which change types |
+| `ssr-contract.md` | SSR-safe ID generation and lifecycle |
+| `test-patterns.md` | Required test categories and recipes |
+| `transition-contract.md` | Show/hide and animation contracts |
+| `workflow-guidelines.md` | Subagent pipeline guidelines |
 
 ---
 
 ## Architecture
 
-Three layers, strictly separated:
+Four layers, strictly separated:
 
 1. **Utilities** (`src/utils/`) — pure functions, zero framework dependency
-2. **Reactive Controllers** (`src/controllers/`) — `ReactiveController` implementations; hook into host lifecycle for DOM-dependent concerns (focus, event listeners, observers)
-3. **Custom Elements** (`src/components/*/`) — Lit elements, compound component pattern
-
-Each compound component also contains an **Engine** — a plain class (not a `ReactiveController`) that owns all state and action resolution with zero DOM or Lit dependency. Engines live in the component's `engine/` directory.
+2. **Reactive Controllers** (`src/controllers/`) — `ReactiveController` implementations for DOM-dependent concerns (focus, listeners, observers)
+3. **Engines** (`src/components/{name}/engine/`) — plain classes owning state and action resolution. Zero DOM, zero Lit, independently testable
+4. **Custom Elements** (`src/components/{name}/`) — Lit elements in the compound component pattern; read context, render templates, delegate actions
 
 ### Compound Component Structure
 
 ```
 component/
-├── root/          → Provider element (@provide, RovingFocusController, engine instantiation)
-├── item/          → Grouping element — only when a repeating container is needed
-├── [sub-parts]/   → Leaf elements (trigger, panel, header, etc.)
-├── engine/        → Pure state machine (Engine class) — no DOM, no Lit, independently testable
-├── registry/      → Ordered child tracking and sub-part attachment (omit if unneeded)
-├── context/       → Context interfaces and context symbols
-├── types.ts       → Public types, event detail types, snapshot interfaces
-└── checkbox.ts       → Barrel export
+├── root/                 → Provider element (@provide, RovingFocusController, engine instantiation)
+├── item/                 → Grouping element — only when a repeating container is needed
+├── [sub-parts]/          → Leaf elements (trigger, panel, header, etc.)
+├── engine/               → Pure state machine — no DOM, no Lit
+├── registry/             → Ordered child tracking and sub-part attachment (omit if unneeded)
+├── context/               → Context interfaces and context symbols
+├── types.ts              → Public types, event detail types, snapshot interfaces
+└── {component-name}.ts   → Barrel export
 ```
 
-Element files use `checkbox.ts` inside their part directory. Test files use descriptive names
-(e.g., `accordion.test.ts`). Component type definitions (event details, host snapshots,
-public interfaces) live in `types.ts`, separate from element implementations.
-
-**Each layer has one job:**
-
-- **Engine** — owns state, resolves actions, returns results. No DOM access. No Lit dependency. Independently testable with `new Engine()` and plain assertions.
-- **Registry** — ordered child tracking, sub-part attachment (trigger↔panel). No Lit runtime dependency.
-- **Context** — carries reactive state down, action callbacks up. Interfaces designed per consumer role.
-- **Elements** — read context, render templates, delegate actions via context callbacks.
+Element files inside each part directory are named `{component-name}.ts`. Test files use descriptive names (e.g., `accordion.test.ts`, `accordion-keyboard.test.ts`).
 
 ### Reactive Controllers vs Engines
 
-Two distinct things share the word "controller" in Lit's ecosystem. This project keeps them strictly separate:
+Two distinct things share the word "controller" in Lit's ecosystem. Keep them strictly separate:
 
 | | Reactive Controller | Engine |
 |---|---|---|
@@ -54,39 +66,24 @@ Two distinct things share the word "controller" in Lit's ecosystem. This project
 | Implements | `ReactiveController` | Plain class — no interface |
 | Constructor | `host.addController(this)` | `new EngineClass()` |
 | Lifecycle hooks | `hostConnected`, `hostDisconnected`, `hostUpdated` | None |
-| DOM access | Yes (event listeners, tabindex, observers) | Never |
+| DOM access | Yes | Never |
 | Lit dependency | Yes | Never |
 | Test setup | Requires mock host or fixture | `new Engine()` — no setup needed |
 | Examples | `RovingFocusController`, `FocusTrapController` | `AccordionEngine`, `TabsEngine`, `SelectionEngine` |
 
-**Rule:** If it touches the DOM, attaches listeners, or needs lifecycle hooks → `ReactiveController` in `src/controllers/`. If it owns state and resolves actions → Engine in `{component}/engine/`.
+**Rule:** Touches DOM, attaches listeners, or needs lifecycle hooks → Reactive Controller. Owns state and resolves actions → Engine.
 
-### Shared Reactive Controllers
+### Shared Reactive Controllers and Engines
 
-Use these — don't reinvent:
+- `RovingFocusController` — keyboard-driven roving tabindex, attached to the container/root element
+- `SelectionEngine` — set-based selection state (single/multiple, controlled/uncontrolled, disabled gating). Wrap in a domain-specific Engine (e.g., `AccordionEngine`), never consume directly from a root element
+- Planned controllers/engines: see `vollgas/refs/component-shapes.md`
 
-| Controller | Purpose | Attach to |
-|---|---|---|
-| `RovingFocusController` | Keyboard-driven roving tabindex | Container element (root) |
-
-Planned controllers (built when first component of that category is built): see `workflow/refs/component-shapes.md`.
-
-### Shared Engines
-
-Use these — don't reinvent:
-
-| Engine | Purpose | Used by |
-|---|---|---|
-| `SelectionEngine` | Set-based selection state — single/multiple, controlled/uncontrolled, disabled gating | `AccordionEngine`, `ToggleGroupEngine` |
-
-**`SelectionEngine` usage:** Wrap it in a domain-specific Engine (e.g., `AccordionEngine`) that exposes component-appropriate method names. Never consume `SelectionEngine` directly from a root element.
-
-**Before using any shared controller or engine:** run the abstraction fit check (lit-patterns Rule 37). If it doesn't cover a required behaviour, classify the gap (Extend / Custom / Inline) and act on it before writing element code.
+**Before using any shared controller or engine:** run the abstraction fit check (`lit-patterns.md` Rule 37). If it doesn't cover a required behaviour, classify the gap (Extend / Custom / Inline) and act on it before writing element code.
 
 ### Pattern Extraction
 
-**Extract on second use, flag on first.** Implement inline for the first component. Extract to a
-shared utility, Reactive Controller, or Engine when a second component needs it. Use `/extract-pattern` skill.
+**Extract on second use, flag on first.** Implement inline for the first component. Extract to a shared utility, Reactive Controller, or Engine when a second component needs it. Use `/extract-pattern`.
 
 ---
 
@@ -106,27 +103,9 @@ One canonical mechanism per direction:
 - Discovery: registration via context callbacks only. Never `querySelectorAll` to find child components.
 - Show/hide: `data-open` boolean attribute set in `willUpdate`. Exception: `hidden="until-found"` for browser-native find-in-page.
 - Event naming: `grund-{action}` with `bubbles: true, composed: false`.
-- ARIA linking: use the Element Reference API (`ariaControlsElements`, `ariaLabelledByElements`) for cross-shadow relationships. Set in `updated()` after render. See `workflow/refs/aria-linking.md` for the full pattern. Legacy IDREF approach (`aria-controls`, `aria-labelledby`) does not resolve across shadow root boundaries.
+- ARIA linking: use the Element Reference API (`ariaControlsElements`, `ariaLabelledByElements`) for cross-shadow relationships. Set in `updated()` after render. See `aria-linking.md`. Legacy IDREF (`aria-controls`, `aria-labelledby`) does not resolve across shadow root boundaries.
 - Keyboard navigation: `RovingFocusController` on the container element.
 - No duplicate paths: a registration or state mutation happens through exactly one mechanism.
-
----
-
-## Context Design
-
-See `workflow/refs/lit-patterns.md` Rules 14–18 for the full context contract.
-
----
-
-## Controlled / Uncontrolled Values
-
-See `workflow/refs/lit-patterns.md` Rule 5 for the HostSnapshot and controlled/uncontrolled contract.
-
----
-
-## Data Attributes
-
-See `workflow/refs/headless-contract.md` Rules 21–24 for the canonical data attribute table and rules.
 
 ---
 
@@ -135,12 +114,12 @@ See `workflow/refs/headless-contract.md` Rules 21–24 for the canonical data at
 - Element prefix: `grund-`
 - Each WAI-ARIA role maps to its own custom element — do not merge compound sub-elements for brevity
 - Shadow DOM on every element, zero visual styles
-- **IDs:** Accept optional `id` prop from consumers. Derive deterministic IDs from `value` prop where possible. Use `crypto.randomUUID().slice(0, 8)` only inside `connectedCallback` or later — never in constructors or field initializers. See `workflow/refs/ssr-contract.md` for the full strategy.
-- Use `ElementInternals` for form-associated components. See `workflow/refs/form-participation.md`.
+- **IDs:** Accept optional `id` prop. Derive deterministic IDs from `value` where possible. Use `crypto.randomUUID().slice(0, 8)` only inside `connectedCallback` or later — never in constructors or field initializers. See `ssr-contract.md`.
+- Use `ElementInternals` for form-associated components. See `form-participation.md`.
 - **Dev-mode warnings:** Every compound element that can be structurally misused MUST emit a dev-mode warning. Guard with `if (import.meta.env.DEV)`. Format: `console.warn('[grund-{element}] {problem}. {fix}.')`.
 - Wrap `customElements.define()` with a registration guard: `if (!customElements.get('...'))`.
-- **Comments:** Non-JSDoc comments explain WHY, not WHAT. Code needing a WHAT-comment should be refactored to be self-explanatory.
-- **Smallest diff:** Every change should be the minimum diff that achieves the goal. No speculative code, unused imports, or redundant abstractions.
+
+**See also:** `lit-patterns.md` Rules 14–18 (context contract) and Rule 5 (HostSnapshot + controlled/uncontrolled), `headless-contract.md` Rules 21–24 (data attributes).
 
 ---
 
@@ -154,99 +133,42 @@ Every component needs:
 - `@csspart` on every interactive and structural shadow element
 - Keyboard contract covered by tests and documented in Storybook
 
-See `workflow/refs/focus-management.md` for focus management patterns.
+See `focus-management.md`.
 
 ---
 
-## JSDoc / CEM
+## Code Hygiene
 
-JSDoc serves IDE tooltips and the Custom Elements Manifest. Use JSDoc syntax, not TSDoc.
-
-**Required on every custom element:**
-
-```ts
-/**
- * One-sentence description.
- *
- * @element grund-{name}
- * @slot - Default slot description
- * @fires {CustomEvent<DetailType>} grund-{action} - When and why
- * @csspart name - What this part wraps
- */
-```
-
-**Rules:**
-- No `{Type}` in `@param`/`@returns` — TypeScript is canonical
-- Document why and constraints, not what. Omit where self-evident.
-- First sentence under ~80 chars
-- Booleans: "Whether ..." — never "True if ..."
-- `@internal` on non-public exports
-- `@deprecated` always includes migration path
+- **Comments:** Non-JSDoc comments explain WHY, not WHAT. Code needing a WHAT-comment should be refactored.
+- **Smallest diff:** Every change should be the minimum diff that achieves the goal. No speculative code, unused imports, or redundant abstractions.
+- **JSDoc / CEM:** Every custom element needs JSDoc — see `jsdoc-contract.md`.
 
 ---
 
-## Skills — Workflow Reference
+## Workflow
 
-Skills live in `workflow/skills/`. Reviewer agents in `workflow/reviewers/`.
-Reference docs in `workflow/refs/`. Superpowers is the orchestrator.
-See `workflow/refs/workflow-guidelines.md` for subagent pipeline guidelines.
+Skills in `vollgas/skills/`, reviewers in `vollgas/reviewers/`, refs in `vollgas/refs/`. Vollgas is the orchestrator. See `workflow-guidelines.md`.
 
-### New component (complex)
-```
-superpowers:brainstorming → /component-spec → /scaffold [→ /build-controller if needed]
-    → /build-engine → /build-elements → /build-stories → /validate-build → superpowers:finishing-a-development-branch
-```
-
-### New component (simple — single element, state lives in the element)
-```
-/component-spec → /scaffold → /build-elements → /build-stories → /validate-build → superpowers:finishing-a-development-branch
-```
-
-**Note:** `/validate-build` Step 8 runs the Reviewer Feedback Loop for any fixes applied after reviewers passed. This is a required gate — do not skip to `finishing-a-development-branch` without completing it. Fixes are tracked in `workflow/.feedback-queue.md` (gitignored): append an entry the moment a post-reviewer fix is applied so the record survives context compression.
-
-### New component (trivial — single element, no state, no keyboard, no events)
-```
-/quick-component {name} — {one-line description}
-```
-Examples: Separator, VisuallyHidden, Icon wrapper. If the component has any compound structure,
-keyboard contract, or dispatched events, use the simple pipeline above instead.
-
-### Modify existing (planned)
-```
-superpowers:brainstorming → superpowers:writing-plans
-    → superpowers:executing-plans → /post-plan-review → /validate-build → superpowers:finishing-a-development-branch
-```
-
-### Modify existing (ad-hoc)
-```
-/modify-component {name} — {description}
-```
-
-### Bug fix
-```
-/fix-bug {component} — {description}
-```
-
-### Rebuild to new standards
-```
-/rebuild-component {name}
-```
-
-**Note:** `superpowers:finishing-a-development-branch` requires `/validate-build` to have passed first.
-Its Step 1 only runs tests — lint, build, CEM, and export checks are covered by `/validate-build`.
+| Task | Pipeline |
+|---|---|
+| New component (complex) | `vollgas:brainstorming` → `/component-spec` → `/scaffold` → `vollgas:writing-plans` → `vollgas:subagent-driven-development` → `vollgas:review-gate` → `/validate-build` → `vollgas:finishing-a-development-branch` |
+| New component (simple) | `/component-spec` → `/scaffold` → `vollgas:writing-plans` → `vollgas:subagent-driven-development` → `vollgas:review-gate` → `/validate-build` → `vollgas:finishing-a-development-branch` |
+| New component (trivial) | `/quick-component {name}` — only for single-element, no-state, no-keyboard, no-events (Separator, VisuallyHidden, Icon wrapper) |
+| Modify existing | `vollgas:brainstorming` → `vollgas:writing-plans` → `vollgas:subagent-driven-development` → `vollgas:review-gate` → `/validate-build` → `vollgas:finishing-a-development-branch`. Consult `reviewer-dispatch.md` for targeted reviewer subset |
+| Bug fix | `vollgas:systematic-debugging` → `vollgas:test-driven-development` → `vollgas:review-gate` → `/validate-build` → `vollgas:finishing-a-development-branch` |
+| Rebuild to new standards | `vollgas:brainstorming` (gap analysis) → `vollgas:writing-plans` → `/scaffold` (fresh) → `vollgas:subagent-driven-development` → `vollgas:review-gate` → `/validate-build` → `vollgas:finishing-a-development-branch` |
 
 ### Supporting skills
-```
-/apg {pattern}              → WAI-ARIA contract
-/validate-build             → lint, build, test, CEM, exports, bundle size
-/smallest-diff              → audit diff for dead code, speculative additions, noise
-/diagnose-failure           → investigate persistent reviewer findings
-/quick-component {name}     → trivial single-element components (Separator, VisuallyHidden)
-/build-controller {name}    → build a shared ReactiveController in src/controllers/
-/extract-pattern            → promote inline pattern to shared engine, controller, or utility
-/deprecate                  → mark API deprecated with migration path
-/audit-cross-component      → check if a bug/pattern affects multiple components
-/update-dependency          → safe dependency version bump with migration
-/prepare-release            → semver, changelog, publish
-/review-system-health       → periodic skill/reviewer quality audit
-```
+
+| Skill | Purpose |
+|---|---|
+| `/apg {pattern}` | WAI-ARIA contract lookup |
+| `/validate-build` | Lint, build, test, CEM, exports, bundle size |
+| `vollgas:smallest-diff` | Audit diff for dead code, speculative additions, noise |
+| `/quick-component` | Trivial single-element components |
+| `/extract-pattern` | Promote inline pattern to shared engine/controller/utility |
+| `/deprecate` | Mark API deprecated with migration path |
+| `/audit-cross-component` | Check if a bug/pattern affects multiple components |
+| `/update-dependency` | Safe dependency version bump with migration |
+| `/prepare-release` | Semver, changelog, publish |
+| `/reconcile-reference` | Reconcile drift between refs and implementation |

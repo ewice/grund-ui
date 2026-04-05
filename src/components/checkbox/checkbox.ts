@@ -209,3 +209,6 @@ export class GrundCheckbox extends LitElement {
 if (!customElements.get('grund-checkbox')) {
   customElements.define('grund-checkbox', GrundCheckbox);
 }
+
+export { GrundCheckboxIndicator } from './checkbox-indicator.js';
+export type { CheckedChangeDetail } from './types.js';

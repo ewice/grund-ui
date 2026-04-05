@@ -1,9 +1,9 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it, vi } from 'vitest';
-import { flush, getByPart } from '../../../test-utils';
+import { flush, getByPart } from '../../../test-utils/test-utils.js';
 import '../toggle';
 
-import type { GrundToggle } from '../toggle';
+import type { GrundToggle } from '../toggle/toggle.js';
 import type { PressedChangeDetail } from '../types.js';
 
 describe('GrundToggle', () => {

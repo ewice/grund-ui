@@ -1,10 +1,10 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
-import { flush } from '../../../test-utils/index.js';
-import '../../../components/accordion/root/index.js';
-import '../../../components/accordion/item/index.js';
+import { flush } from '../../../test-utils/test-utils.js';
+import '../../../components/accordion/root/accordion.js';
+import '../../../components/accordion/item/accordion.js';
 
-import type { GrundAccordion } from './index.js';
+import type { GrundAccordion } from './accordion.js';
 
 describe('GrundAccordion + GrundAccordionItem', () => {
   async function setup(template = html`

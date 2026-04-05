@@ -2,9 +2,9 @@ import { html } from 'lit';
 import { action } from 'storybook/actions';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
-import type { GrundTabs } from '../src/components/tabs/index.js';
+import type { GrundTabs } from '../src/components/tabs/tabs.js';
 
-import '../src/components/tabs/index.js';
+import '../src/components/tabs/tabs.js';
 
 const meta: Meta<GrundTabs> = {
   title: 'Components/Tabs',

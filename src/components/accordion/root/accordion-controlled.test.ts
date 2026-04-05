@@ -1,14 +1,14 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
-import { flush, getByPart } from '../../../test-utils/index.js';
+import { flush, getByPart } from '../../../test-utils/test-utils.js';
 
-import '../../../components/accordion/root/index.js';
-import '../../../components/accordion/item/index.js';
-import '../../../components/accordion/header/index.js';
-import '../../../components/accordion/trigger/index.js';
-import '../../../components/accordion/panel/index.js';
+import '../../../components/accordion/root/accordion.js';
+import '../../../components/accordion/item/accordion.js';
+import '../../../components/accordion/header/accordion.js';
+import '../../../components/accordion/trigger/accordion.js';
+import '../../../components/accordion/panel/accordion.js';
 
-import type { GrundAccordion } from './index.js';
+import type { GrundAccordion } from './accordion.js';
 
 function getTriggerButton(el: GrundAccordion, index: number): HTMLButtonElement {
   const triggers = Array.from(el.querySelectorAll('grund-accordion-trigger'));

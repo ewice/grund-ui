@@ -1,7 +1,7 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
-import { simulateKeyboard } from '../test-utils/index.js';
+import { simulateKeyboard } from '../test-utils/test-utils.js';
 import { RovingFocusController } from './roving-focus.controller.js';
 
 class TestHost extends LitElement {

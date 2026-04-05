@@ -1,6 +1,6 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it, vi } from 'vitest';
-import { flush, getByPart } from '../../../test-utils/index.js';
+import { flush, getByPart } from '../../../test-utils/test-utils.js';
 import '../checkbox.js';
 import '../checkbox-indicator.js';
 

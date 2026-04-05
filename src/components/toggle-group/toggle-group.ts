@@ -158,3 +158,5 @@ export class GrundToggleGroup extends LitElement {
 if (!customElements.get('grund-toggle-group')) {
   customElements.define('grund-toggle-group', GrundToggleGroup);
 }
+
+export type { ToggleGroupValueChangeDetail } from './types.js';

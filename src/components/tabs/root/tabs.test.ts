@@ -1,13 +1,13 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
-import { flush, getByPart, simulateKeyboard } from '../../../test-utils/index.js';
+import { flush, getByPart, simulateKeyboard } from '../../../test-utils/test-utils.js';
 
-import '../root/index.js';
-import '../list/index.js';
-import '../tab/index.js';
-import '../panel/index.js';
+import '../root/tabs.js';
+import '../list/tabs.js';
+import '../tab/tabs.js';
+import '../panel/tabs.js';
 
-import type { GrundTabs } from './index.js';
+import type { GrundTabs } from './tabs.js';
 
 function getTabButtons(el: GrundTabs): HTMLButtonElement[] {
   return Array.from(el.querySelectorAll('grund-tab')).map(
