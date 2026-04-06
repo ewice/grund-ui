@@ -9,6 +9,7 @@ import type { CheckboxContext } from './checkbox.context';
 import type { CheckedChangeDetail } from './types';
 import { checkboxGroupContext } from '../checkbox-group/checkbox-group.context.js';
 import type { CheckboxGroupContext } from '../checkbox-group/checkbox-group.context.js';
+import { disabledContext } from '../../context/disabled.context.js';
 
 /**
  * A headless form-associated checkbox with checked, unchecked, and indeterminate states.
@@ -74,9 +75,13 @@ export class GrundCheckbox extends LitElement {
   @state()
   private _internalChecked = false;
 
+  @consume({ context: disabledContext, subscribe: true })
+  @state()
+  private _ancestorDisabled = false;
+
   @consume({ context: checkboxGroupContext, subscribe: true })
   @state()
-  protected groupCtx?: CheckboxGroupContext;
+  private groupCtx?: CheckboxGroupContext;
 
   @provide({ context: checkboxContext })
   @state()
@@ -112,6 +117,15 @@ export class GrundCheckbox extends LitElement {
       this._internalChecked = this.defaultChecked;
     }
 
+    if (import.meta.env.DEV) {
+      if (this.hasUpdated && this.parent && !this.groupCtx) {
+        console.warn(
+          '[grund-checkbox] parent=true has no effect outside <grund-checkbox-group>. ' +
+          'Wrap in a <grund-checkbox-group> with allValues set.'
+        );
+      }
+    }
+
     const effective = this._effectiveChecked;
     const effectiveIndeterminate = this._effectiveIndeterminate;
 
@@ -119,7 +133,7 @@ export class GrundCheckbox extends LitElement {
     this.toggleAttribute('data-checked', !effectiveIndeterminate && effective);
     this.toggleAttribute('data-unchecked', !effectiveIndeterminate && !effective);
     this.toggleAttribute('data-indeterminate', effectiveIndeterminate);
-    this.toggleAttribute('data-disabled', this.disabled);
+    this.toggleAttribute('data-disabled', this._effectiveDisabled);
     this.toggleAttribute('data-required', this.required);
     this.toggleAttribute('data-readonly', this.readOnly);
 
@@ -173,6 +187,10 @@ export class GrundCheckbox extends LitElement {
     this.disabled = disabled;
   }
 
+  private get _effectiveDisabled(): boolean {
+    return this.disabled || this._ancestorDisabled;
+  }
+
   private get _effectiveIndeterminate(): boolean {
     if (this.groupCtx && this.parent) {
       return this.groupCtx.getParentState() === 'indeterminate';
@@ -189,7 +207,7 @@ export class GrundCheckbox extends LitElement {
   }
 
   private _handleClick(): void {
-    if (this.disabled || this.readOnly || this.groupCtx?.disabled) {
+    if (this._effectiveDisabled || this.readOnly) {
       return;
     }
 
@@ -234,7 +252,7 @@ export class GrundCheckbox extends LitElement {
         type="button"
         role="checkbox"
         aria-checked=${ariaChecked}
-        ?disabled=${this.disabled}
+        ?disabled=${this._effectiveDisabled}
         @click=${this._handleClick}
       >
         <slot></slot>
