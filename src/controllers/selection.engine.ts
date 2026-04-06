@@ -82,6 +82,21 @@ export class SelectionEngine {
     return Array.from(nextValues);
   }
 
+  /** Returns the new selected-values array, or null if the action was blocked. */
+  public requestSet(values: string[]): string[] | null {
+    if (this.disabled) {
+      return null;
+    }
+
+    const nextValues = new Set(values);
+
+    if (!this.isControlled) {
+      this._selectedValues = nextValues;
+    }
+
+    return Array.from(nextValues);
+  }
+
   public isSelected(value: string): boolean {
     return this._selectedValues.has(value);
   }

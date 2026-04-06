@@ -127,6 +127,45 @@ describe('SelectionEngine', () => {
     });
   });
 
+  describe('requestSet', () => {
+    it('replaces selected values and returns new array', () => {
+      const ctrl = create({ multiple: true, defaultValue: ['a'] });
+      const result = ctrl.requestSet(['b', 'c']);
+      expect(result).to.deep.equal(['b', 'c']);
+    });
+
+    it('updates internal state in uncontrolled mode', () => {
+      const ctrl = create({ multiple: true, defaultValue: ['a'] });
+      ctrl.requestSet(['b', 'c']);
+      expect(ctrl.isSelected('a')).to.be.false;
+      expect(ctrl.isSelected('b')).to.be.true;
+      expect(ctrl.isSelected('c')).to.be.true;
+    });
+
+    it('does not update internal state in controlled mode', () => {
+      const ctrl = create({ multiple: true, value: ['a'] });
+      const result = ctrl.requestSet(['b', 'c']);
+      expect(result).to.deep.equal(['b', 'c']);
+      // Internal state unchanged — consumer owns the value
+      expect(ctrl.isSelected('a')).to.be.true;
+      expect(ctrl.isSelected('b')).to.be.false;
+    });
+
+    it('returns null when disabled', () => {
+      const ctrl = create({ multiple: true, disabled: true });
+      const result = ctrl.requestSet(['a', 'b']);
+      expect(result).to.be.null;
+    });
+
+    it('handles empty array (deselect all)', () => {
+      const ctrl = create({ multiple: true, defaultValue: ['a', 'b'] });
+      const result = ctrl.requestSet([]);
+      expect(result).to.deep.equal([]);
+      expect(ctrl.isSelected('a')).to.be.false;
+      expect(ctrl.isSelected('b')).to.be.false;
+    });
+  });
+
   describe('controlled mode', () => {
     it('reflects the provided value array', () => {
       const ctrl = create({ value: ['a', 'b'] });
