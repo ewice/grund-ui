@@ -27,7 +27,7 @@ import type { CheckboxGroupValueChangeDetail, CheckboxGroupHostSnapshot } from '
 export class GrundCheckboxGroup extends LitElement {
   public static override styles = css`
     :host {
-      display: block; /* block: group container wrapping checkbox items */
+      display: block; /* block: this element is a block-level container */
     }
   `;
 
