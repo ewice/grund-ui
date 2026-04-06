@@ -1,15 +1,9 @@
 import { expect, describe, it } from 'vitest';
 import { CheckboxGroupEngine } from '../checkbox-group.engine.js';
-
-interface Snapshot {
-  value: string[] | undefined;
-  defaultValue: string[];
-  disabled: boolean;
-  allValues: string[];
-}
+import type { CheckboxGroupHostSnapshot } from '../types.js';
 
 describe('CheckboxGroupEngine', () => {
-  function create(overrides?: Partial<Snapshot>): CheckboxGroupEngine {
+  function create(overrides?: Partial<CheckboxGroupHostSnapshot>): CheckboxGroupEngine {
     const engine = new CheckboxGroupEngine();
     engine.syncFromHost({
       value: undefined,
