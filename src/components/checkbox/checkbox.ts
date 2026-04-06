@@ -1,12 +1,15 @@
 import { LitElement, html, css } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
+import { consume } from '@lit/context';
 import type { PropertyValues } from 'lit';
 
 import { FormController } from '../../controllers/form.controller';
 import { checkboxContext } from './checkbox.context';
 import type { CheckboxContext } from './checkbox.context';
 import type { CheckedChangeDetail } from './types';
+import { checkboxGroupContext } from '../checkbox-group/checkbox-group.context.js';
+import type { CheckboxGroupContext } from '../checkbox-group/checkbox-group.context.js';
 
 /**
  * A headless form-associated checkbox with checked, unchecked, and indeterminate states.
@@ -65,8 +68,16 @@ export class GrundCheckbox extends LitElement {
   @property({ type: Boolean, attribute: 'read-only' })
   public readOnly = false;
 
+  /** Whether this checkbox acts as a "select all" parent controller. Only meaningful inside a grund-checkbox-group with allValues set. */
+  @property({ type: Boolean })
+  public parent = false;
+
   @state()
   private _internalChecked = false;
+
+  @consume({ context: checkboxGroupContext, subscribe: true })
+  @state()
+  protected groupCtx?: CheckboxGroupContext;
 
   @provide({ context: checkboxContext })
   @state()
@@ -103,19 +114,23 @@ export class GrundCheckbox extends LitElement {
     }
 
     const effective = this._effectiveChecked;
+    const effectiveIndeterminate = this._effectiveIndeterminate;
 
     // Data attributes — indeterminate takes visual precedence over checked.
-    this.toggleAttribute('data-checked', !this.indeterminate && effective);
-    this.toggleAttribute('data-unchecked', !this.indeterminate && !effective);
-    this.toggleAttribute('data-indeterminate', this.indeterminate);
+    this.toggleAttribute('data-checked', !effectiveIndeterminate && effective);
+    this.toggleAttribute('data-unchecked', !effectiveIndeterminate && !effective);
+    this.toggleAttribute('data-indeterminate', effectiveIndeterminate);
     this.toggleAttribute('data-disabled', this.disabled);
     this.toggleAttribute('data-required', this.required);
     this.toggleAttribute('data-readonly', this.readOnly);
 
-    if (!this.indeterminate && effective) {
-      this._form.setValue(this.value);
-    } else {
-      this._form.setValue(null);
+    // Parent checkbox inside a group doesn't submit a form value — skip setValue entirely.
+    if (!(this.parent && this.groupCtx)) {
+      if (!effectiveIndeterminate && effective) {
+        this._form.setValue(this.value);
+      } else {
+        this._form.setValue(null);
+      }
     }
 
     // Validity: required fails when unchecked (indeterminate counts as unchecked).
@@ -131,9 +146,10 @@ export class GrundCheckbox extends LitElement {
       changed.has('checked') ||
       changed.has('_internalChecked') ||
       changed.has('indeterminate') ||
+      changed.has('groupCtx') ||
       !this.hasUpdated
     ) {
-      this._ctx = { checked: effective, indeterminate: this.indeterminate };
+      this._ctx = { checked: effective, indeterminate: effectiveIndeterminate };
     }
   }
 
@@ -158,13 +174,39 @@ export class GrundCheckbox extends LitElement {
     this.disabled = disabled;
   }
 
+  private get _effectiveIndeterminate(): boolean {
+    if (this.groupCtx && this.parent) {
+      return this.groupCtx.getParentState() === 'indeterminate';
+    }
+    return this.indeterminate;
+  }
+
   private get _effectiveChecked(): boolean {
+    if (this.groupCtx) {
+      if (this.parent) return this.groupCtx.getParentState() === 'checked';
+      return this.groupCtx.isChecked(this.value);
+    }
     return this.checked ?? this._internalChecked;
   }
 
   private _handleClick(): void {
-    if (this.disabled || this.readOnly) {
+    if (this.disabled || this.readOnly || this.groupCtx?.disabled) {
       return;
+    }
+
+    if (this.groupCtx) {
+      const newChecked = this.parent
+        ? this.groupCtx.getParentState() !== 'checked'
+        : !this.groupCtx.isChecked(this.value);
+      this.dispatchEvent(
+        new CustomEvent<CheckedChangeDetail>('grund-checked-change', {
+          detail: { checked: newChecked },
+          bubbles: true,
+          composed: false,
+        }),
+      );
+      this.groupCtx.requestToggle(this.value, this.parent);
+      return; // do NOT update _internalChecked
     }
 
     // Indeterminate click always resolves to checked:true (consumer must clear indeterminate).
@@ -185,7 +227,7 @@ export class GrundCheckbox extends LitElement {
   }
 
   protected override render() {
-    const ariaChecked = this.indeterminate ? 'mixed' : String(this._effectiveChecked);
+    const ariaChecked = this._effectiveIndeterminate ? 'mixed' : String(this._effectiveChecked);
 
     return html`
       <button
