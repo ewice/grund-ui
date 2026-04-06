@@ -1,7 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { provide } from '@lit/context';
-import { consume } from '@lit/context';
+import { consume, provide } from '@lit/context';
 import type { PropertyValues } from 'lit';
 
 import { FormController } from '../../controllers/form.controller';
