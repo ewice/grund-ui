@@ -1,5 +1,9 @@
 import { createContext } from '@lit/context';
 
+/**
+ * Context provided by `grund-checkbox-group` to child `grund-checkbox` elements.
+ * @internal
+ */
 export interface CheckboxGroupContext {
   /** Whether a given value is currently checked. */
   readonly isChecked: (value: string) => boolean;
