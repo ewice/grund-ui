@@ -1,4 +1,5 @@
 import { SelectionEngine } from '../../controllers/selection.engine';
+import type { CheckboxGroupHostSnapshot } from './types.js';
 
 /**
  * Pure state and action resolution for the checkbox group.
@@ -14,12 +15,7 @@ export class CheckboxGroupEngine {
     return this.selection.selectedValues;
   }
 
-  public syncFromHost(snapshot: {
-    value: string[] | undefined;
-    defaultValue: string[];
-    disabled: boolean;
-    allValues: string[];
-  }): void {
+  public syncFromHost(snapshot: CheckboxGroupHostSnapshot): void {
     this._allValues = snapshot.allValues;
     this.selection.syncFromHost({
       value: snapshot.value,
