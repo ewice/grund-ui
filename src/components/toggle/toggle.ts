@@ -165,3 +165,5 @@ export class GrundToggle extends LitElement {
 if (!customElements.get('grund-toggle')) {
   customElements.define('grund-toggle', GrundToggle);
 }
+
+export type { PressedChangeDetail } from './types.js';

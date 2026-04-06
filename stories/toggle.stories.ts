@@ -2,10 +2,10 @@ import { html } from 'lit';
 import { action } from 'storybook/actions';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
-import type { GrundToggle } from '../src/components/toggle/index.js';
-import type { PressedChangeDetail } from '../src/components/toggle/index.js';
+import type { GrundToggle } from '../src/components/toggle';
+import type { PressedChangeDetail } from '../src/components/toggle';
 
-import '../src/components/toggle/index.js';
+import '../src/components/toggle';
 
 const onPressedChange = (e: CustomEvent<PressedChangeDetail>) =>
   action('grund-pressed-change')(e.detail.pressed);

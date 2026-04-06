@@ -1,9 +1,9 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it, vi } from 'vitest';
-import { flush, getByPart } from '../../../test-utils';
+import { flush, getByPart } from '../../../test-utils/test-utils.js';
 import '../toggle';
 
-import type { GrundToggle } from '../toggle';
+import type { GrundToggle } from '..';
 import type { PressedChangeDetail } from '../types.js';
 
 describe('GrundToggle', () => {
@@ -157,7 +157,9 @@ describe('GrundToggle', () => {
   it('does not fire event when clicked while disabled', async () => {
     const el = await setup(html`<grund-toggle disabled>Label</grund-toggle>`);
     let callCount = 0;
-    el.addEventListener('grund-pressed-change', () => { callCount++; });
+    el.addEventListener('grund-pressed-change', () => {
+      callCount++;
+    });
     getByPart<HTMLButtonElement>(el, 'button').click();
     await flush(el);
     expect(callCount).to.equal(0);
@@ -215,7 +217,9 @@ describe('GrundToggle', () => {
     await flush(a);
 
     expect(getByPart<HTMLButtonElement>(a, 'button').getAttribute('aria-pressed')).to.equal('true');
-    expect(getByPart<HTMLButtonElement>(b, 'button').getAttribute('aria-pressed')).to.equal('false');
+    expect(getByPart<HTMLButtonElement>(b, 'button').getAttribute('aria-pressed')).to.equal(
+      'false',
+    );
   });
 
   // ── value property ───────────────────────────────────────────────────────

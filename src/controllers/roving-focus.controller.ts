@@ -16,10 +16,7 @@ export class RovingFocusController implements ReactiveController {
   private options: RovingFocusOptions;
   private handleKeydown = this.onKeydown.bind(this);
 
-  constructor(
-    host: ReactiveControllerHost & HTMLElement,
-    options: RovingFocusOptions,
-  ) {
+  constructor(host: ReactiveControllerHost & HTMLElement, options: RovingFocusOptions) {
     this.host = host;
     this.options = options;
     host.addController(this);
@@ -35,9 +32,7 @@ export class RovingFocusController implements ReactiveController {
   }
 
   public update(options: Partial<RovingFocusOptions>): void {
-    const defined = Object.fromEntries(
-      Object.entries(options).filter(([, v]) => v !== undefined),
-    );
+    const defined = Object.fromEntries(Object.entries(options).filter(([, v]) => v !== undefined));
     Object.assign(this.options, defined);
   }
 
@@ -51,9 +46,7 @@ export class RovingFocusController implements ReactiveController {
 
     const currentIndex = items.findIndex((item) => item.tabIndex === 0);
     const activeIndex =
-      currentIndex >= 0
-        ? currentIndex
-        : items.findIndex((item) => !this.isDisabled(item));
+      currentIndex >= 0 ? currentIndex : items.findIndex((item) => !this.isDisabled(item));
 
     items.forEach((item, i) => {
       item.tabIndex = i === activeIndex ? 0 : -1;

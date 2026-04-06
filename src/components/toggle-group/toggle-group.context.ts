@@ -9,5 +9,4 @@ export interface ToggleGroupRootContext {
   unregisterToggle: (toggle: GrundToggle) => void;
 }
 
-export const toggleGroupRootContext =
-  createContext<ToggleGroupRootContext>('toggle-group-root');
+export const toggleGroupRootContext = createContext<ToggleGroupRootContext>('toggle-group-root');

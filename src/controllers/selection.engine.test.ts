@@ -30,7 +30,12 @@ describe('SelectionEngine', () => {
 
     it('seeds defaultValue only once — re-sync with different defaultValue is ignored', () => {
       const ctrl = create({ defaultValue: ['a'] });
-      ctrl.syncFromHost({ value: undefined, defaultValue: ['b'], multiple: false, disabled: false });
+      ctrl.syncFromHost({
+        value: undefined,
+        defaultValue: ['b'],
+        multiple: false,
+        disabled: false,
+      });
       expect(ctrl.isSelected('a')).to.be.true;
       expect(ctrl.isSelected('b')).to.be.false;
     });
@@ -140,7 +145,12 @@ describe('SelectionEngine', () => {
 
     it('updates to reflect new controlled value on each sync', () => {
       const ctrl = create({ value: ['a'] });
-      ctrl.syncFromHost({ value: ['b'], defaultValue: undefined, multiple: false, disabled: false });
+      ctrl.syncFromHost({
+        value: ['b'],
+        defaultValue: undefined,
+        multiple: false,
+        disabled: false,
+      });
       expect(ctrl.isSelected('a')).to.be.false;
       expect(ctrl.isSelected('b')).to.be.true;
     });
@@ -149,7 +159,12 @@ describe('SelectionEngine', () => {
       const ctrl = create({ defaultValue: ['a'] });
       ctrl.requestToggle('b', false); // uncontrolled: b now selected (single mode)
       // Consumer now takes control
-      ctrl.syncFromHost({ value: ['a', 'b'], defaultValue: undefined, multiple: true, disabled: false });
+      ctrl.syncFromHost({
+        value: ['a', 'b'],
+        defaultValue: undefined,
+        multiple: true,
+        disabled: false,
+      });
       expect(ctrl.isSelected('a')).to.be.true;
       expect(ctrl.isSelected('b')).to.be.true;
     });

@@ -1,7 +1,7 @@
 # Grund UI — Vocabulary Registry
 
-Cross-component naming consistency registry. Updated by `/component-spec` (new names),
-`/extract-pattern` (new shared patterns), and `/review-system-health` (audits).
+Cross-component naming consistency registry. Updated by `/component-spec` (new names)
+and `/extract-pattern` (new shared patterns). Audit manually when reviewing reviewer/refs health.
 
 Used by generation skills for shared naming decisions. Validated by:
 - `api-reviewer` for public event naming consistency
@@ -140,4 +140,4 @@ All custom elements: `grund-{component-name}[-{sub-element}]`
 
 1. During `/component-spec`: propose new names that don't exist yet, check for conflicts with existing names.
 2. If approved: add to the relevant section above before writing any skill or spec that uses the name.
-3. During `/review-system-health`: audit for stale entries (names no longer in use) and conflicts.
+3. Periodically audit for stale entries (names no longer in use) and conflicts.

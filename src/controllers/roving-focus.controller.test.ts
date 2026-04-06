@@ -1,7 +1,7 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
-import { simulateKeyboard } from '../test-utils/index.js';
+import { simulateKeyboard } from '../test-utils/test-utils.js';
 import { RovingFocusController } from './roving-focus.controller.js';
 
 class TestHost extends LitElement {
@@ -25,7 +25,11 @@ if (!customElements.get('test-roving-host')) {
 }
 
 describe('RovingFocusController', () => {
-  async function setup(opts?: { orientation?: 'vertical' | 'horizontal'; loop?: boolean; disabledIndex?: number }) {
+  async function setup(opts?: {
+    orientation?: 'vertical' | 'horizontal';
+    loop?: boolean;
+    disabledIndex?: number;
+  }) {
     const el = await fixture<TestHost>(html`
       <test-roving-host>
         <button>One</button>

@@ -1,12 +1,12 @@
 // src/components/toggle-group/root/toggle-group-controlled.test.ts
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
-import { flush } from '../../../test-utils';
+import { flush } from '../../../test-utils/test-utils.js';
 
 import '../toggle-group';
 import '../../toggle/toggle';
 
-import type { GrundToggleGroup } from '../toggle-group';
+import type { GrundToggleGroup } from '../toggle-group/toggle-group.js';
 import type { GrundToggle } from '../../toggle';
 
 describe('ToggleGroup Controlled Mode', () => {

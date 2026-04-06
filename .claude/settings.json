@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "f=$(jq -r '.tool_input.file_path // .tool_response.filePath // empty'); case \"$f\" in *src/components/*.ts) cd /home/user/grund-ui && npm run lint 2>&1 | tail -10 ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // .tool_response.filePath // empty'); case \"$f\" in *src/components/*.ts) npm run lint 2>&1 | tail -10 ;; esac",
             "statusMessage": "Linting...",
             "async": true
           }
@@ -18,12 +18,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd /home/user/grund-ui && git diff --name-only HEAD 2>/dev/null | grep -q 'src/components/' && npm run test:run 2>&1 | tail -15 || true",
+            "command": "git diff --name-only HEAD 2>/dev/null | grep -q 'src/components/' && npm run test:run 2>&1 | tail -15 || true",
             "statusMessage": "Running tests...",
             "async": true
           }
         ]
       }
     ]
+  },
+  "enabledPlugins": {
+    "vollgas@vollgas": true
   }
 }

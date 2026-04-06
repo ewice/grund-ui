@@ -2,11 +2,11 @@ import { html } from 'lit';
 import { action } from 'storybook/actions';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
-import type { GrundToggleGroup } from '../src/components/toggle-group/index.js';
-import type { ToggleGroupValueChangeDetail } from '../src/components/toggle-group/index.js';
+import type { GrundToggleGroup } from '../src/components/toggle-group';
+import type { ToggleGroupValueChangeDetail } from '../src/components/toggle-group';
 
-import '../src/components/toggle-group/index.js';
-import '../src/components/toggle/index.js';
+import '../src/components/toggle-group';
+import '../src/components/toggle';
 
 const onValueChange = (e: CustomEvent<ToggleGroupValueChangeDetail>) =>
   action('grund-value-change')(e.detail.value);

@@ -1,7 +1,7 @@
-export { GrundTabs } from './root/index.js';
-export { GrundTabsList } from './list/index.js';
-export { GrundTab } from './tab/index.js';
-export { GrundTabsPanel } from './panel/index.js';
-export { GrundTabsIndicator } from './indicator/index.js';
+export { GrundTabs } from './tabs';
+export { GrundTabsList } from './tabs-list';
+export { GrundTab } from './tab';
+export { GrundTabsPanel } from './tabs-panel';
+export { GrundTabsIndicator } from './tabs-indicator';
 
 export type { TabsValueChangeDetail } from './types.js';

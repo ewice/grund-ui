@@ -1,7 +1,10 @@
 import { expect, describe, it, afterEach } from 'vitest';
 import { OrderedRegistry } from './ordered-registry.js';
 
-interface TestRecord { element: HTMLElement; label: string }
+interface TestRecord {
+  element: HTMLElement;
+  label: string;
+}
 
 describe('OrderedRegistry', () => {
   function makeEl(id: string): HTMLElement {

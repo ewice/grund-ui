@@ -1,6 +1,7 @@
-export * from './components/accordion/index.js';
-export * from './components/tabs/index.js';
-export * from './components/toggle/index.js';
-export * from './components/toggle-group/index.js';
+export * from './components/accordion';
+export * from './components/checkbox';
+export * from './components/tabs';
+export * from './components/toggle';
+export * from './components/toggle-group';
 
 export { disabledContext } from './context/disabled.context.js';

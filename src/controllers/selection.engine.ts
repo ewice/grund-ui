@@ -49,7 +49,11 @@ export class SelectionEngine {
 
     if (this.isControlled) {
       this._selectedValues = new Set(snapshot.value);
-    } else if (!this.isSeeded && snapshot.defaultValue != null && snapshot.defaultValue.length > 0) {
+    } else if (
+      !this.isSeeded &&
+      snapshot.defaultValue != null &&
+      snapshot.defaultValue.length > 0
+    ) {
       this._selectedValues = new Set(snapshot.defaultValue);
       this.isSeeded = true;
     }
@@ -68,9 +72,7 @@ export class SelectionEngine {
       nextValues = new Set(this._selectedValues);
       nextValues.delete(value);
     } else {
-      nextValues = this.multiple
-        ? new Set([...this._selectedValues, value])
-        : new Set([value]);
+      nextValues = this.multiple ? new Set([...this._selectedValues, value]) : new Set([value]);
     }
 
     if (!this.isControlled) {
