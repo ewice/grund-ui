@@ -9,9 +9,7 @@ import type { GrundCheckboxIndicator } from '../checkbox-indicator.js';
 import type { CheckedChangeDetail } from '../types.js';
 
 describe('GrundCheckbox', () => {
-  async function setup(
-    template = html`<grund-checkbox>Label</grund-checkbox>`,
-  ) {
+  async function setup(template = html`<grund-checkbox>Label</grund-checkbox>`) {
     const el = await fixture<GrundCheckbox>(template);
     await flush(el);
     return el;
@@ -40,9 +38,7 @@ describe('GrundCheckbox', () => {
   });
 
   it('applies default-checked on first render', async () => {
-    const el = await setup(
-      html`<grund-checkbox default-checked>Label</grund-checkbox>`,
-    );
+    const el = await setup(html`<grund-checkbox default-checked>Label</grund-checkbox>`);
     const btn = getByPart<HTMLButtonElement>(el, 'button');
     expect(btn.getAttribute('aria-checked')).to.equal('true');
     expect(el.hasAttribute('data-checked')).to.be.true;
@@ -97,9 +93,7 @@ describe('GrundCheckbox', () => {
   });
 
   it('fires grund-checked-change with checked:false when toggling off', async () => {
-    const el = await setup(
-      html`<grund-checkbox default-checked>Label</grund-checkbox>`,
-    );
+    const el = await setup(html`<grund-checkbox default-checked>Label</grund-checkbox>`);
     const events: CheckedChangeDetail[] = [];
     el.addEventListener('grund-checked-change', (e) => {
       events.push((e as CustomEvent<CheckedChangeDetail>).detail);
@@ -112,17 +106,13 @@ describe('GrundCheckbox', () => {
   // ── Controlled mode ─────────────────────────────────────────────────────────
 
   it('renders aria-checked from controlled checked=true', async () => {
-    const el = await setup(
-      html`<grund-checkbox .checked=${true}>Label</grund-checkbox>`,
-    );
+    const el = await setup(html`<grund-checkbox .checked=${true}>Label</grund-checkbox>`);
     const btn = getByPart<HTMLButtonElement>(el, 'button');
     expect(btn.getAttribute('aria-checked')).to.equal('true');
   });
 
   it('fires event but does not update visual state in controlled mode', async () => {
-    const el = await setup(
-      html`<grund-checkbox .checked=${false}>Label</grund-checkbox>`,
-    );
+    const el = await setup(html`<grund-checkbox .checked=${false}>Label</grund-checkbox>`);
     const btn = getByPart<HTMLButtonElement>(el, 'button');
     const events: CheckedChangeDetail[] = [];
     el.addEventListener('grund-checked-change', (e) => {
@@ -139,9 +129,7 @@ describe('GrundCheckbox', () => {
   });
 
   it('updates display when controlled checked prop changes', async () => {
-    const el = await setup(
-      html`<grund-checkbox .checked=${false}>Label</grund-checkbox>`,
-    );
+    const el = await setup(html`<grund-checkbox .checked=${false}>Label</grund-checkbox>`);
     el.checked = true;
     await flush(el);
     const btn = getByPart<HTMLButtonElement>(el, 'button');
@@ -150,9 +138,7 @@ describe('GrundCheckbox', () => {
   });
 
   it('switches to uncontrolled when checked set to undefined', async () => {
-    const el = await setup(
-      html`<grund-checkbox .checked=${true}>Label</grund-checkbox>`,
-    );
+    const el = await setup(html`<grund-checkbox .checked=${true}>Label</grund-checkbox>`);
     el.checked = undefined;
     await flush(el);
     // Should use _internalChecked (false by default since no defaultChecked)
@@ -163,9 +149,7 @@ describe('GrundCheckbox', () => {
   // ── Indeterminate state ─────────────────────────────────────────────────────
 
   it('renders aria-checked=mixed when indeterminate=true', async () => {
-    const el = await setup(
-      html`<grund-checkbox .indeterminate=${true}>Label</grund-checkbox>`,
-    );
+    const el = await setup(html`<grund-checkbox .indeterminate=${true}>Label</grund-checkbox>`);
     const btn = getByPart<HTMLButtonElement>(el, 'button');
     expect(btn.getAttribute('aria-checked')).to.equal('mixed');
     expect(el.hasAttribute('data-indeterminate')).to.be.true;
@@ -174,9 +158,7 @@ describe('GrundCheckbox', () => {
   });
 
   it('clicking indeterminate checkbox fires grund-checked-change with checked:true', async () => {
-    const el = await setup(
-      html`<grund-checkbox .indeterminate=${true}>Label</grund-checkbox>`,
-    );
+    const el = await setup(html`<grund-checkbox .indeterminate=${true}>Label</grund-checkbox>`);
     const events: CheckedChangeDetail[] = [];
     el.addEventListener('grund-checked-change', (e) => {
       events.push((e as CustomEvent<CheckedChangeDetail>).detail);
@@ -188,9 +170,7 @@ describe('GrundCheckbox', () => {
   });
 
   it('indeterminate is not cleared automatically on click', async () => {
-    const el = await setup(
-      html`<grund-checkbox .indeterminate=${true}>Label</grund-checkbox>`,
-    );
+    const el = await setup(html`<grund-checkbox .indeterminate=${true}>Label</grund-checkbox>`);
     getByPart<HTMLButtonElement>(el, 'button').click();
     await flush(el);
     // Consumer must clear indeterminate manually — verify via the observable data attribute.
@@ -202,11 +182,15 @@ describe('GrundCheckbox', () => {
       html`<grund-checkbox disabled .indeterminate=${true}>Label</grund-checkbox>`,
     );
     let callCount = 0;
-    el.addEventListener('grund-checked-change', () => { callCount++; });
+    el.addEventListener('grund-checked-change', () => {
+      callCount++;
+    });
     getByPart<HTMLButtonElement>(el, 'button').click();
     await flush(el);
     expect(callCount).to.equal(0);
-    expect(getByPart<HTMLButtonElement>(el, 'button').getAttribute('aria-checked')).to.equal('mixed');
+    expect(getByPart<HTMLButtonElement>(el, 'button').getAttribute('aria-checked')).to.equal(
+      'mixed',
+    );
   });
 
   it('readOnly + indeterminate: no event fires and aria-checked=mixed', async () => {
@@ -214,28 +198,28 @@ describe('GrundCheckbox', () => {
       html`<grund-checkbox read-only .indeterminate=${true}>Label</grund-checkbox>`,
     );
     let callCount = 0;
-    el.addEventListener('grund-checked-change', () => { callCount++; });
+    el.addEventListener('grund-checked-change', () => {
+      callCount++;
+    });
     getByPart<HTMLButtonElement>(el, 'button').click();
     await flush(el);
     expect(callCount).to.equal(0);
-    expect(getByPart<HTMLButtonElement>(el, 'button').getAttribute('aria-checked')).to.equal('mixed');
+    expect(getByPart<HTMLButtonElement>(el, 'button').getAttribute('aria-checked')).to.equal(
+      'mixed',
+    );
   });
 
   // ── Disabled ────────────────────────────────────────────────────────────────
 
   it('reflects disabled=true to inner button and data-disabled', async () => {
-    const el = await setup(
-      html`<grund-checkbox disabled>Label</grund-checkbox>`,
-    );
+    const el = await setup(html`<grund-checkbox disabled>Label</grund-checkbox>`);
     const btn = getByPart<HTMLButtonElement>(el, 'button');
     expect(btn.disabled).to.be.true;
     expect(el.hasAttribute('data-disabled')).to.be.true;
   });
 
   it('does not fire event when clicked while disabled', async () => {
-    const el = await setup(
-      html`<grund-checkbox disabled>Label</grund-checkbox>`,
-    );
+    const el = await setup(html`<grund-checkbox disabled>Label</grund-checkbox>`);
     let callCount = 0;
     el.addEventListener('grund-checked-change', () => {
       callCount++;
@@ -257,16 +241,12 @@ describe('GrundCheckbox', () => {
   // ── readOnly ────────────────────────────────────────────────────────────────
 
   it('sets data-readonly when readOnly=true', async () => {
-    const el = await setup(
-      html`<grund-checkbox read-only>Label</grund-checkbox>`,
-    );
+    const el = await setup(html`<grund-checkbox read-only>Label</grund-checkbox>`);
     expect(el.hasAttribute('data-readonly')).to.be.true;
   });
 
   it('does not fire event when clicked while readOnly', async () => {
-    const el = await setup(
-      html`<grund-checkbox read-only>Label</grund-checkbox>`,
-    );
+    const el = await setup(html`<grund-checkbox read-only>Label</grund-checkbox>`);
     let callCount = 0;
     el.addEventListener('grund-checked-change', () => {
       callCount++;
@@ -279,9 +259,7 @@ describe('GrundCheckbox', () => {
   // ── required ────────────────────────────────────────────────────────────────
 
   it('sets data-required when required=true', async () => {
-    const el = await setup(
-      html`<grund-checkbox required>Label</grund-checkbox>`,
-    );
+    const el = await setup(html`<grund-checkbox required>Label</grund-checkbox>`);
     expect(el.hasAttribute('data-required')).to.be.true;
   });
 
@@ -318,7 +296,9 @@ describe('GrundCheckbox', () => {
     await flush(a);
 
     expect(getByPart<HTMLButtonElement>(a, 'button').getAttribute('aria-checked')).to.equal('true');
-    expect(getByPart<HTMLButtonElement>(b, 'button').getAttribute('aria-checked')).to.equal('false');
+    expect(getByPart<HTMLButtonElement>(b, 'button').getAttribute('aria-checked')).to.equal(
+      'false',
+    );
   });
 
   // ── Form participation ──────────────────────────────────────────────────────
@@ -465,9 +445,7 @@ describe('GrundCheckboxIndicator', () => {
   ) {
     const el = await fixture<GrundCheckbox>(template);
     await flush(el);
-    const indicator = el.querySelector<GrundCheckboxIndicator>(
-      'grund-checkbox-indicator',
-    )!;
+    const indicator = el.querySelector<GrundCheckboxIndicator>('grund-checkbox-indicator')!;
     return { el, indicator };
   }
 

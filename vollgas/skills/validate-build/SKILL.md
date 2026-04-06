@@ -71,15 +71,14 @@ If the CEM has drifted from the committed version: report the diff as a failure.
 
 Verify structural integrity of all components. These are fast grep checks — no AI needed.
 
-**Barrel export completeness:** Every element class under `src/components/*/` must be re-exported from its component's barrel file (`src/components/{name}/{name}.ts`).
+**Barrel export completeness:** Every element class under `src/components/*/` must be re-exported from its component's barrel file (`src/components/{name}/index.ts`).
 
 ```bash
 # List all customElements.define() tags
 grep -rh "customElements.define(" src/components/ --include="*.ts" | grep -oP "'grund-[^']+'" | sort > /tmp/defined-tags.txt
-# List all exports from barrel files (one per component directory, named after the component)
+# List all exports from barrel files (index.ts per component directory)
 for dir in src/components/*/; do
-  name=$(basename "$dir")
-  [ -f "$dir$name.ts" ] && grep -h "export" "$dir$name.ts"
+  [ -f "$dir/index.ts" ] && grep -h "export" "$dir/index.ts"
 done | sort > /tmp/barrel-exports.txt
 ```
 
@@ -93,12 +92,12 @@ grep -rn "customElements.define(" src/components/ --include="*.ts" | sort -t"'" 
 
 Report duplicates as blockers.
 
-**Package.json exports map completeness:** Every component directory `src/components/{name}/` with a barrel `{name}.ts` must have a corresponding `"./{name}"` entry in `package.json` `exports`.
+**Package.json exports map completeness:** Every component directory `src/components/{name}/` with a barrel `index.ts` must have a corresponding `"./{name}"` entry in `package.json` `exports`.
 
 ```bash
 for dir in src/components/*/; do
   name=$(basename "$dir")
-  if [ -f "$dir$name.ts" ]; then
+  if [ -f "$dir/index.ts" ]; then
     grep -q "\"\./$name\"" package.json || echo "MISSING exports entry: ./$name"
   fi
 done

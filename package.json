@@ -7,11 +7,11 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
-    "./accordion": "./dist/components/accordion/accordion.js",
-    "./checkbox": "./dist/components/checkbox/checkbox.js",
-    "./tabs": "./dist/components/tabs/tabs.js",
-    "./toggle": "./dist/components/toggle/toggle.js",
-    "./toggle-group": "./dist/components/toggle-group/toggle-group.js"
+    "./accordion": "./dist/components/accordion/index.js",
+    "./checkbox": "./dist/components/checkbox/index.js",
+    "./tabs": "./dist/components/tabs/index.js",
+    "./toggle": "./dist/components/toggle/index.js",
+    "./toggle-group": "./dist/components/toggle-group/index.js"
   },
   "customElements": "custom-elements.json",
   "files": [

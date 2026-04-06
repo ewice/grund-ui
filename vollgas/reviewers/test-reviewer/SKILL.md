@@ -83,7 +83,7 @@ Use the reviewer-output-contract format. Two severity levels only:
 
 #### Finding 1: No mount/unmount memory test
 - Severity: BLOCKER
-- File: src/components/accordion/root/accordion.test.ts:45
+- File: src/components/accordion/tests/accordion.test.ts:45
 - Issue: No mount/unmount memory test present
 - Evidence: `test-reviewer#11` — every component needs addEventListener/removeEventListener symmetry test
 - Suggested fix direction: Add test using vi.spyOn on addEventListener/removeEventListener, call el.remove(), assert symmetry

@@ -151,7 +151,7 @@ Use the reviewer-output-contract format. Two severity levels only:
 
 #### Finding 1: Cross-shadow ARIA relationship broken
 - Severity: BLOCKER
-- File: src/components/accordion/trigger/accordion.ts:12-15
+- File: src/components/accordion/accordion-trigger.ts:12-15
 - Issue: Trigger uses aria-controls IDREF across shadow roots, so the controlled panel is not programmatically related for assistive technology
 - Evidence: `accessibility-contract#7` — aria-controls="panel-1" cannot resolve across shadow boundaries
 - Suggested fix direction: Use ariaControlsElements after render or keep both elements in the same root

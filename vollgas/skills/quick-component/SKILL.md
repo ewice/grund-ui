@@ -10,7 +10,7 @@ controller, no registry, no context. The full 6-reviewer suite still runs becaus
 components still have parts, slots, SSR safety requirements, and accessibility contracts.
 
 Use this only when **all** of the following are true:
-- Single custom element (no root/item/sub-part compound structure)
+- Single custom element (no compound multi-element structure)
 - No state (no `@state` fields, no controller)
 - No keyboard interaction beyond natural focus
 - No custom events dispatched

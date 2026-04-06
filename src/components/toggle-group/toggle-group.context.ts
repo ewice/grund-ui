@@ -1,6 +1,6 @@
 import { createContext } from '@lit/context';
 
-import type { GrundToggle } from '../toggle/toggle.js';
+import type { GrundToggle } from '../toggle';
 
 export interface ToggleGroupRootContext {
   isPressed: (value: string) => boolean;
@@ -9,5 +9,4 @@ export interface ToggleGroupRootContext {
   unregisterToggle: (toggle: GrundToggle) => void;
 }
 
-export const toggleGroupRootContext =
-  createContext<ToggleGroupRootContext>('toggle-group-root');
+export const toggleGroupRootContext = createContext<ToggleGroupRootContext>('toggle-group-root');

@@ -218,7 +218,7 @@ Decompose the work into small, independently validatable tasks.
 
 ```markdown
 ### Task 1 — Reproduce and fix
-**Scope:** tests/accordion.test.ts, root/accordion.ts
+**Scope:** tests/accordion.test.ts, root/index.ts
 **Contract:** Write a test that fails because keyboard selection doesn't fire
   grund-change. Apply the minimal fix. Existing tests must not break.
 **Validation:** `npm run test:run -- src/components/accordion/`

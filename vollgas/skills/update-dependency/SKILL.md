@@ -39,7 +39,7 @@ For each file that imports from the dependency: read the imports and note which 
 Write a checklist of every file + change needed:
 ```
 - src/controllers/aria-link.controller.ts: rename ariaControlsEl → ariaControlsElements
-- src/components/accordion/root/accordion.ts: update context import path
+- src/components/accordion/accordion.ts: update context import path
 ```
 
 If no breaking changes: proceed directly to Step 4 with no checklist.

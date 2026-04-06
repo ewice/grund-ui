@@ -146,7 +146,7 @@ Use the reviewer-output-contract format. Two severity levels only:
 
 #### Finding 1: Missing exported event detail interface
 - Severity: BLOCKER
-- File: src/components/accordion/root/types.ts:5
+- File: src/components/accordion/types.ts:5
 - Issue: grund-change is dispatched publicly but no exported detail interface exists in types.ts for consumers to type against
 - Evidence: `api-contract#6` — every public custom event requires a corresponding exported detail interface
 - Suggested fix direction: Export a corresponding *Detail interface from types.ts and align the dispatch generic with it

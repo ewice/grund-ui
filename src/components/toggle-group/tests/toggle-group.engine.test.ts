@@ -28,7 +28,12 @@ describe('ToggleGroupEngine', () => {
 
     it('seeds defaultValue only once', () => {
       const ctrl = create({ defaultValue: ['a'] });
-      ctrl.syncFromHost({ value: undefined, defaultValue: ['b'], multiple: false, disabled: false });
+      ctrl.syncFromHost({
+        value: undefined,
+        defaultValue: ['b'],
+        multiple: false,
+        disabled: false,
+      });
       expect(ctrl.isPressed('a')).to.be.true;
       expect(ctrl.isPressed('b')).to.be.false;
     });

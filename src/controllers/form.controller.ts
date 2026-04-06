@@ -43,11 +43,7 @@ export class FormController implements ReactiveController {
    *
    * @param anchor - Shadow element used to anchor the browser validation popup.
    */
-  public setValidity(
-    flags: ValidityStateFlags,
-    message: string,
-    anchor?: HTMLElement,
-  ): void {
+  public setValidity(flags: ValidityStateFlags, message: string, anchor?: HTMLElement): void {
     this._internals.setValidity(flags, message, anchor);
   }
 

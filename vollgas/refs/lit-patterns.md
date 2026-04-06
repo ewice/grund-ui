@@ -36,7 +36,7 @@ Reference for generation skills and the `lit-reviewer`. All rules are numbered a
     - **With `ContextProvider` directly:** Call `setValue(value, true)` to force notification after in-place mutation. This avoids recreating the object and is preferred for components with many consumers (50+ items).
     - In both cases, bind action methods once (via arrow functions or `.bind()` in the constructor or `createContextValue()`) so that callbacks are stable references even when the context object is recreated.
 16. Context subscriptions are always `private`. Expose derived values via public getters if other code needs them.
-17. Context key symbols must be unique per component family. Define in the component's `context/` directory. Never reuse between unrelated component families.
+17. Context key symbols must be unique per component family. Define in the component's `{name}.context.ts` file. Never reuse between unrelated component families.
 18. Context interfaces expose the minimum API consumers need. Prefer read-only query methods (`getRecordByValue(value): { element, panel } | null`) over exposing mutable data structures (`getRegistry(): Registry`). If consumers need registry data for DOM queries (ARIA linking, geometry), add specific read-only methods to the context interface — never expose the registry instance directly.
 
 ### Dev-Mode Warnings

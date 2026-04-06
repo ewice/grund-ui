@@ -24,7 +24,7 @@ Read the inline implementations in both components. Document:
 - Whether it belongs in `src/controllers/` (a `ReactiveController`) or `src/utils/` (a pure function)
 
 **Reactive Controllers** (`src/controllers/`): stateful, tied to element lifecycle, implement `ReactiveController` — need `hostConnected`/`hostDisconnected` hooks. Examples: `RovingFocusController`, `FocusTrapController`.
-**Engines** (`src/controllers/` for shared, `src/components/{name}/engine/` for component-specific): pure state machines, no Lit dependency, independently testable with `new Engine()`. Examples: `SelectionEngine`, `AccordionEngine`.
+**Engines** (`src/controllers/` for shared, `src/components/{name}/{name}.engine.ts` for component-specific): pure state machines, no Lit dependency, independently testable with `new Engine()`. Examples: `SelectionEngine`, `AccordionEngine`.
 **Utilities** (`src/utils/`): pure functions, no Lit dependency, no state.
 
 ### Step 2 — Check for prior art

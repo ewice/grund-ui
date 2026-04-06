@@ -23,13 +23,15 @@ and planned shared controllers (built when the first component of that category 
 
 **Examples:** Accordion, Tabs, Toolbar, RadioGroup, TreeView
 
-**Required structure:**
-- `root/` — provider element, `@provide` context, `RovingFocusController`
-- `item/` — repeating container, consumes root context, provides item context
-- `[sub-parts]/` — trigger, panel, etc.
-- `controller/` — owns state, pure resolver functions
-- `registry/` — ordered child tracking
-- `context/` — root context interface + item context interface
+**Required files (flat in component directory):**
+- `{name}.ts` — root/provider element, `@provide` context, `RovingFocusController`
+- `{name}-item.ts` — repeating container, consumes root context, provides item context
+- `{name}-{part}.ts` — sub-part elements (trigger, panel, etc.)
+- `{name}.engine.ts` — owns state, pure resolver functions
+- `{name}.registry.ts` — ordered child tracking
+- `{name}.context.ts` — root context interface + item context interface
+- `index.ts` — barrel export
+- `tests/` — all test files
 
 **Focus management:** `RovingFocusController` on root. Arrow keys move focus within widget. Tab exits to next page-level focusable.
 

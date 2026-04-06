@@ -172,7 +172,7 @@ Use the reviewer-output-contract format. Two severity levels only:
 
 #### Finding 1: Infinite re-render path
 - Severity: BLOCKER
-- File: src/components/accordion/root/accordion.ts:42
+- File: src/components/accordion/accordion.ts:42
 - Issue: updated() calls requestUpdate(), creating an infinite re-render path
 - Evidence: `lit-patterns#4` — never call requestUpdate() inside updated()
 - Suggested fix direction: Move the derivation into willUpdate() or guard the post-render side effect without requesting another update

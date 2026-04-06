@@ -25,7 +25,11 @@ if (!customElements.get('test-roving-host')) {
 }
 
 describe('RovingFocusController', () => {
-  async function setup(opts?: { orientation?: 'vertical' | 'horizontal'; loop?: boolean; disabledIndex?: number }) {
+  async function setup(opts?: {
+    orientation?: 'vertical' | 'horizontal';
+    loop?: boolean;
+    disabledIndex?: number;
+  }) {
     const el = await fixture<TestHost>(html`
       <test-roving-host>
         <button>One</button>

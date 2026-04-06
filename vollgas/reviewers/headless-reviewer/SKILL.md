@@ -78,7 +78,7 @@ Use the reviewer-output-contract format. Two severity levels only:
 
 #### Finding 1: Visual style in shadow DOM
 - Severity: BLOCKER
-- File: src/components/accordion/trigger/accordion.ts:12
+- File: src/components/accordion/accordion-trigger.ts:12
 - Issue: Shadow DOM stylesheet includes color property
 - Evidence: `headless-contract#2` — shadow stylesheets must contain zero visual styles
 - Suggested fix direction: Remove the color rule — consumers own all visual styles

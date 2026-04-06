@@ -5,7 +5,7 @@ description: "Use after /component-spec to create directory structure, types.ts,
 
 ## Overview
 
-Creates the file skeleton: directories, `types.ts` with all public interfaces, `context/` interfaces, and barrel `{name}.ts` files. No logic — just structure and types. Structural validation only — full reviewer gates run via `vollgas:review-gate` during implementation where there is real code to review.
+Creates the file skeleton: flat component files, `types.ts` with all public interfaces, context interfaces, and barrel `index.ts`. No logic — just structure and types. Structural validation only — full reviewer gates run via `vollgas:review-gate` during implementation where there is real code to review.
 
 ## Usage
 
@@ -64,22 +64,22 @@ element implementation — better to surface the gap now.
 
 Read `docs/specs/{name}.spec.md`, `docs/vocabulary.md`, `vollgas/refs/lit-patterns.md`, and `vollgas/refs/headless-contract.md`.
 
-### Step 2 — Create directories
+### Step 2 — Create component directory and `tests/`
 
-Based on category from the spec:
+Create `src/components/{name}/` and `src/components/{name}/tests/`.
 
-| Category | Directories to create |
+All component files are flat in the component directory — no subdirectories for individual parts. Only `tests/` is a subdirectory.
+
+Based on category from the spec, the following files will be created (in Steps 3–5):
+
+| Category | Files to create |
 |---|---|
-| composite-widget | `root/`, `item/`, `engine/`, `registry/`, `context/`, plus each sub-part from spec |
-| form-control | `root/`, `engine/`, `context/` |
-| overlay | `root/`, `trigger/`, `content/`, `engine/`, `context/` |
-| collection | `root/`, `item/`, `engine/`, `context/` |
-| feedback | `root/`, `engine/`, `context/` |
-| simple | `root/` only |
-
-All under `src/components/{name}/`.
-
-Note: git does not track empty directories. Directories will become tracked when stub files are written in Steps 3–5.
+| composite-widget | `{name}.ts` (root), `{name}-item.ts`, `{name}-{part}.ts` per sub-part, `{name}.engine.ts`, `{name}.registry.ts`, `{name}.context.ts`, `types.ts`, `index.ts` |
+| form-control | `{name}.ts` (root), `{name}.engine.ts`, `{name}.context.ts`, `types.ts`, `index.ts` |
+| overlay | `{name}.ts` (root), `{name}-trigger.ts`, `{name}-content.ts`, `{name}.engine.ts`, `{name}.context.ts`, `types.ts`, `index.ts` |
+| collection | `{name}.ts` (root), `{name}-item.ts`, `{name}.engine.ts`, `{name}.context.ts`, `types.ts`, `index.ts` |
+| feedback | `{name}.ts` (root), `{name}.engine.ts`, `{name}.context.ts`, `types.ts`, `index.ts` |
+| simple | `{name}.ts` only |
 
 ### Step 3 — Write `types.ts`
 
@@ -91,7 +91,7 @@ Create `src/components/{name}/types.ts`:
 
 ### Step 4 — Write context interfaces
 
-Create `src/components/{name}/context/{name}.context.ts`:
+Create `src/components/{name}/{name}.context.ts`:
 - Context key (`Symbol`)
 - Context interface: state fields (read-only) and action callbacks (use vocabulary registry names)
 - Export both from `{name}.context.ts`
@@ -108,7 +108,7 @@ Create `src/components/{name}/context/{name}.context.ts`:
 
 ### Step 5 — Write element stubs
 
-For each element directory in the spec (e.g., `root/`, `item/`, `trigger/`, `panel/`), create a minimal stub file `src/components/{name}/{part}/{name}.ts`:
+For each element in the spec (e.g., root, item, trigger, panel), create a minimal stub file `src/components/{name}/{name}-{part}.ts` (or `{name}.ts` for the root element):
 
 ```ts
 import { LitElement, html, css } from 'lit';
@@ -135,21 +135,21 @@ if (!customElements.get('grund-{name}-{part}')) {
 
 These stubs are replaced during element implementation. Their only purpose is to give TypeScript a resolvable import target and ensure `customElements.define()` is guarded.
 
-### Step 6 — Write barrel `{name}.ts`
+### Step 6 — Write barrel `index.ts`
 
-Create `src/components/{name}/{name}.ts`:
+Create `src/components/{name}/index.ts`:
 - Re-export all element classes from their stub files
 - Re-export all public types from `types.ts`
 
 ### Step 7 — Structural validation
 
 Verify before committing:
-- All directories from the spec's category exist
+- Component directory and `tests/` subdirectory exist
 - `types.ts` exports all event detail interfaces and `HostSnapshot`
-- `context/{name}.context.ts` exports the context key and interface
-- Barrel `{name}.ts` re-exports all element classes and public types
+- `{name}.context.ts` exports the context key and interface
+- Barrel `index.ts` re-exports all element classes and public types
 - Every element stub has the `customElements.define()` guard
-- All names in `types.ts` and `context/{name}.ts` match vocabulary registry entries
+- All names in `types.ts` and `{name}.context.ts` match vocabulary registry entries
 
 No reviewer agents run at this step — element stubs have no logic to review. Full reviewer gates run via `vollgas:review-gate` during implementation.
 

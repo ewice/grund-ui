@@ -4,7 +4,7 @@ import { action } from 'storybook/actions';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { GrundAccordion } from '../src/components/accordion';
 
-import '../src/components/accordion/accordion.js';
+import '../src/components/accordion';
 
 const meta: Meta<GrundAccordion> = {
   title: 'Components/Accordion',

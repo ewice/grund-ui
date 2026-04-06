@@ -59,7 +59,7 @@ Use the reviewer-output-contract format. Two severity levels only:
 
 #### Finding 1: unsafeHTML with dynamic content
 - Severity: BLOCKER
-- File: src/components/accordion/root/accordion.ts:23
+- File: src/components/accordion/accordion.ts:23
 - Issue: unsafeHTML used with value from component property
 - Evidence: `security#2` — unsafeHTML is safe only for hard-coded strings
 - Suggested fix direction: Use html template literal with ${value} interpolation instead of unsafeHTML

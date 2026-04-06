@@ -40,10 +40,7 @@ export function simulateKeyboard(
 /**
  * Queries the shadow root of an element for a matching CSS part.
  */
-export function getByPart<T extends Element = HTMLElement>(
-  el: Element,
-  partName: string,
-): T {
+export function getByPart<T extends Element = HTMLElement>(el: Element, partName: string): T {
   const result = el.shadowRoot?.querySelector(`[part="${partName}"]`);
   if (!result) {
     throw new Error(`No element with part="${partName}" found in ${el.tagName}`);

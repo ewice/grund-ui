@@ -3,10 +3,10 @@ import { action } from 'storybook/actions';
 import { within, userEvent, expect } from '@storybook/test';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
-import type { GrundCheckbox } from '../src/components/checkbox/checkbox.js';
-import type { CheckedChangeDetail } from '../src/components/checkbox/checkbox.js';
+import type { GrundCheckbox } from '../src/components/checkbox';
+import type { CheckedChangeDetail } from '../src/components/checkbox';
 
-import '../src/components/checkbox/checkbox.js';
+import '../src/components/checkbox';
 
 const onCheckedChange = (e: CustomEvent<CheckedChangeDetail>) =>
   action('grund-checked-change')(e.detail.checked);

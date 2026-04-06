@@ -37,24 +37,27 @@ Four layers, strictly separated:
 
 1. **Utilities** (`src/utils/`) — pure functions, zero framework dependency
 2. **Reactive Controllers** (`src/controllers/`) — `ReactiveController` implementations for DOM-dependent concerns (focus, listeners, observers)
-3. **Engines** (`src/components/{name}/engine/`) — plain classes owning state and action resolution. Zero DOM, zero Lit, independently testable
+3. **Engines** (`src/components/{name}/{name}.engine.ts`) — plain classes owning state and action resolution. Zero DOM, zero Lit, independently testable
 4. **Custom Elements** (`src/components/{name}/`) — Lit elements in the compound component pattern; read context, render templates, delegate actions
 
 ### Compound Component Structure
 
 ```
 component/
-├── root/                 → Provider element (@provide, RovingFocusController, engine instantiation)
-├── item/                 → Grouping element — only when a repeating container is needed
-├── [sub-parts]/          → Leaf elements (trigger, panel, header, etc.)
-├── engine/               → Pure state machine — no DOM, no Lit
-├── registry/             → Ordered child tracking and sub-part attachment (omit if unneeded)
-├── context/               → Context interfaces and context symbols
+├── {name}.ts             → Root/provider element (@provide, RovingFocusController, engine instantiation)
+├── {name}-{part}.ts      → Sub-part elements (item, trigger, panel, header, etc.)
+├── {name}.context.ts     → Context interfaces and context symbols
+├── {name}.engine.ts      → Pure state machine — no DOM, no Lit
+├── {name}.registry.ts    → Ordered child tracking and sub-part attachment (omit if unneeded)
 ├── types.ts              → Public types, event detail types, snapshot interfaces
-└── {component-name}.ts   → Barrel export
+├── index.ts              → Barrel export
+└── tests/                → All test files
+    ├── {name}.test.ts
+    ├── {name}-{aspect}.test.ts
+    └── {name}.engine.test.ts
 ```
 
-Element files inside each part directory are named `{component-name}.ts`. Test files use descriptive names (e.g., `accordion.test.ts`, `accordion-keyboard.test.ts`).
+All component files are flat in the component directory — no subdirectories for individual parts. Test files are grouped under `tests/`. Element files are named `{name}-{part}.ts` (e.g., `accordion-item.ts`, `tabs-list.ts`).
 
 ### Reactive Controllers vs Engines
 
@@ -62,7 +65,7 @@ Two distinct things share the word "controller" in Lit's ecosystem. Keep them st
 
 | | Reactive Controller | Engine |
 |---|---|---|
-| Location | `src/controllers/` | `src/components/{name}/engine/` |
+| Location | `src/controllers/` | `src/components/{name}/{name}.engine.ts` |
 | Implements | `ReactiveController` | Plain class — no interface |
 | Constructor | `host.addController(this)` | `new EngineClass()` |
 | Lifecycle hooks | `hostConnected`, `hostDisconnected`, `hostUpdated` | None |

@@ -18,8 +18,7 @@ export class OrderedRegistry<TRecord extends OrderedRecord> {
   public insert(record: TRecord): void {
     const idx = this._entries.findIndex(
       (existing) =>
-        existing.element.compareDocumentPosition(record.element) &
-        Node.DOCUMENT_POSITION_PRECEDING,
+        existing.element.compareDocumentPosition(record.element) & Node.DOCUMENT_POSITION_PRECEDING,
     );
     if (idx === -1) {
       this._entries.push(record);

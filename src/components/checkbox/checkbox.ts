@@ -121,11 +121,7 @@ export class GrundCheckbox extends LitElement {
     // Validity: required fails when unchecked (indeterminate counts as unchecked).
     if (this.required && !effective) {
       const btn = this.shadowRoot?.querySelector<HTMLButtonElement>('[part="button"]');
-      this._form.setValidity(
-        { valueMissing: true },
-        'Please check this box.',
-        btn ?? undefined,
-      );
+      this._form.setValidity({ valueMissing: true }, 'Please check this box.', btn ?? undefined);
     } else {
       this._form.setValidity({}, '');
     }
