@@ -11,8 +11,6 @@ export interface CheckboxGroupContext {
   readonly getParentState: () => 'checked' | 'unchecked' | 'indeterminate';
   /** Request a toggle from the group. Group decides engine method based on parent flag. */
   readonly requestToggle: (value: string, parent: boolean) => void;
-  /** Whether the group is disabled. */
-  readonly disabled: boolean;
 }
 
 export const checkboxGroupContext =

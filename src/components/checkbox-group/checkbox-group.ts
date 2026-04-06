@@ -10,31 +10,43 @@ import type { CheckboxGroupContext } from './checkbox-group.context';
 import type { CheckboxGroupValueChangeDetail, CheckboxGroupHostSnapshot } from './types';
 
 /**
- * Root checkbox group container. Provides context to child checkbox elements.
+ * Root checkbox group container. Coordinates checked state across child `grund-checkbox` elements.
+ *
+ * Supports controlled mode (`value` prop set) and uncontrolled mode (`value` is `undefined`,
+ * state seeded by `defaultValue`). In controlled mode, `grund-value-change` fires on each
+ * interaction but the displayed state does not change automatically — the consumer must update
+ * the `value` property.
+ *
+ * Consumers should provide an accessible grouping container (e.g., `<fieldset>` with `<legend>`,
+ * or `aria-labelledby` on the host element) since this element does not add any ARIA grouping role.
  *
  * @element grund-checkbox-group
- * @slot - Checkbox group items
+ * @slot - Checkbox group items (grund-checkbox elements)
  * @fires {CustomEvent<CheckboxGroupValueChangeDetail>} grund-value-change - When any child checkbox toggles
  */
 export class GrundCheckboxGroup extends LitElement {
   public static override styles = css`
     :host {
-      display: block;
+      display: block; /* block: group container wrapping checkbox items */
     }
   `;
 
+  /** Controlled checked values. `undefined` enables uncontrolled mode (seeded by `defaultValue`). */
   // hasChanged: () => true — ensures Lit re-runs when a mutated array reference is re-set.
   @property({ type: Array, hasChanged: () => true })
   public value: string[] | undefined = undefined;
 
+  /** Seeds uncontrolled checked state on first render only. Ignored when `value` is set. */
   // hasChanged: () => true — ensures Lit re-runs when a mutated array reference is re-set.
   @property({ type: Array, attribute: 'default-value', hasChanged: () => true })
   public defaultValue: string[] = [];
 
+  /** All possible checkbox values. Required for the parent checkbox to derive its state (checked / unchecked / indeterminate). */
   // hasChanged: () => true — ensures Lit re-runs when a mutated array reference is re-set.
   @property({ type: Array, attribute: 'all-values', hasChanged: () => true })
   public allValues: string[] = [];
 
+  /** Whether all checkboxes in the group are disabled. */
   @property({ type: Boolean }) public disabled = false;
 
   @provide({ context: checkboxGroupContext })
@@ -43,7 +55,7 @@ export class GrundCheckboxGroup extends LitElement {
 
   @provide({ context: disabledContext })
   @state()
-  protected groupCtx_disabled = false;
+  protected disabledCtx = false;
 
   private readonly engine = new CheckboxGroupEngine();
 
@@ -68,7 +80,7 @@ export class GrundCheckboxGroup extends LitElement {
     this.engine.syncFromHost(snapshot);
 
     this.toggleAttribute('data-disabled', this.disabled);
-    this.groupCtx_disabled = this.disabled;
+    this.disabledCtx = this.disabled;
 
     // Recreate context on first render or when state-bearing properties change.
     // Note: handleToggle() also recreates context directly because internal
@@ -89,7 +101,6 @@ export class GrundCheckboxGroup extends LitElement {
       isChecked: this._isChecked,
       getParentState: this._getParentState,
       requestToggle: this._requestToggle,
-      disabled: this.disabled,
     };
   }
 

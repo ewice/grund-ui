@@ -1,10 +1,18 @@
 /** Detail for `grund-value-change` event on the checkbox group element. */
 export interface CheckboxGroupValueChangeDetail {
-  /** The new complete array of checked values. */
+  /** The new complete array of checked values after the change. */
   value: string[];
-  /** The checkbox value that triggered the change. */
+  /**
+   * The value of the checkbox that triggered the change.
+   * For parent toggle-all actions, this is the parent checkbox's `value` prop (e.g. `"all"`),
+   * not one of the individual child values.
+   */
   itemValue: string;
-  /** The new checked state of the triggering checkbox. */
+  /**
+   * The new checked state of the triggering checkbox.
+   * For parent toggle-all actions, `true` means all `allValues` are now checked;
+   * `false` means all `allValues` are now unchecked.
+   */
   checked: boolean;
 }
 
