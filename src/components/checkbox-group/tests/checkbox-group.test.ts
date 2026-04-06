@@ -95,6 +95,15 @@ describe('GrundCheckboxGroup', () => {
     vitestExpect(handler).toHaveBeenCalledOnce();
   });
 
+  it('fires grund-checked-change before grund-value-change', async () => {
+    const { el, checkboxes } = await setup();
+    const events: string[] = [];
+    checkboxes[0].addEventListener('grund-checked-change', () => events.push('grund-checked-change'));
+    el.addEventListener('grund-value-change', () => events.push('grund-value-change'));
+    clickCheckbox(checkboxes[0]);
+    expect(events).to.deep.equal(['grund-checked-change', 'grund-value-change']);
+  });
+
   // ── Controlled mode ────────────────────────────────────────────────────
 
   it('reflects controlled value prop', async () => {
@@ -220,6 +229,45 @@ describe('GrundCheckboxGroup', () => {
     expect(getByPart(checkboxes[2], 'button').getAttribute('aria-checked')).to.equal('false');
   });
 
+  it('parent checkbox does not submit a form value', async () => {
+    const formEl = await fixture<HTMLFormElement>(html`
+      <form>
+        <grund-checkbox-group .defaultValue=${['a']} .allValues=${['a', 'b']}>
+          <grund-checkbox parent name="select-all" value="all">All</grund-checkbox>
+          <grund-checkbox name="proto" value="a">A</grund-checkbox>
+          <grund-checkbox name="proto" value="b">B</grund-checkbox>
+        </grund-checkbox-group>
+      </form>
+    `);
+    await flush(formEl);
+    const checkboxes = formEl.querySelectorAll<GrundCheckbox>('grund-checkbox');
+    for (const cb of checkboxes) await flush(cb);
+
+    const data = new FormData(formEl);
+    // Parent checkbox (name="select-all") must not appear in FormData
+    expect(data.has('select-all')).to.be.false;
+    // Regular checked checkbox (value="a") should appear
+    expect(data.has('proto')).to.be.true;
+  });
+
+  it('grund-value-change detail is correct when parent checks all', async () => {
+    const { el, checkboxes } = await setup(html`
+      <grund-checkbox-group .allValues=${['a', 'b']}>
+        <grund-checkbox parent value="all">All</grund-checkbox>
+        <grund-checkbox value="a">A</grund-checkbox>
+        <grund-checkbox value="b">B</grund-checkbox>
+      </grund-checkbox-group>
+    `);
+    const handler = vi.fn();
+    el.addEventListener('grund-value-change', handler as EventListener);
+    clickCheckbox(checkboxes[0]); // parent — unchecked → check all
+    vitestExpect(handler).toHaveBeenCalledOnce();
+    const detail = handler.mock.calls[0][0].detail as CheckboxGroupValueChangeDetail;
+    expect(detail.itemValue).to.equal('all');
+    expect(detail.checked).to.equal(true);
+    expect(detail.value).to.include.members(['a', 'b']);
+  });
+
   // ── Standalone checkbox regression ────────────────────────────────────
 
   it('checkbox outside group works as before', async () => {
@@ -229,5 +277,27 @@ describe('GrundCheckboxGroup', () => {
     btn.click();
     await flush(el);
     expect(btn.getAttribute('aria-checked')).to.equal('true');
+  });
+
+  // ── Form submission ───────────────────────────────────────────────────────
+
+  it('checked checkboxes in a group submit their form values', async () => {
+    const formEl = await fixture<HTMLFormElement>(html`
+      <form>
+        <grund-checkbox-group .defaultValue=${['https']}>
+          <grund-checkbox name="proto" value="http">HTTP</grund-checkbox>
+          <grund-checkbox name="proto" value="https">HTTPS</grund-checkbox>
+          <grund-checkbox name="proto" value="ftp">FTP</grund-checkbox>
+        </grund-checkbox-group>
+      </form>
+    `);
+    await flush(formEl);
+    const checkboxes = formEl.querySelectorAll<GrundCheckbox>('grund-checkbox');
+    for (const cb of checkboxes) await flush(cb);
+
+    const data = new FormData(formEl);
+    const values = data.getAll('proto');
+    // Only 'https' was in defaultValue — only it should submit
+    expect(values).to.deep.equal(['https']);
   });
 });
