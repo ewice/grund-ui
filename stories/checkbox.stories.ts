@@ -1,10 +1,9 @@
 import { html } from 'lit';
 import { action } from 'storybook/actions';
-import { within, userEvent, expect } from '@storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
-import type { GrundCheckbox } from '../src/components/checkbox';
-import type { CheckedChangeDetail } from '../src/components/checkbox';
+import type { GrundCheckbox, CheckedChangeDetail } from '../src/components/checkbox';
 
 import '../src/components/checkbox';
 
