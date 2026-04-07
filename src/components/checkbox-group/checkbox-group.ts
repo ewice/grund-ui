@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 
@@ -9,45 +9,29 @@ import { disabledContext } from '../../context/disabled.context';
 import type { CheckboxGroupContext } from './checkbox-group.context';
 import type { CheckboxGroupValueChangeDetail, CheckboxGroupHostSnapshot } from './types';
 
-/**
- * Root checkbox group container. Coordinates checked state across child `grund-checkbox` elements.
- *
- * Supports controlled mode (`value` prop set) and uncontrolled mode (`value` is `undefined`,
- * state seeded by `defaultValue`). In controlled mode, `grund-value-change` fires on each
- * interaction but the displayed state does not change automatically — the consumer must update
- * the `value` property.
- *
- * Consumers should provide an accessible grouping container (e.g., `<fieldset>` with `<legend>`,
- * or `aria-labelledby` on the host element) since this element does not add any ARIA grouping role.
- *
- * @element grund-checkbox-group
- * @slot - Checkbox group items (grund-checkbox elements)
- * @fires {CustomEvent<CheckboxGroupValueChangeDetail>} grund-value-change - When any child checkbox toggles
- */
 export class GrundCheckboxGroup extends LitElement {
-  public static override styles = css`
+  public static override readonly styles = css`
     :host {
-      display: block; /* block: this element is a block-level container */
+      display: block;
     }
   `;
 
-  /** Controlled checked values. `undefined` enables uncontrolled mode (seeded by `defaultValue`). */
-  // hasChanged: () => true — ensures Lit re-runs when a mutated array reference is re-set.
   @property({ type: Array, hasChanged: () => true })
   public value: string[] | undefined = undefined;
 
-  /** Seeds uncontrolled checked state on first render only. Ignored when `value` is set. */
-  // hasChanged: () => true — ensures Lit re-runs when a mutated array reference is re-set.
   @property({ type: Array, attribute: 'default-value', hasChanged: () => true })
   public defaultValue: string[] = [];
 
-  /** All possible checkbox values. Required for the parent checkbox to derive its state (checked / unchecked / indeterminate). */
-  // hasChanged: () => true — ensures Lit re-runs when a mutated array reference is re-set.
   @property({ type: Array, attribute: 'all-values', hasChanged: () => true })
   public allValues: string[] = [];
 
-  /** Whether all checkboxes in the group are disabled. */
   @property({ type: Boolean }) public disabled = false;
+
+  @property({ attribute: 'aria-label' }) public override ariaLabel: string | null = null;
+
+  @property({ attribute: 'aria-labelledby' }) public ariaLabelledBy: string | null = null;
+
+  @property({ attribute: 'aria-describedby' }) public ariaDescribedBy: string | null = null;
 
   @provide({ context: checkboxGroupContext })
   @state()
@@ -59,15 +43,12 @@ export class GrundCheckboxGroup extends LitElement {
 
   private readonly engine = new CheckboxGroupEngine();
 
-  // Stable bound callbacks — defined as class fields so object identity is preserved across
-  // createGroupContext() calls. Lit context consumers re-render when context reference changes;
-  // stable callbacks avoid triggering unnecessary re-renders on unrelated state updates.
   private readonly _isChecked = (value: string) => this.engine.isChecked(value);
 
   private readonly _getParentState = () => this.engine.getParentState();
 
   private readonly _requestToggle = (value: string, parent: boolean): void => {
-    this.handleToggle(value, parent);
+    this._handleToggle(value, parent);
   };
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
@@ -82,9 +63,6 @@ export class GrundCheckboxGroup extends LitElement {
     this.toggleAttribute('data-disabled', this.disabled);
     this.disabledCtx = this.disabled;
 
-    // Recreate context on first render or when state-bearing properties change.
-    // Note: handleToggle() also recreates context directly because internal
-    // engine state changes don't trigger willUpdate (no reactive prop changes).
     if (
       !this.hasUpdated ||
       changed.has('value') ||
@@ -104,18 +82,26 @@ export class GrundCheckboxGroup extends LitElement {
     };
   }
 
-  private handleToggle(itemValue: string, parent: boolean): void {
+  private _handleToggle(itemValue: string, parent: boolean): void {
     let result: string[] | null;
     let checked: boolean;
 
     if (parent) {
       result = this.engine.requestToggleAll();
-      if (result === null) return;
+
+      if (result === null) {
+        return;
+      }
+
       checked =
         result.length === this.allValues.length && this.allValues.every((v) => result!.includes(v));
     } else {
       result = this.engine.requestToggle(itemValue);
-      if (result === null) return;
+
+      if (result === null) {
+        return;
+      }
+
       checked = result.includes(itemValue);
     }
 
@@ -127,14 +113,77 @@ export class GrundCheckboxGroup extends LitElement {
       }),
     );
 
-    // Must recreate context here because toggle changes internal engine state
-    // (checkedValues) without changing any reactive property, so willUpdate's
-    // guard won't detect the change on the next render cycle.
     this.groupCtx = this.createGroupContext();
   }
 
+  protected override updated(): void {
+    const group = this.shadowRoot?.querySelector<HTMLElement>('[part="group"]');
+    if (!group) {
+      return;
+    }
+
+    if (this.ariaLabelledBy) {
+      group.ariaLabelledByElements = this._resolveReferencedElements(this.ariaLabelledBy);
+    } else {
+      group.ariaLabelledByElements = [];
+    }
+
+    if (this.ariaDescribedBy) {
+      group.ariaDescribedByElements = this._resolveReferencedElements(this.ariaDescribedBy);
+    } else {
+      group.ariaDescribedByElements = [];
+    }
+
+    if (import.meta.env.DEV) {
+      this._warnOnInvalidChildren();
+    }
+  }
+
+  private _warnOnInvalidChildren(): void {
+    const checkboxes = Array.from(this.querySelectorAll('grund-checkbox'));
+    const nonParent = checkboxes.filter((cb) => !cb.hasAttribute('parent'));
+    const seen = new Set<string>();
+
+    for (const cb of nonParent) {
+      if (!cb.hasAttribute('value')) {
+        console.warn(
+          '[grund-checkbox-group] A child <grund-checkbox> is missing a value attribute. Set value="..." on each non-parent checkbox.',
+        );
+        continue;
+      }
+      const val = cb.getAttribute('value')!;
+      if (seen.has(val)) {
+        console.warn(
+          `[grund-checkbox-group] Duplicate checkbox value "${val}" detected. Values within a group must be unique.`,
+        );
+      } else {
+        seen.add(val);
+      }
+    }
+
+    const hasParent = checkboxes.some((cb) => cb.hasAttribute('parent'));
+    if (hasParent && this.allValues.length === 0) {
+      console.warn(
+        '[grund-checkbox-group] A parent checkbox is present but allValues is empty. Set allValues="[...]" so the parent can derive its checked/indeterminate state.',
+      );
+    }
+  }
+
+  private _resolveReferencedElements(value: string): HTMLElement[] {
+    return value
+      .split(/\s+/)
+      .map((id) => id.trim())
+      .filter(Boolean)
+      .map((id) => this.ownerDocument?.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+  }
+
   protected override render() {
-    return html`<slot></slot>`;
+    return html`
+      <div part="group" role="group" aria-label=${this.ariaLabel ?? nothing}>
+        <slot></slot>
+      </div>
+    `;
   }
 }
 

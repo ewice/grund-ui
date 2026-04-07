@@ -6,23 +6,16 @@ import { accordionItemContext } from './accordion.context';
 
 import type { AccordionItemContext } from './accordion.context';
 
-/**
- * Button that toggles an accordion panel open/closed.
- *
- * @element grund-accordion-trigger
- * @slot - Trigger label content
- * @csspart trigger - The inner button element
- */
 export class GrundAccordionTrigger extends LitElement {
-  public static override styles = css`
+  public static override readonly styles = css`
     :host {
-      display: block; /* block: this element is a block-level container */
+      display: block;
     }
   `;
 
   @consume({ context: accordionItemContext, subscribe: true })
   @state()
-  private itemCtx?: AccordionItemContext;
+  private readonly itemCtx?: AccordionItemContext;
 
   private isTriggerRegistered = false;
 
@@ -56,7 +49,9 @@ export class GrundAccordionTrigger extends LitElement {
   }
 
   private handleClick(): void {
-    if (this.itemCtx?.disabled) return;
+    if (this.itemCtx?.disabled) {
+      return;
+    }
     this.itemCtx?.toggle();
   }
 

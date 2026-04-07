@@ -17,7 +17,11 @@ function getTabButtons(el: GrundTabs): HTMLButtonElement[] {
 
 function getActiveShadowButton(): Element | null {
   const host = document.activeElement;
-  if (!host) return null;
+
+  if (!host) {
+    return null;
+  }
+
   return host.shadowRoot?.activeElement ?? host;
 }
 

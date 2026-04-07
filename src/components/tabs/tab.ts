@@ -7,17 +7,10 @@ import { disabledContext } from '../../context/disabled.context';
 
 import type { TabsRootContext } from './tabs.context';
 
-/**
- * Individual tab trigger. Renders an accessible button inside shadow DOM.
- *
- * @element grund-tab
- * @slot - Tab label content
- * @csspart tab - The inner button element
- */
 export class GrundTab extends LitElement {
   public static override styles = css`
     :host {
-      display: block; /* block: this element is a block-level container */
+      display: block;
     }
   `;
 
@@ -63,7 +56,9 @@ export class GrundTab extends LitElement {
   }
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
-    if (!this.ctx) return;
+    if (!this.ctx) {
+      return;
+    }
 
     const wasRegistered = this.isRegistered;
 
@@ -73,7 +68,6 @@ export class GrundTab extends LitElement {
       this.isRegistered = true;
     }
 
-    // Only sync disabled change if it was already registered — avoids double-call on first render
     if (changed.has('disabled') && wasRegistered) {
       this.ctx.setDisabled(this.value, this.disabled);
     }
@@ -109,7 +103,10 @@ export class GrundTab extends LitElement {
   }
 
   private handleClick(): void {
-    if (this.ancestorDisabled || this.disabled) return;
+    if (this.ancestorDisabled || this.disabled) {
+      return;
+    }
+
     this.ctx?.requestActivation(this.value);
   }
 

@@ -87,7 +87,9 @@ export class GrundTabsList extends LitElement {
   }
 
   private onFocusin(event: FocusEvent): void {
-    if (!this.activateOnFocus || !this.ctx) return;
+    if (!this.activateOnFocus || !this.ctx) {
+      return;
+    }
 
     const tabEl = event.composedPath().find((el): el is GrundTab => el instanceof GrundTab);
 

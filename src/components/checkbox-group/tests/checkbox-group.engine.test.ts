@@ -40,6 +40,18 @@ describe('CheckboxGroupEngine', () => {
       expect(engine.isChecked('b')).to.be.false;
     });
 
+    it('does not reseed uncontrolled state when first defaultValue is empty', () => {
+      const engine = create({ defaultValue: [] });
+      engine.syncFromHost({
+        value: undefined,
+        defaultValue: ['a'],
+        disabled: false,
+        allValues: [],
+      });
+      expect(engine.isChecked('a')).to.be.false;
+      expect(engine.checkedValues.size).to.equal(0);
+    });
+
     it('requestToggle adds a value', () => {
       const engine = create();
       const result = engine.requestToggle('a');

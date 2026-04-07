@@ -68,7 +68,9 @@ export class GrundTabsPanel extends LitElement {
   }
 
   protected override willUpdate(): void {
-    if (!this.ctx) return;
+    if (!this.ctx) {
+      return;
+    }
 
     if (!this.isRegistered) {
       this.ctx.registerPanel(this.value, this);
@@ -83,7 +85,9 @@ export class GrundTabsPanel extends LitElement {
 
   protected override updated(): void {
     const panelDiv = this.shadowRoot?.querySelector<HTMLElement>('[part="panel"]');
-    if (!this.ctx || !panelDiv) return;
+    if (!this.ctx || !panelDiv) {
+      return;
+    }
 
     // Clear to [] when the tab is not in the DOM (e.g. dynamic tab removal) to avoid
     // stale references pointing to disconnected elements — mirrors ariaControlsElements
@@ -93,7 +97,9 @@ export class GrundTabsPanel extends LitElement {
   }
 
   protected override render() {
-    if (!this.ctx) return nothing;
+    if (!this.ctx) {
+      return nothing;
+    }
 
     const isActive = this.ctx.activeValue === this.value;
 

@@ -11,25 +11,16 @@ import { disabledContext } from '../../context/disabled.context';
 import type { AccordionRootContext } from './accordion.context';
 import type { AccordionHostSnapshot, AccordionValueChangeDetail } from './types';
 
-/**
- * Root accordion container. Provides context to accordion items.
- *
- * @element grund-accordion
- * @slot - Accordion items
- * @fires {CustomEvent<AccordionValueChangeDetail>} grund-value-change - When the expanded set changes
- */
 export class GrundAccordion extends LitElement {
-  public static override styles = css`
+  public static override readonly styles = css`
     :host {
-      display: block; /* block: this element is a block-level container */
+      display: block;
     }
   `;
 
-  // hasChanged: () => true — ensures Lit re-runs when a mutated array reference is re-set.
   @property({ type: Array, hasChanged: () => true })
   public value: string[] | undefined = undefined;
 
-  // hasChanged: () => true — ensures Lit re-runs when a mutated array reference is re-set.
   @property({ type: Array, attribute: 'default-value', hasChanged: () => true })
   public defaultValue: string[] | undefined = undefined;
 
@@ -51,9 +42,6 @@ export class GrundAccordion extends LitElement {
   private readonly engine = new AccordionEngine();
   private readonly registry = new AccordionRegistry();
 
-  // Stable bound callbacks — defined as class fields so object identity is preserved across
-  // createRootContext() calls. Lit context consumers re-render when context reference changes;
-  // stable callbacks avoid triggering unnecessary re-renders on unrelated state updates.
   private readonly _isExpanded = (value: string) => this.engine.isExpanded(value);
 
   private readonly _requestToggle = (itemValue: string, itemDisabled: boolean): void => {
@@ -86,9 +74,6 @@ export class GrundAccordion extends LitElement {
     this.registry.detachPanel(item);
   };
 
-  // Class field initializer — ensures exactly one controller instance per element lifetime.
-  // Constructing in connectedCallback would create a new instance (and duplicate keydown
-  // listeners) on every disconnect+reconnect cycle. willUpdate syncs the live options.
   private readonly rovingFocus = new RovingFocusController(this, {
     orientation: 'vertical',
     loop: true,
@@ -115,9 +100,6 @@ export class GrundAccordion extends LitElement {
     this.dataset.orientation = this.orientation;
     this.disabledCtx = this.disabled;
 
-    // Recreate context on first render or when state-bearing properties change.
-    // Note: handleToggle() also recreates context directly because internal
-    // controller state changes don't trigger willUpdate (no reactive prop changes).
     if (
       !this.hasUpdated ||
       changed.has('value') ||
@@ -152,7 +134,9 @@ export class GrundAccordion extends LitElement {
   private handleToggle(itemValue: string, itemDisabled: boolean): void {
     const result = this.engine.requestToggle(itemValue, itemDisabled);
 
-    if (result === null) return;
+    if (result === null) {
+      return;
+    }
 
     const isOpen = result.includes(itemValue);
 
@@ -164,9 +148,6 @@ export class GrundAccordion extends LitElement {
       }),
     );
 
-    // Must recreate context here because toggle changes internal controller
-    // state (expandedValues) without changing any reactive property, so
-    // willUpdate's guard won't detect the change on the next render cycle.
     this.rootCtx = this.createRootContext();
   }
 

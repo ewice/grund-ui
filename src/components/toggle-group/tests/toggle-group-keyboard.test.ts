@@ -5,7 +5,7 @@ import { flush, simulateKeyboard, getByPart } from '../../../test-utils/test-uti
 import '../toggle-group';
 import '../../toggle/toggle';
 
-import type { GrundToggleGroup } from '../toggle-group/toggle-group.js';
+import type { GrundToggleGroup } from '../toggle-group';
 import type { GrundToggle } from '../../toggle';
 
 function getToggleButtons(el: GrundToggleGroup): HTMLButtonElement[] {
@@ -16,7 +16,11 @@ function getToggleButtons(el: GrundToggleGroup): HTMLButtonElement[] {
 
 function getActiveShadowButton(): Element | null {
   const host = document.activeElement;
-  if (!host) return null;
+
+  if (!host) {
+    return null;
+  }
+
   return host.shadowRoot?.activeElement ?? host;
 }
 

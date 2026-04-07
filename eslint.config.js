@@ -33,6 +33,7 @@ export default [
       ],
       'wc/attach-shadow-constructor': 'off',
       'wc/guard-super-call': 'off',
+      'curly': ['error', 'all'],
     },
   },
   {

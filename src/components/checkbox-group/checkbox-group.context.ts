@@ -13,5 +13,4 @@ export interface CheckboxGroupContext {
   readonly requestToggle: (value: string, parent: boolean) => void;
 }
 
-export const checkboxGroupContext =
-  createContext<CheckboxGroupContext>('checkbox-group');
+export const checkboxGroupContext = createContext<CheckboxGroupContext>('checkbox-group');

@@ -1,9 +1,3 @@
-/**
- * Ordered child tracking and tab-panel linking by value.
- * Keyed by value string. No Lit dependency.
- * @internal
- */
-
 export interface TabsRecord {
   value: string;
   tab: WeakRef<HTMLElement> | null;
@@ -11,13 +5,8 @@ export interface TabsRecord {
   disabled: boolean;
 }
 
-/**
- * Ordered child tracking and tab-panel linking by value.
- * Keyed by value string. No Lit dependency.
- * @internal
- */
 export class TabsRegistry {
-  private records = new Map<string, TabsRecord>();
+  private readonly records = new Map<string, TabsRecord>();
 
   public registerTab(value: string, tab: HTMLElement): void {
     const existing = this.records.get(value);
@@ -35,11 +24,13 @@ export class TabsRegistry {
 
   public unregisterTab(value: string): void {
     const record = this.records.get(value);
-    if (!record) return;
+
+    if (!record) {
+      return;
+    }
 
     record.tab = null;
 
-    // Delete record if both tab and panel are null
     if (record.panel === null) {
       this.records.delete(value);
     }
@@ -61,11 +52,13 @@ export class TabsRegistry {
 
   public unregisterPanel(value: string): void {
     const record = this.records.get(value);
-    if (!record) return;
+
+    if (!record) {
+      return;
+    }
 
     record.panel = null;
 
-    // Delete record if both tab and panel are null
     if (record.tab === null) {
       this.records.delete(value);
     }
@@ -83,11 +76,8 @@ export class TabsRegistry {
   }
 
   public getOrderedValues(): string[] {
-    // Filter records where the tab WeakRef still resolves, sort by DOM order
     const withTabs = Array.from(this.records.values()).filter((r) => r.tab?.deref() != null);
 
-    // Sort by tab element DOM position using compareDocumentPosition
-    // DOCUMENT_POSITION_FOLLOWING (4) is set when a follows b
     withTabs.sort((a, b) => {
       const aTab = a.tab!.deref()!;
       const bTab = b.tab!.deref()!;

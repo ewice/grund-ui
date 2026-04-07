@@ -67,18 +67,22 @@ export class GrundTabsIndicator extends LitElement {
   }
 
   protected override willUpdate(): void {
-    if (!this.ctx) return;
+    if (!this.ctx) {
+      return;
+    }
+
     this.dataset.orientation = this.ctx.orientation;
     this.dataset.activationDirection = this.ctx.activationDirection;
   }
 
   protected override updated(): void {
-    if (!this.ctx) return;
+    if (!this.ctx) {
+      return;
+    }
 
     const activeValue = this.ctx.activeValue;
     const activeTab = activeValue ? this.ctx.getTabElement(activeValue) : null;
 
-    // Swap the tab observer when the active tab changes
     if (activeTab !== this.observedTab) {
       this.tabObserver?.disconnect();
       this.tabObserver = undefined;
@@ -95,10 +99,16 @@ export class GrundTabsIndicator extends LitElement {
 
   private measure(): void {
     const indicatorDiv = this.shadowRoot?.querySelector<HTMLElement>('[part="indicator"]');
-    if (!indicatorDiv || !this.listEl || !this.ctx?.activeValue) return;
+
+    if (!indicatorDiv || !this.listEl || !this.ctx?.activeValue) {
+      return;
+    }
 
     const activeTab = this.ctx.getTabElement(this.ctx.activeValue);
-    if (!activeTab) return;
+
+    if (!activeTab) {
+      return;
+    }
 
     const listRect = this.listEl.getBoundingClientRect();
     const tabRect = activeTab.getBoundingClientRect();

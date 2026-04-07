@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { consume, provide } from '@lit/context';
 import type { PropertyValues } from 'lit';
@@ -11,17 +11,6 @@ import { checkboxGroupContext } from '../checkbox-group/checkbox-group.context.j
 import type { CheckboxGroupContext } from '../checkbox-group/checkbox-group.context.js';
 import { disabledContext } from '../../context/disabled.context.js';
 
-/**
- * A headless form-associated checkbox with checked, unchecked, and indeterminate states.
- * Supports controlled mode (`checked` prop) and uncontrolled mode (`defaultChecked` prop).
- * In controlled mode, `grund-checked-change` fires but the displayed state does not change
- * automatically — the consumer must update the `checked` property.
- *
- * @element grund-checkbox
- * @slot - Label text and optional <grund-checkbox-indicator> child
- * @fires {CustomEvent<CheckedChangeDetail>} grund-checked-change - When checked state changes via user interaction. In controlled mode, also update the `checked` property to reflect the new value.
- * @csspart button - The inner <button role="checkbox"> element
- */
 export class GrundCheckbox extends LitElement {
   public static formAssociated = true;
 
@@ -32,45 +21,45 @@ export class GrundCheckbox extends LitElement {
 
   public static override readonly styles = css`
     :host {
-      display: inline; /* inline: checkbox + label is an inline-level control */
+      display: inline;
     }
   `;
 
-  /** Controlled checked value. `undefined` enables uncontrolled mode. */
   @property({ type: Boolean })
   public checked: boolean | undefined = undefined;
 
-  /** Seeds uncontrolled checked state on first render only. */
   @property({ type: Boolean, attribute: 'default-checked' })
   public defaultChecked = false;
 
-  /** Whether the checkbox is in the indeterminate (mixed) state. Always controlled. */
   @property({ type: Boolean })
   public indeterminate = false;
 
-  /** Form field name. */
   @property()
   public name = '';
 
-  /** Form submission value when checked. */
   @property()
   public value = 'on';
 
-  /** Whether the checkbox is disabled. */
   @property({ type: Boolean })
   public disabled = false;
 
-  /** Whether the checkbox is required for form submission. */
   @property({ type: Boolean })
   public required = false;
 
-  /** Whether the checkbox is read-only (visible but not interactable). */
   @property({ type: Boolean, attribute: 'read-only' })
   public readOnly = false;
 
-  /** Whether this checkbox acts as a "select all" parent controller. Only meaningful inside a grund-checkbox-group with allValues set. */
   @property({ type: Boolean })
   public parent = false;
+
+  @property({ attribute: 'aria-label' })
+  public override ariaLabel: string | null = null;
+
+  @property({ attribute: 'aria-labelledby' })
+  public ariaLabelledBy: string | null = null;
+
+  @property({ attribute: 'aria-describedby' })
+  public ariaDescribedBy: string | null = null;
 
   @state()
   private _internalChecked = false;
@@ -88,16 +77,12 @@ export class GrundCheckbox extends LitElement {
   protected _ctx: CheckboxContext = { checked: false, indeterminate: false };
 
   private readonly _internals = this.attachInternals();
-  // Not using SelectionEngine — checkbox is a single boolean, not a set of selected values.
-  // Not using RovingFocusController — standalone form control, not a composite widget.
   private readonly _form = new FormController(this, this._internals);
 
-  // Arrow function keeps the same reference for add/removeEventListener.
-  // Handles label-for association: the browser dispatches click on the host element, not the inner
-  // button, so we need a host-level listener. Guard against double-fire from button clicks that
-  // bubble up through the shadow boundary by checking the composed event path.
   private readonly _handleHostClick = (e: MouseEvent): void => {
-    if (this.shadowRoot?.contains(e.composedPath()[0] as Node)) return;
+    if (this.shadowRoot?.contains(e.composedPath()[0] as Node)) {
+      return;
+    }
     this._handleClick();
   };
 
@@ -112,7 +97,6 @@ export class GrundCheckbox extends LitElement {
   }
 
   protected override willUpdate(changed: PropertyValues): void {
-    // Seed uncontrolled state from defaultChecked on first render only.
     if (!this.hasUpdated) {
       this._internalChecked = this.defaultChecked;
     }
@@ -121,7 +105,7 @@ export class GrundCheckbox extends LitElement {
       if (this.hasUpdated && this.parent && !this.groupCtx) {
         console.warn(
           '[grund-checkbox] parent=true has no effect outside <grund-checkbox-group>. ' +
-          'Wrap in a <grund-checkbox-group> with allValues set.'
+            'Wrap in a <grund-checkbox-group> with allValues set.',
         );
       }
     }
@@ -129,7 +113,6 @@ export class GrundCheckbox extends LitElement {
     const effective = this._effectiveChecked;
     const effectiveIndeterminate = this._effectiveIndeterminate;
 
-    // Data attributes — indeterminate takes visual precedence over checked.
     this.toggleAttribute('data-checked', !effectiveIndeterminate && effective);
     this.toggleAttribute('data-unchecked', !effectiveIndeterminate && !effective);
     this.toggleAttribute('data-indeterminate', effectiveIndeterminate);
@@ -137,7 +120,6 @@ export class GrundCheckbox extends LitElement {
     this.toggleAttribute('data-required', this.required);
     this.toggleAttribute('data-readonly', this.readOnly);
 
-    // Parent checkbox inside a group doesn't submit a form value — skip setValue entirely.
     if (!(this.parent && this.groupCtx)) {
       if (!effectiveIndeterminate && effective) {
         this._form.setValue(this.value);
@@ -146,7 +128,6 @@ export class GrundCheckbox extends LitElement {
       }
     }
 
-    // Validity: required fails when unchecked (indeterminate counts as unchecked).
     if (this.required && !effective) {
       const btn = this.shadowRoot?.querySelector<HTMLButtonElement>('[part="button"]');
       this._form.setValidity({ valueMissing: true }, 'Please check this box.', btn ?? undefined);
@@ -154,7 +135,6 @@ export class GrundCheckbox extends LitElement {
       this._form.setValidity({}, '');
     }
 
-    // Recreate the context reference so @provide notifies consumers when checkbox state changes.
     if (
       changed.has('checked') ||
       changed.has('_internalChecked') ||
@@ -163,6 +143,28 @@ export class GrundCheckbox extends LitElement {
       !this.hasUpdated
     ) {
       this._ctx = { checked: effective, indeterminate: effectiveIndeterminate };
+    }
+  }
+
+  protected override updated(_changed: PropertyValues): void {
+    const btn = this.shadowRoot?.querySelector<HTMLButtonElement>('[part="button"]');
+
+    if (!btn) {
+      return;
+    }
+
+    if (this.ariaLabel) {
+      btn.ariaLabelledByElements = [];
+    } else if (this.ariaLabelledBy) {
+      btn.ariaLabelledByElements = this._resolveReferencedElements(this.ariaLabelledBy);
+    } else if (!this.ariaLabel) {
+      btn.ariaLabelledByElements = this._getAssociatedLabels();
+    }
+
+    if (this.ariaDescribedBy) {
+      btn.ariaDescribedByElements = this._resolveReferencedElements(this.ariaDescribedBy);
+    } else {
+      btn.ariaDescribedByElements = [];
     }
   }
 
@@ -176,7 +178,6 @@ export class GrundCheckbox extends LitElement {
   /** @internal */
   public formStateRestoreCallback(state: string | File | FormData): void {
     if (typeof state === 'string') {
-      // Browser restores the submitted value — if it matches our value, the checkbox was checked.
       this._internalChecked = state === this.value;
       this.checked = undefined;
     }
@@ -200,7 +201,10 @@ export class GrundCheckbox extends LitElement {
 
   private get _effectiveChecked(): boolean {
     if (this.groupCtx) {
-      if (this.parent) return this.groupCtx.getParentState() === 'checked';
+      if (this.parent) {
+        return this.groupCtx.getParentState() === 'checked';
+      }
+
       return this.groupCtx.isChecked(this.value);
     }
     return this.checked ?? this._internalChecked;
@@ -223,14 +227,12 @@ export class GrundCheckbox extends LitElement {
         }),
       );
       this.groupCtx.requestToggle(this.value, this.parent);
-      return; // do NOT update _internalChecked
+      return;
     }
 
-    // Indeterminate click always resolves to checked:true (consumer must clear indeterminate).
     const newChecked = this.indeterminate ? true : !this._effectiveChecked;
 
     if (this.checked === undefined) {
-      // Uncontrolled: update internal state.
       this._internalChecked = newChecked;
     }
 
@@ -243,6 +245,41 @@ export class GrundCheckbox extends LitElement {
     );
   }
 
+  private _resolveReferencedElements(value: string): HTMLElement[] {
+    return value
+      .split(/\s+/)
+      .map((id) => id.trim())
+      .filter(Boolean)
+      .map((id) => this.ownerDocument?.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+  }
+
+  private _getAssociatedLabels(): HTMLLabelElement[] {
+    const labels = new Set<HTMLLabelElement>();
+
+    for (const label of Array.from(this._internals.labels ?? [])) {
+      if (label instanceof HTMLLabelElement) {
+        labels.add(label);
+      }
+    }
+
+    if (this.id) {
+      const selector = `label[for="${CSS.escape(this.id)}"]`;
+      for (const label of Array.from(this.ownerDocument?.querySelectorAll(selector) ?? [])) {
+        if (label instanceof HTMLLabelElement) {
+          labels.add(label);
+        }
+      }
+    }
+
+    const wrappingLabel = this.closest('label');
+    if (wrappingLabel instanceof HTMLLabelElement) {
+      labels.add(wrappingLabel);
+    }
+
+    return Array.from(labels);
+  }
+
   protected override render() {
     const ariaChecked = this._effectiveIndeterminate ? 'mixed' : String(this._effectiveChecked);
 
@@ -252,6 +289,7 @@ export class GrundCheckbox extends LitElement {
         type="button"
         role="checkbox"
         aria-checked=${ariaChecked}
+        aria-label=${this.ariaLabel ?? nothing}
         ?disabled=${this._effectiveDisabled}
         @click=${this._handleClick}
       >

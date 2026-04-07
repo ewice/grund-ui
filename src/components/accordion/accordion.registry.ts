@@ -2,18 +2,13 @@ import { OrderedRegistry } from '../../utils/ordered-registry';
 import type { OrderedRecord } from '../../utils/ordered-registry';
 
 export interface AccordionItemRecord extends OrderedRecord {
-  item: HTMLElement; // same reference as element — kept for API compatibility
+  item: HTMLElement;
   value: string;
   trigger: HTMLElement | null;
   panel: HTMLElement | null;
 }
 
-/**
- * Ordered child tracking and trigger↔panel linking for accordion items.
- * @internal
- */
 export class AccordionRegistry extends OrderedRegistry<AccordionItemRecord> {
-  /** Alias for `entries` — preserves existing public API. */
   public get items(): readonly AccordionItemRecord[] {
     return this.entries;
   }
@@ -28,22 +23,34 @@ export class AccordionRegistry extends OrderedRegistry<AccordionItemRecord> {
 
   public attachTrigger(item: HTMLElement, trigger: HTMLElement): void {
     const record = this.getRecord(item);
-    if (record) record.trigger = trigger;
+
+    if (record) {
+      record.trigger = trigger;
+    }
   }
 
   public attachPanel(item: HTMLElement, panel: HTMLElement): void {
     const record = this.getRecord(item);
-    if (record) record.panel = panel;
+
+    if (record) {
+      record.panel = panel;
+    }
   }
 
   public detachTrigger(item: HTMLElement): void {
     const record = this.getRecord(item);
-    if (record) record.trigger = null;
+
+    if (record) {
+      record.trigger = null;
+    }
   }
 
   public detachPanel(item: HTMLElement): void {
     const record = this.getRecord(item);
-    if (record) record.panel = null;
+
+    if (record) {
+      record.panel = null;
+    }
   }
 
   public getRecord(item: HTMLElement): AccordionItemRecord | undefined {

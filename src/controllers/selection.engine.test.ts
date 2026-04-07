@@ -50,6 +50,20 @@ describe('SelectionEngine', () => {
       expect(ctrl.selectedValues.size).to.equal(0);
     });
 
+    it('does not reseed when first defaultValue is empty and a subsequent sync passes a non-empty defaultValue', () => {
+      // First sync with empty defaultValue — engine marks itself as seeded
+      const ctrl = create({ defaultValue: [] });
+      // Subsequent sync with a non-empty defaultValue must not reseed
+      ctrl.syncFromHost({
+        value: undefined,
+        defaultValue: ['a'],
+        multiple: false,
+        disabled: false,
+      });
+      expect(ctrl.isSelected('a')).to.be.false;
+      expect(ctrl.selectedValues.size).to.equal(0);
+    });
+
     it('requestToggle selects an item', () => {
       const ctrl = create();
       const result = ctrl.requestToggle('a', false);
