@@ -55,15 +55,17 @@ describe('CheckboxGroupEngine', () => {
     it('requestToggle adds a value', () => {
       const engine = create();
       const result = engine.requestToggle('a');
-      expect(result).to.deep.equal(['a']);
+      expect(result?.value).to.deep.equal(['a']);
+      expect(result?.checked).to.equal(true);
       expect(engine.isChecked('a')).to.be.true;
     });
 
     it('requestToggle removes a checked value', () => {
       const engine = create({ defaultValue: ['a', 'b'] });
       const result = engine.requestToggle('a');
-      expect(result).to.include('b');
-      expect(result).to.not.include('a');
+      expect(result?.value).to.include('b');
+      expect(result?.value).to.not.include('a');
+      expect(result?.checked).to.equal(false);
       expect(engine.isChecked('a')).to.be.false;
       expect(engine.isChecked('b')).to.be.true;
     });
@@ -88,7 +90,8 @@ describe('CheckboxGroupEngine', () => {
     it('requestToggle returns new value without persisting state', () => {
       const engine = create({ value: ['a'] });
       const result = engine.requestToggle('b');
-      expect(result).to.include.members(['a', 'b']);
+      expect(result?.value).to.include.members(['a', 'b']);
+      expect(result?.checked).to.equal(true);
       expect(engine.isChecked('b')).to.be.false;
     });
   });
@@ -140,13 +143,26 @@ describe('CheckboxGroupEngine', () => {
       // Only 'a' of ['a','b'] is checked → indeterminate
       expect(engine.getParentState()).to.equal('indeterminate');
     });
+
+    it('does not change parent state when the caller mutates allValues after sync', () => {
+      const allValues = ['a', 'b'];
+      const engine = create({
+        defaultValue: ['a', 'b'],
+        allValues,
+      });
+
+      allValues.push('c');
+
+      expect(engine.getParentState()).to.equal('checked');
+    });
   });
 
   describe('requestToggleAll', () => {
     it('checks all when parent state is unchecked', () => {
       const engine = create({ allValues: ['a', 'b', 'c'] });
       const result = engine.requestToggleAll();
-      expect(result).to.include.members(['a', 'b', 'c']);
+      expect(result?.value).to.include.members(['a', 'b', 'c']);
+      expect(result?.checked).to.equal(true);
       expect(engine.isChecked('a')).to.be.true;
       expect(engine.isChecked('b')).to.be.true;
       expect(engine.isChecked('c')).to.be.true;
@@ -158,7 +174,8 @@ describe('CheckboxGroupEngine', () => {
         allValues: ['a', 'b', 'c'],
       });
       const result = engine.requestToggleAll();
-      expect(result).to.include.members(['a', 'b', 'c']);
+      expect(result?.value).to.include.members(['a', 'b', 'c']);
+      expect(result?.checked).to.equal(true);
     });
 
     it('unchecks all when parent state is checked', () => {
@@ -167,7 +184,8 @@ describe('CheckboxGroupEngine', () => {
         allValues: ['a', 'b', 'c'],
       });
       const result = engine.requestToggleAll();
-      expect(result).to.deep.equal([]);
+      expect(result?.value).to.deep.equal([]);
+      expect(result?.checked).to.equal(false);
     });
 
     it('preserves values not in allValues when checking all', () => {
@@ -176,9 +194,10 @@ describe('CheckboxGroupEngine', () => {
         allValues: ['a', 'b'],
       });
       const result = engine.requestToggleAll();
-      expect(result).to.include('extra');
-      expect(result).to.include('a');
-      expect(result).to.include('b');
+      expect(result?.value).to.include('extra');
+      expect(result?.value).to.include('a');
+      expect(result?.value).to.include('b');
+      expect(result?.checked).to.equal(true);
     });
 
     it('preserves values not in allValues when unchecking all', () => {
@@ -187,7 +206,8 @@ describe('CheckboxGroupEngine', () => {
         allValues: ['a', 'b'],
       });
       const result = engine.requestToggleAll();
-      expect(result).to.deep.equal(['extra']);
+      expect(result?.value).to.deep.equal(['extra']);
+      expect(result?.checked).to.equal(false);
     });
   });
 });

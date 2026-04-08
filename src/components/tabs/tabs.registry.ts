@@ -66,6 +66,7 @@ export class TabsRegistry {
 
   public setDisabled(value: string, disabled: boolean): void {
     const record = this.records.get(value);
+
     if (record) {
       record.disabled = disabled;
     }

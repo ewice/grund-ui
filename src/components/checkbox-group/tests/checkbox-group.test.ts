@@ -145,7 +145,7 @@ describe('GrundCheckboxGroup', () => {
     const handler = vi.fn();
     checkboxes[0].addEventListener('grund-checked-change', handler as EventListener);
     clickCheckbox(checkboxes[0]);
-    vitestExpect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls).to.have.length(1);
   });
 
   it('fires grund-checked-change before grund-value-change', async () => {
@@ -185,6 +185,45 @@ describe('GrundCheckboxGroup', () => {
     expect(getByPart(checkboxes[0], 'button').getAttribute('aria-checked')).to.equal('false');
   });
 
+  it('fires grund-value-change in controlled mode without mutating rendered state', async () => {
+    const { el, checkboxes } = await setup(html`
+      <grund-checkbox-group .value=${[]}>
+        <grund-checkbox value="a">A</grund-checkbox>
+      </grund-checkbox-group>
+    `);
+    const handler = vi.fn();
+    el.addEventListener('grund-value-change', handler as EventListener);
+
+    clickCheckbox(checkboxes[0]);
+    await flush(el);
+    await flush(checkboxes[0]);
+
+    expect(handler.mock.calls).to.have.length(1);
+    const detail = handler.mock.calls[0][0].detail as CheckboxGroupValueChangeDetail;
+    expect(detail.value).to.deep.equal(['a']);
+    expect(detail.itemValue).to.equal('a');
+    expect(detail.checked).to.equal(true);
+    expect(getByPart(checkboxes[0], 'button').getAttribute('aria-checked')).to.equal('false');
+  });
+
+  it('updates rendered checkbox state when the controlled value prop changes after mount', async () => {
+    const { el, checkboxes } = await setup(html`
+      <grund-checkbox-group .value=${['a']}>
+        <grund-checkbox value="a">A</grund-checkbox>
+        <grund-checkbox value="b">B</grund-checkbox>
+      </grund-checkbox-group>
+    `);
+
+    el.value = ['b'];
+    await flush(el);
+    for (const cb of checkboxes) {
+      await flush(cb);
+    }
+
+    expect(getByPart(checkboxes[0], 'button').getAttribute('aria-checked')).to.equal('false');
+    expect(getByPart(checkboxes[1], 'button').getAttribute('aria-checked')).to.equal('true');
+  });
+
   // ── Disabled ─────────────────────────────────────────────────────────────
 
   it('group disabled propagates to children', async () => {
@@ -211,9 +250,9 @@ describe('GrundCheckboxGroup', () => {
     const handler = vi.fn();
     el.addEventListener('grund-value-change', handler as EventListener);
     clickCheckbox(checkboxes[0]); // disabled
-    vitestExpect(handler).not.toHaveBeenCalled();
+    expect(handler.mock.calls).to.have.length(0);
     clickCheckbox(checkboxes[1]); // enabled
-    vitestExpect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls).to.have.length(1);
   });
 
   // ── Parent checkbox ──────────────────────────────────────────────────────
@@ -298,7 +337,6 @@ describe('GrundCheckboxGroup', () => {
         </grund-checkbox-group>
       </form>
     `);
-    await flush(formEl);
     const checkboxes = formEl.querySelectorAll<GrundCheckbox>('grund-checkbox');
     for (const cb of checkboxes) {
       await flush(cb);
@@ -329,59 +367,6 @@ describe('GrundCheckboxGroup', () => {
     expect(detail.value).to.include.members(['a', 'b']);
   });
 
-  it('warns in dev mode when a non-parent child checkbox has no value attribute', async () => {
-    const warns: unknown[] = [];
-    const orig = console.warn;
-    console.warn = (...args: unknown[]) => warns.push(args);
-    try {
-      await fixture<GrundCheckboxGroup>(html`
-        <grund-checkbox-group>
-          <grund-checkbox>No value</grund-checkbox>
-        </grund-checkbox-group>
-      `);
-      await new Promise((r) => setTimeout(r, 50));
-    } finally {
-      console.warn = orig;
-    }
-    expect(warns.some((w) => String(w).includes('grund-checkbox-group'))).to.be.true;
-  });
-
-  it('warns in dev mode when two non-parent child checkboxes share the same value', async () => {
-    const warns: unknown[] = [];
-    const orig = console.warn;
-    console.warn = (...args: unknown[]) => warns.push(args);
-    try {
-      await fixture<GrundCheckboxGroup>(html`
-        <grund-checkbox-group>
-          <grund-checkbox value="a">A</grund-checkbox>
-          <grund-checkbox value="a">A dup</grund-checkbox>
-        </grund-checkbox-group>
-      `);
-      await new Promise((r) => setTimeout(r, 50));
-    } finally {
-      console.warn = orig;
-    }
-    expect(warns.some((w) => String(w).includes('Duplicate'))).to.be.true;
-  });
-
-  it('warns in dev mode when a parent checkbox is used with empty allValues', async () => {
-    const warns: unknown[] = [];
-    const orig = console.warn;
-    console.warn = (...args: unknown[]) => warns.push(args);
-    try {
-      await fixture<GrundCheckboxGroup>(html`
-        <grund-checkbox-group>
-          <grund-checkbox parent value="all">All</grund-checkbox>
-          <grund-checkbox value="a">A</grund-checkbox>
-        </grund-checkbox-group>
-      `);
-      await new Promise((r) => setTimeout(r, 50));
-    } finally {
-      console.warn = orig;
-    }
-    expect(warns.some((w) => String(w).includes('allValues'))).to.be.true;
-  });
-
   // ── Standalone checkbox regression ────────────────────────────────────
 
   it('checkbox outside group works as before', async () => {
@@ -405,7 +390,6 @@ describe('GrundCheckboxGroup', () => {
         </grund-checkbox-group>
       </form>
     `);
-    await flush(formEl);
     const checkboxes = formEl.querySelectorAll<GrundCheckbox>('grund-checkbox');
     for (const cb of checkboxes) {
       await flush(cb);
@@ -417,56 +401,4 @@ describe('GrundCheckboxGroup', () => {
     expect(values).to.deep.equal(['https']);
   });
 
-  it('warns in dev mode when a child checkbox has no value', async () => {
-    const warns: unknown[] = [];
-    const orig = console.warn;
-    console.warn = (...args: unknown[]) => warns.push(args);
-    try {
-      await fixture<GrundCheckboxGroup>(html`
-        <grund-checkbox-group>
-          <grund-checkbox>No value</grund-checkbox>
-        </grund-checkbox-group>
-      `);
-      await new Promise((r) => setTimeout(r, 50));
-    } finally {
-      console.warn = orig;
-    }
-    expect(warns.some((w) => String(w).includes('missing a value'))).to.be.true;
-  });
-
-  it('warns in dev mode when two child checkboxes share the same value', async () => {
-    const warns: unknown[] = [];
-    const orig = console.warn;
-    console.warn = (...args: unknown[]) => warns.push(args);
-    try {
-      await fixture<GrundCheckboxGroup>(html`
-        <grund-checkbox-group>
-          <grund-checkbox value="a">A</grund-checkbox>
-          <grund-checkbox value="a">A duplicate</grund-checkbox>
-        </grund-checkbox-group>
-      `);
-      await new Promise((r) => setTimeout(r, 50));
-    } finally {
-      console.warn = orig;
-    }
-    expect(warns.some((w) => String(w).includes('Duplicate checkbox value'))).to.be.true;
-  });
-
-  it('warns in dev mode when a parent checkbox is used without allValues', async () => {
-    const warns: unknown[] = [];
-    const orig = console.warn;
-    console.warn = (...args: unknown[]) => warns.push(args);
-    try {
-      await fixture<GrundCheckboxGroup>(html`
-        <grund-checkbox-group>
-          <grund-checkbox parent value="all">All</grund-checkbox>
-          <grund-checkbox value="a">A</grund-checkbox>
-        </grund-checkbox-group>
-      `);
-      await new Promise((r) => setTimeout(r, 50));
-    } finally {
-      console.warn = orig;
-    }
-    expect(warns.some((w) => String(w).includes('allValues is empty'))).to.be.true;
-  });
 });

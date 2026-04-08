@@ -9,6 +9,7 @@ import '../accordion-trigger.js';
 import '../accordion-panel.js';
 
 import type { GrundAccordion } from '../accordion.js';
+import type { AccordionOpenChangeDetail } from '../types.js';
 
 describe('Accordion Panel Visibility', () => {
   it('removes panel from DOM when closed (default)', async () => {
@@ -84,7 +85,7 @@ describe('Accordion Panel Visibility', () => {
 
 describe('Accordion Event Suppression', () => {
   it('does NOT fire grund-open-change on initial render with defaultValue', async () => {
-    const events: any[] = [];
+    const events: AccordionOpenChangeDetail[] = [];
     const el = await fixture<GrundAccordion>(html`
       <grund-accordion .defaultValue=${['a']}>
         <grund-accordion-item
@@ -105,7 +106,7 @@ describe('Accordion Event Suppression', () => {
   });
 
   it('fires grund-open-change after initial render on user interaction', async () => {
-    const events: any[] = [];
+    const events: AccordionOpenChangeDetail[] = [];
     const el = await fixture<GrundAccordion>(html`
       <grund-accordion>
         <grund-accordion-item

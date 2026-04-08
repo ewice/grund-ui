@@ -121,6 +121,7 @@ Example: a parent uses `querySelectorAll('grund-*')` to find children instead of
 16. Slotted-content reactions use `slotchange`, not `MutationObserver`.
 17. `delegatesFocus: true` is used only for form controls that wrap a native focus target.
 18. Every dispatched `CustomEvent` chooses `composed` explicitly, and the chosen boundary behavior matches the intended consumer boundary.
+40. Structural validation and dev-mode warnings that depend on slotted children are driven by `slotchange` and, when needed, narrowly targeted reactive changes such as the specific prop that affects the warning. Flag generic `updated()`-driven validation because it repeats warnings on unrelated updates and can miss structural changes between updates.
 
 ### Dev-Mode Warnings
 

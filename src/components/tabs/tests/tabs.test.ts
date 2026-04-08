@@ -8,6 +8,7 @@ import '../tab.js';
 import '../tabs-panel.js';
 
 import type { GrundTabs } from '../tabs.js';
+import type { TabsValueChangeDetail } from '../types.js';
 
 function getTabButtons(el: GrundTabs): HTMLButtonElement[] {
   return Array.from(el.querySelectorAll('grund-tab')).map((t) =>
@@ -66,9 +67,9 @@ describe('GrundTabs', () => {
 
   it('fires grund-value-change event on activation', async () => {
     const el = await setup();
-    const events: any[] = [];
+    const events: TabsValueChangeDetail[] = [];
     el.addEventListener('grund-value-change', (e: Event) => {
-      events.push((e as CustomEvent).detail);
+      events.push((e as CustomEvent<TabsValueChangeDetail>).detail);
     });
 
     const buttons = getTabButtons(el);

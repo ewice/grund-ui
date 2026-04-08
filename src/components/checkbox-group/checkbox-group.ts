@@ -70,12 +70,12 @@ export class GrundCheckboxGroup extends LitElement {
       changed.has('allValues') ||
       changed.has('disabled')
     ) {
-      this.groupCtx = this.createGroupContext();
+      this._publishGroupContext();
     }
   }
 
-  private createGroupContext(): CheckboxGroupContext {
-    return {
+  private _publishGroupContext(): void {
+    this.groupCtx = {
       isChecked: this._isChecked,
       getParentState: this._getParentState,
       requestToggle: this._requestToggle,
@@ -83,37 +83,27 @@ export class GrundCheckboxGroup extends LitElement {
   }
 
   private _handleToggle(itemValue: string, parent: boolean): void {
-    let result: string[] | null;
-    let checked: boolean;
+    const toggleResult = parent
+      ? this.engine.requestToggleAll()
+      : this.engine.requestToggle(itemValue);
 
-    if (parent) {
-      result = this.engine.requestToggleAll();
-
-      if (result === null) {
-        return;
-      }
-
-      checked =
-        result.length === this.allValues.length && this.allValues.every((v) => result!.includes(v));
-    } else {
-      result = this.engine.requestToggle(itemValue);
-
-      if (result === null) {
-        return;
-      }
-
-      checked = result.includes(itemValue);
+    if (toggleResult === null) {
+      return;
     }
 
     this.dispatchEvent(
       new CustomEvent<CheckboxGroupValueChangeDetail>('grund-value-change', {
-        detail: { value: result, itemValue, checked },
+        detail: {
+          value: toggleResult.value,
+          itemValue,
+          checked: toggleResult.checked,
+        },
         bubbles: true,
         composed: false,
       }),
     );
 
-    this.groupCtx = this.createGroupContext();
+    this._publishGroupContext();
   }
 
   protected override updated(): void {
@@ -132,40 +122,6 @@ export class GrundCheckboxGroup extends LitElement {
       group.ariaDescribedByElements = this._resolveReferencedElements(this.ariaDescribedBy);
     } else {
       group.ariaDescribedByElements = [];
-    }
-
-    if (import.meta.env.DEV) {
-      this._warnOnInvalidChildren();
-    }
-  }
-
-  private _warnOnInvalidChildren(): void {
-    const checkboxes = Array.from(this.querySelectorAll('grund-checkbox'));
-    const nonParent = checkboxes.filter((cb) => !cb.hasAttribute('parent'));
-    const seen = new Set<string>();
-
-    for (const cb of nonParent) {
-      if (!cb.hasAttribute('value')) {
-        console.warn(
-          '[grund-checkbox-group] A child <grund-checkbox> is missing a value attribute. Set value="..." on each non-parent checkbox.',
-        );
-        continue;
-      }
-      const val = cb.getAttribute('value')!;
-      if (seen.has(val)) {
-        console.warn(
-          `[grund-checkbox-group] Duplicate checkbox value "${val}" detected. Values within a group must be unique.`,
-        );
-      } else {
-        seen.add(val);
-      }
-    }
-
-    const hasParent = checkboxes.some((cb) => cb.hasAttribute('parent'));
-    if (hasParent && this.allValues.length === 0) {
-      console.warn(
-        '[grund-checkbox-group] A parent checkbox is present but allValues is empty. Set allValues="[...]" so the parent can derive its checked/indeterminate state.',
-      );
     }
   }
 

@@ -9,6 +9,7 @@ import '../accordion-trigger.js';
 import '../accordion-panel.js';
 
 import type { GrundAccordion } from '../accordion.js';
+import type { AccordionValueChangeDetail, AccordionOpenChangeDetail } from '../types.js';
 
 function getAccordionParts(el: GrundAccordion) {
   const items = Array.from(el.querySelectorAll('grund-accordion-item'));
@@ -121,9 +122,9 @@ describe('Full Accordion Integration', () => {
   it('fires grund-value-change event', async () => {
     const el = await setup();
     const parts = getAccordionParts(el);
-    const events: any[] = [];
+    const events: AccordionValueChangeDetail[] = [];
     el.addEventListener('grund-value-change', (e: Event) => {
-      events.push((e as CustomEvent).detail);
+      events.push((e as CustomEvent<AccordionValueChangeDetail>).detail);
     });
 
     parts[0].triggerBtn.click();
@@ -138,9 +139,9 @@ describe('Full Accordion Integration', () => {
   it('fires grund-open-change event on item', async () => {
     const el = await setup();
     const parts = getAccordionParts(el);
-    const events: any[] = [];
+    const events: AccordionOpenChangeDetail[] = [];
     parts[0].item.addEventListener('grund-open-change', (e: Event) => {
-      events.push((e as CustomEvent).detail);
+      events.push((e as CustomEvent<AccordionOpenChangeDetail>).detail);
     });
 
     parts[0].triggerBtn.click();

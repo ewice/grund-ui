@@ -1,6 +1,11 @@
 import { SelectionEngine } from '../../controllers/selection.engine';
 import type { CheckboxGroupHostSnapshot } from './types.js';
 
+export interface CheckboxGroupToggleResult {
+  value: string[];
+  checked: boolean;
+}
+
 /**
  * Pure state and action resolution for the checkbox group.
  * Wraps SelectionEngine in multi-mode and adds parent-checkbox state derivation.
@@ -16,7 +21,7 @@ export class CheckboxGroupEngine {
   }
 
   public syncFromHost(snapshot: CheckboxGroupHostSnapshot): void {
-    this._allValues = snapshot.allValues;
+    this._allValues = [...snapshot.allValues];
     this.selection.syncFromHost({
       value: snapshot.value,
       defaultValue: snapshot.defaultValue,
@@ -25,11 +30,20 @@ export class CheckboxGroupEngine {
     });
   }
 
-  public requestToggle(itemValue: string): string[] | null {
-    return this.selection.requestToggle(itemValue, false);
+  public requestToggle(itemValue: string): CheckboxGroupToggleResult | null {
+    const value = this.selection.requestToggle(itemValue, false);
+
+    if (value === null) {
+      return null;
+    }
+
+    return {
+      value,
+      checked: value.includes(itemValue),
+    };
   }
 
-  public requestToggleAll(): string[] | null {
+  public requestToggleAll(): CheckboxGroupToggleResult | null {
     const parentState = this.getParentState();
     const current = this.selection.selectedValues;
     const allValuesSet = new Set(this._allValues);
@@ -45,7 +59,16 @@ export class CheckboxGroupEngine {
       targetValues = Array.from(merged);
     }
 
-    return this.selection.requestSet(targetValues);
+    const value = this.selection.requestSet(targetValues);
+
+    if (value === null) {
+      return null;
+    }
+
+    return {
+      value,
+      checked: parentState !== 'checked',
+    };
   }
 
   public isChecked(value: string): boolean {
