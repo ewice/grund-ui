@@ -64,6 +64,8 @@ export class GrundCheckbox extends LitElement {
   @state()
   private _internalChecked = false;
 
+  private _registeredWithGroup = false;
+
   @consume({ context: disabledContext, subscribe: true })
   @state()
   private _ancestorDisabled = false;
@@ -94,6 +96,8 @@ export class GrundCheckbox extends LitElement {
   public override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener('click', this._handleHostClick);
+    this.groupCtx?.unregisterItem(this);
+    this._registeredWithGroup = false;
   }
 
   protected override willUpdate(changed: PropertyValues): void {
@@ -107,6 +111,15 @@ export class GrundCheckbox extends LitElement {
           '[grund-checkbox] parent=true has no effect outside <grund-checkbox-group>. ' +
             'Wrap in a <grund-checkbox-group> with allValues set.',
         );
+      }
+    }
+
+    if (this.groupCtx) {
+      const needsRegistration =
+        !this._registeredWithGroup || changed.has('value') || changed.has('parent');
+      if (needsRegistration) {
+        this._registeredWithGroup = true;
+        this.groupCtx.registerItem(this, { value: this.value, parent: this.parent });
       }
     }
 

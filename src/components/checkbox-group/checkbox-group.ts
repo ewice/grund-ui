@@ -3,10 +3,12 @@ import { property, state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 
 import { CheckboxGroupEngine } from './checkbox-group.engine';
+import { CheckboxGroupRegistry } from './checkbox-group.registry';
 import { checkboxGroupContext } from './checkbox-group.context';
 import { disabledContext } from '../../context/disabled.context';
 
 import type { CheckboxGroupContext } from './checkbox-group.context';
+import type { CheckboxGroupRegistration } from './checkbox-group.registry';
 import type { CheckboxGroupValueChangeDetail, CheckboxGroupHostSnapshot } from './types';
 
 export class GrundCheckboxGroup extends LitElement {
@@ -42,6 +44,7 @@ export class GrundCheckboxGroup extends LitElement {
   protected disabledCtx = false;
 
   private readonly engine = new CheckboxGroupEngine();
+  private readonly registry = new CheckboxGroupRegistry();
 
   private readonly _isChecked = (value: string) => this.engine.isChecked(value);
 
@@ -49,6 +52,37 @@ export class GrundCheckboxGroup extends LitElement {
 
   private readonly _requestToggle = (value: string, parent: boolean): void => {
     this._handleToggle(value, parent);
+  };
+
+  private readonly _registerItem = (element: HTMLElement, record: CheckboxGroupRegistration): void => {
+    if (import.meta.env.DEV) {
+      if (!record.parent) {
+        const existingRecord = this.registry.get(element);
+        const oldValue = existingRecord?.value;
+        const valueToCheck = record.value;
+        if (oldValue !== valueToCheck) {
+          const allSelectable = this.registry.selectableValues();
+          if (allSelectable.includes(valueToCheck)) {
+            console.warn(
+              '[grund-checkbox-group]',
+              `duplicate value "${valueToCheck}" registered. Each <grund-checkbox> in a group must have a unique value.`,
+            );
+          }
+        }
+      }
+    }
+    this.registry.register(element, record);
+    this.engine.registerChild(record.value, record.parent);
+    this._publishGroupContext();
+  };
+
+  private readonly _unregisterItem = (element: HTMLElement): void => {
+    const record = this.registry.get(element);
+    this.registry.unregister(element);
+    if (record) {
+      this.engine.unregisterChild(record.value);
+    }
+    this._publishGroupContext();
   };
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
@@ -79,6 +113,8 @@ export class GrundCheckboxGroup extends LitElement {
       isChecked: this._isChecked,
       getParentState: this._getParentState,
       requestToggle: this._requestToggle,
+      registerItem: this._registerItem,
+      unregisterItem: this._unregisterItem,
     };
   }
 
@@ -103,7 +139,9 @@ export class GrundCheckboxGroup extends LitElement {
       }),
     );
 
-    this._publishGroupContext();
+    if (this.value === undefined) {
+      this._publishGroupContext();
+    }
   }
 
   protected override updated(): void {
