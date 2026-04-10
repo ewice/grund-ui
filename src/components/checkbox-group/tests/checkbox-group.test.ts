@@ -378,6 +378,141 @@ describe('GrundCheckboxGroup', () => {
     expect(btn.getAttribute('aria-checked')).to.equal('true');
   });
 
+  // ── Child registration (target architecture) ─────────────────────────────
+  // These tests describe the intended behavior AFTER the allValues refactor.
+  // They are expected to FAIL until the registration-based architecture is implemented.
+
+  describe('child registration (target architecture)', () => {
+    it('derives parent state from registered non-parent checkboxes without allValues', async () => {
+      // When all non-parent children are checked, parent should be 'checked'
+      // Currently FAILS: without allValues, engine._allValues is [], getParentState() returns 'unchecked'
+      const { checkboxes } = await setup(html`
+        <grund-checkbox-group .defaultValue=${['a', 'b']}>
+          <grund-checkbox parent value="all">All</grund-checkbox>
+          <grund-checkbox value="a">A</grund-checkbox>
+          <grund-checkbox value="b">B</grund-checkbox>
+        </grund-checkbox-group>
+      `);
+      const parentBtn = getByPart<HTMLButtonElement>(checkboxes[0], 'button');
+      expect(parentBtn.getAttribute('aria-checked')).to.equal('true');
+    });
+
+    it('updates parent state when a child checkbox is added after mount', async () => {
+      // Currently FAILS: no registration mechanism exists, so appending a new child
+      // does not update the engine's selectable set and parent state stays stale.
+      const el = await fixture<GrundCheckboxGroup>(html`
+        <grund-checkbox-group .defaultValue=${['a']}>
+          <grund-checkbox parent value="all">All</grund-checkbox>
+          <grund-checkbox value="a">A</grund-checkbox>
+        </grund-checkbox-group>
+      `);
+      await flush(el);
+      const initialCheckboxes = el.querySelectorAll<GrundCheckbox>('grund-checkbox');
+      for (const cb of initialCheckboxes) {
+        await flush(cb);
+      }
+
+      // Append a new unchecked checkbox 'b' — derived set becomes {a, b}, 'a' is checked → indeterminate
+      const newCb = document.createElement('grund-checkbox') as GrundCheckbox;
+      (newCb as any).value = 'b';
+      newCb.textContent = 'B';
+      el.appendChild(newCb);
+      await flush(newCb);
+      await flush(el);
+      for (const cb of el.querySelectorAll<GrundCheckbox>('grund-checkbox')) {
+        await flush(cb);
+      }
+
+      const parentBtn = getByPart<HTMLButtonElement>(initialCheckboxes[0], 'button');
+      expect(parentBtn.getAttribute('aria-checked')).to.equal('mixed');
+    });
+
+    it('does not republish checkbox group state on controlled toggle without a value prop change', async () => {
+      // Currently FAILS: _handleToggle() always calls _publishGroupContext(), which replaces
+      // the groupCtx object reference even in controlled mode where no state change occurred.
+      const { el, checkboxes } = await setup(html`
+        <grund-checkbox-group .value=${['a']}>
+          <grund-checkbox value="a">A</grund-checkbox>
+          <grund-checkbox value="b">B</grund-checkbox>
+        </grund-checkbox-group>
+      `);
+
+      // Capture the groupCtx reference before the click
+      const ctxBefore = (el as any).groupCtx;
+      clickCheckbox(checkboxes[1]); // controlled mode — consumer does not update value prop
+      await flush(el);
+      await flush(checkboxes[0]);
+      await flush(checkboxes[1]);
+
+      // In controlled mode, without a value prop change, context should NOT have been republished
+      const ctxAfter = (el as any).groupCtx;
+      expect(ctxBefore).to.equal(ctxAfter); // same object reference = no republish
+    });
+  });
+
+  // ── Migration behavior (target architecture) ──────────────────────────────
+  // These tests describe compatibility behavior during/after the allValues migration.
+  // They are expected to FAIL until the deprecation warnings are implemented.
+
+  describe('migration behavior (target architecture)', () => {
+    it('logs a deprecation warning in dev when allValues prop is used', async () => {
+      // Currently FAILS: no deprecation warning is emitted for allValues usage
+      const warnSpy = vi.spyOn(console, 'warn');
+      await setup(html`
+        <grund-checkbox-group .allValues=${['a', 'b']}>
+          <grund-checkbox value="a">A</grund-checkbox>
+          <grund-checkbox value="b">B</grund-checkbox>
+        </grund-checkbox-group>
+      `);
+      vitestExpect(warnSpy).toHaveBeenCalledWith(
+        vitestExpect.stringContaining('[grund-checkbox-group]'),
+        vitestExpect.stringContaining('allValues'),
+      );
+      warnSpy.mockRestore();
+    });
+
+    it('logs a dev warning when duplicate child values are registered', async () => {
+      // Currently FAILS: no duplicate-value warning exists in the registration path
+      const warnSpy = vi.spyOn(console, 'warn');
+      await setup(html`
+        <grund-checkbox-group>
+          <grund-checkbox value="a">A1</grund-checkbox>
+          <grund-checkbox value="a">A2</grund-checkbox>
+        </grund-checkbox-group>
+      `);
+      vitestExpect(warnSpy).toHaveBeenCalledWith(
+        vitestExpect.stringContaining('[grund-checkbox-group]'),
+        vitestExpect.stringContaining('duplicate'),
+      );
+      warnSpy.mockRestore();
+    });
+
+    it('excludes parent checkboxes from the derived selectable values used by toggleAll', async () => {
+      // Currently FAILS: requestToggleAll uses _allValues (empty without allValues prop),
+      // so it has no children to toggle. With registration, derived set should be {a, b} only.
+      const { el, checkboxes } = await setup(html`
+        <grund-checkbox-group>
+          <grund-checkbox parent value="all">All</grund-checkbox>
+          <grund-checkbox value="a">A</grund-checkbox>
+          <grund-checkbox value="b">B</grund-checkbox>
+        </grund-checkbox-group>
+      `);
+      const handler = vi.fn();
+      el.addEventListener('grund-value-change', handler as EventListener);
+      clickCheckbox(checkboxes[0]); // parent — should check a and b, not 'all'
+      await flush(el);
+      for (const cb of checkboxes) {
+        await flush(cb);
+      }
+      // 'all' (parent) must not appear in the new value set
+      const detail = handler.mock.calls[0]?.[0]?.detail as CheckboxGroupValueChangeDetail;
+      expect(detail).to.exist;
+      expect(detail.value).to.include('a');
+      expect(detail.value).to.include('b');
+      expect(detail.value).to.not.include('all');
+    });
+  });
+
   // ── Form submission ───────────────────────────────────────────────────────
 
   it('checked checkboxes in a group submit their form values', async () => {
