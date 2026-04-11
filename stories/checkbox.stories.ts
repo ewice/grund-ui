@@ -295,13 +295,6 @@ export const GroupedWithLabel: Story = {
       </grund-checkbox-group>
     </div>
   `,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const checkboxes = canvas.getAllByRole('checkbox');
-    if (checkboxes.length > 0) {
-      await userEvent.click(checkboxes[0]);
-    }
-  },
 };
 
 export const GroupedWithParent: Story = {
@@ -320,11 +313,4 @@ export const GroupedWithParent: Story = {
       </grund-checkbox-group>
     </div>
   `,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const checkboxes = canvas.getAllByRole('checkbox');
-    if (checkboxes.length > 0) {
-      await userEvent.click(checkboxes[0]);
-    }
-  },
 };
