@@ -50,9 +50,6 @@ export class GrundCheckboxGroup extends LitElement {
   @property({ type: Array, attribute: 'all-values', hasChanged: (next, prev) => !checkboxGroupValuesEqual(next, prev) })
   public allValues: string[] = [];
 
-  private _hasWarnedDeprecatedAllValues = false;
-  private _registryDirty = false;
-
   @property({ type: Boolean }) public disabled = false;
 
   @property({ attribute: 'aria-label' }) public override ariaLabel: string | null = null;
@@ -78,6 +75,9 @@ export class GrundCheckboxGroup extends LitElement {
 
   private readonly engine = new CheckboxGroupEngine();
   private readonly registry = new CheckboxGroupRegistry();
+
+  private _hasWarnedDeprecatedAllValues = false;
+  private _registryDirty = false;
 
   private readonly _isChecked = (value: string) => this.engine.isChecked(value);
 

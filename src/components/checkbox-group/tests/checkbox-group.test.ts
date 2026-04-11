@@ -402,14 +402,11 @@ describe('GrundCheckboxGroup', () => {
     expect(btn.getAttribute('aria-checked')).to.equal('true');
   });
 
-  // ── Child registration (target architecture) ─────────────────────────────
-  // These tests describe the intended behavior AFTER the allValues refactor.
-  // They are expected to FAIL until the registration-based architecture is implemented.
+  // ── Child registration ────────────────────────────────────────────────────
 
-  describe('child registration (target architecture)', () => {
+  describe('child registration', () => {
     it('derives parent state from registered non-parent checkboxes without allValues', async () => {
       // When all non-parent children are checked, parent should be 'checked'
-      // Currently FAILS: without allValues, engine._allValues is [], getParentState() returns 'unchecked'
       const { checkboxes } = await setup(html`
         <grund-checkbox-group .defaultValue=${['a', 'b']}>
           <grund-checkbox parent value="all">All</grund-checkbox>
@@ -422,8 +419,8 @@ describe('GrundCheckboxGroup', () => {
     });
 
     it('updates parent state when a child checkbox is added after mount', async () => {
-      // Currently FAILS: no registration mechanism exists, so appending a new child
-      // does not update the engine's selectable set and parent state stays stale.
+      // Appending a new child should update the engine's selectable set via registration,
+      // so parent state reflects the new aggregate.
       const el = await fixture<GrundCheckboxGroup>(html`
         <grund-checkbox-group .defaultValue=${['a']}>
           <grund-checkbox parent value="all">All</grund-checkbox>
@@ -547,13 +544,10 @@ describe('GrundCheckboxGroup', () => {
     });
   });
 
-  // ── Migration behavior (target architecture) ──────────────────────────────
-  // These tests describe compatibility behavior during/after the allValues migration.
-  // They are expected to FAIL until the deprecation warnings are implemented.
+  // ── Migration behavior ────────────────────────────────────────────────────
 
-  describe('migration behavior (target architecture)', () => {
+  describe('migration behavior', () => {
     it('logs a deprecation warning in dev when allValues prop is used', async () => {
-      // Currently FAILS: no deprecation warning is emitted for allValues usage
       const warnSpy = vi.spyOn(console, 'warn');
       await setup(html`
         <grund-checkbox-group .allValues=${['a', 'b']}>
@@ -569,7 +563,6 @@ describe('GrundCheckboxGroup', () => {
     });
 
     it('logs a dev warning when duplicate child values are registered', async () => {
-      // Currently FAILS: no duplicate-value warning exists in the registration path
       const warnSpy = vi.spyOn(console, 'warn');
       await setup(html`
         <grund-checkbox-group>
@@ -585,8 +578,7 @@ describe('GrundCheckboxGroup', () => {
     });
 
     it('excludes parent checkboxes from the derived selectable values used by toggleAll', async () => {
-      // Currently FAILS: requestToggleAll uses _allValues (empty without allValues prop),
-      // so it has no children to toggle. With registration, derived set should be {a, b} only.
+      // With registration, derived selectable set excludes the parent, so only {a, b} toggle.
       const { el, checkboxes } = await setup(html`
         <grund-checkbox-group>
           <grund-checkbox parent value="all">All</grund-checkbox>
@@ -767,8 +759,7 @@ describe('GrundCheckboxGroup', () => {
       vitestExpect(handlerA).not.toHaveBeenCalled();
     });
 
-    it('correctly registers children even when appended dynamically before their own upgrade', async () => {
-      // Simulate children arriving before the parent has completed its first update
+    it('registers children that are appended after the group has already mounted', async () => {
       const el = await fixture<GrundCheckboxGroup>(html`
         <grund-checkbox-group .defaultValue=${['a', 'b']}>
         </grund-checkbox-group>
