@@ -10,8 +10,8 @@ export interface CheckboxGroupValueChangeDetail {
   itemValue: string;
   /**
    * The new checked state of the triggering checkbox.
-   * For parent toggle-all actions, `true` means all `allValues` are now checked;
-   * `false` means all `allValues` are now unchecked.
+   * For parent toggle-all actions, `true` means all non-parent `<grund-checkbox>` children
+   * in the group are now checked; `false` means all non-parent children are now unchecked.
    */
   checked: boolean;
 }

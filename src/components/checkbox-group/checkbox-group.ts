@@ -12,10 +12,23 @@ import type { CheckboxGroupContext } from './checkbox-group.context';
 import type { CheckboxGroupRegistration } from './checkbox-group.registry';
 import type { CheckboxGroupValueChangeDetail } from './types';
 
+/**
+ * Groups multiple `<grund-checkbox>` elements with shared toggle state.
+ * Supports controlled and uncontrolled modes, a parent "select-all" checkbox,
+ * and accessible group labelling.
+ *
+ * @element grund-checkbox-group
+ *
+ * @slot - `<grund-checkbox>` children. Include exactly one `<grund-checkbox parent>` for select-all behavior.
+ *
+ * @fires {CustomEvent<CheckboxGroupValueChangeDetail>} grund-value-change - Fired when the set of checked values changes. Not cancelable.
+ *
+ * @csspart group - The `role="group"` container that receives `aria-label`, `ariaLabelledByElements`, and `ariaDescribedByElements`.
+ */
 export class GrundCheckboxGroup extends LitElement {
   public static override readonly styles = css`
     :host {
-      display: block;
+      display: block; /* block: checkbox-group is a block-level container */
     }
   `;
 
@@ -31,10 +44,14 @@ export class GrundCheckboxGroup extends LitElement {
   @property({ type: Array, attribute: 'default-value', hasChanged: (next, prev) => !checkboxGroupValuesEqual(next, prev) })
   public defaultValue: string[] = [];
 
+  /**
+   * @deprecated Child values are now derived from registered `<grund-checkbox>` children. Remove this prop. Will be removed in v1.
+   */
   @property({ type: Array, attribute: 'all-values', hasChanged: (next, prev) => !checkboxGroupValuesEqual(next, prev) })
   public allValues: string[] = [];
 
   private _hasWarnedDeprecatedAllValues = false;
+  private _registryDirty = false;
 
   @property({ type: Boolean }) public disabled = false;
 
@@ -43,6 +60,8 @@ export class GrundCheckboxGroup extends LitElement {
   @property({ attribute: 'aria-labelledby' }) public ariaLabelledBy: string | null = null;
 
   @property({ attribute: 'aria-describedby' }) public ariaDescribedBy: string | null = null;
+
+  @property() public label = '';
 
   @provide({ context: checkboxGroupContext })
   @state()
@@ -82,8 +101,8 @@ export class GrundCheckboxGroup extends LitElement {
       }
     }
     this.registry.register(element, record);
-    this._syncEngine();
-    this._publishGroupContext();
+    this._registryDirty = true;
+    this.requestUpdate();
   };
 
   private readonly _unregisterItem = (element: HTMLElement): void => {
@@ -91,8 +110,8 @@ export class GrundCheckboxGroup extends LitElement {
       return;
     }
     this.registry.unregister(element);
-    this._syncEngine();
-    this._publishGroupContext();
+    this._registryDirty = true;
+    this.requestUpdate();
   };
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
@@ -100,7 +119,7 @@ export class GrundCheckboxGroup extends LitElement {
       this._hasWarnedDeprecatedAllValues = true;
       console.warn(
         '[grund-checkbox-group]',
-        'allValues is deprecated. Child values are now derived from registered <grund-checkbox> elements. Remove the allValues prop.',
+        'allValues is deprecated. Child values are now derived from registered <grund-checkbox> elements. Remove the allValues prop. Will be removed in v1.',
       );
     }
 
@@ -111,11 +130,13 @@ export class GrundCheckboxGroup extends LitElement {
 
     if (
       !this.hasUpdated ||
+      this._registryDirty ||
       changed.has('value') ||
       changed.has('defaultValue') ||
       changed.has('allValues') ||
       changed.has('disabled')
     ) {
+      this._registryDirty = false;
       this._publishGroupContext();
     }
   }
@@ -193,7 +214,7 @@ export class GrundCheckboxGroup extends LitElement {
 
   protected override render() {
     return html`
-      <div part="group" role="group" aria-label=${this.ariaLabel ?? nothing}>
+      <div part="group" role="group" aria-label=${this.label || this.ariaLabel || nothing}>
         <slot></slot>
       </div>
     `;
