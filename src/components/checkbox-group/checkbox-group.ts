@@ -61,6 +61,11 @@ export class GrundCheckboxGroup extends LitElement {
 
   @property({ attribute: 'aria-describedby' }) public ariaDescribedBy: string | null = null;
 
+  /**
+   * Accessible label for the group. Applied as `aria-label` on the `role="group"` container.
+   * Takes precedence over `ariaLabel`. Prefer `ariaLabelledBy` when the label is rendered
+   * as a visible element in the DOM.
+   */
   @property() public label = '';
 
   @provide({ context: checkboxGroupContext })
