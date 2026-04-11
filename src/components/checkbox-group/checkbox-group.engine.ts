@@ -7,24 +7,18 @@ export interface CheckboxGroupToggleResult {
   persisted: boolean;
 }
 
-/**
- * Pure state and action resolution for the checkbox group.
- * Wraps SelectionEngine in multi-mode and adds parent-checkbox state derivation.
- * No DOM access, no Lit dependency — independently testable.
- * @internal
- */
 export class CheckboxGroupEngine {
   private readonly selection = new SelectionEngine();
-  private _allValues: string[] = [];
-  private _isControlled = false;
+  private selectableValues: string[] = [];
+  private isControlled = false;
 
   public get checkedValues(): ReadonlySet<string> {
     return this.selection.selectedValues;
   }
 
   public syncFromHost(snapshot: CheckboxGroupHostSnapshot): void {
-    this._allValues = [...snapshot.allValues];
-    this._isControlled = snapshot.value !== undefined;
+    this.selectableValues = [...snapshot.selectableValues];
+    this.isControlled = snapshot.value !== undefined;
     this.selection.syncFromHost({
       value: snapshot.value,
       defaultValue: snapshot.defaultValue,
@@ -43,23 +37,21 @@ export class CheckboxGroupEngine {
     return {
       value,
       checked: value.includes(itemValue),
-      persisted: !this._isControlled,
+      persisted: !this.isControlled,
     };
   }
 
   public requestToggleAll(): CheckboxGroupToggleResult | null {
     const parentState = this.getParentState();
     const current = this.selection.selectedValues;
-    const allValuesSet = new Set(this._allValues);
+    const selectableValuesSet = new Set(this.selectableValues);
 
     let targetValues: string[];
 
     if (parentState === 'checked') {
-      // Uncheck all: keep values not in allValues
-      targetValues = Array.from(current).filter((v) => !allValuesSet.has(v));
+      targetValues = Array.from(current).filter((v) => !selectableValuesSet.has(v));
     } else {
-      // Check all: union of current values and allValues
-      const merged = new Set([...current, ...this._allValues]);
+      const merged = new Set([...current, ...this.selectableValues]);
       targetValues = Array.from(merged);
     }
 
@@ -72,7 +64,7 @@ export class CheckboxGroupEngine {
     return {
       value,
       checked: parentState !== 'checked',
-      persisted: !this._isControlled,
+      persisted: !this.isControlled,
     };
   }
 
@@ -81,17 +73,17 @@ export class CheckboxGroupEngine {
   }
 
   public getParentState(): 'checked' | 'unchecked' | 'indeterminate' {
-    if (this._allValues.length === 0) {
+    if (this.selectableValues.length === 0) {
       return 'unchecked';
     }
 
-    const checkedCount = this._allValues.filter((v) => this.checkedValues.has(v)).length;
+    const checkedCount = this.selectableValues.filter((v) => this.checkedValues.has(v)).length;
 
     if (checkedCount === 0) {
       return 'unchecked';
     }
 
-    if (checkedCount === this._allValues.length) {
+    if (checkedCount === this.selectableValues.length) {
       return 'checked';
     }
 

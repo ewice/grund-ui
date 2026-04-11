@@ -12,23 +12,10 @@ import type { CheckboxGroupContext } from './checkbox-group.context';
 import type { CheckboxGroupRegistration } from './checkbox-group.registry';
 import type { CheckboxGroupValueChangeDetail } from './types';
 
-/**
- * Groups multiple `<grund-checkbox>` elements with shared toggle state.
- * Supports controlled and uncontrolled modes, a parent "select-all" checkbox,
- * and accessible group labelling.
- *
- * @element grund-checkbox-group
- *
- * @slot - `<grund-checkbox>` children. Include exactly one `<grund-checkbox parent>` for select-all behavior.
- *
- * @fires {CustomEvent<CheckboxGroupValueChangeDetail>} grund-value-change - Fired when the set of checked values changes. Not cancelable.
- *
- * @csspart group - The `role="group"` container that receives `aria-label`, `ariaLabelledByElements`, and `ariaDescribedByElements`.
- */
 export class GrundCheckboxGroup extends LitElement {
   public static override readonly styles = css`
     :host {
-      display: block; /* block: checkbox-group is a block-level container */
+      display: block;
     }
   `;
 
@@ -74,23 +61,6 @@ export class GrundCheckboxGroup extends LitElement {
   };
 
   private readonly _registerItem = (element: HTMLElement, record: CheckboxGroupRegistration): void => {
-    if (import.meta.env.DEV) {
-      if (!record.parent) {
-        const existing = this.registry.get(element);
-        if (existing?.value !== record.value && this.registry.selectableValues().includes(record.value)) {
-          console.warn(
-            '[grund-checkbox-group]',
-            `duplicate value "${record.value}" registered. Each <grund-checkbox> in a group must have a unique value.`,
-          );
-        }
-      }
-      if (record.parent && this.registry.hasParent() && !this.registry.get(element)?.parent) {
-        console.warn(
-          '[grund-checkbox-group]',
-          'Multiple parent checkboxes detected. Only one parent checkbox is supported per group.',
-        );
-      }
-    }
     this.registry.register(element, record);
     this._registryDirty = true;
     this.requestUpdate();
@@ -127,7 +97,7 @@ export class GrundCheckboxGroup extends LitElement {
     this.engine.syncFromHost({
       value: this.value !== undefined ? normalizeCheckboxGroupValues(this.value) : undefined,
       defaultValue: normalizeCheckboxGroupValues(this.defaultValue),
-      allValues: this.registry.selectableValues(),
+      selectableValues: this.registry.selectableValues(),
       disabled: this.disabled,
     });
   }
