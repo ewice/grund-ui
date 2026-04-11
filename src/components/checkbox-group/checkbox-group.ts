@@ -44,12 +44,6 @@ export class GrundCheckboxGroup extends LitElement {
   @property({ type: Array, attribute: 'default-value', hasChanged: (next, prev) => !checkboxGroupValuesEqual(next, prev) })
   public defaultValue: string[] = [];
 
-  /**
-   * @deprecated Child values are now derived from registered `<grund-checkbox>` children. Remove this prop. Will be removed in v1.
-   */
-  @property({ type: Array, attribute: 'all-values', hasChanged: (next, prev) => !checkboxGroupValuesEqual(next, prev) })
-  public allValues: string[] = [];
-
   @property({ type: Boolean }) public disabled = false;
 
   @property({ attribute: 'aria-label' }) public override ariaLabel: string | null = null;
@@ -58,11 +52,6 @@ export class GrundCheckboxGroup extends LitElement {
 
   @property({ attribute: 'aria-describedby' }) public ariaDescribedBy: string | null = null;
 
-  /**
-   * Accessible label for the group. Applied as `aria-label` on the `role="group"` container.
-   * Takes precedence over `ariaLabel`. Prefer `ariaLabelledBy` when the label is rendered
-   * as a visible element in the DOM.
-   */
   @property() public label: string | null = null;
 
   @provide({ context: checkboxGroupContext })
@@ -76,7 +65,6 @@ export class GrundCheckboxGroup extends LitElement {
   private readonly engine = new CheckboxGroupEngine();
   private readonly registry = new CheckboxGroupRegistry();
 
-  private _hasWarnedDeprecatedAllValues = false;
   private _registryDirty = false;
 
   private readonly _isChecked = (value: string) => this.engine.isChecked(value);
@@ -120,14 +108,6 @@ export class GrundCheckboxGroup extends LitElement {
   };
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
-    if (import.meta.env.DEV && !this._hasWarnedDeprecatedAllValues && this.allValues.length > 0) {
-      this._hasWarnedDeprecatedAllValues = true;
-      console.warn(
-        '[grund-checkbox-group]',
-        'allValues is deprecated. Child values are now derived from registered <grund-checkbox> elements. Remove the allValues prop. Will be removed in v1.',
-      );
-    }
-
     this._syncEngine();
 
     this.toggleAttribute('data-disabled', this.disabled);
@@ -138,7 +118,6 @@ export class GrundCheckboxGroup extends LitElement {
       this._registryDirty ||
       changed.has('value') ||
       changed.has('defaultValue') ||
-      changed.has('allValues') ||
       changed.has('disabled')
     ) {
       this._registryDirty = false;
@@ -147,12 +126,10 @@ export class GrundCheckboxGroup extends LitElement {
   }
 
   private _syncEngine(): void {
-    const selectableValues = this.registry.selectableValues();
-    const allValues = selectableValues.length > 0 ? selectableValues : normalizeCheckboxGroupValues(this.allValues);
     this.engine.syncFromHost({
       value: this.value !== undefined ? normalizeCheckboxGroupValues(this.value) : undefined,
       defaultValue: normalizeCheckboxGroupValues(this.defaultValue),
-      allValues,
+      allValues: this.registry.selectableValues(),
       disabled: this.disabled,
     });
   }

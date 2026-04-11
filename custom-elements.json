@@ -1634,7 +1634,7 @@
             },
             {
               "kind": "field",
-              "name": "_allValues",
+              "name": "allValues",
               "type": {
                 "text": "string[]"
               },
@@ -1643,7 +1643,7 @@
             },
             {
               "kind": "field",
-              "name": "_isControlled",
+              "name": "isControlled",
               "type": {
                 "text": "boolean"
               },
@@ -1900,17 +1900,6 @@
             },
             {
               "kind": "field",
-              "name": "allValues",
-              "type": {
-                "text": "string[]"
-              },
-              "privacy": "public",
-              "default": "[]",
-              "deprecated": "Child values are now derived from registered `<grund-checkbox>` children. Remove this prop. Will be removed in v1.",
-              "attribute": "all-values"
-            },
-            {
-              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -1957,7 +1946,6 @@
               },
               "privacy": "public",
               "default": "null",
-              "description": "Accessible label for the group. Applied as `aria-label` on the `role=\"group\"` container.\nTakes precedence over `ariaLabel`. Prefer `ariaLabelledBy` when the label is rendered\nas a visible element in the DOM.",
               "attribute": "label"
             },
             {
@@ -1990,15 +1978,6 @@
               "privacy": "private",
               "readonly": true,
               "default": "new CheckboxGroupRegistry()"
-            },
-            {
-              "kind": "field",
-              "name": "_hasWarnedDeprecatedAllValues",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
             },
             {
               "kind": "field",
@@ -2129,15 +2108,6 @@
               "fieldName": "defaultValue"
             },
             {
-              "name": "all-values",
-              "type": {
-                "text": "string[]"
-              },
-              "default": "[]",
-              "deprecated": "Child values are now derived from registered `<grund-checkbox>` children. Remove this prop. Will be removed in v1.",
-              "fieldName": "allValues"
-            },
-            {
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -2175,7 +2145,6 @@
                 "text": "string | null"
               },
               "default": "null",
-              "description": "Accessible label for the group. Applied as `aria-label` on the `role=\"group\"` container.\nTakes precedence over `ariaLabel`. Prefer `ariaLabelledBy` when the label is rendered\nas a visible element in the DOM.",
               "fieldName": "label"
             }
           ],

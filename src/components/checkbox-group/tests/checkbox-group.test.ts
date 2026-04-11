@@ -283,7 +283,7 @@ describe('GrundCheckboxGroup', () => {
 
   it('parent checkbox shows checked when all children checked', async () => {
     const { checkboxes } = await setup(html`
-      <grund-checkbox-group .defaultValue=${['a', 'b']} .allValues=${['a', 'b']}>
+      <grund-checkbox-group .defaultValue=${['a', 'b']} >
         <grund-checkbox parent value="all">All</grund-checkbox>
         <grund-checkbox value="a">A</grund-checkbox>
         <grund-checkbox value="b">B</grund-checkbox>
@@ -295,7 +295,7 @@ describe('GrundCheckboxGroup', () => {
 
   it('parent checkbox shows mixed when some children checked', async () => {
     const { checkboxes } = await setup(html`
-      <grund-checkbox-group .defaultValue=${['a']} .allValues=${['a', 'b']}>
+      <grund-checkbox-group .defaultValue=${['a']} >
         <grund-checkbox parent value="all">All</grund-checkbox>
         <grund-checkbox value="a">A</grund-checkbox>
         <grund-checkbox value="b">B</grund-checkbox>
@@ -307,7 +307,7 @@ describe('GrundCheckboxGroup', () => {
 
   it('parent checkbox shows unchecked when no children checked', async () => {
     const { checkboxes } = await setup(html`
-      <grund-checkbox-group .allValues=${['a', 'b']}>
+      <grund-checkbox-group >
         <grund-checkbox parent value="all">All</grund-checkbox>
         <grund-checkbox value="a">A</grund-checkbox>
         <grund-checkbox value="b">B</grund-checkbox>
@@ -319,7 +319,7 @@ describe('GrundCheckboxGroup', () => {
 
   it('clicking parent checks all when unchecked', async () => {
     const { el, checkboxes } = await setup(html`
-      <grund-checkbox-group .allValues=${['a', 'b']}>
+      <grund-checkbox-group >
         <grund-checkbox parent value="all">All</grund-checkbox>
         <grund-checkbox value="a">A</grund-checkbox>
         <grund-checkbox value="b">B</grund-checkbox>
@@ -336,7 +336,7 @@ describe('GrundCheckboxGroup', () => {
 
   it('clicking parent unchecks all when all checked', async () => {
     const { el, checkboxes } = await setup(html`
-      <grund-checkbox-group .defaultValue=${['a', 'b']} .allValues=${['a', 'b']}>
+      <grund-checkbox-group .defaultValue=${['a', 'b']} >
         <grund-checkbox parent value="all">All</grund-checkbox>
         <grund-checkbox value="a">A</grund-checkbox>
         <grund-checkbox value="b">B</grund-checkbox>
@@ -354,7 +354,7 @@ describe('GrundCheckboxGroup', () => {
   it('parent checkbox does not submit a form value', async () => {
     const formEl = await fixture<HTMLFormElement>(html`
       <form>
-        <grund-checkbox-group .defaultValue=${['a']} .allValues=${['a', 'b']}>
+        <grund-checkbox-group .defaultValue=${['a']} >
           <grund-checkbox parent name="select-all" value="all">All</grund-checkbox>
           <grund-checkbox name="proto" value="a">A</grund-checkbox>
           <grund-checkbox name="proto" value="b">B</grund-checkbox>
@@ -375,7 +375,7 @@ describe('GrundCheckboxGroup', () => {
 
   it('grund-value-change detail is correct when parent checks all', async () => {
     const { el, checkboxes } = await setup(html`
-      <grund-checkbox-group .allValues=${['a', 'b']}>
+      <grund-checkbox-group >
         <grund-checkbox parent value="all">All</grund-checkbox>
         <grund-checkbox value="a">A</grund-checkbox>
         <grund-checkbox value="b">B</grund-checkbox>
@@ -405,7 +405,7 @@ describe('GrundCheckboxGroup', () => {
   // ── Child registration ────────────────────────────────────────────────────
 
   describe('child registration', () => {
-    it('derives parent state from registered non-parent checkboxes without allValues', async () => {
+    it('derives parent state from registered non-parent checkboxes', async () => {
       // When all non-parent children are checked, parent should be 'checked'
       const { checkboxes } = await setup(html`
         <grund-checkbox-group .defaultValue=${['a', 'b']}>
@@ -544,24 +544,9 @@ describe('GrundCheckboxGroup', () => {
     });
   });
 
-  // ── Migration behavior ────────────────────────────────────────────────────
+  // ── Dev warnings ─────────────────────────────────────────────────────────
 
-  describe('migration behavior', () => {
-    it('logs a deprecation warning in dev when allValues prop is used', async () => {
-      const warnSpy = vi.spyOn(console, 'warn');
-      await setup(html`
-        <grund-checkbox-group .allValues=${['a', 'b']}>
-          <grund-checkbox value="a">A</grund-checkbox>
-          <grund-checkbox value="b">B</grund-checkbox>
-        </grund-checkbox-group>
-      `);
-      vitestExpect(warnSpy).toHaveBeenCalledWith(
-        vitestExpect.stringContaining('[grund-checkbox-group]'),
-        vitestExpect.stringContaining('allValues'),
-      );
-      warnSpy.mockRestore();
-    });
-
+  describe('dev warnings', () => {
     it('logs a dev warning when duplicate child values are registered', async () => {
       const warnSpy = vi.spyOn(console, 'warn');
       await setup(html`
