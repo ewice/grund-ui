@@ -224,6 +224,30 @@ describe('GrundCheckboxGroup', () => {
     expect(getByPart(checkboxes[1], 'button').getAttribute('aria-checked')).to.equal('true');
   });
 
+  it('re-renders when switching from controlled empty array to uncontrolled', async () => {
+    const { el, checkboxes } = await setup(html`
+      <grund-checkbox-group .value=${[]}>
+        <grund-checkbox value="a">A</grund-checkbox>
+      </grund-checkbox-group>
+    `);
+    // Currently controlled, clicking should not change state
+    clickCheckbox(checkboxes[0]);
+    await flush(el);
+    await flush(checkboxes[0]);
+    expect(getByPart(checkboxes[0], 'button').getAttribute('aria-checked')).to.equal('false');
+
+    // Switch to uncontrolled
+    el.value = undefined;
+    await flush(el);
+    await flush(checkboxes[0]);
+
+    // Now clicking should update state
+    clickCheckbox(checkboxes[0]);
+    await flush(el);
+    await flush(checkboxes[0]);
+    expect(getByPart(checkboxes[0], 'button').getAttribute('aria-checked')).to.equal('true');
+  });
+
   // ── Disabled ─────────────────────────────────────────────────────────────
 
   it('group disabled propagates to children', async () => {

@@ -20,7 +20,13 @@ export class GrundCheckboxGroup extends LitElement {
     }
   `;
 
-  @property({ type: Array, hasChanged: (next, prev) => !checkboxGroupValuesEqual(next, prev) })
+  @property({
+    type: Array,
+    hasChanged: (next: string[] | undefined, prev: string[] | undefined) => {
+      if ((next === undefined) !== (prev === undefined)) return true;
+      return !checkboxGroupValuesEqual(next, prev);
+    },
+  })
   public value: string[] | undefined = undefined;
 
   @property({ type: Array, attribute: 'default-value', hasChanged: (next, prev) => !checkboxGroupValuesEqual(next, prev) })
