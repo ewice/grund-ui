@@ -6,7 +6,7 @@ import { CheckboxGroupEngine } from './checkbox-group.engine';
 import { CheckboxGroupRegistry } from './checkbox-group.registry';
 import { checkboxGroupContext } from './checkbox-group.context';
 import { disabledContext } from '../../context/disabled.context';
-import { normalizeCheckboxGroupValues, checkboxGroupValuesEqual } from './checkbox-group.normalize';
+import { normalizeCheckboxGroupValues, checkboxGroupValuesEqual } from './utils';
 
 import type { CheckboxGroupContext } from './checkbox-group.context';
 import type { CheckboxGroupRegistration } from './checkbox-group.registry';
@@ -35,7 +35,7 @@ export class GrundCheckboxGroup extends LitElement {
   @property({
     type: Array,
     hasChanged: (next: string[] | undefined, prev: string[] | undefined) => {
-      if ((next === undefined) !== (prev === undefined)) return true;
+      if ((next === undefined) !== (prev === undefined)) { return true; }
       return !checkboxGroupValuesEqual(next, prev);
     },
   })
@@ -63,7 +63,7 @@ export class GrundCheckboxGroup extends LitElement {
    * Takes precedence over `ariaLabel`. Prefer `ariaLabelledBy` when the label is rendered
    * as a visible element in the DOM.
    */
-  @property() public label = '';
+  @property() public label: string | null = null;
 
   @provide({ context: checkboxGroupContext })
   @state()
@@ -219,7 +219,7 @@ export class GrundCheckboxGroup extends LitElement {
 
   protected override render() {
     return html`
-      <div part="group" role="group" aria-label=${this.label || this.ariaLabel || nothing}>
+      <div part="group" role="group" aria-label=${this.label ?? this.ariaLabel ?? nothing}>
         <slot></slot>
       </div>
     `;

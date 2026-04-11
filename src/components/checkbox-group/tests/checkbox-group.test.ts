@@ -702,7 +702,7 @@ describe('GrundCheckboxGroup', () => {
       `);
       await flush(el);
       const checkboxes = el.querySelectorAll<GrundCheckbox>('grund-checkbox');
-      for (const cb of checkboxes) await flush(cb);
+      for (const cb of checkboxes) { await flush(cb); }
 
       // Both a and b registered: a is checked → indeterminate parent
       const parentBtn = getByPart<HTMLButtonElement>(checkboxes[0], 'button');

@@ -4,6 +4,996 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "src/components/accordion/accordion-header.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Heading wrapper for an accordion item trigger.",
+          "name": "GrundAccordionHeader",
+          "slots": [
+            {
+              "description": "Trigger element",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "level",
+              "type": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6"
+              },
+              "privacy": "public",
+              "default": "3",
+              "attribute": "level"
+            },
+            {
+              "kind": "field",
+              "name": "itemCtx",
+              "type": {
+                "text": "AccordionItemContext | undefined"
+              },
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "level",
+              "type": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6"
+              },
+              "default": "3",
+              "fieldName": "level"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion-header",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordionHeader",
+          "declaration": {
+            "name": "GrundAccordionHeader",
+            "module": "src/components/accordion/accordion-header.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion-header",
+          "declaration": {
+            "name": "GrundAccordionHeader",
+            "module": "src/components/accordion/accordion-header.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundAccordionItem",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "rootCtx",
+              "type": {
+                "text": "AccordionRootContext | undefined"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "ancestorDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true,
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "itemCtx",
+              "type": {
+                "text": "AccordionItemContext"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "disabledCtx",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "hasSettled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "prevExpanded",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "privacy": "private",
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "isRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "boundToggle",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "boundAttachTrigger",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "boundDetachTrigger",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "boundAttachPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "boundDetachPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "createItemContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "AccordionItemContext"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-open-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion-item",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordionItem",
+          "declaration": {
+            "name": "GrundAccordionItem",
+            "module": "src/components/accordion/accordion-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion-item",
+          "declaration": {
+            "name": "GrundAccordionItem",
+            "module": "src/components/accordion/accordion-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundAccordionPanel",
+          "members": [
+            {
+              "kind": "field",
+              "name": "keepMounted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "keep-mounted"
+            },
+            {
+              "kind": "field",
+              "name": "hiddenUntilFound",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "hidden-until-found"
+            },
+            {
+              "kind": "field",
+              "name": "itemCtx",
+              "type": {
+                "text": "AccordionItemContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isPanelRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "handleBeforematch",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "effectiveKeepMounted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "effectiveHiddenUntilFound",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "keep-mounted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "keepMounted"
+            },
+            {
+              "name": "hidden-until-found",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hiddenUntilFound"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordionPanel",
+          "declaration": {
+            "name": "GrundAccordionPanel",
+            "module": "src/components/accordion/accordion-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion-panel",
+          "declaration": {
+            "name": "GrundAccordionPanel",
+            "module": "src/components/accordion/accordion-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion-trigger.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundAccordionTrigger",
+          "members": [
+            {
+              "kind": "field",
+              "name": "itemCtx",
+              "type": {
+                "text": "AccordionItemContext | undefined"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "isTriggerRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "handleClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion-trigger",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordionTrigger",
+          "declaration": {
+            "name": "GrundAccordionTrigger",
+            "module": "src/components/accordion/accordion-trigger.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion-trigger",
+          "declaration": {
+            "name": "GrundAccordionTrigger",
+            "module": "src/components/accordion/accordion-trigger.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "accordionRootContext"
+        },
+        {
+          "kind": "variable",
+          "name": "accordionItemContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "accordionRootContext",
+          "declaration": {
+            "name": "accordionRootContext",
+            "module": "src/components/accordion/accordion.context.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "accordionItemContext",
+          "declaration": {
+            "name": "accordionItemContext",
+            "module": "src/components/accordion/accordion.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion.engine.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion.registry.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "AccordionRegistry",
+          "members": [
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "readonly AccordionItemRecord[]"
+              },
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "registerItem",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "unregisterItem",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "attachTrigger",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "trigger",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "attachPanel",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "panel",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "detachTrigger",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "detachPanel",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getRecord",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "AccordionItemRecord | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "indexOf",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "OrderedRegistry",
+            "module": "/src/utils/ordered-registry"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AccordionRegistry",
+          "declaration": {
+            "name": "AccordionRegistry",
+            "module": "src/components/accordion/accordion.registry.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundAccordion",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "multiple"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "privacy": "public",
+              "default": "'vertical'",
+              "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "loopFocus",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "true",
+              "attribute": "loop-focus"
+            },
+            {
+              "kind": "field",
+              "name": "keepMounted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "keep-mounted"
+            },
+            {
+              "kind": "field",
+              "name": "hiddenUntilFound",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "hidden-until-found"
+            },
+            {
+              "kind": "field",
+              "name": "rootCtx",
+              "type": {
+                "text": "AccordionRootContext"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "disabledCtx",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "engine",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new AccordionEngine()"
+            },
+            {
+              "kind": "field",
+              "name": "registry",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new AccordionRegistry()"
+            },
+            {
+              "kind": "field",
+              "name": "_isExpanded",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_requestToggle",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_registerItem",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_unregisterItem",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_indexOf",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_attachTrigger",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_detachTrigger",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_attachPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_detachPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "rovingFocus",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new RovingFocusController(this, { orientation: 'vertical', loop: true, getItems: () => this.registry.items .map((r) => r.trigger?.shadowRoot?.querySelector<HTMLElement>('[part=\"trigger\"]') ?? null) .filter((t): t is HTMLElement => t !== null), })"
+            },
+            {
+              "kind": "method",
+              "name": "createRootContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "AccordionRootContext"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleToggle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "itemValue",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "itemDisabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-value-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "value"
+            },
+            {
+              "name": "default-value",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "defaultValue"
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "multiple"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "default": "'vertical'",
+              "fieldName": "orientation"
+            },
+            {
+              "name": "loop-focus",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "loopFocus"
+            },
+            {
+              "name": "keep-mounted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "keepMounted"
+            },
+            {
+              "name": "hidden-until-found",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hiddenUntilFound"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordion",
+          "declaration": {
+            "name": "GrundAccordion",
+            "module": "src/components/accordion/accordion.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion",
+          "declaration": {
+            "name": "GrundAccordion",
+            "module": "src/components/accordion/accordion.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/accordion/index.ts",
       "declarations": [],
       "exports": [
@@ -12,7 +1002,7 @@
           "name": "GrundAccordion",
           "declaration": {
             "name": "GrundAccordion",
-            "module": "./root/index.js"
+            "module": "./accordion"
           }
         },
         {
@@ -20,7 +1010,7 @@
           "name": "GrundAccordionItem",
           "declaration": {
             "name": "GrundAccordionItem",
-            "module": "./item/index.js"
+            "module": "./accordion-item"
           }
         },
         {
@@ -28,7 +1018,7 @@
           "name": "GrundAccordionHeader",
           "declaration": {
             "name": "GrundAccordionHeader",
-            "module": "./header/index.js"
+            "module": "./accordion-header"
           }
         },
         {
@@ -36,7 +1026,7 @@
           "name": "GrundAccordionTrigger",
           "declaration": {
             "name": "GrundAccordionTrigger",
-            "module": "./trigger/index.js"
+            "module": "./accordion-trigger"
           }
         },
         {
@@ -44,7 +1034,7 @@
           "name": "GrundAccordionPanel",
           "declaration": {
             "name": "GrundAccordionPanel",
-            "module": "./panel/index.js"
+            "module": "./accordion-panel"
           }
         },
         {
@@ -52,7 +1042,7 @@
           "name": "AccordionValueChangeDetail",
           "declaration": {
             "name": "AccordionValueChangeDetail",
-            "module": "./types.js"
+            "module": "./types"
           }
         },
         {
@@ -60,7 +1050,7 @@
           "name": "AccordionOpenChangeDetail",
           "declaration": {
             "name": "AccordionOpenChangeDetail",
-            "module": "./types.js"
+            "module": "./types"
           }
         }
       ]
@@ -68,6 +1058,2326 @@
     {
       "kind": "javascript-module",
       "path": "src/components/accordion/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/checkbox-indicator.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Visual indicator for <grund-checkbox>. Place inside <grund-checkbox> to slot a\ncustom checkmark or dash icon. Visibility is controlled by consumers via CSS\non the reflected data-checked, data-unchecked, and data-indeterminate attributes.",
+          "name": "GrundCheckboxIndicator",
+          "cssParts": [
+            {
+              "description": "The wrapper span element",
+              "name": "indicator"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Custom checkmark or dash icon",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_ctx",
+              "type": {
+                "text": "CheckboxContext | undefined"
+              },
+              "privacy": "private",
+              "default": "undefined"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-checkbox-indicator",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCheckboxIndicator",
+          "declaration": {
+            "name": "GrundCheckboxIndicator",
+            "module": "src/components/checkbox/checkbox-indicator.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-checkbox-indicator",
+          "declaration": {
+            "name": "GrundCheckboxIndicator",
+            "module": "src/components/checkbox/checkbox-indicator.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/checkbox.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "checkboxContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "checkboxContext",
+          "declaration": {
+            "name": "checkboxContext",
+            "module": "src/components/checkbox/checkbox.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/checkbox.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundCheckbox",
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "privacy": "public",
+              "static": true,
+              "readonly": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "checked",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined",
+              "attribute": "checked"
+            },
+            {
+              "kind": "field",
+              "name": "defaultChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "default-checked"
+            },
+            {
+              "kind": "field",
+              "name": "indeterminate",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "indeterminate"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "''",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "'on'",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "required"
+            },
+            {
+              "kind": "field",
+              "name": "readOnly",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "read-only"
+            },
+            {
+              "kind": "field",
+              "name": "parent",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "parent"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabel",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "aria-label"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "aria-labelledby"
+            },
+            {
+              "kind": "field",
+              "name": "ariaDescribedBy",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "aria-describedby"
+            },
+            {
+              "kind": "field",
+              "name": "_internalChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_registeredWithGroup",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_ancestorDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "groupCtx",
+              "type": {
+                "text": "CheckboxGroupContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_ctx",
+              "type": {
+                "text": "CheckboxContext"
+              },
+              "privacy": "protected",
+              "default": "{ checked: false, indeterminate: false }"
+            },
+            {
+              "kind": "field",
+              "name": "_internals",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_form",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormController(this, this._internals)"
+            },
+            {
+              "kind": "field",
+              "name": "_handleHostClick",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_effectiveDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_effectiveIndeterminate",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_effectiveChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_handleClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_resolveReferencedElements",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getAssociatedLabels",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLLabelElement[]"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-checked-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "checked",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "checked"
+            },
+            {
+              "name": "default-checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "defaultChecked"
+            },
+            {
+              "name": "indeterminate",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "indeterminate"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "'on'",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required"
+            },
+            {
+              "name": "read-only",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readOnly"
+            },
+            {
+              "name": "parent",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "parent"
+            },
+            {
+              "name": "aria-label",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "ariaLabel"
+            },
+            {
+              "name": "aria-labelledby",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "ariaLabelledBy"
+            },
+            {
+              "name": "aria-describedby",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "ariaDescribedBy"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-checkbox",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCheckbox",
+          "declaration": {
+            "name": "GrundCheckbox",
+            "module": "src/components/checkbox/checkbox.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-checkbox",
+          "declaration": {
+            "name": "GrundCheckbox",
+            "module": "src/components/checkbox/checkbox.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundCheckboxIndicator",
+          "declaration": {
+            "name": "GrundCheckboxIndicator",
+            "module": "./checkbox-indicator.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CheckedChangeDetail",
+          "declaration": {
+            "name": "CheckedChangeDetail",
+            "module": "./types.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCheckbox",
+          "declaration": {
+            "name": "GrundCheckbox",
+            "module": "./checkbox"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CheckedChangeDetail",
+          "declaration": {
+            "name": "CheckedChangeDetail",
+            "module": "./types"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox-group/checkbox-group.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "checkboxGroupContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "checkboxGroupContext",
+          "declaration": {
+            "name": "checkboxGroupContext",
+            "module": "src/components/checkbox-group/checkbox-group.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox-group/checkbox-group.engine.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CheckboxGroupEngine",
+          "members": [
+            {
+              "kind": "field",
+              "name": "selection",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new SelectionEngine()"
+            },
+            {
+              "kind": "field",
+              "name": "_allValues",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_isControlled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "checkedValues",
+              "type": {
+                "text": "ReadonlySet<string>"
+              },
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "syncFromHost",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "snapshot",
+                  "type": {
+                    "text": "CheckboxGroupHostSnapshot"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "requestToggle",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "CheckboxGroupToggleResult | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "itemValue",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "requestToggleAll",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "CheckboxGroupToggleResult | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "isChecked",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getParentState",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "'checked' | 'unchecked' | 'indeterminate'"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CheckboxGroupEngine",
+          "declaration": {
+            "name": "CheckboxGroupEngine",
+            "module": "src/components/checkbox-group/checkbox-group.engine.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox-group/checkbox-group.registry.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CheckboxGroupRegistry",
+          "members": [
+            {
+              "kind": "field",
+              "name": "records",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<HTMLElement, CheckboxGroupRegistration>()"
+            },
+            {
+              "kind": "method",
+              "name": "register",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "record",
+                  "type": {
+                    "text": "CheckboxGroupRegistration"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "get",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "CheckboxGroupRegistration | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "unregister",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "selectableValues",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hasParent",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CheckboxGroupRegistry",
+          "declaration": {
+            "name": "CheckboxGroupRegistry",
+            "module": "src/components/checkbox-group/checkbox-group.registry.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox-group/checkbox-group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Groups multiple `<grund-checkbox>` elements with shared toggle state.\nSupports controlled and uncontrolled modes, a parent \"select-all\" checkbox,\nand accessible group labelling.",
+          "name": "GrundCheckboxGroup",
+          "cssParts": [
+            {
+              "description": "The `role=\"group\"` container that receives `aria-label`, `ariaLabelledByElements`, and `ariaDescribedByElements`.",
+              "name": "group"
+            }
+          ],
+          "slots": [
+            {
+              "description": "`<grund-checkbox>` children. Include exactly one `<grund-checkbox parent>` for select-all behavior.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "public",
+              "default": "[]",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "allValues",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "public",
+              "default": "[]",
+              "deprecated": "Child values are now derived from registered `<grund-checkbox>` children. Remove this prop. Will be removed in v1.",
+              "attribute": "all-values"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabel",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "aria-label"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "aria-labelledby"
+            },
+            {
+              "kind": "field",
+              "name": "ariaDescribedBy",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "aria-describedby"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "description": "Accessible label for the group. Applied as `aria-label` on the `role=\"group\"` container.\nTakes precedence over `ariaLabel`. Prefer `ariaLabelledBy` when the label is rendered\nas a visible element in the DOM.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "groupCtx",
+              "type": {
+                "text": "CheckboxGroupContext"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "disabledCtx",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "engine",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new CheckboxGroupEngine()"
+            },
+            {
+              "kind": "field",
+              "name": "registry",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new CheckboxGroupRegistry()"
+            },
+            {
+              "kind": "field",
+              "name": "_hasWarnedDeprecatedAllValues",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_registryDirty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_isChecked",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_getParentState",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_requestToggle",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_registerItem",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_unregisterItem",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_syncEngine",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_publishGroupContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleToggle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "itemValue",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "parent",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_resolveReferencedElements",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-value-change",
+              "type": {
+                "text": "CustomEvent<CheckboxGroupValueChangeDetail>"
+              },
+              "description": "Fired when the set of checked values changes. Not cancelable."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "value"
+            },
+            {
+              "name": "default-value",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]",
+              "fieldName": "defaultValue"
+            },
+            {
+              "name": "all-values",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]",
+              "deprecated": "Child values are now derived from registered `<grund-checkbox>` children. Remove this prop. Will be removed in v1.",
+              "fieldName": "allValues"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "aria-label",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "ariaLabel"
+            },
+            {
+              "name": "aria-labelledby",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "ariaLabelledBy"
+            },
+            {
+              "name": "aria-describedby",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "ariaDescribedBy"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Accessible label for the group. Applied as `aria-label` on the `role=\"group\"` container.\nTakes precedence over `ariaLabel`. Prefer `ariaLabelledBy` when the label is rendered\nas a visible element in the DOM.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-checkbox-group",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCheckboxGroup",
+          "declaration": {
+            "name": "GrundCheckboxGroup",
+            "module": "src/components/checkbox-group/checkbox-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-checkbox-group",
+          "declaration": {
+            "name": "GrundCheckboxGroup",
+            "module": "src/components/checkbox-group/checkbox-group.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox-group/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCheckboxGroup",
+          "declaration": {
+            "name": "GrundCheckboxGroup",
+            "module": "./checkbox-group"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CheckboxGroupValueChangeDetail",
+          "declaration": {
+            "name": "CheckboxGroupValueChangeDetail",
+            "module": "./types"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox-group/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox-group/utils.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "normalizeCheckboxGroupValues",
+          "return": {
+            "type": {
+              "text": "string[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "input",
+              "type": {
+                "text": "unknown"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "checkboxGroupValuesEqual",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "a",
+              "type": {
+                "text": "unknown"
+              }
+            },
+            {
+              "name": "b",
+              "type": {
+                "text": "unknown"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "normalizeCheckboxGroupValues",
+          "declaration": {
+            "name": "normalizeCheckboxGroupValues",
+            "module": "src/components/checkbox-group/utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "checkboxGroupValuesEqual",
+          "declaration": {
+            "name": "checkboxGroupValuesEqual",
+            "module": "src/components/checkbox-group/utils.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabs",
+          "declaration": {
+            "name": "GrundTabs",
+            "module": "./tabs"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundTabsList",
+          "declaration": {
+            "name": "GrundTabsList",
+            "module": "./tabs-list"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundTab",
+          "declaration": {
+            "name": "GrundTab",
+            "module": "./tab"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundTabsPanel",
+          "declaration": {
+            "name": "GrundTabsPanel",
+            "module": "./tabs-panel"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundTabsIndicator",
+          "declaration": {
+            "name": "GrundTabsIndicator",
+            "module": "./tabs-indicator"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TabsValueChangeDetail",
+          "declaration": {
+            "name": "TabsValueChangeDetail",
+            "module": "./types.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/tab.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundTab",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "ctx",
+              "type": {
+                "text": "TabsRootContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "ancestorDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "isRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "triggerElement",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "privacy": "public",
+              "description": "Exposes the inner button for RovingFocusController on the list to manage tabindex.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "handleClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-tab",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTab",
+          "declaration": {
+            "name": "GrundTab",
+            "module": "src/components/tabs/tab.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-tab",
+          "declaration": {
+            "name": "GrundTab",
+            "module": "src/components/tabs/tab.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/tabs-indicator.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Visual indicator that tracks the active tab's position via CSS custom properties.\nPosition inside `<grund-tabs-list>`. Consumer uses the exposed custom properties\nto animate or style the indicator relative to the active tab.",
+          "name": "GrundTabsIndicator",
+          "cssProperties": [
+            {
+              "description": "Width of the active tab",
+              "name": "--grund-tabs-indicator-width"
+            },
+            {
+              "description": "Height of the active tab",
+              "name": "--grund-tabs-indicator-height"
+            },
+            {
+              "description": "Distance from list left edge to active tab left edge",
+              "name": "--grund-tabs-indicator-left"
+            },
+            {
+              "description": "Distance from list top edge to active tab top edge",
+              "name": "--grund-tabs-indicator-top"
+            },
+            {
+              "description": "Distance from list right edge to active tab right edge",
+              "name": "--grund-tabs-indicator-right"
+            },
+            {
+              "description": "Distance from list bottom edge to active tab bottom edge",
+              "name": "--grund-tabs-indicator-bottom"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The indicator element",
+              "name": "indicator"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "ctx",
+              "type": {
+                "text": "TabsRootContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "listObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "tabObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "listEl",
+              "type": {
+                "text": "Element | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The `<grund-tabs-list>` this indicator is inside. Located in connectedCallback."
+            },
+            {
+              "kind": "field",
+              "name": "observedTab",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The active tab element being observed, used to detect when the active tab changes."
+            },
+            {
+              "kind": "method",
+              "name": "measure",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-tabs-indicator",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabsIndicator",
+          "declaration": {
+            "name": "GrundTabsIndicator",
+            "module": "src/components/tabs/tabs-indicator.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-tabs-indicator",
+          "declaration": {
+            "name": "GrundTabsIndicator",
+            "module": "src/components/tabs/tabs-indicator.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/tabs-list.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Container for tab triggers. Manages keyboard navigation via roving tabindex.",
+          "name": "GrundTabsList",
+          "cssParts": [
+            {
+              "description": "The tablist wrapper",
+              "name": "list"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Tab elements",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "activateOnFocus",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "true",
+              "attribute": "activate-on-focus"
+            },
+            {
+              "kind": "field",
+              "name": "loopFocus",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "true",
+              "attribute": "loop-focus"
+            },
+            {
+              "kind": "field",
+              "name": "ctx",
+              "type": {
+                "text": "TabsRootContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "ancestorDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "rovingFocus",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new RovingFocusController(this, { orientation: 'horizontal', loop: true, getItems: () => this.getTabButtons(), })"
+            },
+            {
+              "kind": "field",
+              "name": "handleFocusin",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getTabButtons",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLButtonElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleSlotchange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onFocusin",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "FocusEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "activate-on-focus",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "activateOnFocus"
+            },
+            {
+              "name": "loop-focus",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "loopFocus"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-tabs-list",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabsList",
+          "declaration": {
+            "name": "GrundTabsList",
+            "module": "src/components/tabs/tabs-list.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-tabs-list",
+          "declaration": {
+            "name": "GrundTabsList",
+            "module": "src/components/tabs/tabs-list.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/tabs-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Content panel associated with a tab by matching value.",
+          "name": "GrundTabsPanel",
+          "cssParts": [
+            {
+              "description": "The panel container",
+              "name": "panel"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Panel content",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "keepMounted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "keep-mounted"
+            },
+            {
+              "kind": "field",
+              "name": "hiddenUntilFound",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "hidden-until-found"
+            },
+            {
+              "kind": "field",
+              "name": "ctx",
+              "type": {
+                "text": "TabsRootContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "handleBeforematch",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "keep-mounted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "keepMounted"
+            },
+            {
+              "name": "hidden-until-found",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hiddenUntilFound"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-tabs-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabsPanel",
+          "declaration": {
+            "name": "GrundTabsPanel",
+            "module": "src/components/tabs/tabs-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-tabs-panel",
+          "declaration": {
+            "name": "GrundTabsPanel",
+            "module": "src/components/tabs/tabs-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/tabs.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "tabsRootContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "tabsRootContext",
+          "declaration": {
+            "name": "tabsRootContext",
+            "module": "src/components/tabs/tabs.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/tabs.engine.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/tabs.registry.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "TabsRegistry",
+          "members": [
+            {
+              "kind": "field",
+              "name": "records",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, TabsRecord>()"
+            },
+            {
+              "kind": "method",
+              "name": "registerTab",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "tab",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "unregisterTab",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "registerPanel",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "panel",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "unregisterPanel",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setDisabled",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getRecord",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "TabsRecord | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getOrderedValues",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getDisabledValues",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Set<string>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "indexOf",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getTabElement",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getPanelElement",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TabsRegistry",
+          "declaration": {
+            "name": "TabsRegistry",
+            "module": "src/components/tabs/tabs.registry.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/tabs.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundTabs",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | null | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "privacy": "public",
+              "default": "'horizontal'",
+              "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "rootCtx",
+              "type": {
+                "text": "TabsRootContext"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "disabledCtx",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "privacy": "private",
+              "default": "new TabsEngine()"
+            },
+            {
+              "kind": "field",
+              "name": "registry",
+              "privacy": "private",
+              "default": "new TabsRegistry()"
+            },
+            {
+              "kind": "field",
+              "name": "activationDirection",
+              "type": {
+                "text": "'start' | 'end' | 'none'"
+              },
+              "privacy": "private",
+              "default": "'none'"
+            },
+            {
+              "kind": "field",
+              "name": "_registerTab",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_unregisterTab",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_registerPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_unregisterPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_setDisabled",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_requestActivation",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_getTabElement",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_getPanelElement",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_indexOf",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "computeActivationDirection",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "'start' | 'end' | 'none'"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "createRootContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TabsRootContext"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleActivation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-value-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "default-value",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "defaultValue"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'",
+              "fieldName": "orientation"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-tabs",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundTabs",
+          "declaration": {
+            "name": "GrundTabs",
+            "module": "src/components/tabs/tabs.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-tabs",
+          "declaration": {
+            "name": "GrundTabs",
+            "module": "src/components/tabs/tabs.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/tabs/types.ts",
       "declarations": [],
       "exports": []
     },
@@ -89,7 +3399,7 @@
           "name": "PressedChangeDetail",
           "declaration": {
             "name": "PressedChangeDetail",
-            "module": "./types.js"
+            "module": "./types"
           }
         }
       ]
@@ -351,110 +3661,20 @@
             "name": "GrundToggle",
             "module": "src/components/toggle/toggle.ts"
           }
+        },
+        {
+          "kind": "js",
+          "name": "PressedChangeDetail",
+          "declaration": {
+            "name": "PressedChangeDetail",
+            "module": "./types.js"
+          }
         }
       ]
     },
     {
       "kind": "javascript-module",
       "path": "src/components/toggle/types.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/checkbox/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundCheckbox",
-          "declaration": {
-            "name": "GrundCheckbox",
-            "module": "./root/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundCheckboxIndicator",
-          "declaration": {
-            "name": "GrundCheckboxIndicator",
-            "module": "./indicator/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "CheckedChangeDetail",
-          "declaration": {
-            "name": "CheckedChangeDetail",
-            "module": "./types.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/checkbox/types.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/tabs/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundTabs",
-          "declaration": {
-            "name": "GrundTabs",
-            "module": "./root/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundTabsList",
-          "declaration": {
-            "name": "GrundTabsList",
-            "module": "./list/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundTab",
-          "declaration": {
-            "name": "GrundTab",
-            "module": "./tab/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundTabsPanel",
-          "declaration": {
-            "name": "GrundTabsPanel",
-            "module": "./panel/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundTabsIndicator",
-          "declaration": {
-            "name": "GrundTabsIndicator",
-            "module": "./indicator/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TabsValueChangeDetail",
-          "declaration": {
-            "name": "TabsValueChangeDetail",
-            "module": "./types.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/tabs/types.ts",
       "declarations": [],
       "exports": []
     },
@@ -947,6 +4167,14 @@
             "name": "GrundToggleGroup",
             "module": "src/components/toggle-group/toggle-group.ts"
           }
+        },
+        {
+          "kind": "js",
+          "name": "ToggleGroupValueChangeDetail",
+          "declaration": {
+            "name": "ToggleGroupValueChangeDetail",
+            "module": "./types.js"
+          }
         }
       ]
     },
@@ -955,2053 +4183,6 @@
       "path": "src/components/toggle-group/types.ts",
       "declarations": [],
       "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/context/accordion.context.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "accordionRootContext"
-        },
-        {
-          "kind": "variable",
-          "name": "accordionItemContext"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "accordionRootContext",
-          "declaration": {
-            "name": "accordionRootContext",
-            "module": "src/components/accordion/context/accordion.context.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "accordionItemContext",
-          "declaration": {
-            "name": "accordionItemContext",
-            "module": "src/components/accordion/context/accordion.context.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/engine/accordion.engine.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/header/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Heading wrapper for an accordion item trigger.",
-          "name": "GrundAccordionHeader",
-          "slots": [
-            {
-              "description": "Trigger element",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "level",
-              "type": {
-                "text": "1 | 2 | 3 | 4 | 5 | 6"
-              },
-              "privacy": "public",
-              "default": "3",
-              "attribute": "level"
-            },
-            {
-              "kind": "field",
-              "name": "itemCtx",
-              "type": {
-                "text": "AccordionItemContext | undefined"
-              },
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "level",
-              "type": {
-                "text": "1 | 2 | 3 | 4 | 5 | 6"
-              },
-              "default": "3",
-              "fieldName": "level"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-accordion-header",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundAccordionHeader",
-          "declaration": {
-            "name": "GrundAccordionHeader",
-            "module": "src/components/accordion/header/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-accordion-header",
-          "declaration": {
-            "name": "GrundAccordionHeader",
-            "module": "src/components/accordion/header/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/item/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Accordion item container. Bridges root and leaf element context.",
-          "name": "GrundAccordionItem",
-          "slots": [
-            {
-              "description": "Header and panel elements",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "public",
-              "default": "''",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "rootCtx",
-              "type": {
-                "text": "AccordionRootContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "ancestorDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "itemCtx",
-              "type": {
-                "text": "AccordionItemContext"
-              },
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "disabledCtx",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "protected",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "hasSettled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "prevExpanded",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "privacy": "private",
-              "default": "undefined"
-            },
-            {
-              "kind": "field",
-              "name": "isRegistered",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "boundToggle",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "boundAttachTrigger",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "boundDetachTrigger",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "boundAttachPanel",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "boundDetachPanel",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "createItemContext",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "AccordionItemContext"
-                }
-              }
-            }
-          ],
-          "events": [
-            {
-              "name": "grund-open-change",
-              "type": {
-                "text": "CustomEvent<AccordionOpenChangeDetail>"
-              },
-              "description": "When this item's open state changes (after initial mount)"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "value"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-accordion-item",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundAccordionItem",
-          "declaration": {
-            "name": "GrundAccordionItem",
-            "module": "src/components/accordion/item/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-accordion-item",
-          "declaration": {
-            "name": "GrundAccordionItem",
-            "module": "src/components/accordion/item/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/panel/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Collapsible content region of an accordion item.",
-          "name": "GrundAccordionPanel",
-          "cssParts": [
-            {
-              "description": "The panel container",
-              "name": "panel"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Panel content",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "keepMounted",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "keep-mounted"
-            },
-            {
-              "kind": "field",
-              "name": "hiddenUntilFound",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "hidden-until-found"
-            },
-            {
-              "kind": "field",
-              "name": "itemCtx",
-              "type": {
-                "text": "AccordionItemContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "isPanelRegistered",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "handleBeforematch",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "effectiveKeepMounted",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "effectiveHiddenUntilFound",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "readonly": true
-            }
-          ],
-          "attributes": [
-            {
-              "name": "keep-mounted",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "keepMounted"
-            },
-            {
-              "name": "hidden-until-found",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hiddenUntilFound"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-accordion-panel",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundAccordionPanel",
-          "declaration": {
-            "name": "GrundAccordionPanel",
-            "module": "src/components/accordion/panel/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-accordion-panel",
-          "declaration": {
-            "name": "GrundAccordionPanel",
-            "module": "src/components/accordion/panel/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/registry/accordion.registry.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/registry/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "AccordionRegistry",
-          "declaration": {
-            "name": "AccordionRegistry",
-            "module": "./accordion.registry.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "AccordionItemRecord",
-          "declaration": {
-            "name": "AccordionItemRecord",
-            "module": "./accordion.registry.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/root/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Root accordion container. Provides context to accordion items.",
-          "name": "GrundAccordion",
-          "slots": [
-            {
-              "description": "Accordion items",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "privacy": "public",
-              "default": "undefined",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "privacy": "public",
-              "default": "undefined",
-              "attribute": "default-value"
-            },
-            {
-              "kind": "field",
-              "name": "multiple",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "multiple"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "orientation",
-              "type": {
-                "text": "'vertical' | 'horizontal'"
-              },
-              "privacy": "public",
-              "default": "'vertical'",
-              "attribute": "orientation"
-            },
-            {
-              "kind": "field",
-              "name": "loopFocus",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "true",
-              "attribute": "loop-focus"
-            },
-            {
-              "kind": "field",
-              "name": "keepMounted",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "keep-mounted"
-            },
-            {
-              "kind": "field",
-              "name": "hiddenUntilFound",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "hidden-until-found"
-            },
-            {
-              "kind": "field",
-              "name": "rootCtx",
-              "type": {
-                "text": "AccordionRootContext"
-              },
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "disabledCtx",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "protected",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "engine",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new AccordionEngine()"
-            },
-            {
-              "kind": "field",
-              "name": "registry",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new AccordionRegistry()"
-            },
-            {
-              "kind": "field",
-              "name": "_isExpanded",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_requestToggle",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_registerItem",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_unregisterItem",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_indexOf",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_attachTrigger",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_detachTrigger",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_attachPanel",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_detachPanel",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "rovingFocus",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new RovingFocusController(this, { orientation: 'vertical', loop: true, getItems: () => this.registry.items .map((r) => r.trigger?.shadowRoot?.querySelector<HTMLElement>('[part=\"trigger\"]') ?? null) .filter((t): t is HTMLElement => t !== null), })"
-            },
-            {
-              "kind": "method",
-              "name": "createRootContext",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "AccordionRootContext"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "handleToggle",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "itemValue",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "itemDisabled",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "name": "grund-value-change",
-              "type": {
-                "text": "CustomEvent<AccordionValueChangeDetail>"
-              },
-              "description": "When the expanded set changes"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "default": "undefined",
-              "fieldName": "value"
-            },
-            {
-              "name": "default-value",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "default": "undefined",
-              "fieldName": "defaultValue"
-            },
-            {
-              "name": "multiple",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "multiple"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "orientation",
-              "type": {
-                "text": "'vertical' | 'horizontal'"
-              },
-              "default": "'vertical'",
-              "fieldName": "orientation"
-            },
-            {
-              "name": "loop-focus",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "fieldName": "loopFocus"
-            },
-            {
-              "name": "keep-mounted",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "keepMounted"
-            },
-            {
-              "name": "hidden-until-found",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hiddenUntilFound"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-accordion",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundAccordion",
-          "declaration": {
-            "name": "GrundAccordion",
-            "module": "src/components/accordion/root/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-accordion",
-          "declaration": {
-            "name": "GrundAccordion",
-            "module": "src/components/accordion/root/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/trigger/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Button that toggles an accordion panel open/closed.",
-          "name": "GrundAccordionTrigger",
-          "cssParts": [
-            {
-              "description": "The inner button element",
-              "name": "trigger"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Trigger label content",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "itemCtx",
-              "type": {
-                "text": "AccordionItemContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "isTriggerRegistered",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "method",
-              "name": "handleClick",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-accordion-trigger",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundAccordionTrigger",
-          "declaration": {
-            "name": "GrundAccordionTrigger",
-            "module": "src/components/accordion/trigger/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-accordion-trigger",
-          "declaration": {
-            "name": "GrundAccordionTrigger",
-            "module": "src/components/accordion/trigger/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/checkbox/context/checkbox.context.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "checkboxContext"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "checkboxContext",
-          "declaration": {
-            "name": "checkboxContext",
-            "module": "src/components/checkbox/context/checkbox.context.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/checkbox/indicator/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Visual indicator for <grund-checkbox>. Place inside <grund-checkbox> to slot a\ncustom checkmark or dash icon. Visibility is controlled by consumers via CSS\non the reflected data-checked, data-unchecked, and data-indeterminate attributes.",
-          "name": "GrundCheckboxIndicator",
-          "cssParts": [
-            {
-              "description": "The wrapper span element",
-              "name": "indicator"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Custom checkmark or dash icon",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "_ctx",
-              "type": {
-                "text": "CheckboxContext | undefined"
-              },
-              "privacy": "private",
-              "default": "undefined"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-checkbox-indicator",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundCheckboxIndicator",
-          "declaration": {
-            "name": "GrundCheckboxIndicator",
-            "module": "src/components/checkbox/indicator/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-checkbox-indicator",
-          "declaration": {
-            "name": "GrundCheckboxIndicator",
-            "module": "src/components/checkbox/indicator/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/checkbox/root/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "A headless form-associated checkbox with checked, unchecked, and indeterminate states.\nSupports controlled mode (`checked` prop) and uncontrolled mode (`defaultChecked` prop).\nIn controlled mode, `grund-checked-change` fires but the displayed state does not change\nautomatically — the consumer must update the `checked` property.",
-          "name": "GrundCheckbox",
-          "cssParts": [
-            {
-              "description": "The inner <button role=\"checkbox\"> element",
-              "name": "button"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Label text and optional <grund-checkbox-indicator> child",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "formAssociated",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "static": true,
-              "default": "true"
-            },
-            {
-              "kind": "field",
-              "name": "shadowRootOptions",
-              "type": {
-                "text": "ShadowRootInit"
-              },
-              "privacy": "public",
-              "static": true,
-              "readonly": true,
-              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
-            },
-            {
-              "kind": "field",
-              "name": "checked",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "privacy": "public",
-              "default": "undefined",
-              "description": "Controlled checked value. `undefined` enables uncontrolled mode.",
-              "attribute": "checked"
-            },
-            {
-              "kind": "field",
-              "name": "defaultChecked",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "description": "Seeds uncontrolled checked state on first render only.",
-              "attribute": "default-checked"
-            },
-            {
-              "kind": "field",
-              "name": "indeterminate",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "description": "Whether the checkbox is in the indeterminate (mixed) state. Always controlled.",
-              "attribute": "indeterminate"
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "public",
-              "default": "''",
-              "description": "Form field name.",
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "public",
-              "default": "'on'",
-              "description": "Form submission value when checked.",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "description": "Whether the checkbox is disabled.",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "description": "Whether the checkbox is required for form submission.",
-              "attribute": "required"
-            },
-            {
-              "kind": "field",
-              "name": "readOnly",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "description": "Whether the checkbox is read-only (visible but not interactable).",
-              "attribute": "read-only"
-            },
-            {
-              "kind": "field",
-              "name": "_internalChecked",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_ctx",
-              "type": {
-                "text": "CheckboxContext"
-              },
-              "privacy": "protected",
-              "default": "{ checked: false, indeterminate: false }"
-            },
-            {
-              "kind": "field",
-              "name": "_internals",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_form",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new FormController(this, this._internals)"
-            },
-            {
-              "kind": "field",
-              "name": "_handleHostClick",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_effectiveChecked",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "_handleClick",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            }
-          ],
-          "events": [
-            {
-              "name": "grund-checked-change",
-              "type": {
-                "text": "CustomEvent<CheckedChangeDetail>"
-              },
-              "description": "When checked state changes via user interaction. In controlled mode, also update the `checked` property to reflect the new value."
-            }
-          ],
-          "attributes": [
-            {
-              "name": "checked",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "default": "undefined",
-              "description": "Controlled checked value. `undefined` enables uncontrolled mode.",
-              "fieldName": "checked"
-            },
-            {
-              "name": "default-checked",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Seeds uncontrolled checked state on first render only.",
-              "fieldName": "defaultChecked"
-            },
-            {
-              "name": "indeterminate",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the checkbox is in the indeterminate (mixed) state. Always controlled.",
-              "fieldName": "indeterminate"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Form field name.",
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "'on'",
-              "description": "Form submission value when checked.",
-              "fieldName": "value"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the checkbox is disabled.",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the checkbox is required for form submission.",
-              "fieldName": "required"
-            },
-            {
-              "name": "read-only",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the checkbox is read-only (visible but not interactable).",
-              "fieldName": "readOnly"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-checkbox",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundCheckbox",
-          "declaration": {
-            "name": "GrundCheckbox",
-            "module": "src/components/checkbox/root/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-checkbox",
-          "declaration": {
-            "name": "GrundCheckbox",
-            "module": "src/components/checkbox/root/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/tabs/context/tabs.context.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "tabsRootContext"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "tabsRootContext",
-          "declaration": {
-            "name": "tabsRootContext",
-            "module": "src/components/tabs/context/tabs.context.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/tabs/engine/tabs.engine.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/tabs/indicator/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Visual indicator that tracks the active tab's position via CSS custom properties.\r\nPosition inside `<grund-tabs-list>`. Consumer uses the exposed custom properties\r\nto animate or style the indicator relative to the active tab.",
-          "name": "GrundTabsIndicator",
-          "cssProperties": [
-            {
-              "description": "Width of the active tab",
-              "name": "--grund-tabs-indicator-width"
-            },
-            {
-              "description": "Height of the active tab",
-              "name": "--grund-tabs-indicator-height"
-            },
-            {
-              "description": "Distance from list left edge to active tab left edge",
-              "name": "--grund-tabs-indicator-left"
-            },
-            {
-              "description": "Distance from list top edge to active tab top edge",
-              "name": "--grund-tabs-indicator-top"
-            },
-            {
-              "description": "Distance from list right edge to active tab right edge",
-              "name": "--grund-tabs-indicator-right"
-            },
-            {
-              "description": "Distance from list bottom edge to active tab bottom edge",
-              "name": "--grund-tabs-indicator-bottom"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The indicator element",
-              "name": "indicator"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "ctx",
-              "type": {
-                "text": "TabsRootContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "listObserver",
-              "type": {
-                "text": "ResizeObserver | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "tabObserver",
-              "type": {
-                "text": "ResizeObserver | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "listEl",
-              "type": {
-                "text": "Element | null"
-              },
-              "privacy": "private",
-              "default": "null",
-              "description": "The `<grund-tabs-list>` this indicator is inside. Located in connectedCallback."
-            },
-            {
-              "kind": "field",
-              "name": "observedTab",
-              "type": {
-                "text": "HTMLElement | null"
-              },
-              "privacy": "private",
-              "default": "null",
-              "description": "The active tab element being observed, used to detect when the active tab changes."
-            },
-            {
-              "kind": "method",
-              "name": "measure",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-tabs-indicator",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundTabsIndicator",
-          "declaration": {
-            "name": "GrundTabsIndicator",
-            "module": "src/components/tabs/indicator/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-tabs-indicator",
-          "declaration": {
-            "name": "GrundTabsIndicator",
-            "module": "src/components/tabs/indicator/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/tabs/list/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Container for tab triggers. Manages keyboard navigation via roving tabindex.",
-          "name": "GrundTabsList",
-          "cssParts": [
-            {
-              "description": "The tablist wrapper",
-              "name": "list"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Tab elements",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "activateOnFocus",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "true",
-              "attribute": "activate-on-focus"
-            },
-            {
-              "kind": "field",
-              "name": "loopFocus",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "true",
-              "attribute": "loop-focus"
-            },
-            {
-              "kind": "field",
-              "name": "ctx",
-              "type": {
-                "text": "TabsRootContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "ancestorDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "rovingFocus",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new RovingFocusController(this, { orientation: 'horizontal', loop: true, getItems: () => this.getTabButtons(), })"
-            },
-            {
-              "kind": "field",
-              "name": "handleFocusin",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "getTabButtons",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLButtonElement[]"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "handleSlotchange",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "onFocusin",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "FocusEvent"
-                  }
-                }
-              ]
-            }
-          ],
-          "attributes": [
-            {
-              "name": "activate-on-focus",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "fieldName": "activateOnFocus"
-            },
-            {
-              "name": "loop-focus",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "fieldName": "loopFocus"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-tabs-list",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundTabsList",
-          "declaration": {
-            "name": "GrundTabsList",
-            "module": "src/components/tabs/list/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-tabs-list",
-          "declaration": {
-            "name": "GrundTabsList",
-            "module": "src/components/tabs/list/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/tabs/panel/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Content panel associated with a tab by matching value.",
-          "name": "GrundTabsPanel",
-          "cssParts": [
-            {
-              "description": "The panel container",
-              "name": "panel"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Panel content",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "public",
-              "default": "''",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "keepMounted",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "keep-mounted"
-            },
-            {
-              "kind": "field",
-              "name": "hiddenUntilFound",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "hidden-until-found"
-            },
-            {
-              "kind": "field",
-              "name": "ctx",
-              "type": {
-                "text": "TabsRootContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "isRegistered",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "handleBeforematch",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "value"
-            },
-            {
-              "name": "keep-mounted",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "keepMounted"
-            },
-            {
-              "name": "hidden-until-found",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hiddenUntilFound"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-tabs-panel",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundTabsPanel",
-          "declaration": {
-            "name": "GrundTabsPanel",
-            "module": "src/components/tabs/panel/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-tabs-panel",
-          "declaration": {
-            "name": "GrundTabsPanel",
-            "module": "src/components/tabs/panel/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/tabs/registry/tabs.registry.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/tabs/root/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Root tabs container. Provides context to tab list, tabs, and panels.",
-          "name": "GrundTabs",
-          "slots": [
-            {
-              "description": "Tab list and panel elements",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string | null | undefined"
-              },
-              "privacy": "public",
-              "default": "undefined"
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "string | null"
-              },
-              "privacy": "public",
-              "default": "null",
-              "attribute": "default-value"
-            },
-            {
-              "kind": "field",
-              "name": "orientation",
-              "type": {
-                "text": "'horizontal' | 'vertical'"
-              },
-              "privacy": "public",
-              "default": "'horizontal'",
-              "attribute": "orientation"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "rootCtx",
-              "type": {
-                "text": "TabsRootContext"
-              },
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "disabledCtx",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "protected",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "controller",
-              "privacy": "private",
-              "default": "new TabsEngine()"
-            },
-            {
-              "kind": "field",
-              "name": "registry",
-              "privacy": "private",
-              "default": "new TabsRegistry()"
-            },
-            {
-              "kind": "field",
-              "name": "activationDirection",
-              "type": {
-                "text": "'start' | 'end' | 'none'"
-              },
-              "privacy": "private",
-              "default": "'none'"
-            },
-            {
-              "kind": "field",
-              "name": "_registerTab",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_unregisterTab",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_registerPanel",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_unregisterPanel",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_setDisabled",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_requestActivation",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_getTabElement",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_getPanelElement",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_indexOf",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "computeActivationDirection",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "'start' | 'end' | 'none'"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "createRootContext",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "TabsRootContext"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "handleActivation",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "name": "grund-value-change",
-              "type": {
-                "text": "CustomEvent<TabsValueChangeDetail>"
-              },
-              "description": "When the active tab changes"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "default-value",
-              "type": {
-                "text": "string | null"
-              },
-              "default": "null",
-              "fieldName": "defaultValue"
-            },
-            {
-              "name": "orientation",
-              "type": {
-                "text": "'horizontal' | 'vertical'"
-              },
-              "default": "'horizontal'",
-              "fieldName": "orientation"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-tabs",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundTabs",
-          "declaration": {
-            "name": "GrundTabs",
-            "module": "src/components/tabs/root/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-tabs",
-          "declaration": {
-            "name": "GrundTabs",
-            "module": "src/components/tabs/root/index.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/tabs/tab/index.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Individual tab trigger. Renders an accessible button inside shadow DOM.",
-          "name": "GrundTab",
-          "cssParts": [
-            {
-              "description": "The inner button element",
-              "name": "tab"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Tab label content",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "public",
-              "default": "''",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "ctx",
-              "type": {
-                "text": "TabsRootContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "ancestorDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "isRegistered",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "triggerElement",
-              "type": {
-                "text": "HTMLButtonElement | null"
-              },
-              "privacy": "public",
-              "description": "Exposes the inner button for RovingFocusController on the list to manage tabindex.",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "handleClick",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            }
-          ],
-          "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "value"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-tab",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundTab",
-          "declaration": {
-            "name": "GrundTab",
-            "module": "src/components/tabs/tab/index.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-tab",
-          "declaration": {
-            "name": "GrundTab",
-            "module": "src/components/tabs/tab/index.ts"
-          }
-        }
-      ]
     }
   ]
 }
