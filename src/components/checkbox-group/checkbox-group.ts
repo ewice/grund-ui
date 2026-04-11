@@ -6,6 +6,7 @@ import { CheckboxGroupEngine } from './checkbox-group.engine';
 import { CheckboxGroupRegistry } from './checkbox-group.registry';
 import { checkboxGroupContext } from './checkbox-group.context';
 import { disabledContext } from '../../context/disabled.context';
+import { normalizeCheckboxGroupValues, checkboxGroupValuesEqual } from './checkbox-group.normalize';
 
 import type { CheckboxGroupContext } from './checkbox-group.context';
 import type { CheckboxGroupRegistration } from './checkbox-group.registry';
@@ -19,13 +20,13 @@ export class GrundCheckboxGroup extends LitElement {
     }
   `;
 
-  @property({ type: Array, hasChanged: () => true })
+  @property({ type: Array, hasChanged: (next, prev) => !checkboxGroupValuesEqual(next, prev) })
   public value: string[] | undefined = undefined;
 
-  @property({ type: Array, attribute: 'default-value', hasChanged: () => true })
+  @property({ type: Array, attribute: 'default-value', hasChanged: (next, prev) => !checkboxGroupValuesEqual(next, prev) })
   public defaultValue: string[] = [];
 
-  @property({ type: Array, attribute: 'all-values', hasChanged: () => true })
+  @property({ type: Array, attribute: 'all-values', hasChanged: (next, prev) => !checkboxGroupValuesEqual(next, prev) })
   public allValues: string[] = [];
 
   @property({ type: Boolean }) public disabled = false;
@@ -106,10 +107,11 @@ export class GrundCheckboxGroup extends LitElement {
 
   private _syncEngine(): void {
     const selectableValues = this.registry.selectableValues();
+    const allValues = selectableValues.length > 0 ? selectableValues : normalizeCheckboxGroupValues(this.allValues);
     this.engine.syncFromHost({
-      value: this.value,
-      defaultValue: this.defaultValue,
-      allValues: selectableValues.length > 0 ? selectableValues : this.allValues,
+      value: this.value !== undefined ? normalizeCheckboxGroupValues(this.value) : undefined,
+      defaultValue: normalizeCheckboxGroupValues(this.defaultValue),
+      allValues,
       disabled: this.disabled,
     });
   }
