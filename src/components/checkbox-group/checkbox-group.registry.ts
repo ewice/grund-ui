@@ -24,7 +24,4 @@ export class CheckboxGroupRegistry {
       .map((record) => record.value);
   }
 
-  size(): number {
-    return this.records.size;
-  }
 }

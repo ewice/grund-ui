@@ -1,4 +1,4 @@
-import { expect, describe, it, vi } from 'vitest';
+import { expect, describe, it } from 'vitest';
 import { CheckboxGroupEngine } from '../checkbox-group.engine.js';
 import type { CheckboxGroupHostSnapshot } from '../types.js';
 
@@ -158,75 +158,43 @@ describe('CheckboxGroupEngine', () => {
   });
 
   // ── Child registration (target architecture) ─────────────────────────────
-  // These tests describe the intended engine behavior AFTER the allValues refactor.
-  // They are expected to FAIL until child registration is wired into the engine.
+  // The group element derives selectableValues from the registry and passes them
+  // to the engine via syncFromHost({ allValues: [...] }). These tests verify the
+  // engine correctly uses whatever allValues it receives.
 
   describe('child registration (target architecture)', () => {
-    it('uses registered child values as the selectable set when allValues is not provided', () => {
-      // Currently FAILS: engine has no registerChild API; allValues defaults to [] and
-      // getParentState() returns 'unchecked' regardless of checked state.
-      const engine = create({ defaultValue: ['a', 'b'] });
-      // Simulate what registration would provide — engine must expose registerChild()
-      (engine as any).registerChild('a', false);
-      (engine as any).registerChild('b', false);
+    it('uses provided allValues as the selectable set', () => {
+      const engine = create({ defaultValue: ['a', 'b'], allValues: ['a', 'b'] });
       expect(engine.getParentState()).to.equal('checked');
     });
 
-    it('excludes parent (select-all) children from the derived selectable set', () => {
-      // Currently FAILS: no registerChild API and no concept of parent exclusion
-      const engine = create({ defaultValue: ['a'] });
-      (engine as any).registerChild('all', true); // parent=true, should be excluded
-      (engine as any).registerChild('a', false);
-      (engine as any).registerChild('b', false);
+    it('excludes parent (select-all) children — caller passes only non-parent values', () => {
+      // The group element filters out parent checkboxes before passing allValues
+      const engine = create({ defaultValue: ['a'], allValues: ['a', 'b'] });
       // Only 'a' of non-parent set {a, b} is checked → indeterminate
       expect(engine.getParentState()).to.equal('indeterminate');
     });
 
-    it('updates parent state after a child is unregistered', () => {
-      // Currently FAILS: no unregisterChild API
-      const engine = create({ defaultValue: ['a', 'b'] });
-      (engine as any).registerChild('a', false);
-      (engine as any).registerChild('b', false);
+    it('updates parent state after re-sync with a reduced allValues set', () => {
+      const engine = create({ defaultValue: ['a', 'b'], allValues: ['a', 'b'] });
       // Both checked → 'checked'
       expect(engine.getParentState()).to.equal('checked');
-      // Remove 'b' from the registered set
-      (engine as any).unregisterChild('b');
-      // Only 'a' remains, and it is checked → 'checked' again (set is now just {a})
+      // Simulate unregistering 'b': group re-syncs with allValues: ['a']
+      engine.syncFromHost({
+        value: undefined,
+        defaultValue: ['a', 'b'],
+        disabled: false,
+        allValues: ['a'],
+      });
+      // Only 'a' remains in the selectable set, and it is checked → 'checked'
       expect(engine.getParentState()).to.equal('checked');
     });
 
-    it('requestToggleAll uses derived child set, not allValues', () => {
-      // Currently FAILS: requestToggleAll relies on _allValues which is populated via syncFromHost
-      // After refactor, it should use the registered child set.
-      const engine = create(); // no allValues
-      (engine as any).registerChild('a', false);
-      (engine as any).registerChild('b', false);
+    it('requestToggleAll uses allValues passed via syncFromHost', () => {
+      const engine = create({ allValues: ['a', 'b'] });
       const result = engine.requestToggleAll();
       expect(result?.value).to.include.members(['a', 'b']);
       expect(result?.checked).to.equal(true);
-    });
-  });
-
-  // ── Migration behavior (target architecture) ──────────────────────────────
-  // These tests describe compatibility behavior during/after the allValues migration.
-  // They are expected to FAIL until the deprecation warnings are implemented.
-
-  describe('migration behavior (target architecture)', () => {
-    it('emits a console.warn deprecation notice when allValues is non-empty in syncFromHost', () => {
-      // Currently FAILS: no deprecation warning is emitted anywhere
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const engine = new CheckboxGroupEngine();
-      engine.syncFromHost({
-        value: undefined,
-        defaultValue: [],
-        disabled: false,
-        allValues: ['a', 'b'],
-      });
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('[grund-checkbox-group]'),
-        expect.stringContaining('allValues'),
-      );
-      warnSpy.mockRestore();
     });
   });
 

@@ -9,9 +9,10 @@ import { disabledContext } from '../../context/disabled.context';
 
 import type { CheckboxGroupContext } from './checkbox-group.context';
 import type { CheckboxGroupRegistration } from './checkbox-group.registry';
-import type { CheckboxGroupValueChangeDetail, CheckboxGroupHostSnapshot } from './types';
+import type { CheckboxGroupValueChangeDetail } from './types';
 
 export class GrundCheckboxGroup extends LitElement {
+  private _hasWarnedDeprecatedAllValues = false;
   public static override readonly styles = css`
     :host {
       display: block;
@@ -55,44 +56,39 @@ export class GrundCheckboxGroup extends LitElement {
   };
 
   private readonly _registerItem = (element: HTMLElement, record: CheckboxGroupRegistration): void => {
-    if (import.meta.env.DEV) {
-      if (!record.parent) {
-        const existingRecord = this.registry.get(element);
-        const oldValue = existingRecord?.value;
-        const valueToCheck = record.value;
-        if (oldValue !== valueToCheck) {
-          const allSelectable = this.registry.selectableValues();
-          if (allSelectable.includes(valueToCheck)) {
-            console.warn(
-              '[grund-checkbox-group]',
-              `duplicate value "${valueToCheck}" registered. Each <grund-checkbox> in a group must have a unique value.`,
-            );
-          }
-        }
+    if (import.meta.env.DEV && !record.parent) {
+      const existing = this.registry.get(element);
+      if (existing?.value !== record.value && this.registry.selectableValues().includes(record.value)) {
+        console.warn(
+          '[grund-checkbox-group]',
+          `duplicate value "${record.value}" registered. Each <grund-checkbox> in a group must have a unique value.`,
+        );
       }
     }
     this.registry.register(element, record);
-    this.engine.registerChild(record.value, record.parent);
+    this._syncEngine();
     this._publishGroupContext();
   };
 
   private readonly _unregisterItem = (element: HTMLElement): void => {
-    const record = this.registry.get(element);
-    this.registry.unregister(element);
-    if (record) {
-      this.engine.unregisterChild(record.value);
+    if (!this.registry.get(element)) {
+      return;
     }
+    this.registry.unregister(element);
+    this._syncEngine();
     this._publishGroupContext();
   };
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
-    const snapshot: CheckboxGroupHostSnapshot = {
-      value: this.value,
-      defaultValue: this.defaultValue,
-      allValues: this.allValues,
-      disabled: this.disabled,
-    };
-    this.engine.syncFromHost(snapshot);
+    if (import.meta.env.DEV && !this._hasWarnedDeprecatedAllValues && this.allValues.length > 0) {
+      this._hasWarnedDeprecatedAllValues = true;
+      console.warn(
+        '[grund-checkbox-group]',
+        'allValues is deprecated. Child values are now derived from registered <grund-checkbox> elements. Remove the allValues prop.',
+      );
+    }
+
+    this._syncEngine();
 
     this.toggleAttribute('data-disabled', this.disabled);
     this.disabledCtx = this.disabled;
@@ -106,6 +102,16 @@ export class GrundCheckboxGroup extends LitElement {
     ) {
       this._publishGroupContext();
     }
+  }
+
+  private _syncEngine(): void {
+    const selectableValues = this.registry.selectableValues();
+    this.engine.syncFromHost({
+      value: this.value,
+      defaultValue: this.defaultValue,
+      allValues: selectableValues.length > 0 ? selectableValues : this.allValues,
+      disabled: this.disabled,
+    });
   }
 
   private _publishGroupContext(): void {

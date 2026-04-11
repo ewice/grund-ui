@@ -15,38 +15,12 @@ export interface CheckboxGroupToggleResult {
 export class CheckboxGroupEngine {
   private readonly selection = new SelectionEngine();
   private _allValues: string[] = [];
-  private readonly _registeredChildren = new Map<string, boolean>();
 
   public get checkedValues(): ReadonlySet<string> {
     return this.selection.selectedValues;
   }
 
-  private get _effectiveAllValues(): string[] {
-    if (this._registeredChildren.size > 0) {
-      return Array.from(this._registeredChildren.entries())
-        .filter(([, parent]) => !parent)
-        .map(([value]) => value);
-    }
-    return this._allValues;
-  }
-
-  public registerChild(value: string, parent: boolean): void {
-    this._registeredChildren.set(value, parent);
-  }
-
-  public unregisterChild(value: string): void {
-    this._registeredChildren.delete(value);
-  }
-
   public syncFromHost(snapshot: CheckboxGroupHostSnapshot): void {
-    if (import.meta.env.DEV) {
-      if (snapshot.allValues.length > 0) {
-        console.warn(
-          '[grund-checkbox-group]',
-          'allValues is deprecated. Child values are now derived from registered <grund-checkbox> elements. Remove the allValues prop.',
-        );
-      }
-    }
     this._allValues = [...snapshot.allValues];
     this.selection.syncFromHost({
       value: snapshot.value,
@@ -72,8 +46,7 @@ export class CheckboxGroupEngine {
   public requestToggleAll(): CheckboxGroupToggleResult | null {
     const parentState = this.getParentState();
     const current = this.selection.selectedValues;
-    const effectiveValues = this._effectiveAllValues;
-    const allValuesSet = new Set(effectiveValues);
+    const allValuesSet = new Set(this._allValues);
 
     let targetValues: string[];
 
@@ -82,7 +55,7 @@ export class CheckboxGroupEngine {
       targetValues = Array.from(current).filter((v) => !allValuesSet.has(v));
     } else {
       // Check all: union of current values and allValues
-      const merged = new Set([...current, ...effectiveValues]);
+      const merged = new Set([...current, ...this._allValues]);
       targetValues = Array.from(merged);
     }
 
@@ -103,19 +76,17 @@ export class CheckboxGroupEngine {
   }
 
   public getParentState(): 'checked' | 'unchecked' | 'indeterminate' {
-    const effectiveValues = this._effectiveAllValues;
-
-    if (effectiveValues.length === 0) {
+    if (this._allValues.length === 0) {
       return 'unchecked';
     }
 
-    const checkedCount = effectiveValues.filter((v) => this.checkedValues.has(v)).length;
+    const checkedCount = this._allValues.filter((v) => this.checkedValues.has(v)).length;
 
     if (checkedCount === 0) {
       return 'unchecked';
     }
 
-    if (checkedCount === effectiveValues.length) {
+    if (checkedCount === this._allValues.length) {
       return 'checked';
     }
 
