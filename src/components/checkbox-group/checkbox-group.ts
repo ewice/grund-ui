@@ -13,7 +13,6 @@ import type { CheckboxGroupRegistration } from './checkbox-group.registry';
 import type { CheckboxGroupValueChangeDetail } from './types';
 
 export class GrundCheckboxGroup extends LitElement {
-  private _hasWarnedDeprecatedAllValues = false;
   public static override readonly styles = css`
     :host {
       display: block;
@@ -34,6 +33,8 @@ export class GrundCheckboxGroup extends LitElement {
 
   @property({ type: Array, attribute: 'all-values', hasChanged: (next, prev) => !checkboxGroupValuesEqual(next, prev) })
   public allValues: string[] = [];
+
+  private _hasWarnedDeprecatedAllValues = false;
 
   @property({ type: Boolean }) public disabled = false;
 
@@ -149,21 +150,17 @@ export class GrundCheckboxGroup extends LitElement {
       return;
     }
 
-    this._emitValueChange(result.value, itemValue, result.checked);
-
-    if (result.persisted) {
-      this._publishGroupContext();
-    }
-  }
-
-  private _emitValueChange(value: string[], itemValue: string, checked: boolean): void {
     this.dispatchEvent(
       new CustomEvent<CheckboxGroupValueChangeDetail>('grund-value-change', {
-        detail: { value, itemValue, checked },
+        detail: { value: result.value, itemValue, checked: result.checked },
         bubbles: true,
         composed: false,
       }),
     );
+
+    if (result.persisted) {
+      this._publishGroupContext();
+    }
   }
 
   protected override updated(): void {
