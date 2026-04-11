@@ -451,9 +451,7 @@ describe('GrundCheckboxGroup', () => {
       expect(parentBtn.getAttribute('aria-checked')).to.equal('mixed');
     });
 
-    it('does not republish checkbox group state on controlled toggle without a value prop change', async () => {
-      // Currently FAILS: _handleToggle() always calls _publishGroupContext(), which replaces
-      // the groupCtx object reference even in controlled mode where no state change occurred.
+    it('does not change the checked state of checkboxes in controlled mode when the consumer does not update value', async () => {
       const { el, checkboxes } = await setup(html`
         <grund-checkbox-group .value=${['a']}>
           <grund-checkbox value="a">A</grund-checkbox>
@@ -461,16 +459,14 @@ describe('GrundCheckboxGroup', () => {
         </grund-checkbox-group>
       `);
 
-      // Capture the groupCtx reference before the click
-      const ctxBefore = (el as any).groupCtx;
       clickCheckbox(checkboxes[1]); // controlled mode — consumer does not update value prop
       await flush(el);
       await flush(checkboxes[0]);
       await flush(checkboxes[1]);
 
-      // In controlled mode, without a value prop change, context should NOT have been republished
-      const ctxAfter = (el as any).groupCtx;
-      expect(ctxBefore).to.equal(ctxAfter); // same object reference = no republish
+      // In controlled mode, the checked state must not change (consumer owns the state)
+      expect(getByPart(checkboxes[0], 'button').getAttribute('aria-checked')).to.equal('true');
+      expect(getByPart(checkboxes[1], 'button').getAttribute('aria-checked')).to.equal('false');
     });
   });
 
@@ -635,6 +631,175 @@ describe('GrundCheckboxGroup', () => {
     const values = data.getAll('proto');
     // Only 'https' was in defaultValue — only it should submit
     expect(values).to.deep.equal(['https']);
+  });
+
+  // ── Memory and lifecycle ──────────────────────────────────────────────────
+
+  describe('memory and lifecycle', () => {
+    it('removes the click listener on disconnect', async () => {
+      const { el, checkboxes } = await setup(html`
+        <grund-checkbox-group>
+          <grund-checkbox value="a">A</grund-checkbox>
+        </grund-checkbox-group>
+      `);
+      await flush(el);
+
+      const removeSpy = vi.spyOn(checkboxes[0], 'removeEventListener');
+
+      el.remove();
+
+      vitestExpect(removeSpy).toHaveBeenCalledWith('click', vitestExpect.any(Function));
+      removeSpy.mockRestore();
+    });
+  });
+
+  // ── Sibling-group isolation ───────────────────────────────────────────────
+
+  describe('sibling-group isolation', () => {
+    it('two sibling checkbox groups do not share state', async () => {
+      const container = await fixture<HTMLDivElement>(html`
+        <div>
+          <grund-checkbox-group id="group-a">
+            <grund-checkbox value="x">X</grund-checkbox>
+          </grund-checkbox-group>
+          <grund-checkbox-group id="group-b">
+            <grund-checkbox value="x">X</grund-checkbox>
+          </grund-checkbox-group>
+        </div>
+      `);
+
+      const groupA = container.querySelector<GrundCheckboxGroup>('#group-a')!;
+      const groupB = container.querySelector<GrundCheckboxGroup>('#group-b')!;
+      const [cbA] = Array.from(groupA.querySelectorAll<GrundCheckbox>('grund-checkbox'));
+      const [cbB] = Array.from(groupB.querySelectorAll<GrundCheckbox>('grund-checkbox'));
+
+      await flush(groupA);
+      await flush(groupB);
+      await flush(cbA);
+      await flush(cbB);
+
+      const handlerB = vi.fn();
+      groupB.addEventListener('grund-value-change', handlerB as EventListener);
+
+      // Click checkbox in group A
+      clickCheckbox(cbA);
+      await flush(groupA);
+      await flush(groupB);
+      await flush(cbA);
+      await flush(cbB);
+
+      // Group A's checkbox should be checked
+      expect(getByPart(cbA, 'button').getAttribute('aria-checked')).to.equal('true');
+      // Group B's checkbox must remain unchecked
+      expect(getByPart(cbB, 'button').getAttribute('aria-checked')).to.equal('false');
+      // Group B must NOT have fired an event
+      vitestExpect(handlerB).not.toHaveBeenCalled();
+    });
+  });
+
+  // ── Dynamic registration ──────────────────────────────────────────────────
+
+  describe('dynamic registration', () => {
+    it('unregisters a child checkbox when it is removed from the DOM', async () => {
+      const el = await fixture<GrundCheckboxGroup>(html`
+        <grund-checkbox-group .defaultValue=${['a']}>
+          <grund-checkbox parent value="all">All</grund-checkbox>
+          <grund-checkbox value="a">A</grund-checkbox>
+          <grund-checkbox value="b">B</grund-checkbox>
+        </grund-checkbox-group>
+      `);
+      await flush(el);
+      const checkboxes = el.querySelectorAll<GrundCheckbox>('grund-checkbox');
+      for (const cb of checkboxes) await flush(cb);
+
+      // Both a and b registered: a is checked → indeterminate parent
+      const parentBtn = getByPart<HTMLButtonElement>(checkboxes[0], 'button');
+      expect(parentBtn.getAttribute('aria-checked')).to.equal('mixed');
+
+      // Remove checkbox b — derived set becomes {a}, a is checked → parent = checked
+      checkboxes[2].remove();
+      await flush(el);
+      for (const cb of el.querySelectorAll<GrundCheckbox>('grund-checkbox')) {
+        await flush(cb);
+      }
+
+      expect(parentBtn.getAttribute('aria-checked')).to.equal('true');
+    });
+
+    it('resubscribes to a new group after reparenting', async () => {
+      const container = await fixture<HTMLDivElement>(html`
+        <div>
+          <grund-checkbox-group id="group-a">
+            <grund-checkbox value="x">X</grund-checkbox>
+          </grund-checkbox-group>
+          <grund-checkbox-group id="group-b">
+            <grund-checkbox value="y">Y</grund-checkbox>
+          </grund-checkbox-group>
+        </div>
+      `);
+
+      const groupA = container.querySelector<GrundCheckboxGroup>('#group-a')!;
+      const groupB = container.querySelector<GrundCheckboxGroup>('#group-b')!;
+      const cbX = groupA.querySelector<GrundCheckbox>('grund-checkbox')!;
+
+      await flush(groupA);
+      await flush(groupB);
+      await flush(cbX);
+
+      // Move cbX from group A to group B
+      groupB.appendChild(cbX);
+      await flush(groupA);
+      await flush(groupB);
+      await flush(cbX);
+
+      const handlerA = vi.fn();
+      const handlerB = vi.fn();
+      groupA.addEventListener('grund-value-change', handlerA as EventListener);
+      groupB.addEventListener('grund-value-change', handlerB as EventListener);
+
+      clickCheckbox(cbX);
+      await flush(groupA);
+      await flush(groupB);
+      await flush(cbX);
+
+      // Event must fire on group B (the new home), not group A
+      vitestExpect(handlerB).toHaveBeenCalledOnce();
+      vitestExpect(handlerA).not.toHaveBeenCalled();
+    });
+
+    it('correctly registers children even when appended dynamically before their own upgrade', async () => {
+      // Simulate children arriving before the parent has completed its first update
+      const el = await fixture<GrundCheckboxGroup>(html`
+        <grund-checkbox-group .defaultValue=${['a', 'b']}>
+        </grund-checkbox-group>
+      `);
+      await flush(el);
+
+      // Append children after the group has already mounted
+      const cbA = document.createElement('grund-checkbox') as GrundCheckbox;
+      const cbB = document.createElement('grund-checkbox') as GrundCheckbox;
+      const cbParent = document.createElement('grund-checkbox') as GrundCheckbox;
+      (cbA as any).value = 'a';
+      cbA.textContent = 'A';
+      (cbB as any).value = 'b';
+      cbB.textContent = 'B';
+      (cbParent as any).parent = true;
+      (cbParent as any).value = 'all';
+      cbParent.textContent = 'All';
+
+      el.appendChild(cbParent);
+      el.appendChild(cbA);
+      el.appendChild(cbB);
+
+      await flush(el);
+      for (const cb of el.querySelectorAll<GrundCheckbox>('grund-checkbox')) {
+        await flush(cb);
+      }
+
+      // All three should be registered; a and b are checked → parent = 'checked'
+      const parentBtn = getByPart<HTMLButtonElement>(cbParent, 'button');
+      expect(parentBtn.getAttribute('aria-checked')).to.equal('true');
+    });
   });
 
 });
