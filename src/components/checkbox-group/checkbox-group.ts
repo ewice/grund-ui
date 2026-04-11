@@ -63,12 +63,20 @@ export class GrundCheckboxGroup extends LitElement {
   };
 
   private readonly _registerItem = (element: HTMLElement, record: CheckboxGroupRegistration): void => {
-    if (import.meta.env.DEV && !record.parent) {
-      const existing = this.registry.get(element);
-      if (existing?.value !== record.value && this.registry.selectableValues().includes(record.value)) {
+    if (import.meta.env.DEV) {
+      if (!record.parent) {
+        const existing = this.registry.get(element);
+        if (existing?.value !== record.value && this.registry.selectableValues().includes(record.value)) {
+          console.warn(
+            '[grund-checkbox-group]',
+            `duplicate value "${record.value}" registered. Each <grund-checkbox> in a group must have a unique value.`,
+          );
+        }
+      }
+      if (record.parent && this.registry.hasParent() && !this.registry.get(element)?.parent) {
         console.warn(
           '[grund-checkbox-group]',
-          `duplicate value "${record.value}" registered. Each <grund-checkbox> in a group must have a unique value.`,
+          'Multiple parent checkboxes detected. Only one parent checkbox is supported per group.',
         );
       }
     }

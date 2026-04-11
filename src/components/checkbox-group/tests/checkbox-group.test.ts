@@ -474,6 +474,83 @@ describe('GrundCheckboxGroup', () => {
     });
   });
 
+  // ── Select-all ownership boundary ────────────────────────────────────────
+
+  describe('select-all ownership boundary', () => {
+    it('parent checkbox aggregate state is driven by the group, not the primitive', async () => {
+      // Parent checkbox reflects aggregate group state — checked only when all non-parent are checked
+      const { checkboxes } = await setup(html`
+        <grund-checkbox-group .defaultValue=${['a', 'b']}>
+          <grund-checkbox parent value="all">All</grund-checkbox>
+          <grund-checkbox value="a">A</grund-checkbox>
+          <grund-checkbox value="b">B</grund-checkbox>
+        </grund-checkbox-group>
+      `);
+      const parentBtn = getByPart<HTMLButtonElement>(checkboxes[0], 'button');
+      expect(parentBtn.getAttribute('aria-checked')).to.equal('true');
+    });
+
+    it('non-parent checkboxes remain simple value items unaffected by aggregate logic', async () => {
+      // Individual item checkboxes are not affected by parent/aggregate logic
+      const { checkboxes } = await setup(html`
+        <grund-checkbox-group .defaultValue=${['a']}>
+          <grund-checkbox parent value="all">All</grund-checkbox>
+          <grund-checkbox value="a">A</grund-checkbox>
+          <grund-checkbox value="b">B</grund-checkbox>
+        </grund-checkbox-group>
+      `);
+      expect(getByPart(checkboxes[1], 'button').getAttribute('aria-checked')).to.equal('true');
+      expect(getByPart(checkboxes[2], 'button').getAttribute('aria-checked')).to.equal('false');
+    });
+
+    it('parent checkbox never contributes a submitted form value', async () => {
+      const formEl = await fixture<HTMLFormElement>(html`
+        <form>
+          <grund-checkbox-group .defaultValue=${['a', 'b']}>
+            <grund-checkbox parent name="select-all" value="all">All</grund-checkbox>
+            <grund-checkbox name="item" value="a">A</grund-checkbox>
+            <grund-checkbox name="item" value="b">B</grund-checkbox>
+          </grund-checkbox-group>
+        </form>
+      `);
+      const checkboxes = formEl.querySelectorAll<GrundCheckbox>('grund-checkbox');
+      for (const cb of checkboxes) {
+        await flush(cb);
+      }
+      const data = new FormData(formEl);
+      expect(data.has('select-all')).to.be.false;
+      expect(data.getAll('item')).to.deep.equal(['a', 'b']);
+    });
+
+    it('emits a dev warning when parent=true is used outside a group', async () => {
+      const warnSpy = vi.spyOn(console, 'warn');
+      const el = await fixture<GrundCheckbox>(html`
+        <grund-checkbox parent value="all">All</grund-checkbox>
+      `);
+      await flush(el);
+      vitestExpect(warnSpy).toHaveBeenCalledWith(
+        vitestExpect.stringContaining('[grund-checkbox] parent=true has no effect outside'),
+      );
+      warnSpy.mockRestore();
+    });
+
+    it('emits a dev warning when multiple parent checkboxes are registered in the same group', async () => {
+      const warnSpy = vi.spyOn(console, 'warn');
+      await setup(html`
+        <grund-checkbox-group>
+          <grund-checkbox parent value="all1">All 1</grund-checkbox>
+          <grund-checkbox parent value="all2">All 2</grund-checkbox>
+          <grund-checkbox value="a">A</grund-checkbox>
+        </grund-checkbox-group>
+      `);
+      vitestExpect(warnSpy).toHaveBeenCalledWith(
+        vitestExpect.stringContaining('[grund-checkbox-group]'),
+        vitestExpect.stringContaining('Multiple parent checkboxes'),
+      );
+      warnSpy.mockRestore();
+    });
+  });
+
   // ── Migration behavior (target architecture) ──────────────────────────────
   // These tests describe compatibility behavior during/after the allValues migration.
   // They are expected to FAIL until the deprecation warnings are implemented.

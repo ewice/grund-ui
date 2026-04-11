@@ -24,4 +24,8 @@ export class CheckboxGroupRegistry {
       .map((record) => record.value);
   }
 
+  hasParent(): boolean {
+    return Array.from(this.records.values()).some((record) => record.parent);
+  }
+
 }

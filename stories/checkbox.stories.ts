@@ -304,7 +304,6 @@ export const GroupedWithParent: Story = {
       <span id="features-label" style="font-weight: 600; font-size: 14px;">Features</span>
       <grund-checkbox-group
         aria-labelledby="features-label"
-        .allValues=${['analytics', 'alerts', 'reports']}
         @grund-value-change=${action('grund-value-change')}
       >
         <grund-checkbox parent value="all">Select all</grund-checkbox>

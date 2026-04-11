@@ -106,10 +106,10 @@ export class GrundCheckbox extends LitElement {
     }
 
     if (import.meta.env.DEV) {
-      if (this.hasUpdated && this.parent && !this.groupCtx) {
+      if (this.parent && !this.groupCtx) {
         console.warn(
           '[grund-checkbox] parent=true has no effect outside <grund-checkbox-group>. ' +
-            'Wrap in a <grund-checkbox-group> with allValues set.',
+            'Wrap in a <grund-checkbox-group>.',
         );
       }
     }
