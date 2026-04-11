@@ -133,29 +133,29 @@ export class GrundCheckboxGroup extends LitElement {
   }
 
   private _handleToggle(itemValue: string, parent: boolean): void {
-    const toggleResult = parent
+    const result = parent
       ? this.engine.requestToggleAll()
       : this.engine.requestToggle(itemValue);
 
-    if (toggleResult === null) {
+    if (result === null) {
       return;
     }
 
+    this._emitValueChange(result.value, itemValue, result.checked);
+
+    if (result.persisted) {
+      this._publishGroupContext();
+    }
+  }
+
+  private _emitValueChange(value: string[], itemValue: string, checked: boolean): void {
     this.dispatchEvent(
       new CustomEvent<CheckboxGroupValueChangeDetail>('grund-value-change', {
-        detail: {
-          value: toggleResult.value,
-          itemValue,
-          checked: toggleResult.checked,
-        },
+        detail: { value, itemValue, checked },
         bubbles: true,
         composed: false,
       }),
     );
-
-    if (this.value === undefined) {
-      this._publishGroupContext();
-    }
   }
 
   protected override updated(): void {

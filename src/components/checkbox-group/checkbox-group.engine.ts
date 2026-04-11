@@ -4,6 +4,7 @@ import type { CheckboxGroupHostSnapshot } from './types.js';
 export interface CheckboxGroupToggleResult {
   value: string[];
   checked: boolean;
+  persisted: boolean;
 }
 
 /**
@@ -15,6 +16,7 @@ export interface CheckboxGroupToggleResult {
 export class CheckboxGroupEngine {
   private readonly selection = new SelectionEngine();
   private _allValues: string[] = [];
+  private _isControlled = false;
 
   public get checkedValues(): ReadonlySet<string> {
     return this.selection.selectedValues;
@@ -22,6 +24,7 @@ export class CheckboxGroupEngine {
 
   public syncFromHost(snapshot: CheckboxGroupHostSnapshot): void {
     this._allValues = [...snapshot.allValues];
+    this._isControlled = snapshot.value !== undefined;
     this.selection.syncFromHost({
       value: snapshot.value,
       defaultValue: snapshot.defaultValue,
@@ -40,6 +43,7 @@ export class CheckboxGroupEngine {
     return {
       value,
       checked: value.includes(itemValue),
+      persisted: !this._isControlled,
     };
   }
 
@@ -68,6 +72,7 @@ export class CheckboxGroupEngine {
     return {
       value,
       checked: parentState !== 'checked',
+      persisted: !this._isControlled,
     };
   }
 

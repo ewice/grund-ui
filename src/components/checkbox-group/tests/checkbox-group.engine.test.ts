@@ -60,6 +60,12 @@ describe('CheckboxGroupEngine', () => {
       expect(engine.isChecked('a')).to.be.true;
     });
 
+    it('requestToggle returns persisted: true in uncontrolled mode', () => {
+      const engine = create();
+      const result = engine.requestToggle('a');
+      expect(result?.persisted).to.equal(true);
+    });
+
     it('requestToggle removes a checked value', () => {
       const engine = create({ defaultValue: ['a', 'b'] });
       const result = engine.requestToggle('a');
@@ -93,6 +99,12 @@ describe('CheckboxGroupEngine', () => {
       expect(result?.value).to.include.members(['a', 'b']);
       expect(result?.checked).to.equal(true);
       expect(engine.isChecked('b')).to.be.false;
+    });
+
+    it('requestToggle returns persisted: false in controlled mode', () => {
+      const engine = create({ value: ['a'] });
+      const result = engine.requestToggle('b');
+      expect(result?.persisted).to.equal(false);
     });
   });
 
@@ -195,6 +207,12 @@ describe('CheckboxGroupEngine', () => {
       const result = engine.requestToggleAll();
       expect(result?.value).to.include.members(['a', 'b']);
       expect(result?.checked).to.equal(true);
+    });
+
+    it('requestToggleAll returns persisted: true in uncontrolled mode', () => {
+      const engine = create({ allValues: ['a', 'b'] });
+      const result = engine.requestToggleAll();
+      expect(result?.persisted).to.equal(true);
     });
   });
 
