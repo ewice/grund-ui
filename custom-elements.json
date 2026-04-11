@@ -1598,678 +1598,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/checkbox-group/checkbox-group.context.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "checkboxGroupContext"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "checkboxGroupContext",
-          "declaration": {
-            "name": "checkboxGroupContext",
-            "module": "src/components/checkbox-group/checkbox-group.context.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/checkbox-group/checkbox-group.engine.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "CheckboxGroupEngine",
-          "members": [
-            {
-              "kind": "field",
-              "name": "selection",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new SelectionEngine()"
-            },
-            {
-              "kind": "field",
-              "name": "allValues",
-              "type": {
-                "text": "string[]"
-              },
-              "privacy": "private",
-              "default": "[]"
-            },
-            {
-              "kind": "field",
-              "name": "isControlled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "checkedValues",
-              "type": {
-                "text": "ReadonlySet<string>"
-              },
-              "privacy": "public",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "syncFromHost",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "snapshot",
-                  "type": {
-                    "text": "CheckboxGroupHostSnapshot"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "requestToggle",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "CheckboxGroupToggleResult | null"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "itemValue",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "requestToggleAll",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "CheckboxGroupToggleResult | null"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "isChecked",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getParentState",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "'checked' | 'unchecked' | 'indeterminate'"
-                }
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "CheckboxGroupEngine",
-          "declaration": {
-            "name": "CheckboxGroupEngine",
-            "module": "src/components/checkbox-group/checkbox-group.engine.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/checkbox-group/checkbox-group.registry.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "CheckboxGroupRegistry",
-          "members": [
-            {
-              "kind": "field",
-              "name": "records",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new Map<HTMLElement, CheckboxGroupRegistration>()"
-            },
-            {
-              "kind": "method",
-              "name": "register",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "element",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                },
-                {
-                  "name": "record",
-                  "type": {
-                    "text": "CheckboxGroupRegistration"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "get",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "CheckboxGroupRegistration | undefined"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "element",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "unregister",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "element",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "selectableValues",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "string[]"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "hasParent",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "CheckboxGroupRegistry",
-          "declaration": {
-            "name": "CheckboxGroupRegistry",
-            "module": "src/components/checkbox-group/checkbox-group.registry.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/checkbox-group/checkbox-group.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Groups multiple `<grund-checkbox>` elements with shared toggle state.\nSupports controlled and uncontrolled modes, a parent \"select-all\" checkbox,\nand accessible group labelling.",
-          "name": "GrundCheckboxGroup",
-          "cssParts": [
-            {
-              "description": "The `role=\"group\"` container that receives `aria-label`, `ariaLabelledByElements`, and `ariaDescribedByElements`.",
-              "name": "group"
-            }
-          ],
-          "slots": [
-            {
-              "description": "`<grund-checkbox>` children. Include exactly one `<grund-checkbox parent>` for select-all behavior.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "privacy": "public",
-              "default": "undefined",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "string[]"
-              },
-              "privacy": "public",
-              "default": "[]",
-              "attribute": "default-value"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "ariaLabel",
-              "type": {
-                "text": "string | null"
-              },
-              "privacy": "public",
-              "default": "null",
-              "attribute": "aria-label"
-            },
-            {
-              "kind": "field",
-              "name": "ariaLabelledBy",
-              "type": {
-                "text": "string | null"
-              },
-              "privacy": "public",
-              "default": "null",
-              "attribute": "aria-labelledby"
-            },
-            {
-              "kind": "field",
-              "name": "ariaDescribedBy",
-              "type": {
-                "text": "string | null"
-              },
-              "privacy": "public",
-              "default": "null",
-              "attribute": "aria-describedby"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string | null"
-              },
-              "privacy": "public",
-              "default": "null",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "groupCtx",
-              "type": {
-                "text": "CheckboxGroupContext"
-              },
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "disabledCtx",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "protected",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "engine",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new CheckboxGroupEngine()"
-            },
-            {
-              "kind": "field",
-              "name": "registry",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new CheckboxGroupRegistry()"
-            },
-            {
-              "kind": "field",
-              "name": "_registryDirty",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_isChecked",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_getParentState",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_requestToggle",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_registerItem",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_unregisterItem",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "_syncEngine",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_publishGroupContext",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_handleToggle",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "itemValue",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "parent",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_resolveReferencedElements",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "name": "grund-value-change",
-              "type": {
-                "text": "CustomEvent<CheckboxGroupValueChangeDetail>"
-              },
-              "description": "Fired when the set of checked values changes. Not cancelable."
-            }
-          ],
-          "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "default": "undefined",
-              "fieldName": "value"
-            },
-            {
-              "name": "default-value",
-              "type": {
-                "text": "string[]"
-              },
-              "default": "[]",
-              "fieldName": "defaultValue"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "aria-label",
-              "type": {
-                "text": "string | null"
-              },
-              "default": "null",
-              "fieldName": "ariaLabel"
-            },
-            {
-              "name": "aria-labelledby",
-              "type": {
-                "text": "string | null"
-              },
-              "default": "null",
-              "fieldName": "ariaLabelledBy"
-            },
-            {
-              "name": "aria-describedby",
-              "type": {
-                "text": "string | null"
-              },
-              "default": "null",
-              "fieldName": "ariaDescribedBy"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string | null"
-              },
-              "default": "null",
-              "fieldName": "label"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-checkbox-group",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundCheckboxGroup",
-          "declaration": {
-            "name": "GrundCheckboxGroup",
-            "module": "src/components/checkbox-group/checkbox-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-checkbox-group",
-          "declaration": {
-            "name": "GrundCheckboxGroup",
-            "module": "src/components/checkbox-group/checkbox-group.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/checkbox-group/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundCheckboxGroup",
-          "declaration": {
-            "name": "GrundCheckboxGroup",
-            "module": "./checkbox-group"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "CheckboxGroupValueChangeDetail",
-          "declaration": {
-            "name": "CheckboxGroupValueChangeDetail",
-            "module": "./types"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/checkbox-group/types.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/checkbox-group/utils.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "normalizeCheckboxGroupValues",
-          "return": {
-            "type": {
-              "text": "string[]"
-            }
-          },
-          "parameters": [
-            {
-              "name": "input",
-              "type": {
-                "text": "unknown"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "checkboxGroupValuesEqual",
-          "return": {
-            "type": {
-              "text": "boolean"
-            }
-          },
-          "parameters": [
-            {
-              "name": "a",
-              "type": {
-                "text": "unknown"
-              }
-            },
-            {
-              "name": "b",
-              "type": {
-                "text": "unknown"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "normalizeCheckboxGroupValues",
-          "declaration": {
-            "name": "normalizeCheckboxGroupValues",
-            "module": "src/components/checkbox-group/utils.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "checkboxGroupValuesEqual",
-          "declaration": {
-            "name": "checkboxGroupValuesEqual",
-            "module": "src/components/checkbox-group/utils.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/components/tabs/index.ts",
       "declarations": [],
       "exports": [
@@ -3349,6 +2677,660 @@
       "path": "src/components/tabs/types.ts",
       "declarations": [],
       "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox-group/checkbox-group.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "checkboxGroupContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "checkboxGroupContext",
+          "declaration": {
+            "name": "checkboxGroupContext",
+            "module": "src/components/checkbox-group/checkbox-group.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox-group/checkbox-group.engine.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CheckboxGroupEngine",
+          "members": [
+            {
+              "kind": "field",
+              "name": "selection",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new SelectionEngine()"
+            },
+            {
+              "kind": "field",
+              "name": "allValues",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "isControlled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "checkedValues",
+              "type": {
+                "text": "ReadonlySet<string>"
+              },
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "syncFromHost",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "snapshot",
+                  "type": {
+                    "text": "CheckboxGroupHostSnapshot"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "requestToggle",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "CheckboxGroupToggleResult | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "itemValue",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "requestToggleAll",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "CheckboxGroupToggleResult | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "isChecked",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getParentState",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "'checked' | 'unchecked' | 'indeterminate'"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CheckboxGroupEngine",
+          "declaration": {
+            "name": "CheckboxGroupEngine",
+            "module": "src/components/checkbox-group/checkbox-group.engine.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox-group/checkbox-group.registry.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CheckboxGroupRegistry",
+          "members": [
+            {
+              "kind": "field",
+              "name": "records",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<HTMLElement, CheckboxGroupRegistration>()"
+            },
+            {
+              "kind": "method",
+              "name": "register",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "record",
+                  "type": {
+                    "text": "CheckboxGroupRegistration"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "get",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "CheckboxGroupRegistration | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "unregister",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "selectableValues",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hasParent",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CheckboxGroupRegistry",
+          "declaration": {
+            "name": "CheckboxGroupRegistry",
+            "module": "src/components/checkbox-group/checkbox-group.registry.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox-group/checkbox-group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Groups multiple `<grund-checkbox>` elements with shared toggle state.\nSupports controlled and uncontrolled modes, a parent \"select-all\" checkbox,\nand accessible group labelling.",
+          "name": "GrundCheckboxGroup",
+          "cssParts": [
+            {
+              "description": "The `role=\"group\"` container that receives `aria-label`, `ariaLabelledByElements`, and `ariaDescribedByElements`.",
+              "name": "group"
+            }
+          ],
+          "slots": [
+            {
+              "description": "`<grund-checkbox>` children. Include exactly one `<grund-checkbox parent>` for select-all behavior.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "public",
+              "default": "[]",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabel",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "aria-label"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "aria-labelledby"
+            },
+            {
+              "kind": "field",
+              "name": "ariaDescribedBy",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "aria-describedby"
+            },
+            {
+              "kind": "field",
+              "name": "groupCtx",
+              "type": {
+                "text": "CheckboxGroupContext"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "disabledCtx",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "engine",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new CheckboxGroupEngine()"
+            },
+            {
+              "kind": "field",
+              "name": "registry",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new CheckboxGroupRegistry()"
+            },
+            {
+              "kind": "field",
+              "name": "_registryDirty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_isChecked",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_getParentState",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_requestToggle",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_registerItem",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_unregisterItem",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_syncEngine",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_publishGroupContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleToggle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "itemValue",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "parent",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_resolveReferencedElements",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-value-change",
+              "type": {
+                "text": "CustomEvent<CheckboxGroupValueChangeDetail>"
+              },
+              "description": "Fired when the set of checked values changes. Not cancelable."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "value"
+            },
+            {
+              "name": "default-value",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]",
+              "fieldName": "defaultValue"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "aria-label",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "ariaLabel"
+            },
+            {
+              "name": "aria-labelledby",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "ariaLabelledBy"
+            },
+            {
+              "name": "aria-describedby",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "ariaDescribedBy"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-checkbox-group",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCheckboxGroup",
+          "declaration": {
+            "name": "GrundCheckboxGroup",
+            "module": "src/components/checkbox-group/checkbox-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-checkbox-group",
+          "declaration": {
+            "name": "GrundCheckboxGroup",
+            "module": "src/components/checkbox-group/checkbox-group.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox-group/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCheckboxGroup",
+          "declaration": {
+            "name": "GrundCheckboxGroup",
+            "module": "./checkbox-group"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CheckboxGroupValueChangeDetail",
+          "declaration": {
+            "name": "CheckboxGroupValueChangeDetail",
+            "module": "./types"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox-group/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox-group/utils.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "normalizeCheckboxGroupValues",
+          "return": {
+            "type": {
+              "text": "string[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "input",
+              "type": {
+                "text": "unknown"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "checkboxGroupValuesEqual",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "a",
+              "type": {
+                "text": "unknown"
+              }
+            },
+            {
+              "name": "b",
+              "type": {
+                "text": "unknown"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "normalizeCheckboxGroupValues",
+          "declaration": {
+            "name": "normalizeCheckboxGroupValues",
+            "module": "src/components/checkbox-group/utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "checkboxGroupValuesEqual",
+          "declaration": {
+            "name": "checkboxGroupValuesEqual",
+            "module": "src/components/checkbox-group/utils.ts"
+          }
+        }
+      ]
     },
     {
       "kind": "javascript-module",

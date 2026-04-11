@@ -52,8 +52,6 @@ export class GrundCheckboxGroup extends LitElement {
 
   @property({ attribute: 'aria-describedby' }) public ariaDescribedBy: string | null = null;
 
-  @property() public label: string | null = null;
-
   @provide({ context: checkboxGroupContext })
   @state()
   protected groupCtx!: CheckboxGroupContext;
@@ -196,7 +194,7 @@ export class GrundCheckboxGroup extends LitElement {
 
   protected override render() {
     return html`
-      <div part="group" role="group" aria-label=${this.label ?? this.ariaLabel ?? nothing}>
+      <div part="group" role="group" aria-label=${this.ariaLabel ?? nothing}>
         <slot></slot>
       </div>
     `;
