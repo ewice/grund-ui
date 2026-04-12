@@ -144,6 +144,7 @@ See `focus-management.md`.
 
 - **Comments:** Non-JSDoc comments explain WHY, not WHAT. Code needing a WHAT-comment should be refactored.
 - **Smallest diff:** Every change should be the minimum diff that achieves the goal. No speculative code, unused imports, or redundant abstractions.
+- **Imports:** Use extensionless relative imports in repo TypeScript source and tests. Keep explicit extensions only for package subpath imports that require them, such as `lit/decorators.js`.
 - **JSDoc / CEM:** Every custom element needs JSDoc — see `jsdoc-contract.md`.
 
 ---

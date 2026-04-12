@@ -1,5 +1,5 @@
 import { expect, describe, it, afterEach } from 'vitest';
-import { AccordionRegistry } from '../accordion.registry.js';
+import { AccordionRegistry } from '../accordion.registry';
 
 describe('AccordionRegistry', () => {
   function makeEl(id: string): HTMLElement {

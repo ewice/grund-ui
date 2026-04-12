@@ -1,5 +1,5 @@
 import { expect, describe, it, afterEach } from 'vitest';
-import { TabsRegistry } from '../tabs.registry.js';
+import { TabsRegistry } from '../tabs.registry';
 
 describe('TabsRegistry', () => {
   function makeEl(id: string): HTMLElement {

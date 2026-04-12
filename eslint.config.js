@@ -10,6 +10,23 @@ export default [
   litPlugin.configs['flat/recommended'],
   wcPlugin.configs['flat/best-practice'],
   {
+    files: ['src/**/*.ts', 'stories/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['./*.js', './**/*.js', '../*.js', '../**/*.js'],
+              message:
+                'Use extensionless relative imports for local TypeScript modules. Keep explicit extensions only for package subpath imports.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['src/**/*.ts'],
     rules: {
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],

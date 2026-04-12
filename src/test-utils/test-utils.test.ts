@@ -1,7 +1,7 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
-import { flush, simulateKeyboard, getByPart } from './test-utils.js';
+import { flush, simulateKeyboard, getByPart } from './test-utils';
 
 class TestElement extends LitElement {
   override render() {

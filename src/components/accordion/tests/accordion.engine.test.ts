@@ -1,7 +1,7 @@
 import { expect, describe, it } from 'vitest';
-import { AccordionEngine } from '../accordion.engine.js';
+import { AccordionEngine } from '../accordion.engine';
 
-import type { AccordionHostSnapshot } from '../types.js';
+import type { AccordionHostSnapshot } from '../types';
 
 describe('AccordionEngine', () => {
   function create(snapshot?: Partial<AccordionHostSnapshot>) {

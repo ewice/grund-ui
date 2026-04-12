@@ -1,12 +1,12 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it, vi } from 'vitest';
-import { flush, getByPart } from '../../../test-utils/test-utils.js';
-import '../checkbox.js';
-import '../checkbox-indicator.js';
+import { flush, getByPart } from '../../../test-utils/test-utils';
+import '../checkbox';
+import '../checkbox-indicator';
 
-import type { GrundCheckbox } from '../checkbox.js';
-import type { GrundCheckboxIndicator } from '../checkbox-indicator.js';
-import type { CheckedChangeDetail } from '../types.js';
+import type { GrundCheckbox } from '../checkbox';
+import type { GrundCheckboxIndicator } from '../checkbox-indicator';
+import type { CheckedChangeDetail } from '../types';
 
 describe('GrundCheckbox', () => {
   async function setup(template = html`<grund-checkbox>Label</grund-checkbox>`) {

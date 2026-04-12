@@ -5,4 +5,4 @@ export * from './components/tabs';
 export * from './components/toggle';
 export * from './components/toggle-group';
 
-export { disabledContext } from './context/disabled.context.js';
+export { disabledContext } from './context/disabled.context';

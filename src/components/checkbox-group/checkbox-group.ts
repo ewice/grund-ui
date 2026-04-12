@@ -49,31 +49,34 @@ export class GrundCheckboxGroup extends LitElement {
 
   private readonly engine = new CheckboxGroupEngine();
   private readonly registry = new CheckboxGroupRegistry();
+  private readonly contextApi: CheckboxGroupContext = {
+    isChecked: (value) => this.engine.isChecked(value),
+    getParentState: () => this.engine.getParentState(),
+    requestToggle: (value, parent) => this._handleToggle(value, parent),
+    registerItem: (element, record) => this._registerItem(element, record),
+    unregisterItem: (element) => this._unregisterItem(element),
+  };
 
   private _registryDirty = false;
 
-  private readonly _isChecked = (value: string) => this.engine.isChecked(value);
-
-  private readonly _getParentState = () => this.engine.getParentState();
-
-  private readonly _requestToggle = (value: string, parent: boolean): void => {
-    this._handleToggle(value, parent);
-  };
-
-  private readonly _registerItem = (element: HTMLElement, record: CheckboxGroupRegistration): void => {
+  private _registerItem(element: HTMLElement, record: CheckboxGroupRegistration): void {
     this.registry.register(element, record);
-    this._registryDirty = true;
-    this.requestUpdate();
-  };
+    this._markRegistryDirty();
+  }
 
-  private readonly _unregisterItem = (element: HTMLElement): void => {
+  private _unregisterItem(element: HTMLElement): void {
     if (!this.registry.get(element)) {
       return;
     }
+
     this.registry.unregister(element);
+    this._markRegistryDirty();
+  }
+
+  private _markRegistryDirty(): void {
     this._registryDirty = true;
     this.requestUpdate();
-  };
+  }
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
     this._syncEngine();
@@ -89,7 +92,7 @@ export class GrundCheckboxGroup extends LitElement {
       changed.has('disabled')
     ) {
       this._registryDirty = false;
-      this._publishGroupContext();
+      this._updateGroupContext();
     }
   }
 
@@ -102,14 +105,8 @@ export class GrundCheckboxGroup extends LitElement {
     });
   }
 
-  private _publishGroupContext(): void {
-    this.groupCtx = {
-      isChecked: this._isChecked,
-      getParentState: this._getParentState,
-      requestToggle: this._requestToggle,
-      registerItem: this._registerItem,
-      unregisterItem: this._unregisterItem,
-    };
+  private _updateGroupContext(): void {
+    this.groupCtx = { ...this.contextApi };
   }
 
   private _handleToggle(itemValue: string, parent: boolean): void {
@@ -129,8 +126,8 @@ export class GrundCheckboxGroup extends LitElement {
       }),
     );
 
-    if (result.persisted) {
-      this._publishGroupContext();
+    if (this.value === undefined) {
+      this._updateGroupContext();
     }
   }
 

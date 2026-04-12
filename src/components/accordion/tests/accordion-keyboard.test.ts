@@ -1,14 +1,14 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
-import { flush, simulateKeyboard, getByPart } from '../../../test-utils/test-utils.js';
+import { flush, simulateKeyboard, getByPart } from '../../../test-utils/test-utils';
 
-import '../accordion.js';
-import '../accordion-item.js';
-import '../accordion-header.js';
-import '../accordion-trigger.js';
-import '../accordion-panel.js';
+import '../accordion';
+import '../accordion-item';
+import '../accordion-header';
+import '../accordion-trigger';
+import '../accordion-panel';
 
-import type { GrundAccordion } from '../accordion.js';
+import type { GrundAccordion } from '../accordion';
 
 function getTriggerButtons(el: GrundAccordion): HTMLButtonElement[] {
   return Array.from(el.querySelectorAll('grund-accordion-trigger')).map((t) =>

@@ -1,13 +1,13 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
-import { flush } from '../../../test-utils/test-utils.js';
+import { flush } from '../../../test-utils/test-utils';
 
-import '../tabs.js';
-import '../tabs-list.js';
-import '../tab.js';
-import '../tabs-panel.js';
+import '../tabs';
+import '../tabs-list';
+import '../tab';
+import '../tabs-panel';
 
-import type { GrundTabs } from '../tabs.js';
+import type { GrundTabs } from '../tabs';
 
 describe('Tabs Panel Visibility', () => {
   async function setup(template: ReturnType<typeof html>) {
@@ -107,7 +107,7 @@ describe('Tabs Panel Visibility', () => {
         <grund-tabs-panel value="a">A</grund-tabs-panel>
       </grund-tabs>
     `);
-    const panel = el.querySelector('grund-tabs-panel')!;
+    const panel = el.querySelector<HTMLElement>('grund-tabs-panel')!;
     expect(panel.dataset.orientation).to.equal('vertical');
     expect(panel.dataset.activationDirection).to.equal('none');
   });

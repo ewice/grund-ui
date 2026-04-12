@@ -1,5 +1,5 @@
 import { createContext } from '@lit/context';
-import type { CheckboxGroupRegistration } from './checkbox-group.registry.js';
+import type { CheckboxGroupRegistration } from './checkbox-group.registry';
 
 export interface CheckboxGroupContext {
   readonly isChecked: (value: string) => boolean;

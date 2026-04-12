@@ -1,6 +1,6 @@
 import { expect, describe, it } from 'vitest';
-import { ToggleGroupEngine } from '../toggle-group.engine.js';
-import type { ToggleGroupHostSnapshot } from '../types.js';
+import { ToggleGroupEngine } from '../toggle-group.engine';
+import type { ToggleGroupHostSnapshot } from '../types';
 
 describe('ToggleGroupEngine', () => {
   function create(snapshot?: Partial<ToggleGroupHostSnapshot>) {

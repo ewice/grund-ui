@@ -1,6 +1,6 @@
 import { expect, describe, it } from 'vitest';
-import { SelectionEngine } from './selection.engine.js';
-import type { SelectionSnapshot } from './selection.engine.js';
+import { SelectionEngine } from './selection.engine';
+import type { SelectionSnapshot } from './selection.engine';
 
 describe('SelectionEngine', () => {
   function create(overrides?: Partial<SelectionSnapshot>): SelectionEngine {

@@ -7,9 +7,9 @@ import { FormController } from '../../controllers/form.controller';
 import { checkboxContext } from './checkbox.context';
 import type { CheckboxContext } from './checkbox.context';
 import type { CheckedChangeDetail } from './types';
-import { checkboxGroupContext } from '../checkbox-group/checkbox-group.context.js';
-import type { CheckboxGroupContext } from '../checkbox-group/checkbox-group.context.js';
-import { disabledContext } from '../../context/disabled.context.js';
+import { checkboxGroupContext } from '../checkbox-group/checkbox-group.context';
+import type { CheckboxGroupContext } from '../checkbox-group/checkbox-group.context';
+import { disabledContext } from '../../context/disabled.context';
 
 export class GrundCheckbox extends LitElement {
   public static formAssociated = true;
@@ -316,5 +316,5 @@ if (!customElements.get('grund-checkbox')) {
   customElements.define('grund-checkbox', GrundCheckbox);
 }
 
-export { GrundCheckboxIndicator } from './checkbox-indicator.js';
-export type { CheckedChangeDetail } from './types.js';
+export { GrundCheckboxIndicator } from './checkbox-indicator';
+export type { CheckedChangeDetail } from './types';

@@ -1,8 +1,8 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
-import { simulateKeyboard } from '../test-utils/test-utils.js';
-import { RovingFocusController } from './roving-focus.controller.js';
+import { simulateKeyboard } from '../test-utils/test-utils';
+import { RovingFocusController } from './roving-focus.controller';
 
 class TestHost extends LitElement {
   controller!: RovingFocusController;

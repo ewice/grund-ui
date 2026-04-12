@@ -1,6 +1,6 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
-import { flush, simulateKeyboard, getByPart } from '../../../test-utils/test-utils.js';
+import { flush, simulateKeyboard, getByPart } from '../../../test-utils/test-utils';
 
 import '../toggle-group';
 import '../../toggle/toggle';

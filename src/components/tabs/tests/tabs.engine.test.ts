@@ -1,6 +1,6 @@
 import { expect, describe, it } from 'vitest';
-import { TabsEngine } from '../tabs.engine.js';
-import type { TabsHostSnapshot } from '../types.js';
+import { TabsEngine } from '../tabs.engine';
+import type { TabsHostSnapshot } from '../types';
 
 describe('TabsEngine', () => {
   function create(snapshot?: Partial<TabsHostSnapshot>) {

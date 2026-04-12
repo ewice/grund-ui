@@ -1,6 +1,6 @@
 import { expect, describe, it } from 'vitest';
-import { CheckboxGroupEngine } from '../checkbox-group.engine.js';
-import type { CheckboxGroupHostSnapshot } from '../types.js';
+import { CheckboxGroupEngine } from '../checkbox-group.engine';
+import type { CheckboxGroupHostSnapshot } from '../types';
 
 describe('CheckboxGroupEngine', () => {
   function create(overrides?: Partial<CheckboxGroupHostSnapshot>): CheckboxGroupEngine {
@@ -60,12 +60,6 @@ describe('CheckboxGroupEngine', () => {
       expect(engine.isChecked('a')).to.be.true;
     });
 
-    it('requestToggle returns persisted: true in uncontrolled mode', () => {
-      const engine = create();
-      const result = engine.requestToggle('a');
-      expect(result?.persisted).to.equal(true);
-    });
-
     it('requestToggle removes a checked value', () => {
       const engine = create({ defaultValue: ['a', 'b'] });
       const result = engine.requestToggle('a');
@@ -101,11 +95,6 @@ describe('CheckboxGroupEngine', () => {
       expect(engine.isChecked('b')).to.be.false;
     });
 
-    it('requestToggle returns persisted: false in controlled mode', () => {
-      const engine = create({ value: ['a'] });
-      const result = engine.requestToggle('b');
-      expect(result?.persisted).to.equal(false);
-    });
   });
 
   describe('disabled', () => {
@@ -209,11 +198,6 @@ describe('CheckboxGroupEngine', () => {
       expect(result?.checked).to.equal(true);
     });
 
-    it('requestToggleAll returns persisted: true in uncontrolled mode', () => {
-      const engine = create({ selectableValues: ['a', 'b'] });
-      const result = engine.requestToggleAll();
-      expect(result?.persisted).to.equal(true);
-    });
   });
 
   describe('requestToggleAll', () => {

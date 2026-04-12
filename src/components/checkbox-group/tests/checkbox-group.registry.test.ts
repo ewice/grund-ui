@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'vitest';
-import { CheckboxGroupRegistry } from '../checkbox-group.registry.js';
+import { CheckboxGroupRegistry } from '../checkbox-group.registry';
 
 describe('CheckboxGroupRegistry', () => {
   it('registers and unregisters checkbox records by element', () => {

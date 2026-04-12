@@ -166,4 +166,4 @@ if (!customElements.get('grund-toggle')) {
   customElements.define('grund-toggle', GrundToggle);
 }
 
-export type { PressedChangeDetail } from './types.js';
+export type { PressedChangeDetail } from './types';
