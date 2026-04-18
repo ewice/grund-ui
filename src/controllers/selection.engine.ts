@@ -61,6 +61,13 @@ export class SelectionEngine {
 
     const nextValues = new Set(values);
 
+    if (
+      nextValues.size === this._selectedValues.size &&
+      [...nextValues].every((v) => this._selectedValues.has(v))
+    ) {
+      return null;
+    }
+
     if (!this.isControlled) {
       this._selectedValues = nextValues;
     }

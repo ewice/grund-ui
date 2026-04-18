@@ -180,6 +180,31 @@ describe('SelectionEngine', () => {
     });
   });
 
+  describe('requestSet no-op detection', () => {
+    it('returns null when the requested set equals the current selection', () => {
+      const engine = new SelectionEngine();
+      engine.syncFromHost({ value: undefined, defaultValue: ['a', 'b'], multiple: true, disabled: false });
+
+      expect(engine.requestSet(['a', 'b'])).to.be.null;
+      expect(engine.requestSet(['b', 'a'])).to.be.null;
+      expect(engine.requestSet(['a', 'a', 'b'])).to.be.null;
+    });
+
+    it('returns null when both the requested set and the current selection are empty', () => {
+      const engine = new SelectionEngine();
+      engine.syncFromHost({ value: undefined, defaultValue: [], multiple: true, disabled: false });
+
+      expect(engine.requestSet([])).to.be.null;
+    });
+
+    it('returns an array when the requested set differs', () => {
+      const engine = new SelectionEngine();
+      engine.syncFromHost({ value: undefined, defaultValue: ['a'], multiple: true, disabled: false });
+
+      expect(engine.requestSet(['a', 'b'])).to.deep.equal(['a', 'b']);
+    });
+  });
+
   describe('controlled mode', () => {
     it('reflects the provided value array', () => {
       const ctrl = create({ value: ['a', 'b'] });

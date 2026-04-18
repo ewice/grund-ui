@@ -252,5 +252,15 @@ describe('CheckboxGroupEngine', () => {
       expect(result?.value).to.deep.equal(['extra']);
       expect(result?.checked).to.equal(false);
     });
+
+    it('returns null when the selectable set is empty (parent click is a no-op)', () => {
+      const engine = create({ selectableValues: [] });
+      expect(engine.requestToggleAll()).to.be.null;
+    });
+
+    it('returns null when the computed set equals current (no-op toggle-all)', () => {
+      const engine = create({ defaultValue: ['extra'], selectableValues: [] });
+      expect(engine.requestToggleAll()).to.be.null;
+    });
   });
 });
