@@ -64,4 +64,30 @@ describe('GrundCheckboxGroup accessibility', () => {
     expect(group?.ariaDescribedByElements).to.have.length(1);
     expect(group?.ariaDescribedByElements?.[0]?.id).to.equal('group-desc');
   });
+
+  it('resolves aria-labelledby IDs from the host element\'s root node', async () => {
+    class LabelHost extends HTMLElement {
+      constructor() {
+        super();
+        const shadow = this.attachShadow({ mode: 'open' });
+        shadow.innerHTML = `
+          <span id="shadow-group-label">Protocols</span>
+          <grund-checkbox-group aria-labelledby="shadow-group-label">
+            <grund-checkbox value="a">A</grund-checkbox>
+          </grund-checkbox-group>
+        `;
+      }
+    }
+    if (!customElements.get('label-host-element')) {
+      customElements.define('label-host-element', LabelHost);
+    }
+
+    const host = await fixture<HTMLElement>(html`<label-host-element></label-host-element>`);
+    const el = host.shadowRoot!.querySelector<GrundCheckboxGroup>('grund-checkbox-group')!;
+    await flush(el);
+
+    const group = el.shadowRoot?.querySelector<HTMLElement>('[part="group"]');
+    expect(group?.ariaLabelledByElements).to.have.length(1);
+    expect(group?.ariaLabelledByElements?.[0]?.id).to.equal('shadow-group-label');
+  });
 });

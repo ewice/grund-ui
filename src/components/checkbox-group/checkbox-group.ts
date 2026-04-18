@@ -7,6 +7,7 @@ import { CheckboxGroupRegistry } from './checkbox-group.registry';
 import { checkboxGroupContext } from './checkbox-group.context';
 import { disabledContext } from '../../context/disabled.context';
 import { normalizeCheckboxGroupValues, checkboxGroupValuesEqual } from './utils';
+import { resolveReferencedElements } from '../../utils/resolve-referenced-elements';
 
 import type { CheckboxGroupContext } from './checkbox-group.context';
 import type { CheckboxGroupRegistration } from './checkbox-group.registry';
@@ -138,25 +139,16 @@ export class GrundCheckboxGroup extends LitElement {
     }
 
     if (this.ariaLabelledBy) {
-      group.ariaLabelledByElements = this._resolveReferencedElements(this.ariaLabelledBy);
+      group.ariaLabelledByElements = resolveReferencedElements(this.ariaLabelledBy, this);
     } else {
       group.ariaLabelledByElements = [];
     }
 
     if (this.ariaDescribedBy) {
-      group.ariaDescribedByElements = this._resolveReferencedElements(this.ariaDescribedBy);
+      group.ariaDescribedByElements = resolveReferencedElements(this.ariaDescribedBy, this);
     } else {
       group.ariaDescribedByElements = [];
     }
-  }
-
-  private _resolveReferencedElements(value: string): HTMLElement[] {
-    return value
-      .split(/\s+/)
-      .map((id) => id.trim())
-      .filter(Boolean)
-      .map((id) => this.ownerDocument?.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
   }
 
   protected override render() {
