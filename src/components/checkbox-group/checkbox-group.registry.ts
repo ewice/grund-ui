@@ -1,7 +1,4 @@
-export interface CheckboxGroupRegistration {
-  value: string;
-  parent: boolean;
-}
+import type { CheckboxGroupRegistration } from './types';
 
 export class CheckboxGroupRegistry {
   private readonly records = new Map<HTMLElement, CheckboxGroupRegistration>();

@@ -1,10 +1,5 @@
 import { SelectionEngine } from '../../controllers/selection.engine';
-import type { CheckboxGroupHostSnapshot } from './types';
-
-export interface CheckboxGroupToggleResult {
-  value: string[];
-  checked: boolean;
-}
+import type { CheckboxGroupHostSnapshot, CheckboxGroupToggleResult } from './types';
 
 export class CheckboxGroupEngine {
   private readonly selection = new SelectionEngine();

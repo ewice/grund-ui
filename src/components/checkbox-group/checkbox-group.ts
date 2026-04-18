@@ -1,17 +1,16 @@
-import { LitElement, html, css, nothing, type PropertyValues } from 'lit';
+import { css, html, LitElement, nothing, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 
-import { CheckboxGroupEngine } from './checkbox-group.engine';
-import { CheckboxGroupRegistry } from './checkbox-group.registry';
-import { checkboxGroupContext } from './checkbox-group.context';
 import { disabledContext } from '../../context/disabled.context';
-import { normalizeCheckboxGroupValues, checkboxGroupValuesEqual } from './utils';
 import { resolveReferencedElements } from '../../utils/resolve-referenced-elements';
+import { checkboxGroupContext } from './checkbox-group.context';
+import { CheckboxGroupEngine } from './checkbox-group.engine';
+import { checkboxGroupValuesEqual, normalizeCheckboxGroupValues } from './utils';
 
+import { CheckboxGroupRegistry } from './checkbox-group.registry';
 import type { CheckboxGroupContext } from './checkbox-group.context';
-import type { CheckboxGroupRegistration } from './checkbox-group.registry';
-import type { CheckboxGroupValueChangeDetail } from './types';
+import type { CheckboxGroupRegistration, CheckboxGroupValueChangeDetail } from './types';
 
 export class GrundCheckboxGroup extends LitElement {
   public static override readonly styles = css`
@@ -20,17 +19,22 @@ export class GrundCheckboxGroup extends LitElement {
     }
   `;
 
-  // undefined means uncontrolled; any array (even []) means controlled — flipping between modes must trigger re-render regardless of content equality.
   @property({
     type: Array,
     hasChanged: (next: string[] | undefined, prev: string[] | undefined) => {
-      if ((next === undefined) !== (prev === undefined)) { return true; }
+      if ((next === undefined) !== (prev === undefined)) {
+        return true;
+      }
       return !checkboxGroupValuesEqual(next, prev);
     },
   })
   public value: string[] | undefined = undefined;
 
-  @property({ type: Array, attribute: 'default-value', hasChanged: (next, prev) => !checkboxGroupValuesEqual(next, prev) })
+  @property({
+    type: Array,
+    attribute: 'default-value',
+    hasChanged: (next, prev) => !checkboxGroupValuesEqual(next, prev),
+  })
   public defaultValue: string[] = [];
 
   @property({ type: Boolean }) public disabled = false;
@@ -112,9 +116,7 @@ export class GrundCheckboxGroup extends LitElement {
   }
 
   private _handleToggle(itemValue: string, parent: boolean): void {
-    const result = parent
-      ? this.engine.requestToggleAll()
-      : this.engine.requestToggle(itemValue);
+    const result = parent ? this.engine.requestToggleAll() : this.engine.requestToggle(itemValue);
 
     if (result === null) {
       return;

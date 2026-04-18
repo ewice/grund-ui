@@ -10,3 +10,13 @@ export interface CheckboxGroupHostSnapshot {
   disabled: boolean;
   selectableValues: string[];
 }
+
+export interface CheckboxGroupToggleResult {
+  value: string[];
+  checked: boolean;
+}
+
+export interface CheckboxGroupRegistration {
+  value: string;
+  parent: boolean;
+}
