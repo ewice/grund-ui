@@ -20,6 +20,7 @@ export class GrundCheckboxGroup extends LitElement {
     }
   `;
 
+  // undefined means uncontrolled; any array (even []) means controlled — flipping between modes must trigger re-render regardless of content equality.
   @property({
     type: Array,
     hasChanged: (next: string[] | undefined, prev: string[] | undefined) => {
