@@ -10,6 +10,7 @@ import type { CheckedChangeDetail } from './types';
 import { checkboxGroupContext } from '../checkbox-group/checkbox-group.context';
 import type { CheckboxGroupContext } from '../checkbox-group/checkbox-group.context';
 import { disabledContext } from '../../context/disabled.context';
+import { resolveReferencedElements } from '../../utils/resolve-referenced-elements';
 
 export class GrundCheckbox extends LitElement {
   public static formAssociated = true;
@@ -159,25 +160,27 @@ export class GrundCheckbox extends LitElement {
     }
   }
 
-  protected override updated(_changed: PropertyValues): void {
-    const btn = this.shadowRoot?.querySelector<HTMLButtonElement>('[part="button"]');
+  protected override updated(changed: PropertyValues): void {
+    if (!this.hasUpdated || changed.has('ariaLabel') || changed.has('ariaLabelledBy') || changed.has('ariaDescribedBy')) {
+      const btn = this.shadowRoot?.querySelector<HTMLButtonElement>('[part="button"]');
 
-    if (!btn) {
-      return;
-    }
+      if (!btn) {
+        return;
+      }
 
-    if (this.ariaLabel) {
-      btn.ariaLabelledByElements = [];
-    } else if (this.ariaLabelledBy) {
-      btn.ariaLabelledByElements = this._resolveReferencedElements(this.ariaLabelledBy);
-    } else if (!this.ariaLabel) {
-      btn.ariaLabelledByElements = this._getAssociatedLabels();
-    }
+      if (this.ariaLabel) {
+        btn.ariaLabelledByElements = [];
+      } else if (this.ariaLabelledBy) {
+        btn.ariaLabelledByElements = resolveReferencedElements(this.ariaLabelledBy, this);
+      } else if (!this.ariaLabel) {
+        btn.ariaLabelledByElements = this._getAssociatedLabels();
+      }
 
-    if (this.ariaDescribedBy) {
-      btn.ariaDescribedByElements = this._resolveReferencedElements(this.ariaDescribedBy);
-    } else {
-      btn.ariaDescribedByElements = [];
+      if (this.ariaDescribedBy) {
+        btn.ariaDescribedByElements = resolveReferencedElements(this.ariaDescribedBy, this);
+      } else {
+        btn.ariaDescribedByElements = [];
+      }
     }
   }
 
@@ -256,15 +259,6 @@ export class GrundCheckbox extends LitElement {
         composed: false,
       }),
     );
-  }
-
-  private _resolveReferencedElements(value: string): HTMLElement[] {
-    return value
-      .split(/\s+/)
-      .map((id) => id.trim())
-      .filter(Boolean)
-      .map((id) => this.ownerDocument?.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
   }
 
   private _getAssociatedLabels(): HTMLLabelElement[] {
