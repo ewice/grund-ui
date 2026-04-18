@@ -7,17 +7,10 @@ import { accordionItemContext } from './accordion.context';
 
 import type { AccordionItemContext } from './accordion.context';
 
-/**
- * Collapsible content region of an accordion item.
- *
- * @element grund-accordion-panel
- * @slot - Panel content
- * @csspart panel - The panel container
- */
 export class GrundAccordionPanel extends LitElement {
   public static override styles = css`
     :host {
-      display: block; /* block: this element is a block-level container */
+      display: block;
     }
   `;
 
@@ -83,7 +76,10 @@ export class GrundAccordionPanel extends LitElement {
   // method. The current IDREF cannot resolve across shadow root boundaries (aria-linking.md).
   protected override render() {
     const ctx = this.itemCtx;
-    if (!ctx) return nothing;
+
+    if (!ctx) {
+      return nothing;
+    }
 
     if (!ctx.expanded) {
       if (!this.effectiveKeepMounted && !this.effectiveHiddenUntilFound) {
@@ -91,7 +87,8 @@ export class GrundAccordionPanel extends LitElement {
       }
     }
 
-    const hidden = ctx.expanded ? undefined : this.effectiveHiddenUntilFound ? 'until-found' : '';
+    const hiddenWhenCollapsed = this.effectiveHiddenUntilFound ? 'until-found' : '';
+    const hidden = ctx.expanded ? undefined : hiddenWhenCollapsed;
 
     return html`
       <div

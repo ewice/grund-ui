@@ -324,6 +324,10 @@ transition(from: DialogState, to: DialogState): DialogState {
     }
     ```
 
+### Slotted Validation
+
+42. Structural validation and dev-mode warnings that depend on slotted children MUST be driven by `slotchange` and, when needed, only the specific reactive properties that affect the validation result. Do not run slotted-child validation from generic `updated()` paths: that replays the same warnings on unrelated updates and can still miss child insertions that happen between host updates.
+
 ---
 
 ## Anti-Patterns

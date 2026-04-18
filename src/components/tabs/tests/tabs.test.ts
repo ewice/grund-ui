@@ -1,13 +1,14 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
-import { flush, getByPart, simulateKeyboard } from '../../../test-utils/test-utils.js';
+import { flush, getByPart, simulateKeyboard } from '../../../test-utils/test-utils';
 
-import '../tabs.js';
-import '../tabs-list.js';
-import '../tab.js';
-import '../tabs-panel.js';
+import '../tabs';
+import '../tabs-list';
+import '../tab';
+import '../tabs-panel';
 
-import type { GrundTabs } from '../tabs.js';
+import type { GrundTabs } from '../tabs';
+import type { TabsValueChangeDetail } from '../types';
 
 function getTabButtons(el: GrundTabs): HTMLButtonElement[] {
   return Array.from(el.querySelectorAll('grund-tab')).map((t) =>
@@ -66,9 +67,9 @@ describe('GrundTabs', () => {
 
   it('fires grund-value-change event on activation', async () => {
     const el = await setup();
-    const events: any[] = [];
+    const events: TabsValueChangeDetail[] = [];
     el.addEventListener('grund-value-change', (e: Event) => {
-      events.push((e as CustomEvent).detail);
+      events.push((e as CustomEvent<TabsValueChangeDetail>).detail);
     });
 
     const buttons = getTabButtons(el);

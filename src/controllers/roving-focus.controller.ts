@@ -42,7 +42,10 @@ export class RovingFocusController implements ReactiveController {
 
   private syncTabIndexes(): void {
     const items = this.options.getItems();
-    if (items.length === 0) return;
+
+    if (items.length === 0) {
+      return;
+    }
 
     const currentIndex = items.findIndex((item) => item.tabIndex === 0);
     const activeIndex =
@@ -56,7 +59,10 @@ export class RovingFocusController implements ReactiveController {
   private onKeydown(event: Event): void {
     const e = event as KeyboardEvent;
     const items = this.options.getItems().filter((item) => !this.isDisabled(item));
-    if (items.length === 0) return;
+
+    if (items.length === 0) {
+      return;
+    }
 
     const { key } = e;
     const { orientation, loop } = this.options;
@@ -65,17 +71,28 @@ export class RovingFocusController implements ReactiveController {
     let direction: 'next' | 'prev' | 'first' | 'last' | null = null;
 
     if (orientation === 'vertical') {
-      if (key === 'ArrowDown') direction = 'next';
-      else if (key === 'ArrowUp') direction = 'prev';
+      if (key === 'ArrowDown') {
+        direction = 'next';
+      } else if (key === 'ArrowUp') {
+        direction = 'prev';
+      }
     } else {
-      if (key === 'ArrowRight') direction = isRtl ? 'prev' : 'next';
-      else if (key === 'ArrowLeft') direction = isRtl ? 'next' : 'prev';
+      if (key === 'ArrowRight') {
+        direction = isRtl ? 'prev' : 'next';
+      } else if (key === 'ArrowLeft') {
+        direction = isRtl ? 'next' : 'prev';
+      }
     }
 
-    if (key === 'Home') direction = 'first';
-    else if (key === 'End') direction = 'last';
+    if (key === 'Home') {
+      direction = 'first';
+    } else if (key === 'End') {
+      direction = 'last';
+    }
 
-    if (!direction) return;
+    if (!direction) {
+      return;
+    }
 
     e.preventDefault();
 
@@ -88,11 +105,15 @@ export class RovingFocusController implements ReactiveController {
     switch (direction) {
       case 'next':
         nextIndex = currentIndex + 1;
-        if (nextIndex >= items.length) nextIndex = loop ? 0 : items.length - 1;
+        if (nextIndex >= items.length) {
+          nextIndex = loop ? 0 : items.length - 1;
+        }
         break;
       case 'prev':
         nextIndex = currentIndex - 1;
-        if (nextIndex < 0) nextIndex = loop ? items.length - 1 : 0;
+        if (nextIndex < 0) {
+          nextIndex = loop ? items.length - 1 : 0;
+        }
         break;
       case 'first':
         nextIndex = 0;

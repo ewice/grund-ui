@@ -194,3 +194,11 @@ export const KeyboardNavigation: Story = {
   },
 };
 ```
+
+---
+
+## Rules
+
+1. **[warning] Storybook `play` functions must contain at least one assertion.** A `play` block that only performs interactions (clicks, keyboard events) but never calls `expect()` provides no regression value — it exercises the component but never verifies the outcome, so it passes even when the behavior is broken. Example of the mistake: a `play` block that calls `userEvent.click(checkbox)` with no follow-up `expect`. Fix: add an `expect` call that asserts the observable result (e.g., `expect(checkbox).to.have.attribute('aria-checked', 'true')`), or remove the `play` block entirely if no assertion can be written.
+
+2. **[warning] Remove TDD-era "expected to FAIL" scaffolding before merging.** `describe` block titles suffixed with `(target architecture)` or banner comments like `// NOTE: expected to FAIL` mark tests that were written during TDD before the implementation existed. Once the tests pass, these markers become misleading — they imply the behavior is unimplemented when it is not. Example of the mistake: `describe('child registration (target architecture)')` or a `// NOTE: expected to FAIL — remove once implemented` banner that remains in a passing test. Fix: rename the `describe` to a plain description of the behavior (e.g., `describe('child registration')`), remove the banner comments, and reword any test titles that describe a pre-implementation state (e.g., `'before their own upgrade'` → `'registers children that are appended after the group has already mounted'`).

@@ -111,10 +111,11 @@ Before defining implementation tasks in a plan, the plan MUST include a shared a
 
 ```markdown
 ## Shared Abstractions Audit
-Searched: src/utils/, src/controllers/, reference component (accordion)
+Searched: src/utils/, src/controllers/, src/context/, reference component (accordion)
 - OrderedRegistry (src/utils/ordered-registry.ts) — DOM-ordered child tracking → USE for registry
 - RovingFocusController (src/controllers/roving-focus.controller.ts) — keyboard navigation → USE for list
 - SelectionEngine (src/controllers/selection.engine.ts) — set-based selection state → USE when managing selected/pressed/expanded values
+- disabledContext (src/context/disabled.context.ts) — cross-component disabled propagation → USE instead of adding disabled to component-specific context interfaces
 - [none found for X] → implement inline, flag for extraction on second use
 ```
 
@@ -123,11 +124,66 @@ subagents from reimplementing utilities they cannot discover independently withi
 limited context window.
 
 **Who populates this section:** The plan author (orchestrator or `writing-plans` skill), before
-any implementation task is written. It requires a real grep of `src/utils/` and `src/controllers/`
-at plan-writing time.
+any implementation task is written. It requires a real grep of `src/utils/`, `src/controllers/`,
+and `src/context/` at plan-writing time.
 
 **Note on naming:** `src/controllers/` contains two distinct kinds of things:
 - **Reactive Controllers** (e.g., `RovingFocusController`) — implement `ReactiveController`, need lifecycle hooks
 - **Engines** (e.g., `SelectionEngine`) — plain classes, no Lit dependency, independently testable
 
 List both accurately in the audit section. The distinction matters for how implementers write tests (mock host vs `new Engine()`).
+
+**Context patterns:** `src/context/` contains shared context definitions that propagate state
+across component boundaries (e.g., `disabledContext`). These MUST appear in the audit to
+prevent plan authors from adding redundant fields to component-specific context interfaces.
+A plan that defines `disabled: boolean` on a component context when `disabledContext` already
+exists is a plan defect — reviewers will catch it, but the fix wastes a review round.
+
+---
+
+## 8. Session Boundaries
+
+Running the full pipeline (spec → plan → implement → review-gate → finish) in a single
+session exhausts context. The orchestrator accumulates prompt-construction and result-processing
+costs for every subagent dispatch, even though subagents get fresh context.
+
+**Natural break points — start a fresh session at each:**
+
+| After | Durable artifact | Next session starts with |
+|---|---|---|
+| Brainstorming + spec | `docs/vollgas/specs/YYYY-MM-DD-*.md` | Read spec, invoke `vollgas:writing-plans` |
+| Plan writing | `docs/vollgas/plans/YYYY-MM-DD-*.md` | Read plan, invoke `vollgas:subagent-driven-development` |
+| Implementation (all tasks done) | Commits on feature branch | Read changed files, invoke `vollgas:review-gate` |
+| Review-gate | Fix commits + findings file | Invoke `vollgas:finishing-a-development-branch` |
+
+**Minimum viable split:** Break between implementation and review-gate. Implementation
+produces commits as durable artifacts; review-gate can discover all changes from git diff
+without needing the orchestrator's implementation history.
+
+**How to hand off:** Each skill that ends at a boundary should output a continuation message:
+```
+Implementation complete. All N tasks committed on branch <branch-name>.
+Start a fresh session and invoke vollgas:review-gate to run the post-implementation review.
+```
+
+The receiving session reads the plan file and git diff to reconstruct context — no session
+state needs to survive the boundary.
+
+---
+
+## 9. Test Completeness
+
+When writing test code in plans, cross-reference the project's `vollgas/refs/test-patterns.md`
+to verify coverage of all required test categories. The plan author — not the implementer —
+is responsible for test completeness because test code is written verbatim in plans.
+
+**Required cross-reference:** Before finalizing the plan's test tasks, scan `test-patterns.md`
+for the required categories list and verify each applicable category has a test in the plan.
+
+Common categories missed by plan authors:
+- Event ordering tests (when the spec defines an ordering contract)
+- Form submission tests (when the component is form-associated or wraps form-associated children)
+- Structural misuse tests (when the component has compound structure requirements)
+
+A missing test category in the plan is a plan defect — the test-reviewer will catch it during
+review-gate, but the fix wastes a review round and an implementer dispatch.

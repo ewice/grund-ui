@@ -120,3 +120,33 @@ willUpdate(changed: PropertyValues) {
 5. `formStateRestoreCallback()` MUST restore state from the provided value string for browser autofill scenarios.
 6. Validation MUST use `setValidity()` with the appropriate `ValidityStateFlags`. Do not use custom validity without setting the correct built-in flags.
 7. Use `FormController` — never use raw `ElementInternals` directly in element classes.
+8. Composite groups (multi-valued selection) submit through children, not the group element. See "Composite Groups (Children Submit)" below.
+
+---
+
+## Composite Groups (Children Submit)
+
+### When this pattern applies
+
+Use this pattern for multi-valued selection where each option maps to a separate form field — for example, `name="proto"` repeated across N checkboxes. This is distinct from single-valued controls (checkbox, switch) that own one `name` on the root element and submit a single value via `setFormValue`.
+
+### What the group does NOT do
+
+The group element (`grund-checkbox-group`) does NOT:
+
+- Declare `static formAssociated = true`
+- Call `setFormValue` or manage form submission
+- Register its own `name` attribute
+- Use `ElementInternals` at the group level
+
+The group is not a form control — it is a coordination container.
+
+### What the group IS responsible for
+
+- **Propagating `disabled`:** When the group is disabled, it must propagate that state to all child elements so they are excluded from form submission.
+- **Excluding parent/select-all pseudo-values:** A parent or "select all" checkbox must not submit its own value to the form. Only the real option checkboxes should appear in `FormData`. The parent checkbox value must be excluded from form submission.
+- **Children own `formResetCallback`:** Because the group does not participate in form reset, each child checkbox must implement `formResetCallback` correctly on its own to restore its default state when the form resets.
+
+### Test coverage
+
+`src/components/checkbox-group/tests/checkbox-group.form.test.ts` pins the contract that children submit independently on their own `name`. The parent-value exclusion rule is covered by lines 84–102 in `src/components/checkbox-group/tests/checkbox-group.parent-checkbox.test.ts`.

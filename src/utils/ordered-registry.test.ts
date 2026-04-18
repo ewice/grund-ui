@@ -1,5 +1,5 @@
 import { expect, describe, it, afterEach } from 'vitest';
-import { OrderedRegistry } from './ordered-registry.js';
+import { OrderedRegistry } from './ordered-registry';
 
 interface TestRecord {
   element: HTMLElement;

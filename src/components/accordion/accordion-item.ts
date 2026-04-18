@@ -8,17 +8,10 @@ import { disabledContext } from '../../context/disabled.context';
 import type { AccordionRootContext, AccordionItemContext } from './accordion.context';
 import type { AccordionOpenChangeDetail } from './types';
 
-/**
- * Accordion item container. Bridges root and leaf element context.
- *
- * @element grund-accordion-item
- * @slot - Header and panel elements
- * @fires {CustomEvent<AccordionOpenChangeDetail>} grund-open-change - When this item's open state changes (after initial mount)
- */
 export class GrundAccordionItem extends LitElement {
-  public static override styles = css`
+  public static override readonly styles = css`
     :host {
-      display: block; /* block: this element is a block-level container */
+      display: block;
     }
   `;
 
@@ -27,11 +20,11 @@ export class GrundAccordionItem extends LitElement {
 
   @consume({ context: accordionRootContext, subscribe: true })
   @state()
-  private rootCtx?: AccordionRootContext;
+  private readonly rootCtx?: AccordionRootContext;
 
   @consume({ context: disabledContext, subscribe: true })
   @state()
-  private ancestorDisabled = false;
+  private readonly ancestorDisabled = false;
 
   @provide({ context: accordionItemContext })
   @state()
@@ -45,7 +38,6 @@ export class GrundAccordionItem extends LitElement {
   private prevExpanded: boolean | undefined = undefined;
   private isRegistered = false;
 
-  // Stable callback references — bound once, reused across context recreations
   private readonly boundToggle = () => {
     this.rootCtx?.requestToggle(this.value, this.disabled);
   };
@@ -73,8 +65,6 @@ export class GrundAccordionItem extends LitElement {
         );
       }
     }
-    // rootCtx may not be available yet at connectedCallback time.
-    // Registration is handled in willUpdate when rootCtx first becomes available.
   }
 
   public override disconnectedCallback(): void {
@@ -87,15 +77,15 @@ export class GrundAccordionItem extends LitElement {
   }
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
-    if (!this.rootCtx) return;
+    if (!this.rootCtx) {
+      return;
+    }
 
-    // Register on first availability of rootCtx
     if (!this.isRegistered) {
       this.rootCtx.registerItem(this, this.value);
       this.isRegistered = true;
     }
 
-    // Re-register if value changed
     if (changed.has('value') && changed.get('value') !== undefined && this.isRegistered) {
       this.rootCtx.unregisterItem(this);
       this.rootCtx.registerItem(this, this.value);
@@ -110,10 +100,6 @@ export class GrundAccordionItem extends LitElement {
     this.disabledCtx = mergedDisabled;
     this.dataset.index = String(index);
 
-    // Only recreate item context when relevant state changes.
-    // IMPORTANT: rootCtx is always a new object when root re-renders
-    // (because @lit/context notifies on object reference change),
-    // so changed.has('rootCtx') covers all root state changes.
     if (
       !this.hasUpdated ||
       changed.has('rootCtx') ||

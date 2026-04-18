@@ -1,10 +1,10 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
-import { flush } from '../../../test-utils/test-utils.js';
-import '../accordion.js';
-import '../accordion-item.js';
+import { flush } from '../../../test-utils/test-utils';
+import '../accordion';
+import '../accordion-item';
 
-import type { GrundAccordion } from '../accordion.js';
+import type { GrundAccordion } from '../accordion';
 
 describe('GrundAccordion + GrundAccordionItem', () => {
   async function setup(
@@ -29,7 +29,7 @@ describe('GrundAccordion + GrundAccordionItem', () => {
 
   it('items get data-index attributes', async () => {
     const el = await setup();
-    const items = el.querySelectorAll('grund-accordion-item');
+    const items = el.querySelectorAll<HTMLElement>('grund-accordion-item');
     expect(items[0].dataset.index).to.equal('0');
     expect(items[1].dataset.index).to.equal('1');
   });

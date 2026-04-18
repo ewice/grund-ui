@@ -70,6 +70,45 @@ the DOM lib types. Use a type assertion until they are:
 
 Remove the assertion once TypeScript ships the types.
 
+## Host-Forwarded Consumer IDREFs
+
+### The case
+
+A consumer can write `<grund-checkbox-group aria-labelledby="my-label">` to associate an
+external label with the component. The component must forward this IDREF to an internal
+shadow element via `ariaLabelledByElements`. To do so, it must resolve the ID string to a
+DOM element — and the host may live inside a consumer's own shadow root.
+
+### Why `ownerDocument.getElementById` is wrong
+
+`ownerDocument` always returns the top-level `Document`. If the consumer is itself a web
+component and declared `id="my-label"` inside its own shadow root, that ID is scoped to
+that shadow root — `ownerDocument.getElementById("my-label")` returns `null`.
+
+### Why `this.getRootNode().getElementById(id)` is correct
+
+`getRootNode()` returns the `Document` when the host is in the light DOM (same result as
+before) and the consumer's `ShadowRoot` when the host is slotted inside one. In both cases
+the returned root's `getElementById` finds the ID in the correct scope.
+
+### The shared utility
+
+Use `resolveReferencedElements(idref, this)` from `src/utils/resolve-referenced-elements.ts`.
+It handles the `getRootNode()` call, whitespace-separated lists of IDs, and missing elements.
+
+### Example
+
+```ts
+protected override updated(changed: PropertyValues): void {
+  if (!this.hasUpdated || changed.has('ariaLabelledBy') || changed.has('ariaDescribedBy')) {
+    const group = this.shadowRoot?.querySelector<HTMLElement>('[part="group"]');
+    if (!group) return;
+    group.ariaLabelledByElements = resolveReferencedElements(this.ariaLabelledBy, this);
+    group.ariaDescribedByElements = resolveReferencedElements(this.ariaDescribedBy, this);
+  }
+}
+```
+
 ## Available Element Reference Properties
 
 | Property | Replaces | Direction |
@@ -91,6 +130,7 @@ non-list properties like `ariaActiveDescendantElement`).
 | Setting element refs in `render()` | Target may not exist in DOM yet | Set in `updated()` |
 | `document.getElementById()` to find target | Breaks encapsulation, can't cross shadow | Registry lookup via context |
 | Setting `id` solely for ARIA linking | Unnecessary with element references | Remove if no other consumer needs the ID |
+| `ownerDocument.getElementById` for consumer-supplied IDREFs | Fails when the host lives in a consumer shadow root — `ownerDocument` is always the top-level document | Use `resolveReferencedElements(idref, this)` from `src/utils/` |
 
 ## Migration Note
 

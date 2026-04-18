@@ -1,12 +1,12 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it, vi } from 'vitest';
-import { flush, getByPart } from '../../../test-utils/test-utils.js';
-import '../checkbox.js';
-import '../checkbox-indicator.js';
+import { flush, getByPart } from '../../../test-utils/test-utils';
+import '../checkbox';
+import '../checkbox-indicator';
 
-import type { GrundCheckbox } from '../checkbox.js';
-import type { GrundCheckboxIndicator } from '../checkbox-indicator.js';
-import type { CheckedChangeDetail } from '../types.js';
+import type { GrundCheckbox } from '../checkbox';
+import type { GrundCheckboxIndicator } from '../checkbox-indicator';
+import type { CheckedChangeDetail } from '../types';
 
 describe('GrundCheckbox', () => {
   async function setup(template = html`<grund-checkbox>Label</grund-checkbox>`) {
@@ -55,6 +55,40 @@ describe('GrundCheckbox', () => {
   it('value defaults to "on"', async () => {
     const el = await setup();
     expect(el.value).to.equal('on');
+  });
+
+  it('forwards host aria-label to the inner button', async () => {
+    const el = await setup(html`<grund-checkbox aria-label="Accept policy"></grund-checkbox>`);
+    const btn = getByPart<HTMLButtonElement>(el, 'button');
+    expect(btn.getAttribute('aria-label')).to.equal('Accept policy');
+  });
+
+  it('forwards host aria-labelledby to the inner button via element references', async () => {
+    const container = await fixture<HTMLDivElement>(html`
+      <div>
+        <span id="cb-label">External label</span>
+        <grund-checkbox aria-labelledby="cb-label"></grund-checkbox>
+      </div>
+    `);
+    const el = container.querySelector<GrundCheckbox>('grund-checkbox')!;
+    await flush(el);
+    const btn = getByPart<HTMLButtonElement>(el, 'button');
+    expect(btn.ariaLabelledByElements).to.have.length(1);
+    expect(btn.ariaLabelledByElements?.[0]?.id).to.equal('cb-label');
+  });
+
+  it('forwards host aria-describedby to the inner button via element references', async () => {
+    const container = await fixture<HTMLDivElement>(html`
+      <div>
+        <span id="cb-desc">Helpful description</span>
+        <grund-checkbox aria-describedby="cb-desc">Label</grund-checkbox>
+      </div>
+    `);
+    const el = container.querySelector<GrundCheckbox>('grund-checkbox')!;
+    await flush(el);
+    const btn = getByPart<HTMLButtonElement>(el, 'button');
+    expect(btn.ariaDescribedByElements).to.have.length(1);
+    expect(btn.ariaDescribedByElements?.[0]?.id).to.equal('cb-desc');
   });
 
   // ── Uncontrolled mode ───────────────────────────────────────────────────────
@@ -404,6 +438,20 @@ describe('GrundCheckbox', () => {
     label.click();
     await flush(cb);
     expect(cb.hasAttribute('data-checked')).to.be.true;
+  });
+
+  it('uses external label-for association as the button accessible name source', async () => {
+    const container = await fixture<HTMLDivElement>(html`
+      <div>
+        <label for="checkbox-name-only">Terms</label>
+        <grund-checkbox id="checkbox-name-only"></grund-checkbox>
+      </div>
+    `);
+    const cb = container.querySelector<GrundCheckbox>('grund-checkbox')!;
+    await flush(cb);
+    const btn = getByPart<HTMLButtonElement>(cb, 'button');
+    expect(btn.ariaLabelledByElements).to.have.length(1);
+    expect(btn.ariaLabelledByElements?.[0]?.tagName).to.equal('LABEL');
   });
 
   // ── Memory: no event listener leaks ────────────────────────────────────────

@@ -1,14 +1,15 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it } from 'vitest';
-import { flush, getByPart } from '../../../test-utils/test-utils.js';
+import { flush, getByPart } from '../../../test-utils/test-utils';
 
-import '../accordion.js';
-import '../accordion-item.js';
-import '../accordion-header.js';
-import '../accordion-trigger.js';
-import '../accordion-panel.js';
+import '../accordion';
+import '../accordion-item';
+import '../accordion-header';
+import '../accordion-trigger';
+import '../accordion-panel';
 
-import type { GrundAccordion } from '../accordion.js';
+import type { GrundAccordion } from '../accordion';
+import type { AccordionOpenChangeDetail } from '../types';
 
 describe('Accordion Panel Visibility', () => {
   it('removes panel from DOM when closed (default)', async () => {
@@ -84,7 +85,7 @@ describe('Accordion Panel Visibility', () => {
 
 describe('Accordion Event Suppression', () => {
   it('does NOT fire grund-open-change on initial render with defaultValue', async () => {
-    const events: any[] = [];
+    const events: AccordionOpenChangeDetail[] = [];
     const el = await fixture<GrundAccordion>(html`
       <grund-accordion .defaultValue=${['a']}>
         <grund-accordion-item
@@ -105,7 +106,7 @@ describe('Accordion Event Suppression', () => {
   });
 
   it('fires grund-open-change after initial render on user interaction', async () => {
-    const events: any[] = [];
+    const events: AccordionOpenChangeDetail[] = [];
     const el = await fixture<GrundAccordion>(html`
       <grund-accordion>
         <grund-accordion-item

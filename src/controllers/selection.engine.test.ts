@@ -1,6 +1,6 @@
 import { expect, describe, it } from 'vitest';
-import { SelectionEngine } from './selection.engine.js';
-import type { SelectionSnapshot } from './selection.engine.js';
+import { SelectionEngine } from './selection.engine';
+import type { SelectionSnapshot } from './selection.engine';
 
 describe('SelectionEngine', () => {
   function create(overrides?: Partial<SelectionSnapshot>): SelectionEngine {
@@ -47,6 +47,20 @@ describe('SelectionEngine', () => {
 
     it('does not seed when defaultValue is undefined', () => {
       const ctrl = create({ defaultValue: undefined });
+      expect(ctrl.selectedValues.size).to.equal(0);
+    });
+
+    it('does not reseed when first defaultValue is empty and a subsequent sync passes a non-empty defaultValue', () => {
+      // First sync with empty defaultValue — engine marks itself as seeded
+      const ctrl = create({ defaultValue: [] });
+      // Subsequent sync with a non-empty defaultValue must not reseed
+      ctrl.syncFromHost({
+        value: undefined,
+        defaultValue: ['a'],
+        multiple: false,
+        disabled: false,
+      });
+      expect(ctrl.isSelected('a')).to.be.false;
       expect(ctrl.selectedValues.size).to.equal(0);
     });
 
@@ -124,6 +138,70 @@ describe('SelectionEngine', () => {
       const ctrl = create({ defaultValue: ['a'] });
       const result = ctrl.requestToggle('a', true);
       expect(result).to.be.null;
+    });
+  });
+
+  describe('requestSet', () => {
+    it('replaces selected values and returns new array', () => {
+      const ctrl = create({ multiple: true, defaultValue: ['a'] });
+      const result = ctrl.requestSet(['b', 'c']);
+      expect(result).to.deep.equal(['b', 'c']);
+    });
+
+    it('updates internal state in uncontrolled mode', () => {
+      const ctrl = create({ multiple: true, defaultValue: ['a'] });
+      ctrl.requestSet(['b', 'c']);
+      expect(ctrl.isSelected('a')).to.be.false;
+      expect(ctrl.isSelected('b')).to.be.true;
+      expect(ctrl.isSelected('c')).to.be.true;
+    });
+
+    it('does not update internal state in controlled mode', () => {
+      const ctrl = create({ multiple: true, value: ['a'] });
+      const result = ctrl.requestSet(['b', 'c']);
+      expect(result).to.deep.equal(['b', 'c']);
+      // Internal state unchanged — consumer owns the value
+      expect(ctrl.isSelected('a')).to.be.true;
+      expect(ctrl.isSelected('b')).to.be.false;
+    });
+
+    it('returns null when disabled', () => {
+      const ctrl = create({ multiple: true, disabled: true });
+      const result = ctrl.requestSet(['a', 'b']);
+      expect(result).to.be.null;
+    });
+
+    it('handles empty array (deselect all)', () => {
+      const ctrl = create({ multiple: true, defaultValue: ['a', 'b'] });
+      const result = ctrl.requestSet([]);
+      expect(result).to.deep.equal([]);
+      expect(ctrl.isSelected('a')).to.be.false;
+      expect(ctrl.isSelected('b')).to.be.false;
+    });
+  });
+
+  describe('requestSet no-op detection', () => {
+    it('returns null when the requested set equals the current selection', () => {
+      const engine = new SelectionEngine();
+      engine.syncFromHost({ value: undefined, defaultValue: ['a', 'b'], multiple: true, disabled: false });
+
+      expect(engine.requestSet(['a', 'b'])).to.be.null;
+      expect(engine.requestSet(['b', 'a'])).to.be.null;
+      expect(engine.requestSet(['a', 'a', 'b'])).to.be.null;
+    });
+
+    it('returns null when both the requested set and the current selection are empty', () => {
+      const engine = new SelectionEngine();
+      engine.syncFromHost({ value: undefined, defaultValue: [], multiple: true, disabled: false });
+
+      expect(engine.requestSet([])).to.be.null;
+    });
+
+    it('returns an array when the requested set differs', () => {
+      const engine = new SelectionEngine();
+      engine.syncFromHost({ value: undefined, defaultValue: ['a'], multiple: true, disabled: false });
+
+      expect(engine.requestSet(['a', 'b'])).to.deep.equal(['a', 'b']);
     });
   });
 

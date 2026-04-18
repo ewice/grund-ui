@@ -6,6 +6,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import type { GrundCheckbox, CheckedChangeDetail } from '../src/components/checkbox';
 
 import '../src/components/checkbox';
+import '../src/components/checkbox-group';
 
 const onCheckedChange = (e: CustomEvent<CheckedChangeDetail>) =>
   action('grund-checked-change')(e.detail.checked);
@@ -242,6 +243,74 @@ export const RTL: Story = {
       <grund-checkbox @grund-checked-change=${onCheckedChange}>
         قبول الشروط والأحكام
       </grund-checkbox>
+    </div>
+  `,
+};
+
+export const ExternallyLabeled: Story = {
+  name: 'Externally labeled (label for)',
+  render: () => html`
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <label for="ext-cb" style="cursor: pointer; font-size: 14px;">Accept privacy policy</label>
+      <grund-checkbox id="ext-cb" @grund-checked-change=${onCheckedChange}></grund-checkbox>
+    </div>
+  `,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // The inner button must be discoverable by its associated label
+    const button = canvas.getByRole('checkbox', { name: /accept privacy policy/i });
+    expect(button).toHaveAttribute('aria-checked', 'false');
+  },
+};
+
+export const WithDescription: Story = {
+  name: 'With description (aria-describedby)',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <grund-checkbox
+        aria-describedby="cb-hint"
+        @grund-checked-change=${onCheckedChange}
+      >
+        Enable notifications
+      </grund-checkbox>
+      <span id="cb-hint" style="font-size: 12px; color: #666;">
+        You can unsubscribe at any time from your account settings.
+      </span>
+    </div>
+  `,
+};
+
+export const GroupedWithLabel: Story = {
+  name: 'Grouped with explicit label',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <span id="protocols-label" style="font-weight: 600; font-size: 14px;">Protocols</span>
+      <grund-checkbox-group
+        aria-labelledby="protocols-label"
+        @grund-value-change=${action('grund-value-change')}
+      >
+        <grund-checkbox value="http">HTTP</grund-checkbox>
+        <grund-checkbox value="https">HTTPS</grund-checkbox>
+        <grund-checkbox value="ftp">FTP</grund-checkbox>
+      </grund-checkbox-group>
+    </div>
+  `,
+};
+
+export const GroupedWithParent: Story = {
+  name: 'Grouped with parent (select all)',
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <span id="features-label" style="font-weight: 600; font-size: 14px;">Features</span>
+      <grund-checkbox-group
+        aria-labelledby="features-label"
+        @grund-value-change=${action('grund-value-change')}
+      >
+        <grund-checkbox parent value="all">Select all</grund-checkbox>
+        <grund-checkbox value="analytics">Analytics</grund-checkbox>
+        <grund-checkbox value="alerts">Alerts</grund-checkbox>
+        <grund-checkbox value="reports">Reports</grund-checkbox>
+      </grund-checkbox-group>
     </div>
   `,
 };

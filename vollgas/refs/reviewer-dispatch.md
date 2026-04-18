@@ -39,6 +39,12 @@ Run all 7 when:
 - Adding a new sub-part element to an existing component
 - Plan touches files across 3+ change types or modifies more than 5 files
 
+**Exception — lightweight containers:** Components that only provide context and a slot
+(no interactive shadow DOM elements, no keyboard handling, no ARIA roles beyond what children
+handle) may skip `security-reviewer` and `accessibility-reviewer`. Examples: `checkbox-group`
+(state coordinator, no own ARIA), `field` (label association only). Use this exception only
+when the component's `render()` contains nothing but `<slot></slot>`.
+
 ### Targeted selection
 
 | Change type | Reviewers |
@@ -83,9 +89,14 @@ After collecting reviewer findings:
 reviewers return PASS, the pipeline enters post-reviewer mode for the remainder of the branch.
 
 **Rule:** Any fix applied after reviewers have passed — whether during a subsequent pipeline
-step, a `/validate-build` run, or a manual audit — must be written to
-`vollgas/.feedback-queue.md` immediately. Do not wait; the record must survive context
-compression.
+step (including `code-simplifier` and `smallest-diff` post-review), a `/validate-build` run,
+or a manual audit — must be written to `vollgas/.feedback-queue.md` immediately. Do not wait;
+the record must survive context compression.
+
+**Code-simplifier is not exempt.** The code-simplifier runs after reviewers pass (review-gate
+step 12). Any change it makes — renaming, deduplication, restructuring — is a post-reviewer
+fix and MUST produce a feedback-queue entry. The review-gate orchestrator is responsible for
+checking the code-simplifier's output diff and writing entries for each meaningful change.
 
 **Entry format:**
 

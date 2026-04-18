@@ -1,10 +1,10 @@
 import { fixture, html, expect } from '@open-wc/testing';
 import { describe, it, vi } from 'vitest';
-import { flush, getByPart } from '../../../test-utils/test-utils.js';
+import { flush, getByPart } from '../../../test-utils/test-utils';
 import '../toggle';
 
 import type { GrundToggle } from '..';
-import type { PressedChangeDetail } from '../types.js';
+import type { PressedChangeDetail } from '../types';
 
 describe('GrundToggle', () => {
   async function setup(template = html`<grund-toggle>Label</grund-toggle>`) {

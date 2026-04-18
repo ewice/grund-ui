@@ -10,22 +10,13 @@ import { disabledContext } from '../../context/disabled.context';
 import type { TabsRootContext } from './tabs.context';
 import type { TabsHostSnapshot, TabsValueChangeDetail } from './types';
 
-/**
- * Root tabs container. Provides context to tab list, tabs, and panels.
- *
- * @element grund-tabs
- * @slot - Tab list and panel elements
- * @fires {CustomEvent<TabsValueChangeDetail>} grund-value-change - When the active tab changes
- */
 export class GrundTabs extends LitElement {
   public static override styles = css`
     :host {
-      display: block; /* block: this element is a block-level container */
+      display: block;
     }
   `;
 
-  // Not attribute-reflected: null requires property binding, string | null | undefined
-  // cannot be safely round-tripped through an attribute.
   @property({ attribute: false })
   public value: string | null | undefined = undefined;
 
@@ -50,22 +41,15 @@ export class GrundTabs extends LitElement {
   private registry = new TabsRegistry();
   private activationDirection: 'start' | 'end' | 'none' = 'none';
 
-  // Stable bound callbacks — defined as class fields so object identity is preserved across
-  // createRootContext() calls. Lit context consumers re-render when context reference changes;
-  // stable callbacks avoid triggering unnecessary re-renders on unrelated state updates.
   private readonly _registerTab = (value: string, tab: HTMLElement): void => {
     this.registry.registerTab(value, tab);
-    // Auto-select the first enabled tab when uncontrolled and nothing is selected yet.
-    // This must happen here (not in syncFromHost) because the registry is empty on the
-    // first willUpdate call — tabs register themselves after the root renders.
+
     if (this.controller.activeValue === null && this.value === undefined) {
       const ordered = this.registry.getOrderedValues();
       const disabled = this.registry.getDisabledValues();
       const first = ordered.find((v) => !disabled.has(v));
+
       if (first !== undefined) {
-        // Use seed() rather than requestActivation() so that a disabled root
-        // still gets its first tab auto-selected. Disabled blocks user
-        // interaction, not initial state seeding.
         this.controller.seed(first);
         this.rootCtx = this.createRootContext();
       }
@@ -79,7 +63,6 @@ export class GrundTabs extends LitElement {
 
   private readonly _registerPanel = (value: string, panel: HTMLElement): void => {
     this.registry.registerPanel(value, panel);
-    // Recreate context so tabs can resolve ariaControlsElements after panels register.
     this.rootCtx = this.createRootContext();
   };
 
@@ -125,15 +108,28 @@ export class GrundTabs extends LitElement {
   }
 
   private computeActivationDirection(): 'start' | 'end' | 'none' {
-    if (this.controller.previousValue === null) return 'none';
+    if (this.controller.previousValue === null) {
+      return 'none';
+    }
+
     const prevIdx = this.registry.indexOf(this.controller.previousValue);
     const activeIdx =
       this.controller.activeValue !== null
         ? this.registry.indexOf(this.controller.activeValue)
         : -1;
-    if (prevIdx < 0 || activeIdx < 0) return 'none';
-    if (prevIdx > activeIdx) return 'start';
-    if (prevIdx < activeIdx) return 'end';
+
+    if (prevIdx < 0 || activeIdx < 0) {
+      return 'none';
+    }
+
+    if (prevIdx > activeIdx) {
+      return 'start';
+    }
+
+    if (prevIdx < activeIdx) {
+      return 'end';
+    }
+
     return 'none';
   }
 
@@ -155,13 +151,16 @@ export class GrundTabs extends LitElement {
   }
 
   private handleActivation(value: string): void {
-    // Per-tab disabled check — registry-level guard independent of root disabled.
-    if (this.registry.getRecord(value)?.disabled) return;
+    if (this.registry.getRecord(value)?.disabled) {
+      return;
+    }
 
     const previousValue = this.controller.activeValue;
     const result = this.controller.requestActivation(value);
 
-    if (result === null) return;
+    if (result === null) {
+      return;
+    }
 
     this.dispatchEvent(
       new CustomEvent<TabsValueChangeDetail>('grund-value-change', {
@@ -171,8 +170,6 @@ export class GrundTabs extends LitElement {
       }),
     );
 
-    // Internal controller state changed without a reactive prop change, so
-    // willUpdate won't fire. Recreate context manually to propagate new activeValue.
     this.rootCtx = this.createRootContext();
   }
 
