@@ -1,4 +1,4 @@
-import { LitElement, html, css, nothing } from 'lit';
+import { LitElement, html, css, nothing, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 
@@ -132,22 +132,24 @@ export class GrundCheckboxGroup extends LitElement {
     }
   }
 
-  protected override updated(): void {
-    const group = this.shadowRoot?.querySelector<HTMLElement>('[part="group"]');
-    if (!group) {
-      return;
-    }
+  protected override updated(changed: PropertyValues): void {
+    if (!this.hasUpdated || changed.has('ariaLabelledBy') || changed.has('ariaDescribedBy')) {
+      const group = this.shadowRoot?.querySelector<HTMLElement>('[part="group"]');
+      if (!group) {
+        return;
+      }
 
-    if (this.ariaLabelledBy) {
-      group.ariaLabelledByElements = resolveReferencedElements(this.ariaLabelledBy, this);
-    } else {
-      group.ariaLabelledByElements = [];
-    }
+      if (this.ariaLabelledBy) {
+        group.ariaLabelledByElements = resolveReferencedElements(this.ariaLabelledBy, this);
+      } else {
+        group.ariaLabelledByElements = [];
+      }
 
-    if (this.ariaDescribedBy) {
-      group.ariaDescribedByElements = resolveReferencedElements(this.ariaDescribedBy, this);
-    } else {
-      group.ariaDescribedByElements = [];
+      if (this.ariaDescribedBy) {
+        group.ariaDescribedByElements = resolveReferencedElements(this.ariaDescribedBy, this);
+      } else {
+        group.ariaDescribedByElements = [];
+      }
     }
   }
 
