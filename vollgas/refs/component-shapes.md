@@ -16,6 +16,7 @@ and planned shared controllers (built when the first component of that category 
 | Renders a list of options, supports filtering or typeahead | Collection |
 | Appears temporarily to communicate status, auto-dismisses | Feedback |
 | No interaction, no state | Simple |
+| Compound API with 1–2 specialised sub-parts, internal shared state, no keyboard navigation | Stateful Simple Compound |
 
 ---
 
