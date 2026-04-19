@@ -44,7 +44,7 @@ export class GrundAvatarImage extends LitElement {
   private _imgLoadHandler: (() => void) | null = null;
   private _imgErrorHandler: (() => void) | null = null;
 
-  override connectedCallback(): void {
+  public override connectedCallback(): void {
     super.connectedCallback();
 
     if (import.meta.env.DEV) {
@@ -59,12 +59,12 @@ export class GrundAvatarImage extends LitElement {
     }
   }
 
-  override disconnectedCallback(): void {
+  public override disconnectedCallback(): void {
     super.disconnectedCallback();
     const img = this.shadowRoot?.querySelector('img');
     if (img) {
-      if (this._imgLoadHandler) img.removeEventListener('load', this._imgLoadHandler);
-      if (this._imgErrorHandler) img.removeEventListener('error', this._imgErrorHandler);
+      if (this._imgLoadHandler) { img.removeEventListener('load', this._imgLoadHandler); }
+      if (this._imgErrorHandler) { img.removeEventListener('error', this._imgErrorHandler); }
     }
     this._imgLoadHandler = null;
     this._imgErrorHandler = null;

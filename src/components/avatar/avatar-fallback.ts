@@ -34,7 +34,7 @@ export class GrundAvatarFallback extends LitElement {
 
   private _delayTimer: ReturnType<typeof setTimeout> | null = null;
 
-  override connectedCallback(): void {
+  public override connectedCallback(): void {
     super.connectedCallback();
 
     if (this.delay > 0) {
@@ -59,7 +59,7 @@ export class GrundAvatarFallback extends LitElement {
     }
   }
 
-  override disconnectedCallback(): void {
+  public override disconnectedCallback(): void {
     super.disconnectedCallback();
     if (this._delayTimer !== null) {
       clearTimeout(this._delayTimer);

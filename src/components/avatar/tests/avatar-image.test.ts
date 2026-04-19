@@ -14,7 +14,7 @@ const ONE_PX_SVG =
 async function waitFor(el: Element, predicate: () => boolean, timeoutMs = 500): Promise<void> {
   const start = Date.now();
   while (!predicate()) {
-    if (Date.now() - start > timeoutMs) throw new Error('waitFor: timeout');
+    if (Date.now() - start > timeoutMs) { throw new Error('waitFor: timeout'); }
     await new Promise<void>((r) => setTimeout(r, 10));
     await (el as GrundAvatar).updateComplete;
   }
@@ -113,7 +113,7 @@ describe('GrundAvatarImage', () => {
   });
 
   it('DEV: warns when missing alt', async () => {
-    if (!import.meta.env.DEV) return;
+    if (!import.meta.env.DEV) { return; }
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await fixture<GrundAvatar>(html`
       <grund-avatar>
@@ -127,7 +127,7 @@ describe('GrundAvatarImage', () => {
   });
 
   it('DEV: warns when two <grund-avatar-image> siblings exist', async () => {
-    if (!import.meta.env.DEV) return;
+    if (!import.meta.env.DEV) { return; }
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await fixture<GrundAvatar>(html`
       <grund-avatar>
@@ -142,7 +142,7 @@ describe('GrundAvatarImage', () => {
   });
 
   it('DEV: warns when used outside <grund-avatar>', async () => {
-    if (!import.meta.env.DEV) return;
+    if (!import.meta.env.DEV) { return; }
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await fixture(html`<grund-avatar-image src=${ONE_PX_SVG} alt="x"></grund-avatar-image>`);
     await flush(document.body);

@@ -15,7 +15,7 @@ const ONE_PX_SVG =
 async function waitFor(el: Element, predicate: () => boolean, timeoutMs = 500): Promise<void> {
   const start = Date.now();
   while (!predicate()) {
-    if (Date.now() - start > timeoutMs) throw new Error('waitFor: timeout');
+    if (Date.now() - start > timeoutMs) { throw new Error('waitFor: timeout'); }
     await new Promise<void>((r) => setTimeout(r, 10));
   }
 }
@@ -99,7 +99,7 @@ describe('GrundAvatarFallback', () => {
   });
 
   it('DEV: warns when two siblings exist', async () => {
-    if (!import.meta.env.DEV) return;
+    if (!import.meta.env.DEV) { return; }
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await fixture<GrundAvatar>(html`
       <grund-avatar>
@@ -114,7 +114,7 @@ describe('GrundAvatarFallback', () => {
   });
 
   it('DEV: warns when used outside <grund-avatar>', async () => {
-    if (!import.meta.env.DEV) return;
+    if (!import.meta.env.DEV) { return; }
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await fixture(html`<grund-avatar-fallback>JD</grund-avatar-fallback>`);
     await flush(document.body);

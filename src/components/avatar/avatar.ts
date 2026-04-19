@@ -46,7 +46,7 @@ export class GrundAvatar extends LitElement {
     });
   }
 
-  override disconnectedCallback(): void {
+  public override disconnectedCallback(): void {
     super.disconnectedCallback();
     this._unsubscribe?.();
     this._unsubscribe = null;

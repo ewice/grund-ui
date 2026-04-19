@@ -16,7 +16,7 @@ export class AvatarEngine {
   }
 
   public setStatus(next: AvatarStatus): void {
-    if (next === this._status) return;
+    if (next === this._status) { return; }
     this._status = next;
     for (const listener of this._listeners) {
       listener(next);

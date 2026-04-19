@@ -7,6 +7,9 @@ import '../avatar';
 import type { GrundAvatar } from '../avatar';
 import type { AvatarStatusChangeDetail } from '../types';
 
+const ONE_PX_SVG =
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/>";
+
 describe('GrundAvatar (root)', () => {
   async function setup(template = html`<grund-avatar></grund-avatar>`) {
     const el = await fixture<GrundAvatar>(template);
@@ -35,10 +38,7 @@ describe('GrundAvatar (root)', () => {
   it('reflects data-status to "loaded" when child image loads', async () => {
     const el = await setup(html`
       <grund-avatar>
-        <grund-avatar-image
-          src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/>"
-          alt="Pixel"
-        ></grund-avatar-image>
+        <grund-avatar-image src=${ONE_PX_SVG} alt="Pixel"></grund-avatar-image>
       </grund-avatar>
     `);
     await flush(el);
