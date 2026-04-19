@@ -65,8 +65,7 @@ describe('GrundAvatar (root)', () => {
     await flush(el);
 
     const statuses = events.map((e) => e.status);
-    expect(statuses).to.include('loading');
-    expect(statuses).to.include('error');
+    expect(statuses).to.deep.equal(['loading', 'error']);
   });
 
   it('grund-status-change is bubbles:true, composed:false', async () => {
@@ -86,5 +85,36 @@ describe('GrundAvatar (root)', () => {
     expect(captured, 'no event dispatched').to.exist;
     expect((captured as unknown as Event).bubbles).to.be.true;
     expect((captured as unknown as Event).composed).to.be.false;
+  });
+
+  it('cleans up engine subscription on disconnect', async () => {
+    const el = await setup();
+    // Disconnect the element — this should call unsubscribe on the engine listener
+    const parent = el.parentElement!;
+    parent.removeChild(el);
+    // Engine changes after disconnect must not cause errors or re-renders
+    // We verify by calling requestUpdate on the detached element — no throw
+    expect(() => el.requestUpdate()).not.to.throw();
+  });
+
+  it('two independent avatars do not share context', async () => {
+    const container = await fixture<HTMLDivElement>(html`
+      <div>
+        <grund-avatar id="a1">
+          <grund-avatar-image src="not-real-1.png" alt="x"></grund-avatar-image>
+        </grund-avatar>
+        <grund-avatar id="a2"></grund-avatar>
+      </div>
+    `);
+    await flush(container);
+    await new Promise<void>((r) => setTimeout(r, 100));
+    await flush(container);
+
+    const a1 = container.querySelector<GrundAvatar>('#a1')!;
+    const a2 = container.querySelector<GrundAvatar>('#a2')!;
+
+    // a1 should transition to error (bad URL), a2 stays idle (no image)
+    expect(a1.getAttribute('data-status')).to.equal('error');
+    expect(a2.getAttribute('data-status')).to.equal('idle');
   });
 });

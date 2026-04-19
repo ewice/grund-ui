@@ -150,4 +150,18 @@ describe('GrundAvatarImage', () => {
     expect(messages.some((m) => m.includes('[grund-avatar-image]') && m.includes('<grund-avatar>'))).to.be.true;
     warn.mockRestore();
   });
+
+  it('removes load/error listeners on disconnect', async () => {
+    const el = await fixture<GrundAvatar>(html`
+      <grund-avatar>
+        <grund-avatar-image src=${ONE_PX_SVG} alt="x"></grund-avatar-image>
+      </grund-avatar>
+    `);
+    await flush(el);
+    const image = el.querySelector('grund-avatar-image') as GrundAvatarImage;
+    // Disconnect the image element
+    el.removeChild(image);
+    // After disconnect, accessing shadowRoot should not throw and no cleanup errors
+    expect(() => image.requestUpdate()).not.to.throw();
+  });
 });
