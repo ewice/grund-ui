@@ -50,6 +50,24 @@ expectAriaRelationship(trigger, panel, 'controls');
 
 ---
 
+## Required Coverage
+
+Every component that attaches subscriptions or event listeners must have a
+mount/unmount test. This is non-negotiable — it is the only test category
+that catches the disconnect/reconnect bug class.
+
+**Trigger:** any `connectedCallback`, constructor, or `firstUpdated` that calls
+`addEventListener`, `addController`, or an engine's `onChange`.
+
+**What to assert:** After `el.remove()`, trigger the event or state change that
+the cleaned-up listener would have handled, then assert the element does NOT
+react. A "does not throw" assertion is insufficient — it passes even when
+cleanup is absent.
+
+Example using the Mount/Unmount Memory Test recipe below.
+
+---
+
 ## Recipes
 
 ### Standard Test File Structure
