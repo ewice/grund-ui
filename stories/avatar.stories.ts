@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { action } from 'storybook/actions';
-import { within, expect } from 'storybook/test';
+import { expect } from 'storybook/test';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { GrundAvatar, AvatarStatusChangeDetail } from '../src/components/avatar';
@@ -48,10 +48,11 @@ export const ImageWithFallback: Story = {
     </grund-avatar>
   `,
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const img = canvas.getByAltText('Jane Doe') as HTMLImageElement;
-    await new Promise<void>((r) => (img.complete ? r() : img.addEventListener('load', () => r())));
     const avatar = canvasElement.querySelector('grund-avatar')!;
+    const start = Date.now();
+    while (avatar.getAttribute('data-status') !== 'loaded' && Date.now() - start < 1000) {
+      await new Promise<void>((r) => setTimeout(r, 20));
+    }
     expect(avatar.getAttribute('data-status')).toBe('loaded');
   },
 };
