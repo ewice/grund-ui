@@ -22,4 +22,4 @@ Threshold for action: 2 occurrences in the same category.
 | Event sequence asserted with `.include()` instead of ordered `deep.equal()` | test-reviewer | `test/event-sequence-assertion` | 1 |
 | Listeners lost on disconnect/reconnect (firstUpdated runs once) | lit-reviewer | `lit/listener-reconnect` | 1 |
 
-Actions taken: pending approval
+Actions taken: (1) Added engine-onChange dispatch pattern to `vollgas/refs/lit-patterns.md` Rule 2. (2) Added Required Coverage section to `vollgas/refs/test-patterns.md` mandating mount/unmount tests for any component with listener/subscription cleanup.
