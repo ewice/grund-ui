@@ -3,6 +3,8 @@ import { describe, it } from 'vitest';
 
 import { flush, getByPart } from '../../../test-utils/test-utils';
 import '../avatar';
+import '../avatar-image';
+import '../avatar-fallback';
 
 import type { GrundAvatar } from '../avatar';
 import type { AvatarStatusChangeDetail } from '../types';

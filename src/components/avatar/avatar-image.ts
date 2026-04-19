@@ -38,7 +38,6 @@ export class GrundAvatarImage extends LitElement {
   @state()
   private _ctx: AvatarContext | undefined;
 
-  private _previousSrc: string | null = null;
   private _warnedAlt = false;
 
   private readonly _onLoad = (): void => { this._ctx?.setStatus('loaded'); };
@@ -54,12 +53,11 @@ export class GrundAvatarImage extends LitElement {
     }
 
     if (this._ctx !== undefined && changed.has('src')) {
-      if (this.src && this.src !== this._previousSrc) {
+      if (this.src) {
         this._ctx.setStatus('loading');
-      } else if (!this.src) {
+      } else {
         this._ctx.setStatus('idle');
       }
-      this._previousSrc = this.src;
     }
 
     this.dataset.status = this._ctx?.status ?? 'idle';

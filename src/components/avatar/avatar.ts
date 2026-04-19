@@ -102,6 +102,3 @@ if (!customElements.get('grund-avatar')) {
   customElements.define('grund-avatar', GrundAvatar);
 }
 
-export { GrundAvatarImage } from './avatar-image';
-export { GrundAvatarFallback } from './avatar-fallback';
-export type { AvatarStatus, AvatarStatusChangeDetail } from './types';
