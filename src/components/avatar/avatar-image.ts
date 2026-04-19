@@ -20,7 +20,7 @@ export class GrundAvatarImage extends LitElement {
       /* display:none (not visibility:hidden) so the image reserves no layout space while loading */
     }
     :host([data-status='loaded']) {
-      display: inline;
+      display: inline; /* reveal once status reflects successful load */
     }
   `;
 
@@ -43,21 +43,6 @@ export class GrundAvatarImage extends LitElement {
 
   private _imgLoadHandler: (() => void) | null = null;
   private _imgErrorHandler: (() => void) | null = null;
-
-  public override connectedCallback(): void {
-    super.connectedCallback();
-
-    if (import.meta.env.DEV) {
-      queueMicrotask(() => {
-        const count = this.parentElement?.querySelectorAll('grund-avatar-image').length ?? 0;
-        if (count > 1) {
-          console.warn(
-            '[grund-avatar-image] more than one <grund-avatar-image> inside a <grund-avatar>. Use at most one.',
-          );
-        }
-      });
-    }
-  }
 
   public override disconnectedCallback(): void {
     super.disconnectedCallback();
@@ -116,7 +101,7 @@ export class GrundAvatarImage extends LitElement {
     return html`<img
       part="image"
       src=${this.src ?? nothing}
-      alt=${this.alt ?? nothing}
+      alt=${this.alt ?? ''}
       srcset=${this.srcset ?? nothing}
       sizes=${this.sizes ?? nothing}
       crossorigin=${this.crossorigin ?? nothing}
