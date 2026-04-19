@@ -1077,6 +1077,1065 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/accordion/accordion-header.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Heading wrapper for an accordion item trigger.",
+          "name": "GrundAccordionHeader",
+          "slots": [
+            {
+              "description": "Trigger element",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "level",
+              "type": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6"
+              },
+              "privacy": "public",
+              "default": "3",
+              "attribute": "level"
+            },
+            {
+              "kind": "field",
+              "name": "itemCtx",
+              "type": {
+                "text": "AccordionItemContext | undefined"
+              },
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "level",
+              "type": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6"
+              },
+              "default": "3",
+              "fieldName": "level"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion-header",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordionHeader",
+          "declaration": {
+            "name": "GrundAccordionHeader",
+            "module": "src/components/accordion/accordion-header.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion-header",
+          "declaration": {
+            "name": "GrundAccordionHeader",
+            "module": "src/components/accordion/accordion-header.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundAccordionItem",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "rootCtx",
+              "type": {
+                "text": "AccordionRootContext | undefined"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "ancestorDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true,
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "itemCtx",
+              "type": {
+                "text": "AccordionItemContext"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "disabledCtx",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "hasSettled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "prevExpanded",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "privacy": "private",
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "isRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "boundToggle",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "boundAttachTrigger",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "boundDetachTrigger",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "boundAttachPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "boundDetachPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "createItemContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "AccordionItemContext"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-open-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion-item",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordionItem",
+          "declaration": {
+            "name": "GrundAccordionItem",
+            "module": "src/components/accordion/accordion-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion-item",
+          "declaration": {
+            "name": "GrundAccordionItem",
+            "module": "src/components/accordion/accordion-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundAccordionPanel",
+          "members": [
+            {
+              "kind": "field",
+              "name": "keepMounted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "keep-mounted"
+            },
+            {
+              "kind": "field",
+              "name": "hiddenUntilFound",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "hidden-until-found"
+            },
+            {
+              "kind": "field",
+              "name": "itemCtx",
+              "type": {
+                "text": "AccordionItemContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isPanelRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "handleBeforematch",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "effectiveKeepMounted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "effectiveHiddenUntilFound",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "keep-mounted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "keepMounted"
+            },
+            {
+              "name": "hidden-until-found",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hiddenUntilFound"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordionPanel",
+          "declaration": {
+            "name": "GrundAccordionPanel",
+            "module": "src/components/accordion/accordion-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion-panel",
+          "declaration": {
+            "name": "GrundAccordionPanel",
+            "module": "src/components/accordion/accordion-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion-trigger.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundAccordionTrigger",
+          "members": [
+            {
+              "kind": "field",
+              "name": "itemCtx",
+              "type": {
+                "text": "AccordionItemContext | undefined"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "isTriggerRegistered",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "handleClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion-trigger",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordionTrigger",
+          "declaration": {
+            "name": "GrundAccordionTrigger",
+            "module": "src/components/accordion/accordion-trigger.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion-trigger",
+          "declaration": {
+            "name": "GrundAccordionTrigger",
+            "module": "src/components/accordion/accordion-trigger.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "accordionRootContext"
+        },
+        {
+          "kind": "variable",
+          "name": "accordionItemContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "accordionRootContext",
+          "declaration": {
+            "name": "accordionRootContext",
+            "module": "src/components/accordion/accordion.context.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "accordionItemContext",
+          "declaration": {
+            "name": "accordionItemContext",
+            "module": "src/components/accordion/accordion.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion.engine.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion.registry.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "AccordionRegistry",
+          "members": [
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "readonly AccordionItemRecord[]"
+              },
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "registerItem",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "unregisterItem",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "attachTrigger",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "trigger",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "attachPanel",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "panel",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "detachTrigger",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "detachPanel",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getRecord",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "AccordionItemRecord | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "indexOf",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "OrderedRegistry",
+            "module": "/src/utils/ordered-registry"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AccordionRegistry",
+          "declaration": {
+            "name": "AccordionRegistry",
+            "module": "src/components/accordion/accordion.registry.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/accordion.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundAccordion",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "multiple"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "privacy": "public",
+              "default": "'vertical'",
+              "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "loopFocus",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "true",
+              "attribute": "loop-focus"
+            },
+            {
+              "kind": "field",
+              "name": "keepMounted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "keep-mounted"
+            },
+            {
+              "kind": "field",
+              "name": "hiddenUntilFound",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "hidden-until-found"
+            },
+            {
+              "kind": "field",
+              "name": "rootCtx",
+              "type": {
+                "text": "AccordionRootContext"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "disabledCtx",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "engine",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new AccordionEngine()"
+            },
+            {
+              "kind": "field",
+              "name": "registry",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new AccordionRegistry()"
+            },
+            {
+              "kind": "field",
+              "name": "_isExpanded",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_requestToggle",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_registerItem",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_unregisterItem",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_indexOf",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_attachTrigger",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_detachTrigger",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_attachPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_detachPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "rovingFocus",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new RovingFocusController(this, { orientation: 'vertical', loop: true, getItems: () => this.registry.items .map((r) => r.trigger?.shadowRoot?.querySelector<HTMLElement>('[part=\"trigger\"]') ?? null) .filter((t): t is HTMLElement => t !== null), })"
+            },
+            {
+              "kind": "method",
+              "name": "createRootContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "AccordionRootContext"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleToggle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "itemValue",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "itemDisabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-value-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "value"
+            },
+            {
+              "name": "default-value",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "defaultValue"
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "multiple"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "default": "'vertical'",
+              "fieldName": "orientation"
+            },
+            {
+              "name": "loop-focus",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "loopFocus"
+            },
+            {
+              "name": "keep-mounted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "keepMounted"
+            },
+            {
+              "name": "hidden-until-found",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hiddenUntilFound"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-accordion",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordion",
+          "declaration": {
+            "name": "GrundAccordion",
+            "module": "src/components/accordion/accordion.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-accordion",
+          "declaration": {
+            "name": "GrundAccordion",
+            "module": "src/components/accordion/accordion.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundAccordion",
+          "declaration": {
+            "name": "GrundAccordion",
+            "module": "./accordion"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundAccordionItem",
+          "declaration": {
+            "name": "GrundAccordionItem",
+            "module": "./accordion-item"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundAccordionHeader",
+          "declaration": {
+            "name": "GrundAccordionHeader",
+            "module": "./accordion-header"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundAccordionTrigger",
+          "declaration": {
+            "name": "GrundAccordionTrigger",
+            "module": "./accordion-trigger"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundAccordionPanel",
+          "declaration": {
+            "name": "GrundAccordionPanel",
+            "module": "./accordion-panel"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AccordionValueChangeDetail",
+          "declaration": {
+            "name": "AccordionValueChangeDetail",
+            "module": "./types"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AccordionOpenChangeDetail",
+          "declaration": {
+            "name": "AccordionOpenChangeDetail",
+            "module": "./types"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/accordion/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/tabs/index.ts",
       "declarations": [],
       "exports": [
@@ -2154,1065 +3213,6 @@
     {
       "kind": "javascript-module",
       "path": "src/components/tabs/types.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/accordion-header.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Heading wrapper for an accordion item trigger.",
-          "name": "GrundAccordionHeader",
-          "slots": [
-            {
-              "description": "Trigger element",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "level",
-              "type": {
-                "text": "1 | 2 | 3 | 4 | 5 | 6"
-              },
-              "privacy": "public",
-              "default": "3",
-              "attribute": "level"
-            },
-            {
-              "kind": "field",
-              "name": "itemCtx",
-              "type": {
-                "text": "AccordionItemContext | undefined"
-              },
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "level",
-              "type": {
-                "text": "1 | 2 | 3 | 4 | 5 | 6"
-              },
-              "default": "3",
-              "fieldName": "level"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-accordion-header",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundAccordionHeader",
-          "declaration": {
-            "name": "GrundAccordionHeader",
-            "module": "src/components/accordion/accordion-header.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-accordion-header",
-          "declaration": {
-            "name": "GrundAccordionHeader",
-            "module": "src/components/accordion/accordion-header.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/accordion-item.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "GrundAccordionItem",
-          "members": [
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "public",
-              "default": "''",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "rootCtx",
-              "type": {
-                "text": "AccordionRootContext | undefined"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "ancestorDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "readonly": true,
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "itemCtx",
-              "type": {
-                "text": "AccordionItemContext"
-              },
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "disabledCtx",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "protected",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "hasSettled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "prevExpanded",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "privacy": "private",
-              "default": "undefined"
-            },
-            {
-              "kind": "field",
-              "name": "isRegistered",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "boundToggle",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "boundAttachTrigger",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "boundDetachTrigger",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "boundAttachPanel",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "boundDetachPanel",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "createItemContext",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "AccordionItemContext"
-                }
-              }
-            }
-          ],
-          "events": [
-            {
-              "name": "grund-open-change",
-              "type": {
-                "text": "CustomEvent"
-              }
-            }
-          ],
-          "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "value"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-accordion-item",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundAccordionItem",
-          "declaration": {
-            "name": "GrundAccordionItem",
-            "module": "src/components/accordion/accordion-item.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-accordion-item",
-          "declaration": {
-            "name": "GrundAccordionItem",
-            "module": "src/components/accordion/accordion-item.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/accordion-panel.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "GrundAccordionPanel",
-          "members": [
-            {
-              "kind": "field",
-              "name": "keepMounted",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "keep-mounted"
-            },
-            {
-              "kind": "field",
-              "name": "hiddenUntilFound",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "hidden-until-found"
-            },
-            {
-              "kind": "field",
-              "name": "itemCtx",
-              "type": {
-                "text": "AccordionItemContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "isPanelRegistered",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "handleBeforematch",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "effectiveKeepMounted",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "effectiveHiddenUntilFound",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "readonly": true
-            }
-          ],
-          "attributes": [
-            {
-              "name": "keep-mounted",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "keepMounted"
-            },
-            {
-              "name": "hidden-until-found",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hiddenUntilFound"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-accordion-panel",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundAccordionPanel",
-          "declaration": {
-            "name": "GrundAccordionPanel",
-            "module": "src/components/accordion/accordion-panel.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-accordion-panel",
-          "declaration": {
-            "name": "GrundAccordionPanel",
-            "module": "src/components/accordion/accordion-panel.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/accordion-trigger.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "GrundAccordionTrigger",
-          "members": [
-            {
-              "kind": "field",
-              "name": "itemCtx",
-              "type": {
-                "text": "AccordionItemContext | undefined"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "isTriggerRegistered",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "method",
-              "name": "handleClick",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-accordion-trigger",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundAccordionTrigger",
-          "declaration": {
-            "name": "GrundAccordionTrigger",
-            "module": "src/components/accordion/accordion-trigger.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-accordion-trigger",
-          "declaration": {
-            "name": "GrundAccordionTrigger",
-            "module": "src/components/accordion/accordion-trigger.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/accordion.context.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "accordionRootContext"
-        },
-        {
-          "kind": "variable",
-          "name": "accordionItemContext"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "accordionRootContext",
-          "declaration": {
-            "name": "accordionRootContext",
-            "module": "src/components/accordion/accordion.context.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "accordionItemContext",
-          "declaration": {
-            "name": "accordionItemContext",
-            "module": "src/components/accordion/accordion.context.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/accordion.engine.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/accordion.registry.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "AccordionRegistry",
-          "members": [
-            {
-              "kind": "field",
-              "name": "items",
-              "type": {
-                "text": "readonly AccordionItemRecord[]"
-              },
-              "privacy": "public",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "registerItem",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                },
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "unregisterItem",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "attachTrigger",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                },
-                {
-                  "name": "trigger",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "attachPanel",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                },
-                {
-                  "name": "panel",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "detachTrigger",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "detachPanel",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getRecord",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "AccordionItemRecord | undefined"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "indexOf",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "number"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ]
-            }
-          ],
-          "superclass": {
-            "name": "OrderedRegistry",
-            "module": "/src/utils/ordered-registry"
-          }
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "AccordionRegistry",
-          "declaration": {
-            "name": "AccordionRegistry",
-            "module": "src/components/accordion/accordion.registry.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/accordion.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "GrundAccordion",
-          "members": [
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "privacy": "public",
-              "default": "undefined",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "privacy": "public",
-              "default": "undefined",
-              "attribute": "default-value"
-            },
-            {
-              "kind": "field",
-              "name": "multiple",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "multiple"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "orientation",
-              "type": {
-                "text": "'vertical' | 'horizontal'"
-              },
-              "privacy": "public",
-              "default": "'vertical'",
-              "attribute": "orientation"
-            },
-            {
-              "kind": "field",
-              "name": "loopFocus",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "true",
-              "attribute": "loop-focus"
-            },
-            {
-              "kind": "field",
-              "name": "keepMounted",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "keep-mounted"
-            },
-            {
-              "kind": "field",
-              "name": "hiddenUntilFound",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "hidden-until-found"
-            },
-            {
-              "kind": "field",
-              "name": "rootCtx",
-              "type": {
-                "text": "AccordionRootContext"
-              },
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "disabledCtx",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "protected",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "engine",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new AccordionEngine()"
-            },
-            {
-              "kind": "field",
-              "name": "registry",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new AccordionRegistry()"
-            },
-            {
-              "kind": "field",
-              "name": "_isExpanded",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_requestToggle",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_registerItem",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_unregisterItem",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_indexOf",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_attachTrigger",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_detachTrigger",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_attachPanel",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_detachPanel",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "rovingFocus",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new RovingFocusController(this, { orientation: 'vertical', loop: true, getItems: () => this.registry.items .map((r) => r.trigger?.shadowRoot?.querySelector<HTMLElement>('[part=\"trigger\"]') ?? null) .filter((t): t is HTMLElement => t !== null), })"
-            },
-            {
-              "kind": "method",
-              "name": "createRootContext",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "AccordionRootContext"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "handleToggle",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "itemValue",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "itemDisabled",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "name": "grund-value-change",
-              "type": {
-                "text": "CustomEvent"
-              }
-            }
-          ],
-          "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "default": "undefined",
-              "fieldName": "value"
-            },
-            {
-              "name": "default-value",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "default": "undefined",
-              "fieldName": "defaultValue"
-            },
-            {
-              "name": "multiple",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "multiple"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "orientation",
-              "type": {
-                "text": "'vertical' | 'horizontal'"
-              },
-              "default": "'vertical'",
-              "fieldName": "orientation"
-            },
-            {
-              "name": "loop-focus",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "fieldName": "loopFocus"
-            },
-            {
-              "name": "keep-mounted",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "keepMounted"
-            },
-            {
-              "name": "hidden-until-found",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hiddenUntilFound"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-accordion",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundAccordion",
-          "declaration": {
-            "name": "GrundAccordion",
-            "module": "src/components/accordion/accordion.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-accordion",
-          "declaration": {
-            "name": "GrundAccordion",
-            "module": "src/components/accordion/accordion.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundAccordion",
-          "declaration": {
-            "name": "GrundAccordion",
-            "module": "./accordion"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundAccordionItem",
-          "declaration": {
-            "name": "GrundAccordionItem",
-            "module": "./accordion-item"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundAccordionHeader",
-          "declaration": {
-            "name": "GrundAccordionHeader",
-            "module": "./accordion-header"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundAccordionTrigger",
-          "declaration": {
-            "name": "GrundAccordionTrigger",
-            "module": "./accordion-trigger"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundAccordionPanel",
-          "declaration": {
-            "name": "GrundAccordionPanel",
-            "module": "./accordion-panel"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "AccordionValueChangeDetail",
-          "declaration": {
-            "name": "AccordionValueChangeDetail",
-            "module": "./types"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "AccordionOpenChangeDetail",
-          "declaration": {
-            "name": "AccordionOpenChangeDetail",
-            "module": "./types"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/accordion/types.ts",
       "declarations": [],
       "exports": []
     },
