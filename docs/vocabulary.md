@@ -26,6 +26,7 @@ for the same semantic action.
 | `registerPanel` / `unregisterPanel` | Add/remove a panel from the tabs registry | `ctx.registerPanel(value, this)` |
 | `setDisabled` | Sync disabled state from a tab to the registry | `ctx.setDisabled(value, disabled)` |
 | `registerToggle` / `unregisterToggle` | Add/remove a toggle child from the toggle-group registry | `ctx.registerToggle(this, value)` |
+| `setStatus` | Set avatar image loading status (idle/loading/loaded/error) | `ctx.setStatus('loaded')` |
 
 ---
 
@@ -40,6 +41,7 @@ is reviewed separately from the naming registry.
 | `grund-open-change` | `{ value: string, open: boolean, index: number }` | An item opened or closed |
 | `grund-pressed-change` | `{ pressed: boolean }` | Toggle pressed state changed |
 | `grund-checked-change` | `{ checked: boolean }` | Checkbox checked state changed |
+| `grund-status-change` | `{ status: 'idle' \| 'loading' \| 'loaded' \| 'error' }` | Avatar image loading status transitioned |
 
 ---
 
@@ -62,6 +64,9 @@ CSS `::part()` names. All lowercase, hyphenated nouns.
 | `group` | The inner container wrapping slotted toggle children | ToggleGroup |
 | `close-button` | Button that closes an overlay | Dialog, Sheet, Toast |
 | `overlay` | The backdrop/scrim behind a modal | Dialog, Sheet |
+| `root` | Avatar host container | Avatar |
+| `image` | Internal `<img>` inside `<grund-avatar-image>` | Avatar |
+| `fallback` | Fallback content wrapper | Avatar |
 
 ---
 
@@ -95,6 +100,7 @@ Standard data attributes set by controllers or elements as public API.
 | `data-indeterminate` | boolean presence | Host in `willUpdate` | Indeterminate (mixed) state for checkbox. |
 | `data-required` | boolean presence | Host in `willUpdate` | Form control is required. |
 | `data-readonly` | boolean presence | Host in `willUpdate` | Form control is read-only. |
+| `data-status` | `"idle"` / `"loading"` / `"loaded"` / `"error"` | Root in `willUpdate`; image reflects its own `data-status` from consumed context | Avatar image loading status |
 
 ---
 
@@ -110,6 +116,7 @@ Context symbols follow the pattern `{ComponentName}Context` for the root context
 | `tabsRootContext` | Root-level context for tabs |
 | `toggleGroupRootContext` | Root-level context for toggle-group |
 | `checkboxContext` | Checkbox state for indicator |
+| `avatarContext` | Avatar status + setStatus for image/fallback |
 
 ---
 
@@ -133,6 +140,9 @@ All custom elements: `grund-{component-name}[-{sub-element}]`
 | Toggle Group root | `grund-toggle-group` |
 | Checkbox | `grund-checkbox` |
 | Checkbox indicator | `grund-checkbox-indicator` |
+| Avatar root | `grund-avatar` |
+| Avatar image | `grund-avatar-image` |
+| Avatar fallback | `grund-avatar-fallback` |
 
 ---
 
