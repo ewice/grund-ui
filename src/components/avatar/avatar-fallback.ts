@@ -36,7 +36,32 @@ export class GrundAvatarFallback extends LitElement {
 
   public override connectedCallback(): void {
     super.connectedCallback();
+    this._startDelay();
+  }
 
+  public override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this._clearDelayTimer();
+  }
+
+  protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
+    if (import.meta.env.DEV && this._ctx === undefined) {
+      console.warn(
+        '[grund-avatar-fallback] Must be used inside <grund-avatar>. Wrap this element in <grund-avatar>.',
+      );
+    }
+
+    if (changed.has('delay') && this.hasUpdated) {
+      this._clearDelayTimer();
+      this._startDelay();
+    }
+
+    const status = this._ctx?.status ?? 'idle';
+    const shouldBeVisible = (status === 'idle' || status === 'error') && this._delayPassed;
+    this.toggleAttribute('data-visible', shouldBeVisible);
+  }
+
+  private _startDelay(): void {
     if (this.delay > 0) {
       this._delayTimer = setTimeout(() => {
         this._delayPassed = true;
@@ -46,45 +71,13 @@ export class GrundAvatarFallback extends LitElement {
     } else {
       this._delayPassed = true;
     }
-
   }
 
-  public override disconnectedCallback(): void {
-    super.disconnectedCallback();
+  private _clearDelayTimer(): void {
     if (this._delayTimer !== null) {
       clearTimeout(this._delayTimer);
       this._delayTimer = null;
     }
-  }
-
-  protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
-    if (import.meta.env.DEV) {
-      if (this._ctx === undefined) {
-        console.warn(
-          '[grund-avatar-fallback] Must be used inside <grund-avatar>. Wrap this element in <grund-avatar>.',
-        );
-      }
-    }
-
-    if (changed.has('delay') && this.hasUpdated) {
-      if (this._delayTimer !== null) {
-        clearTimeout(this._delayTimer);
-        this._delayTimer = null;
-      }
-      if (this.delay > 0) {
-        this._delayTimer = setTimeout(() => {
-          this._delayPassed = true;
-          this._delayTimer = null;
-          this.requestUpdate();
-        }, this.delay);
-      } else {
-        this._delayPassed = true;
-      }
-    }
-
-    const status = this._ctx?.status ?? 'idle';
-    const shouldBeVisible = (status === 'idle' || status === 'error') && this._delayPassed;
-    this.toggleAttribute('data-visible', shouldBeVisible);
   }
 
   protected override render() {

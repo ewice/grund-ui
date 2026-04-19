@@ -44,20 +44,14 @@ export class GrundAvatarImage extends LitElement {
   private readonly _onError = (): void => { this._ctx?.setStatus('error'); };
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
-    if (this._ctx === undefined) {
-      if (import.meta.env.DEV) {
-        console.warn(
-          '[grund-avatar-image] Must be used inside <grund-avatar>. Wrap this element in <grund-avatar>.',
-        );
-      }
+    if (import.meta.env.DEV && this._ctx === undefined) {
+      console.warn(
+        '[grund-avatar-image] Must be used inside <grund-avatar>. Wrap this element in <grund-avatar>.',
+      );
     }
 
     if (this._ctx !== undefined && changed.has('src')) {
-      if (this.src) {
-        this._ctx.setStatus('loading');
-      } else {
-        this._ctx.setStatus('idle');
-      }
+      this._ctx.setStatus(this.src ? 'loading' : 'idle');
     }
 
     this.dataset.status = this._ctx?.status ?? 'idle';

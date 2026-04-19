@@ -57,7 +57,7 @@ export class GrundAvatar extends LitElement {
 
     this.dataset.status = status;
 
-    if (!this.hasUpdated || this.engine.status !== this.avatarCtx?.status) {
+    if (!this.hasUpdated || status !== this.avatarCtx?.status) {
       this.avatarCtx = { status, setStatus: this._setStatus };
     }
   }
