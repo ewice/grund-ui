@@ -17,7 +17,7 @@ export class GrundAvatarImage extends LitElement {
   public static override readonly styles = css`
     :host {
       display: none;
-      /* Hidden until image loads — visibility is driven by data-status attribute */
+      /* display:none (not visibility:hidden) so the image reserves no layout space while loading */
     }
     :host([data-status='loaded']) {
       display: inline;

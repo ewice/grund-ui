@@ -40,7 +40,7 @@ export class GrundAvatar extends LitElement {
 
   constructor() {
     super();
-    // Subscribe to engine changes so each transition triggers a re-render.
+    // Engine is not a ReactiveController, so it won't trigger Lit updates automatically.
     this._unsubscribe = this.engine.onChange(() => {
       this.requestUpdate();
     });

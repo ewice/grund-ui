@@ -16,7 +16,7 @@ import type { AvatarContext } from './avatar.context';
 export class GrundAvatarFallback extends LitElement {
   public static override readonly styles = css`
     :host {
-      display: none; /* hidden until delayed visibility engaged */
+      display: none; /* display:none so the fallback occupies no space while hidden */
     }
     :host([data-visible]) {
       display: inline;
