@@ -60,7 +60,27 @@ export class GrundAvatar extends LitElement {
     if (!this.hasUpdated || this.engine.status !== this.avatarCtx?.status) {
       this.avatarCtx = { status, setStatus: this._setStatus };
     }
+  }
 
+  protected override firstUpdated(): void {
+    if (import.meta.env.DEV) {
+      const slot = this.shadowRoot!.querySelector('slot')!;
+      slot.addEventListener('slotchange', () => {
+        const children = slot.assignedElements({ flatten: true });
+        const images = children.filter(el => el.tagName === 'GRUND-AVATAR-IMAGE');
+        const fallbacks = children.filter(el => el.tagName === 'GRUND-AVATAR-FALLBACK');
+        if (images.length > 1) {
+          console.warn('[grund-avatar-image] more than one <grund-avatar-image> inside a <grund-avatar>. Use at most one.');
+        }
+        if (fallbacks.length > 1) {
+          console.warn('[grund-avatar-fallback] more than one <grund-avatar-fallback> inside a <grund-avatar>. Use at most one.');
+        }
+      });
+    }
+  }
+
+  protected override updated(): void {
+    const status = this.engine.status;
     if (this._previousStatus !== null && this._previousStatus !== status) {
       this.dispatchEvent(
         new CustomEvent<AvatarStatusChangeDetail>('grund-status-change', {
@@ -70,7 +90,6 @@ export class GrundAvatar extends LitElement {
         }),
       );
     }
-
     this._previousStatus = status;
   }
 
