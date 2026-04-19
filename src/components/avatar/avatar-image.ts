@@ -41,19 +41,8 @@ export class GrundAvatarImage extends LitElement {
   private _previousSrc: string | null = null;
   private _warnedAlt = false;
 
-  private _imgLoadHandler: (() => void) | null = null;
-  private _imgErrorHandler: (() => void) | null = null;
-
-  public override disconnectedCallback(): void {
-    super.disconnectedCallback();
-    const img = this.shadowRoot?.querySelector('img');
-    if (img) {
-      if (this._imgLoadHandler) { img.removeEventListener('load', this._imgLoadHandler); }
-      if (this._imgErrorHandler) { img.removeEventListener('error', this._imgErrorHandler); }
-    }
-    this._imgLoadHandler = null;
-    this._imgErrorHandler = null;
-  }
+  private readonly _onLoad = (): void => { this._ctx?.setStatus('loaded'); };
+  private readonly _onError = (): void => { this._ctx?.setStatus('error'); };
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
     if (this._ctx === undefined) {
@@ -83,20 +72,6 @@ export class GrundAvatarImage extends LitElement {
     }
   }
 
-  protected override firstUpdated(): void {
-    const img = this.shadowRoot!.querySelector('img')!;
-
-    this._imgLoadHandler = () => {
-      this._ctx?.setStatus('loaded');
-    };
-    this._imgErrorHandler = () => {
-      this._ctx?.setStatus('error');
-    };
-
-    img.addEventListener('load', this._imgLoadHandler);
-    img.addEventListener('error', this._imgErrorHandler);
-  }
-
   protected override render() {
     return html`<img
       part="image"
@@ -109,6 +84,8 @@ export class GrundAvatarImage extends LitElement {
       decoding=${this.decoding ?? nothing}
       loading=${this.loading ?? nothing}
       fetchpriority=${this.fetchpriority ?? nothing}
+      @load=${this._onLoad}
+      @error=${this._onError}
     />`;
   }
 }
