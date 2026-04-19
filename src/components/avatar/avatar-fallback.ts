@@ -19,7 +19,7 @@ export class GrundAvatarFallback extends LitElement {
       display: none; /* display:none so the fallback occupies no space while hidden */
     }
     :host([data-visible]) {
-      display: inline;
+      display: inline; /* reveal once status is idle or error and delay has elapsed */
     }
   `;
 
@@ -47,16 +47,6 @@ export class GrundAvatarFallback extends LitElement {
       this._delayPassed = true;
     }
 
-    if (import.meta.env.DEV) {
-      queueMicrotask(() => {
-        const count = this.parentElement?.querySelectorAll('grund-avatar-fallback').length ?? 0;
-        if (count > 1) {
-          console.warn(
-            '[grund-avatar-fallback] more than one <grund-avatar-fallback> inside a <grund-avatar>. Use at most one.',
-          );
-        }
-      });
-    }
   }
 
   public override disconnectedCallback(): void {
@@ -92,7 +82,8 @@ export class GrundAvatarFallback extends LitElement {
       }
     }
 
-    const shouldBeVisible = (this._ctx?.status ?? 'idle') !== 'loaded' && this._delayPassed;
+    const status = this._ctx?.status ?? 'idle';
+    const shouldBeVisible = (status === 'idle' || status === 'error') && this._delayPassed;
     this.toggleAttribute('data-visible', shouldBeVisible);
   }
 
