@@ -101,6 +101,7 @@ Standard data attributes set by controllers or elements as public API.
 | `data-required` | boolean presence | Host in `willUpdate` | Form control is required. |
 | `data-readonly` | boolean presence | Host in `willUpdate` | Form control is read-only. |
 | `data-status` | `"idle"` / `"loading"` / `"loaded"` / `"error"` | Root in `willUpdate`; image reflects its own `data-status` from consumed context | Avatar image loading status |
+| `data-visible` | boolean presence | `<grund-avatar-fallback>` in `willUpdate` | Fallback is currently visible (status is idle or error and delay has elapsed) |
 
 ---
 
