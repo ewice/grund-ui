@@ -6,24 +6,16 @@ import { avatarContext } from './avatar.context';
 
 import type { AvatarContext } from './avatar.context';
 
-/**
- * Fallback content displayed while the avatar image is loading or has failed.
- *
- * @element grund-avatar-fallback
- * @slot - Fallback content (initials, icon)
- * @csspart fallback - Wrapper span
- */
 export class GrundAvatarFallback extends LitElement {
   public static override readonly styles = css`
     :host {
-      display: none; /* display:none so the fallback occupies no space while hidden */
+      display: none;
     }
     :host([data-visible]) {
-      display: inline; /* reveal once status is idle or error and delay has elapsed */
+      display: inline;
     }
   `;
 
-  /** Milliseconds to wait before showing the fallback. Useful to avoid FOUC on fast connections. */
   @property({ type: Number }) public delay = 0;
 
   @consume({ context: avatarContext, subscribe: true })
@@ -31,6 +23,8 @@ export class GrundAvatarFallback extends LitElement {
   private _ctx: AvatarContext | undefined;
 
   private _delayPassed = false;
+  private _warnedMissingParent = false;
+  private _warnedDuplicate = false;
 
   private _delayTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -45,10 +39,8 @@ export class GrundAvatarFallback extends LitElement {
   }
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
-    if (import.meta.env.DEV && this._ctx === undefined) {
-      console.warn(
-        '[grund-avatar-fallback] Must be used inside <grund-avatar>. Wrap this element in <grund-avatar>.',
-      );
+    if (import.meta.env.DEV) {
+      this._warnForMisuse();
     }
 
     if (changed.has('delay') && this.hasUpdated) {
@@ -57,8 +49,35 @@ export class GrundAvatarFallback extends LitElement {
     }
 
     const status = this._ctx?.status ?? 'idle';
-    const shouldBeVisible = (status === 'idle' || status === 'error') && this._delayPassed;
+    const shouldBeVisible = status !== 'loaded' && this._delayPassed;
     this.toggleAttribute('data-visible', shouldBeVisible);
+  }
+
+  private _warnForMisuse(): void {
+    const parent = this.parentElement;
+
+    if (parent?.localName !== 'grund-avatar') {
+      if (!this._warnedMissingParent) {
+        console.warn(
+          '[grund-avatar-fallback] Must be used inside <grund-avatar>. ' +
+            'Wrap this element in <grund-avatar>.',
+        );
+        this._warnedMissingParent = true;
+      }
+      return;
+    }
+
+    const fallbackCount = Array.from(parent.children).filter(
+      (child) => child.localName === 'grund-avatar-fallback',
+    ).length;
+
+    if (fallbackCount > 1 && !this._warnedDuplicate) {
+      console.warn(
+        '[grund-avatar-fallback] Found more than one <grund-avatar-fallback>. ' +
+          'Use a single fallback inside each <grund-avatar>.',
+      );
+      this._warnedDuplicate = true;
+    }
   }
 
   private _startDelay(): void {

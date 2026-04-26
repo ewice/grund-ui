@@ -12,6 +12,14 @@ import type { AvatarStatusChangeDetail } from '../types';
 const ONE_PX_SVG =
   "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/>";
 
+async function waitFor(predicate: () => boolean, timeoutMs = 500): Promise<void> {
+  const start = Date.now();
+  while (!predicate()) {
+    if (Date.now() - start > timeoutMs) { throw new Error('waitFor: timeout'); }
+    await new Promise<void>((resolve) => setTimeout(resolve, 10));
+  }
+}
+
 describe('GrundAvatar (root)', () => {
   async function setup(template = html`<grund-avatar></grund-avatar>`) {
     const el = await fixture<GrundAvatar>(template);
@@ -97,6 +105,26 @@ describe('GrundAvatar (root)', () => {
     // Engine changes after disconnect must not cause errors or re-renders
     // We verify by calling requestUpdate on the detached element — no throw
     expect(() => el.requestUpdate()).not.to.throw();
+  });
+
+  it('resubscribes to engine changes after reconnect', async () => {
+    const container = await fixture<HTMLDivElement>(html`<div><grund-avatar></grund-avatar></div>`);
+    const el = container.querySelector<GrundAvatar>('grund-avatar')!;
+    await flush(container);
+
+    container.removeChild(el);
+    await flush(container);
+    container.appendChild(el);
+    await flush(container);
+
+    const img = document.createElement('grund-avatar-image');
+    img.setAttribute('src', 'not-a-real-url-12345.png');
+    img.setAttribute('alt', 'x');
+    el.appendChild(img);
+    await flush(el);
+
+    await waitFor(() => el.getAttribute('data-status') === 'error');
+    expect(el.getAttribute('data-status')).to.equal('error');
   });
 
   it('two independent avatars do not share context', async () => {

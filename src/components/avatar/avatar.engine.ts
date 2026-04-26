@@ -1,32 +1,30 @@
-import type { AvatarStatus } from './types';
+import type { AvatarStatus, Listener } from './types';
 
-type Listener = (status: AvatarStatus) => void;
-
-/**
- * Pure state and action resolution for the avatar image-loading lifecycle.
- * No DOM access, no Lit dependency.
- * @internal
- */
 export class AvatarEngine {
+  private readonly listeners = new Set<Listener>();
   private _status: AvatarStatus = 'idle';
-  private readonly _listeners = new Set<Listener>();
 
   public get status(): AvatarStatus {
     return this._status;
   }
 
   public setStatus(next: AvatarStatus): void {
-    if (next === this._status) { return; }
+    if (next === this._status) {
+      return;
+    }
+
     this._status = next;
-    for (const listener of this._listeners) {
+
+    for (const listener of this.listeners) {
       listener(next);
     }
   }
 
   public onChange(listener: Listener): () => void {
-    this._listeners.add(listener);
+    this.listeners.add(listener);
+
     return () => {
-      this._listeners.delete(listener);
+      this.listeners.delete(listener);
     };
   }
 }
