@@ -48,14 +48,24 @@ export class GrundAvatarImage extends LitElement {
     }
 
     const status = this.ctx?.status ?? 'idle';
-    this.dataset.status = status;
+    if (this.dataset.status !== status) {
+      this.dataset.status = status;
+    }
 
     if (status === 'error' && this.alt) {
-      this.setAttribute('role', 'img');
-      this.setAttribute('aria-label', this.alt);
+      if (this.getAttribute('role') !== 'img') {
+        this.setAttribute('role', 'img');
+      }
+      if (this.getAttribute('aria-label') !== this.alt) {
+        this.setAttribute('aria-label', this.alt);
+      }
     } else {
-      this.removeAttribute('role');
-      this.removeAttribute('aria-label');
+      if (this.hasAttribute('role')) {
+        this.removeAttribute('role');
+      }
+      if (this.hasAttribute('aria-label')) {
+        this.removeAttribute('aria-label');
+      }
     }
   }
 
