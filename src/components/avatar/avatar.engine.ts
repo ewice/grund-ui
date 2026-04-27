@@ -1,8 +1,8 @@
 import type { AvatarStatus, Listener } from './types';
 
 export class AvatarEngine {
-  private readonly listeners = new Set<Listener>();
   private _status: AvatarStatus = 'idle';
+  private readonly listeners = new Set<Listener>();
 
   public get status(): AvatarStatus {
     return this._status;

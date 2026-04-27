@@ -20,12 +20,13 @@ export class GrundAvatar extends LitElement {
   protected avatarCtx!: AvatarContext;
 
   private readonly engine = new AvatarEngine();
-  private previousStatus: AvatarStatus | null = null;
-  private unsubscribe: (() => void) | null = null;
 
   private readonly setStatus = (next: AvatarStatus): void => {
     this.engine.setStatus(next);
   };
+
+  private previousStatus: AvatarStatus | null = null;
+  private unsubscribe: (() => void) | null = null;
 
   public override connectedCallback(): void {
     super.connectedCallback();

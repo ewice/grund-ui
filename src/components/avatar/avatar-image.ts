@@ -29,58 +29,22 @@ export class GrundAvatarImage extends LitElement {
 
   @consume({ context: avatarContext, subscribe: true })
   @state()
-  private _ctx: AvatarContext | undefined;
+  private readonly ctx: AvatarContext | undefined;
 
-  private _warnedMissingParent = false;
-  private _warnedMissingAlt = false;
-  private _warnedDuplicate = false;
-
-  private readonly _onLoad = (): void => { this._ctx?.setStatus('loaded'); };
-  private readonly _onError = (): void => { this._ctx?.setStatus('error'); };
+  private readonly onLoad = (): void => {
+    this.ctx?.setStatus('loaded');
+  };
+  private readonly onError = (): void => {
+    this.ctx?.setStatus('error');
+  };
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
-    if (import.meta.env.DEV) {
-      this._warnForMisuse();
+    const receivedContext = changed.has('ctx') && changed.get('ctx') === undefined;
+    if (this.ctx !== undefined && (changed.has('src') || receivedContext)) {
+      this.ctx.setStatus(this.src ? 'loading' : 'idle');
     }
 
-    const receivedContext = changed.has('_ctx') && changed.get('_ctx') === undefined;
-    if (this._ctx !== undefined && (changed.has('src') || receivedContext)) {
-      this._ctx.setStatus(this.src ? 'loading' : 'idle');
-    }
-
-    this.dataset.status = this._ctx?.status ?? 'idle';
-  }
-
-  private _warnForMisuse(): void {
-    const parent = this.parentElement;
-
-    if (parent?.localName !== 'grund-avatar') {
-      if (!this._warnedMissingParent) {
-        console.warn(
-          '[grund-avatar-image] Must be used inside <grund-avatar>. ' +
-            'Wrap this element in <grund-avatar>.',
-        );
-        this._warnedMissingParent = true;
-      }
-      return;
-    }
-
-    if (!this.hasAttribute('alt') && !this._warnedMissingAlt) {
-      console.warn('[grund-avatar-image] Missing alt attribute. Provide alt="" if decorative.');
-      this._warnedMissingAlt = true;
-    }
-
-    const imageCount = Array.from(parent.children).filter(
-      (child) => child.localName === 'grund-avatar-image',
-    ).length;
-
-    if (imageCount > 1 && !this._warnedDuplicate) {
-      console.warn(
-        '[grund-avatar-image] Found more than one <grund-avatar-image>. ' +
-          'Use a single image inside each <grund-avatar>.',
-      );
-      this._warnedDuplicate = true;
-    }
+    this.dataset.status = this.ctx?.status ?? 'idle';
   }
 
   protected override render() {
@@ -95,8 +59,8 @@ export class GrundAvatarImage extends LitElement {
       decoding=${this.decoding ?? nothing}
       loading=${this.loading ?? nothing}
       fetchpriority=${this.fetchpriority ?? nothing}
-      @load=${this._onLoad}
-      @error=${this._onError}
+      @load=${this.onLoad}
+      @error=${this.onError}
     />`;
   }
 }

@@ -20,82 +20,48 @@ export class GrundAvatarFallback extends LitElement {
 
   @consume({ context: avatarContext, subscribe: true })
   @state()
-  private _ctx: AvatarContext | undefined;
+  private readonly ctx: AvatarContext | undefined;
 
-  private _delayPassed = false;
-  private _warnedMissingParent = false;
-  private _warnedDuplicate = false;
-
-  private _delayTimer: ReturnType<typeof setTimeout> | null = null;
+  private delayPassed = false;
+  private delayTimer: ReturnType<typeof setTimeout> | null = null;
 
   public override connectedCallback(): void {
     super.connectedCallback();
-    this._startDelay();
+    this.startDelay();
   }
 
   public override disconnectedCallback(): void {
     super.disconnectedCallback();
-    this._clearDelayTimer();
+    this.clearDelayTimer();
   }
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
-    if (import.meta.env.DEV) {
-      this._warnForMisuse();
-    }
-
     if (changed.has('delay') && this.hasUpdated) {
-      this._clearDelayTimer();
-      this._startDelay();
+      this.clearDelayTimer();
+      this.startDelay();
     }
 
-    const status = this._ctx?.status ?? 'idle';
-    const shouldBeVisible = status !== 'loaded' && this._delayPassed;
+    const status = this.ctx?.status ?? 'idle';
+    const shouldBeVisible = status !== 'loaded' && this.delayPassed;
     this.toggleAttribute('data-visible', shouldBeVisible);
   }
 
-  private _warnForMisuse(): void {
-    const parent = this.parentElement;
-
-    if (parent?.localName !== 'grund-avatar') {
-      if (!this._warnedMissingParent) {
-        console.warn(
-          '[grund-avatar-fallback] Must be used inside <grund-avatar>. ' +
-            'Wrap this element in <grund-avatar>.',
-        );
-        this._warnedMissingParent = true;
-      }
-      return;
-    }
-
-    const fallbackCount = Array.from(parent.children).filter(
-      (child) => child.localName === 'grund-avatar-fallback',
-    ).length;
-
-    if (fallbackCount > 1 && !this._warnedDuplicate) {
-      console.warn(
-        '[grund-avatar-fallback] Found more than one <grund-avatar-fallback>. ' +
-          'Use a single fallback inside each <grund-avatar>.',
-      );
-      this._warnedDuplicate = true;
-    }
-  }
-
-  private _startDelay(): void {
+  private startDelay(): void {
     if (this.delay > 0) {
-      this._delayTimer = setTimeout(() => {
-        this._delayPassed = true;
-        this._delayTimer = null;
+      this.delayTimer = setTimeout(() => {
+        this.delayPassed = true;
+        this.delayTimer = null;
         this.requestUpdate();
       }, this.delay);
     } else {
-      this._delayPassed = true;
+      this.delayPassed = true;
     }
   }
 
-  private _clearDelayTimer(): void {
-    if (this._delayTimer !== null) {
-      clearTimeout(this._delayTimer);
-      this._delayTimer = null;
+  private clearDelayTimer(): void {
+    if (this.delayTimer !== null) {
+      clearTimeout(this.delayTimer);
+      this.delayTimer = null;
     }
   }
 
