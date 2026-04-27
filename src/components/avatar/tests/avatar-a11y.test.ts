@@ -65,7 +65,7 @@ describe('GrundAvatar accessibility', () => {
     expect(fb.getAttribute('aria-hidden')).to.equal('true');
   });
 
-  it('keeps the alt-bearing image host exposed when image fails', async () => {
+  it('keeps failed images labelled when fallback is hidden from AT', async () => {
     const el = await fixture<GrundAvatar>(html`
       <grund-avatar>
         <grund-avatar-image src="not-a-real-url-12345.png" alt="Jane Doe"></grund-avatar-image>
@@ -78,6 +78,7 @@ describe('GrundAvatar accessibility', () => {
     await waitFor(() => image.getAttribute('data-status') === 'error');
 
     expect(getComputedStyle(image).display).to.not.equal('none');
-    expect(image.shadowRoot!.querySelector('img')!.alt).to.equal('Jane Doe');
+    expect(image.getAttribute('role')).to.equal('img');
+    expect(image.getAttribute('aria-label')).to.equal('Jane Doe');
   });
 });

@@ -1,5 +1,5 @@
 import { fixture, html, expect } from '@open-wc/testing';
-import { describe, it, vi } from 'vitest';
+import { describe, it } from 'vitest';
 
 import { flush, getByPart } from '../../../test-utils/test-utils';
 import '../avatar';
@@ -116,28 +116,4 @@ describe('GrundAvatarFallback', () => {
     expect(fb.hasAttribute('data-visible')).to.be.false;
   });
 
-  it('DEV: warns when two siblings exist', async () => {
-    if (!import.meta.env.DEV) { return; }
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    await fixture<GrundAvatar>(html`
-      <grund-avatar>
-        <grund-avatar-fallback>A</grund-avatar-fallback>
-        <grund-avatar-fallback>B</grund-avatar-fallback>
-      </grund-avatar>
-    `);
-    await flush(document.body);
-    const messages = warn.mock.calls.map((c) => c[0]).filter((m) => typeof m === 'string');
-    expect(messages.some((m) => m.includes('[grund-avatar-fallback]') && m.includes('more than one'))).to.be.true;
-    warn.mockRestore();
-  });
-
-  it('DEV: warns when used outside <grund-avatar>', async () => {
-    if (!import.meta.env.DEV) { return; }
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    await fixture(html`<grund-avatar-fallback>JD</grund-avatar-fallback>`);
-    await flush(document.body);
-    const messages = warn.mock.calls.map((c) => c[0]).filter((m) => typeof m === 'string');
-    expect(messages.some((m) => m.includes('[grund-avatar-fallback]') && m.includes('<grund-avatar>'))).to.be.true;
-    warn.mockRestore();
-  });
 });

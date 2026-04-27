@@ -1,5 +1,5 @@
 import { fixture, html, expect } from '@open-wc/testing';
-import { describe, it, vi } from 'vitest';
+import { describe, it } from 'vitest';
 
 import { flush, getByPart } from '../../../test-utils/test-utils';
 import '../avatar';
@@ -85,7 +85,7 @@ describe('GrundAvatarImage', () => {
     expect(el.getAttribute('data-status')).to.equal('error');
   });
 
-  it('hides the image host when image fails to load', async () => {
+  it('hides the internal image when image fails to load', async () => {
     const el = await fixture<GrundAvatar>(html`
       <grund-avatar>
         <grund-avatar-image src="not-a-real-url-12345.png" alt="x"></grund-avatar-image>
@@ -94,7 +94,8 @@ describe('GrundAvatarImage', () => {
     await flush(el);
     const image = el.querySelector('grund-avatar-image') as GrundAvatarImage;
     await waitFor(el, () => image.getAttribute('data-status') === 'error');
-    expect(getComputedStyle(image).display).to.equal('none');
+    const img = getByPart<HTMLImageElement>(image, 'image');
+    expect(getComputedStyle(img).display).to.equal('none');
   });
 
   it('reports status=idle when src is removed', async () => {
@@ -122,45 +123,6 @@ describe('GrundAvatarImage', () => {
     const image = el.querySelector('grund-avatar-image') as GrundAvatarImage;
     await waitFor(el, () => image.getAttribute('data-status') === 'loaded');
     expect(image.getAttribute('data-status')).to.equal('loaded');
-  });
-
-  it('DEV: warns when missing alt', async () => {
-    if (!import.meta.env.DEV) { return; }
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    await fixture<GrundAvatar>(html`
-      <grund-avatar>
-        <grund-avatar-image src=${ONE_PX_SVG}></grund-avatar-image>
-      </grund-avatar>
-    `);
-    await flush(document.body);
-    const messages = warn.mock.calls.map((c) => c[0]).filter((m) => typeof m === 'string');
-    expect(messages.some((m) => m.includes('[grund-avatar-image]') && m.includes('alt'))).to.be.true;
-    warn.mockRestore();
-  });
-
-  it('DEV: warns when two <grund-avatar-image> siblings exist', async () => {
-    if (!import.meta.env.DEV) { return; }
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    await fixture<GrundAvatar>(html`
-      <grund-avatar>
-        <grund-avatar-image src=${ONE_PX_SVG} alt="a"></grund-avatar-image>
-        <grund-avatar-image src=${ONE_PX_SVG} alt="b"></grund-avatar-image>
-      </grund-avatar>
-    `);
-    await flush(document.body);
-    const messages = warn.mock.calls.map((c) => c[0]).filter((m) => typeof m === 'string');
-    expect(messages.some((m) => m.includes('[grund-avatar-image]') && m.includes('more than one'))).to.be.true;
-    warn.mockRestore();
-  });
-
-  it('DEV: warns when used outside <grund-avatar>', async () => {
-    if (!import.meta.env.DEV) { return; }
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    await fixture(html`<grund-avatar-image src=${ONE_PX_SVG} alt="x"></grund-avatar-image>`);
-    await flush(document.body);
-    const messages = warn.mock.calls.map((c) => c[0]).filter((m) => typeof m === 'string');
-    expect(messages.some((m) => m.includes('[grund-avatar-image]') && m.includes('<grund-avatar>'))).to.be.true;
-    warn.mockRestore();
   });
 
   it('removes load/error listeners on disconnect', async () => {

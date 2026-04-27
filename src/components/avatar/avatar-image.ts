@@ -11,8 +11,12 @@ export class GrundAvatarImage extends LitElement {
     :host {
       display: none;
     }
-    :host([data-status='loaded']) {
+    :host([data-status='loaded']),
+    :host([data-status='error']) {
       display: inline;
+    }
+    :host([data-status='error']) img {
+      display: none;
     }
   `;
 
@@ -43,7 +47,16 @@ export class GrundAvatarImage extends LitElement {
       this.ctx.setStatus(this.src ? 'loading' : 'idle');
     }
 
-    this.dataset.status = this.ctx?.status ?? 'idle';
+    const status = this.ctx?.status ?? 'idle';
+    this.dataset.status = status;
+
+    if (status === 'error' && this.alt) {
+      this.setAttribute('role', 'img');
+      this.setAttribute('aria-label', this.alt);
+    } else {
+      this.removeAttribute('role');
+      this.removeAttribute('aria-label');
+    }
   }
 
   protected override render() {
