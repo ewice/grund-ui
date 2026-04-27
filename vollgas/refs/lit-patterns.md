@@ -9,18 +9,33 @@ Reference for generation skills and the `lit-reviewer`. All rules are numbered a
 ### Lifecycle
 
 1. Use `willUpdate(changedProperties)` for deriving state from properties. Never derive state in `updated()`.
-2. Use `updated(changedProperties)` only for post-render side effects (e.g., restoring focus, measuring DOM). Dispatch `grund-*` events from the controller action method that causes the state change. **Exception:** per-item derived events that depend on context propagation (e.g., `grund-open-change` on an item element) may be dispatched in `updated()` because the item cannot determine its new state until context settles in `willUpdate`. Guard with a `hasSettled` flag to suppress the initial-render event.
+2. Use `updated(changedProperties)` only for post-render side effects (e.g., restoring focus, measuring DOM). Dispatch `grund-*` events from the controller action method that causes the state change. **Exception:** per-item derived events that depend on context propagation (e.g., `grund-open-change` on an item element) may be dispatched in `updated()` because the item cannot determine its new state until context settles in `willUpdate`. Guard with a `hasSettled` flag to suppress the initial-render event. **Engine-onChange pattern:** When a root element subscribes to an external engine's `onChange` callback (engine notifies → `requestUpdate` → lifecycle), there is no controller action method to dispatch from. In this case, dispatch `grund-*` events in `updated()`, comparing current engine state against a `_previousStatus` field. Never dispatch in `willUpdate()` — the DOM has not committed yet. Guard with `this._previousStatus !== null` to suppress the initial-render event.
 3. Use `firstUpdated()` only for one-time DOM setup (e.g., a controller that needs a DOM reference). Never use it for logic that must run on every update.
 4. Never call `this.requestUpdate()` inside `updated()`. This creates an infinite render loop.
 5. The root element packages its reactive properties into a `HostSnapshot` plain object in `willUpdate` and passes it to the Engine via `syncFromHost()`. The Engine never reads reactive properties directly from the host — this decouples it from Lit and keeps it independently testable with plain `new Engine()` instantiation.
 
 ### Reactive Properties
 
-6. Use `@property()` for public API (accessible as HTML attributes and JS properties). Use `@state()` for internal state never exposed to consumers.
+6. Use `@property()` for public API (accessible as HTML attributes and JS properties). Use `@state()` for internal state never exposed to consumers. Exception: component-owned host attributes that need Lit reflection (`data-*`, and host-level `role`/`aria-*` derived from component state) use private `@property({ reflect: true, attribute: ... })` fields per Grund UI convention in Rule 43.
 7. Always define `hasChanged` for properties holding objects, arrays, or Sets. The Lit default (`!==`) works for primitives. Override for deep equality only when necessary.
 8. Boolean properties: `@property({ type: Boolean })`. Reflect to attribute (`reflect: true`) only if consumers need CSS selector targeting (e.g., `[disabled]`). Reflected boolean attributes use HTML convention: presence = true, absence = false.
 9. Never reflect object or array properties to attributes. Reflecting objects produces `[object Object]` in HTML.
 10. Properties with `reflect: true` must have stable, serialisable values. Never reflect Sets, Maps, or class instances.
+43. Component-owned reactive host attributes (`data-*`, and host-level `role`/`aria-*` derived from component state) SHOULD be synchronized through reflected reactive properties. Avoid imperative `this.dataset.* = ...`, `this.setAttribute(...)`, or `this.removeAttribute(...)` lifecycle synchronization for these attributes unless there is a documented reason. This is a Grund UI convention built on Lit's documented `reflect: true` property option; static one-time host attributes may still be set once in `connectedCallback`, and shadow/template attributes should remain declarative in `render()`.
+
+```ts
+@property({ attribute: 'data-status', reflect: true })
+private hostStatus: AvatarStatus = 'idle';
+
+@property({ attribute: 'aria-label', reflect: true })
+private hostAriaLabel: string | null = null;
+
+protected override willUpdate(): void {
+  const status = this.context?.status ?? 'idle';
+  this.hostStatus = status;
+  this.hostAriaLabel = status === 'error' ? this.alt : null;
+}
+```
 
 ### Shadow DOM
 
@@ -63,7 +78,8 @@ if (import.meta.env.DEV) {
 
     | Member | Modifier | Reason |
     |---|---|---|
-    | `@property()` fields | `public` | Part of the element's public JS/HTML API |
+    | Public `@property()` fields | `public` | Part of the element's public JS/HTML API |
+    | Internal reflected host attributes | `private` | Grund UI convention for component-owned host styling/accessibility hooks reflected to attributes (Rule 43) |
     | `static styles` | `public static` | Read by Lit framework infrastructure |
     | `connectedCallback`, `disconnectedCallback`, `attributeChangedCallback` | `public override` | Defined as `public` in `HTMLElement` |
     | `render()`, `willUpdate()`, `updated()`, `firstUpdated()` | `protected override` | Defined as `protected` in `LitElement` / `ReactiveElement` |
@@ -337,6 +353,7 @@ transition(from: DialogState, to: DialogState): DialogState {
 | Dispatching events in `updated()` without a settled guard | Can fire during initial render or cause cascading re-renders | Dispatch from controller action method; use `updated()` only for context-derived events with a `hasSettled` guard (see Rule 2) |
 | `requestUpdate()` inside `updated()` | Infinite render loop | Compute in `willUpdate`, not `updated` |
 | Recreating context object on every `willUpdate` when nothing changed | Unnecessary re-renders in all consumers | With `@provide`: recreate only when state fields change. With `ContextProvider`: mutate in place + `setValue(ref, true)` (see Rule 15) |
+| Imperative host attribute synchronization in lifecycle hooks | Bypasses Lit's reflected-property change detection and scatters DOM mutation logic | Prefer private reflected reactive properties for component-owned `data-*` and host-level `role`/`aria-*` state (Rule 43) |
 | Reading host reactive props in Engine | Tight coupling, not independently testable | Use `HostSnapshot` pattern via `syncFromHost()` |
 | `customElements.define()` without guard | Throws on duplicate definition (micro-frontends) | Wrap with `if (!customElements.get(...))` |
 | `addEventListener` without cleanup | Memory leak, stale handler on reconnect | Symmetric cleanup in `disconnectedCallback` |

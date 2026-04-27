@@ -104,7 +104,7 @@ One canonical mechanism per direction:
 
 **Rules:**
 - Discovery: registration via context callbacks only. Never `querySelectorAll` to find child components.
-- Show/hide: `data-open` boolean attribute set in `willUpdate`. Exception: `hidden="until-found"` for browser-native find-in-page.
+- Show/hide: component-owned reactive `data-*` host attributes are derived in `willUpdate` and synchronized through reflected reactive properties by default, not imperative `this.dataset.*` writes. Exception: `hidden="until-found"` for browser-native find-in-page.
 - Event naming: `grund-{action}` with `bubbles: true, composed: false`.
 - ARIA linking: use the Element Reference API (`ariaControlsElements`, `ariaLabelledByElements`) for cross-shadow relationships. Set in `updated()` after render. See `aria-linking.md`. Legacy IDREF (`aria-controls`, `aria-labelledby`) does not resolve across shadow root boundaries.
 - Keyboard navigation: `RovingFocusController` on the container element.

@@ -16,6 +16,7 @@ and planned shared controllers (built when the first component of that category 
 | Renders a list of options, supports filtering or typeahead | Collection |
 | Appears temporarily to communicate status, auto-dismisses | Feedback |
 | No interaction, no state | Simple |
+| Compound API with 1–2 specialised sub-parts, internal shared state, no keyboard navigation | Stateful Simple Compound |
 
 ---
 
@@ -144,6 +145,30 @@ Open/closed state and ARIA linking are inline patterns — set `data-open` in `w
 
 ---
 
+## Stateful Simple Compound
+
+**Examples:** Avatar
+
+**What makes it a compound-with-state:**
+- Compound API — a root element with specialised sub-part elements.
+- Internal state shared across parts via context — but no selection set, no keyboard navigation, no registry of repeating items.
+- Typically one of each sub-part (enforced via dev warnings rather than registry tracking).
+
+**Required files:**
+- `{name}.ts` — root, `@provide` context, holds engine.
+- `{name}-{part}.ts` — sub-parts, consume context.
+- `{name}.context.ts` — context interface + symbol.
+- `{name}.engine.ts` — pure reducer (no DOM, no Lit) when the state transition deserves isolated testing. If state is truly a single boolean, skip the engine and use `@state` on the root.
+- `types.ts`, `index.ts`, `tests/`.
+
+**No registry, no RovingFocusController, no state-machine transitions table.** Structural validation (duplicate sub-parts, wrong parent) via dev-mode warnings per Rule 20–21.
+
+**Context pattern:**
+- Root provides: current state field(s) + bound action methods (stable references).
+- Sub-parts consume; action calls from sub-parts trigger reducer in engine, root reassigns context when state fields change (Rule 15).
+
+---
+
 ## Component Readiness Matrix
 
 Quick reference for which categories are buildable right now. Update this table whenever
@@ -153,6 +178,7 @@ a planned controller is implemented (and update the Planned Controllers Registry
 |---|---|---|
 | **Composite widget** | ✅ Ready | — (`RovingFocusController` exists) |
 | **Simple** | ✅ Ready | — (no shared controllers needed) |
+| **Stateful Simple Compound** | ✅ Ready | — (no shared controllers needed) |
 | **Form control** | 🔴 Blocked | `FormController` — see `refs/form-participation.md` for full spec |
 | **Overlay (any)** | 🔴 Blocked | `PresenceController` (required for all overlays); additionally `FocusTrapController` (modal), `FocusRestorationController` (non-modal), `OutsideClickController` (dismissable), `ScrollLockController` (modal), `PositioningController` (anchor-relative) |
 | **Collection** | 🔴 Blocked | `VirtualFocusController` — required when a text input retains focus while options are navigated. If building a menu/listbox *without* a text input, `RovingFocusController` suffices (✅ exists). |

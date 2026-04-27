@@ -61,7 +61,7 @@ public event detail types or exported interfaces that consumers will import dire
 - Shadow DOM via Lit (`createRenderRoot()` through LitElement — never direct `attachShadow()`)
 - Zero visual styles — no color, font, border, background, sizing beyond `display` on `:host`
 - `@csspart` on every structural shadow element
-- `data-*` attributes set in `willUpdate` for any reflected properties
+- `data-*` attributes derived in `willUpdate` and synchronized through reflected reactive properties by default; avoid imperative `this.dataset.*` writes unless reflection is unsuitable and documented
 - Dev-mode warning in `connectedCallback` if structural misuse is possible
 - No `document`, `window`, or `navigator` in constructor or field initializers (SSR safety)
 
