@@ -5,6 +5,7 @@ import { consume } from '@lit/context';
 import { avatarContext } from './avatar.context';
 
 import type { AvatarContext } from './avatar.context';
+import type { AvatarStatus } from './types';
 
 export class GrundAvatarImage extends LitElement {
   public static override readonly styles = css`
@@ -30,6 +31,15 @@ export class GrundAvatarImage extends LitElement {
   @property() public loading: string | null = null;
   @property({ attribute: 'fetchpriority' }) public fetchpriority: string | null = null;
 
+  @property({ attribute: 'data-status', reflect: true })
+  private hostStatus: AvatarStatus = 'idle';
+
+  @property({ attribute: 'role', reflect: true })
+  private hostRole: 'img' | null = null;
+
+  @property({ attribute: 'aria-label', reflect: true })
+  private hostAriaLabel: string | null = null;
+
   @consume({ context: avatarContext, subscribe: true })
   @state()
   private readonly ctx: AvatarContext | undefined;
@@ -48,24 +58,17 @@ export class GrundAvatarImage extends LitElement {
     }
 
     const status = this.ctx?.status ?? 'idle';
-    if (this.dataset.status !== status) {
-      this.dataset.status = status;
-    }
+    const failedImageLabel = status === 'error' && this.alt ? this.alt : null;
+    const hostRole = failedImageLabel ? 'img' : null;
 
-    if (status === 'error' && this.alt) {
-      if (this.getAttribute('role') !== 'img') {
-        this.setAttribute('role', 'img');
-      }
-      if (this.getAttribute('aria-label') !== this.alt) {
-        this.setAttribute('aria-label', this.alt);
-      }
-    } else {
-      if (this.hasAttribute('role')) {
-        this.removeAttribute('role');
-      }
-      if (this.hasAttribute('aria-label')) {
-        this.removeAttribute('aria-label');
-      }
+    if (this.hostStatus !== status) {
+      this.hostStatus = status;
+    }
+    if (this.hostRole !== hostRole) {
+      this.hostRole = hostRole;
+    }
+    if (this.hostAriaLabel !== failedImageLabel) {
+      this.hostAriaLabel = failedImageLabel;
     }
   }
 

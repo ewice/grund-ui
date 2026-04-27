@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit';
-import { state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 
 import { AvatarEngine } from './avatar.engine';
@@ -18,6 +18,9 @@ export class GrundAvatar extends LitElement {
   @provide({ context: avatarContext })
   @state()
   protected avatarCtx!: AvatarContext;
+
+  @property({ attribute: 'data-status', reflect: true })
+  private hostStatus: AvatarStatus = 'idle';
 
   private readonly engine = new AvatarEngine();
 
@@ -42,7 +45,9 @@ export class GrundAvatar extends LitElement {
   protected override willUpdate(): void {
     const status = this.engine.status;
 
-    this.dataset.status = status;
+    if (this.hostStatus !== status) {
+      this.hostStatus = status;
+    }
 
     if (!this.hasUpdated || status !== this.avatarCtx?.status) {
       this.avatarCtx = { status, setStatus: this.setStatus };
@@ -73,4 +78,3 @@ export class GrundAvatar extends LitElement {
 if (!customElements.get('grund-avatar')) {
   customElements.define('grund-avatar', GrundAvatar);
 }
-

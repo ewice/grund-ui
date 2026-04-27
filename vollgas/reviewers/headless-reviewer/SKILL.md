@@ -52,7 +52,7 @@ The caller provides `refs/headless-contract.md`. Cross-reference rule numbers in
 ### `data-*` Attributes (Rules 17–20)
 17. State styling hooks use `data-*` — no bare unprefixed attributes.
 18. Standard attributes (`data-open`, `data-disabled`, `data-orientation`, `data-index`) match `headless-contract.md`.
-19. `data-*` attributes set in `willUpdate` only — not in event handlers or methods.
+19. Component-owned reactive `data-*` attributes are derived in `willUpdate` and synchronized through reflected reactive properties by default. Flag imperative `this.dataset.*` writes in event handlers, methods, or lifecycle hooks unless a documented exception explains why reflection is unsuitable.
 20. Every public `data-*` attribute registered in `docs/vocabulary.md`.
 
 ### CSS Custom Properties (Rules 21–22)

@@ -104,9 +104,10 @@ Example: a parent uses `querySelectorAll('grund-*')` to find children instead of
 
 6. `render()` is pure: no state mutation, no event dispatch, no imperative DOM work, and no unstable reads from the live DOM.
 7. Values used by `render()` are derivable without DOM access.
-8. `@property()` is used for public API and `@state()` for internal-only state.
+8. `@property()` is used for public API and `@state()` for internal-only state, except private reflected host attributes allowed by the Grund UI convention in `lit-patterns#43`.
 9. Object, Array, and Set properties define `hasChanged` when the default identity check is insufficient.
 10. `reflect: true` is used only for stable, serializable values when attribute presence is intentionally needed. Never reflect Objects, Arrays, Sets, Maps, or class instances.
+41. Component-owned reactive host attributes (`data-*`, and host-level `role`/`aria-*` derived from component state) should be synchronized through reflected reactive properties. Flag imperative `this.dataset.* = ...`, `this.setAttribute(...)`, or `this.removeAttribute(...)` lifecycle synchronization when the value is derived from reactive state and no documented exception explains why reflection is unsuitable.
 
 ### Context and Component Discovery
 
@@ -148,7 +149,7 @@ Example: a parent uses `querySelectorAll('grund-*')` to find children instead of
 ### Member Visibility
 
 32. Class members in Lit elements and controllers use explicit visibility modifiers and the narrowest scope that satisfies the contract. This includes lifecycle overrides: a `public override updated()` on a class where `LitElement.updated()` is `protected` widens the API surface unnecessarily — use `protected override updated()`. Applies equally to shared controllers: every method and getter on a `ReactiveController` must carry an explicit `public`/`private` modifier.
-33. `@property()` fields are public API; `@state()` fields and `@consume()` subscriptions are not left public accidentally.
+33. Public `@property()` fields are public API; `@state()` fields and `@consume()` subscriptions are not left public accidentally. Private reflected host attributes are allowed only for component-owned `data-*` and host-level `role`/`aria-*` synchronization per `lit-patterns#43`.
 34. `protected` members are used only for intentional subclass extension points, not as a default for internal helpers.
 
 ### Static vs Dynamic Host Attributes

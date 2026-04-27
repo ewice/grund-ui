@@ -45,16 +45,16 @@ Loaded by generation skills and the `headless-reviewer`.
 ### `data-*` Attribute API
 
 21. All state-based styling hooks use `data-*` attributes. Never use bare unprefixed attributes (e.g., `expanded`, `selected`, `active`) as CSS hooks.
-22. `data-*` attributes are set in `willUpdate`, not in response to DOM events or method calls directly.
+22. Component-owned reactive `data-*` attributes are derived during `willUpdate` and synchronized through reflected reactive properties by default. Do not imperatively write `this.dataset.*` in lifecycle hooks unless a documented exception explains why reflection is unsuitable; see `lit-patterns.md` Rule 43.
 23. Every `data-*` attribute exposed as public API MUST be registered in `docs/vocabulary.md`.
 24. Standard attributes used across all components (set by their respective controllers/elements):
 
 | Attribute | Values | Set by |
 |---|---|---|
-| `data-open` | boolean presence | Host in `willUpdate` |
-| `data-disabled` | boolean presence | Host in `willUpdate` |
-| `data-orientation` | `"vertical"` / `"horizontal"` | Root and sub-parts in `willUpdate` |
-| `data-index` | string number | Item element in `willUpdate` |
+| `data-open` | boolean presence | Reflected host property derived in `willUpdate` |
+| `data-disabled` | boolean presence | Reflected host property derived in `willUpdate` |
+| `data-orientation` | `"vertical"` / `"horizontal"` | Reflected host property derived in `willUpdate` |
+| `data-index` | string number | Reflected host property derived in `willUpdate` |
 
 ### CSS Custom Properties
 
@@ -90,5 +90,6 @@ Loaded by generation skills and the `headless-reviewer`.
 | Part name as verb or state adjective | Unstable, semantically wrong | Noun-only part names |
 | `exportparts` on slotted compound layer | Has no effect on slotted children; consumer styles their own elements directly | Only use `exportparts` when the element renders sub-elements in its own shadow template |
 | Bare `expanded` attribute as CSS hook | Inconsistent, not part of public API | Use `data-open` |
+| Imperative `this.dataset.*` writes for reactive host state | Bypasses Lit's reflected-property change detection | Prefer a private reflected reactive property for the `data-*` hook |
 | CSS custom property for color | Headless contract violation | Consumers provide all colors |
 | `role="group"` / `role="toolbar"` with no accessible name | Screen readers announce "group" with no context | Expose `label` property, bind to `aria-label` on the container (Rule 28) |
