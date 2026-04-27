@@ -85,6 +85,18 @@ describe('GrundAvatarImage', () => {
     expect(el.getAttribute('data-status')).to.equal('error');
   });
 
+  it('hides the image host when image fails to load', async () => {
+    const el = await fixture<GrundAvatar>(html`
+      <grund-avatar>
+        <grund-avatar-image src="not-a-real-url-12345.png" alt="x"></grund-avatar-image>
+      </grund-avatar>
+    `);
+    await flush(el);
+    const image = el.querySelector('grund-avatar-image') as GrundAvatarImage;
+    await waitFor(el, () => image.getAttribute('data-status') === 'error');
+    expect(getComputedStyle(image).display).to.equal('none');
+  });
+
   it('reports status=idle when src is removed', async () => {
     const el = await fixture<GrundAvatar>(html`
       <grund-avatar>

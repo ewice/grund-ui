@@ -11,8 +11,7 @@ export class GrundAvatarImage extends LitElement {
     :host {
       display: none;
     }
-    :host([data-status='loaded']),
-    :host([data-status='error']) {
+    :host([data-status='loaded']) {
       display: inline;
     }
   `;
