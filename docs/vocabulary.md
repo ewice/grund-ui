@@ -38,7 +38,7 @@ is reviewed separately from the naming registry.
 | Event | Detail type | Meaning |
 |---|---|---|
 | `grund-value-change` | `{ value: string[], itemValue: string, open: boolean }` (accordion) / `{ value: string \| null, previousValue: string \| null }` (tabs) / `{ value: string[] }` (toggle-group) | Full expanded values snapshot (accordion); active tab changed (tabs); pressed toggles changed (toggle-group) |
-| `grund-open-change` | `{ value: string, open: boolean, index: number }` | An item opened or closed |
+| `grund-open-change` | `{ value: string, open: boolean, index: number }` (accordion) / `CollapsibleOpenChangeDetail` (collapsible) | An item opened or closed |
 | `grund-pressed-change` | `{ pressed: boolean }` | Toggle pressed state changed |
 | `grund-checked-change` | `{ checked: boolean }` | Checkbox checked state changed |
 | `grund-status-change` | `{ status: 'idle' \| 'loading' \| 'loaded' \| 'error' }` | Avatar image loading status transitioned |
@@ -51,8 +51,8 @@ CSS `::part()` names. All lowercase, hyphenated nouns.
 
 | Part | Meaning | Components |
 |---|---|---|
-| `trigger` | The interactive element that activates an item | Accordion, Disclosure, Tabs |
-| `panel` | The collapsible/revealable content region | Accordion, Disclosure, Tabs |
+| `trigger` | The interactive element that activates an item | Accordion, Collapsible, Disclosure, Tabs |
+| `panel` | The collapsible/revealable content region | Accordion, Collapsible, Disclosure, Tabs |
 | `tab` | The tab button element | Tabs |
 | `list` | The tablist container | Tabs |
 | `header` | The heading wrapper element | (reserved — no component uses it yet) |
@@ -102,6 +102,8 @@ Standard data attributes set by controllers or elements as public API.
 | `data-readonly` | boolean presence | Host in `willUpdate` | Form control is read-only. |
 | `data-status` | `"idle"` / `"loading"` / `"loaded"` / `"error"` | Root in `willUpdate`; image reflects its own `data-status` from consumed context | Avatar image loading status |
 | `data-visible` | boolean presence | `<grund-avatar-fallback>` in `willUpdate` | Fallback is currently visible (status is idle or error and delay has elapsed) |
+| `data-starting-style` | boolean presence | Collapsible panel in `willUpdate` | Indicates the panel is entering its starting animation state |
+| `data-ending-style` | boolean presence | Collapsible panel in `willUpdate` | Indicates the panel is entering its ending animation state |
 
 ---
 
@@ -118,6 +120,7 @@ Context symbols follow the pattern `{ComponentName}Context` for the root context
 | `toggleGroupRootContext` | Root-level context for toggle-group |
 | `checkboxContext` | Checkbox state for indicator |
 | `avatarContext` | Avatar status + setStatus for image/fallback |
+| `collapsibleRootContext` | Root-level context for collapsible |
 
 ---
 
@@ -144,6 +147,20 @@ All custom elements: `grund-{component-name}[-{sub-element}]`
 | Avatar root | `grund-avatar` |
 | Avatar image | `grund-avatar-image` |
 | Avatar fallback | `grund-avatar-fallback` |
+| Collapsible root | `grund-collapsible` |
+| Collapsible trigger | `grund-collapsible-trigger` |
+| Collapsible panel | `grund-collapsible-panel` |
+
+---
+
+## CSS Custom Properties
+
+Public CSS custom properties exposed by components for animation and theming.
+
+| Property | Meaning | Component |
+|---|---|---|
+| `--grund-collapsible-panel-height` | Current animated height of the collapsible panel | Collapsible |
+| `--grund-collapsible-panel-width` | Current animated width of the collapsible panel | Collapsible |
 
 ---
 
