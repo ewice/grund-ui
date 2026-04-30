@@ -180,7 +180,7 @@ a planned controller is implemented (and update the Planned Controllers Registry
 | **Simple** | ✅ Ready | — (no shared controllers needed) |
 | **Stateful Simple Compound** | ✅ Ready | — (no shared controllers needed) |
 | **Form control** | 🔴 Blocked | `FormController` — see `refs/form-participation.md` for full spec |
-| **Overlay (any)** | 🔴 Blocked | `PresenceController` (required for all overlays); additionally `FocusTrapController` (modal), `FocusRestorationController` (non-modal), `OutsideClickController` (dismissable), `ScrollLockController` (modal), `PositioningController` (anchor-relative) |
+| **Overlay (any)** | 🔴 Blocked | `FocusTrapController` (modal), `FocusRestorationController` (non-modal), `OutsideClickController` (dismissable), `ScrollLockController` (modal), `PositioningController` (anchor-relative) |
 | **Collection** | 🔴 Blocked | `VirtualFocusController` — required when a text input retains focus while options are navigated. If building a menu/listbox *without* a text input, `RovingFocusController` suffices (✅ exists). |
 | **Feedback** | 🔴 Blocked | `LiveRegionController` |
 
@@ -218,7 +218,7 @@ Track build status here as the library grows:
 |---|---|---|
 | `RovingFocusController` | ✅ Exists | Accordion |
 | `SelectionEngine` (Engine, not ReactiveController) | ✅ Exists | Accordion + Toggle Group |
-| `PresenceController` | 🔲 Planned | First overlay component |
+| `PresenceController` | ✅ Exists | Collapsible |
 | `FocusTrapController` | 🔲 Planned | Dialog |
 | `FocusRestorationController` | 🔲 Planned | First non-modal overlay |
 | `VirtualFocusController` | 🔲 Planned | Combobox |
