@@ -75,6 +75,13 @@ describe('GrundCollapsibleTrigger', () => {
     expect(button.getAttribute('aria-disabled')).to.equal('true');
   });
 
+  it('omits aria-disabled when root is not disabled', async () => {
+    const el = await setup();
+    const trigger = el.querySelector('grund-collapsible-trigger')!;
+    const button = getByPart<HTMLButtonElement>(trigger, 'trigger');
+    expect(button.hasAttribute('aria-disabled')).to.be.false;
+  });
+
   it('click does nothing when disabled', async () => {
     const el = await setup(html`
       <grund-collapsible disabled>

@@ -33,8 +33,6 @@ export class GrundCollapsiblePanel extends LitElement {
   @property({ attribute: 'data-disabled', reflect: true, type: Boolean })
   private hostDisabled = false;
 
-
-
   @consume({ context: collapsibleRootContext, subscribe: true })
   @state()
   private rootCtx?: CollapsibleRootContext;
@@ -56,7 +54,7 @@ export class GrundCollapsiblePanel extends LitElement {
   });
 
   private handleBeforematch = (): void => {
-    this.rootCtx?.requestOpen('programmatic', null);
+    this.rootCtx?.requestOpen('programmatic');
   };
 
   public override disconnectedCallback(): void {
@@ -154,7 +152,7 @@ export class GrundCollapsiblePanel extends LitElement {
       }
     }
 
-    const triggerEl = ctx.getTriggerElement();
+    const triggerEl = ctx.triggerElement;
 
     return html`
       <div

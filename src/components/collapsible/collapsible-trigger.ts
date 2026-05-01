@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { collapsibleRootContext } from './collapsible.context';
 
 import type { CollapsibleRootContext } from './collapsible.context';
@@ -66,19 +67,19 @@ export class GrundCollapsibleTrigger extends LitElement {
     if (this.rootCtx?.disabled) {
       return;
     }
-    this.rootCtx?.requestToggle('trigger-press', this);
+    this.rootCtx?.requestToggle('trigger-press');
   }
 
   protected override render() {
     const ctx = this.rootCtx;
-    const panelEl = ctx?.getPanelElement() ?? null;
+    const panelEl = ctx?.panelElement ?? null;
 
     return html`
       <button
         part="trigger"
         type="button"
         aria-expanded="${ctx?.open ? 'true' : 'false'}"
-        aria-disabled="${ctx?.disabled ? 'true' : 'false'}"
+        aria-disabled="${ifDefined(ctx?.disabled ? 'true' : undefined)}"
         .ariaControlsElements=${panelEl ? [panelEl] : []}
         @click=${this.handleClick}
       >

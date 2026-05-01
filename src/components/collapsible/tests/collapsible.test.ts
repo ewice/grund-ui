@@ -6,6 +6,7 @@ import { describe, it } from 'vitest';
 import { flush } from '../../../test-utils/test-utils';
 
 import '../collapsible';
+import '../collapsible-trigger';
 import { collapsibleRootContext } from '../collapsible.context';
 
 import type { GrundCollapsible } from '../collapsible';
@@ -18,7 +19,7 @@ class TestCollapsibleConsumer extends LitElement {
   private rootCtx?: CollapsibleRootContext;
 
   private handleClick = (): void => {
-    this.rootCtx?.requestToggle('trigger-press', this);
+    this.rootCtx?.requestToggle('trigger-press');
   };
 
   override render() {
@@ -90,7 +91,26 @@ describe('GrundCollapsible', () => {
       expect(events).to.have.length(1);
       expect(events[0].open).to.be.true;
       expect(events[0].reason).to.equal('trigger-press');
-      expect(events[0].trigger).to.equal(consumer);
+      expect(events[0].trigger).to.be.null;
+    });
+
+    it('emits grund-open-change with the registered trigger element', async () => {
+      const events: CollapsibleOpenChangeDetail[] = [];
+      const el = await setup(html`
+        <grund-collapsible
+          @grund-open-change=${(e: CustomEvent<CollapsibleOpenChangeDetail>) =>
+            events.push(e.detail)}
+        >
+          <grund-collapsible-trigger>Toggle</grund-collapsible-trigger>
+        </grund-collapsible>
+      `);
+
+      const trigger = el.querySelector('grund-collapsible-trigger')!;
+      trigger.shadowRoot!.querySelector('button')!.click();
+      await flush(el);
+
+      expect(events).to.have.length(1);
+      expect(events[0].trigger).to.equal(trigger);
     });
   });
 

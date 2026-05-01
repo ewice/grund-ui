@@ -3,6 +3,7 @@ import { property, state } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 import { CollapsibleEngine } from './collapsible.engine';
 import { collapsibleRootContext } from './collapsible.context';
+import { disabledContext } from '../../context/disabled.context';
 
 import type { CollapsibleRootContext } from './collapsible.context';
 import type {
@@ -31,6 +32,10 @@ export class GrundCollapsible extends LitElement {
   @provide({ context: collapsibleRootContext })
   @state()
   protected rootCtx!: CollapsibleRootContext;
+
+  @provide({ context: disabledContext })
+  @state()
+  protected disabledCtx = false;
 
   private readonly engine = new CollapsibleEngine();
   private triggerElement: HTMLElement | null = null;
@@ -64,8 +69,6 @@ export class GrundCollapsible extends LitElement {
     this.panelElement = null;
     this.rootCtx = this.createRootContext();
   };
-  private readonly _getTriggerElement = (): HTMLElement | null => this.triggerElement;
-  private readonly _getPanelElement = (): HTMLElement | null => this.panelElement;
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
     const snapshot: CollapsibleHostSnapshot = {
@@ -82,6 +85,7 @@ export class GrundCollapsible extends LitElement {
     if (this.hostDisabled !== this.disabled) {
       this.hostDisabled = this.disabled;
     }
+    this.disabledCtx = this.disabled;
 
     if (
       !this.hasUpdated ||
@@ -104,21 +108,21 @@ export class GrundCollapsible extends LitElement {
       detachTrigger: this._detachTrigger,
       attachPanel: this._attachPanel,
       detachPanel: this._detachPanel,
-      getTriggerElement: this._getTriggerElement,
-      getPanelElement: this._getPanelElement,
+      triggerElement: this.triggerElement,
+      panelElement: this.panelElement,
     };
   }
 
-  private readonly handleToggle = (reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void => {
+  private readonly handleToggle = (reason: CollapsibleOpenChangeReason): void => {
     const result = this.engine.requestToggle();
     if (result === null) {
       return;
     }
 
-    this.emitOpenChange(result, reason, trigger);
+    this.emitOpenChange(result, reason);
   }
 
-  private readonly handleOpen = (reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void => {
+  private readonly handleOpen = (reason: CollapsibleOpenChangeReason): void => {
     if (this.engine.isOpen) {
       return;
     }
@@ -128,10 +132,10 @@ export class GrundCollapsible extends LitElement {
       return;
     }
 
-    this.emitOpenChange(result, reason, trigger);
+    this.emitOpenChange(result, reason);
   }
 
-  private readonly handleClose = (reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void => {
+  private readonly handleClose = (reason: CollapsibleOpenChangeReason): void => {
     if (!this.engine.isOpen) {
       return;
     }
@@ -141,23 +145,21 @@ export class GrundCollapsible extends LitElement {
       return;
     }
 
-    this.emitOpenChange(result, reason, trigger);
+    this.emitOpenChange(result, reason);
   }
 
-  private emitOpenChange(
-    open: boolean,
-    reason: CollapsibleOpenChangeReason,
-    trigger: HTMLElement | null,
-  ): void {
+  private emitOpenChange(open: boolean, reason: CollapsibleOpenChangeReason): void {
     this.dispatchEvent(
       new CustomEvent<CollapsibleOpenChangeDetail>('grund-open-change', {
-        detail: { open, reason, trigger },
+        detail: { open, reason, trigger: this.triggerElement },
         bubbles: true,
         composed: false,
       }),
     );
 
-    this.rootCtx = this.createRootContext();
+    if (this.rootCtx.open !== this.engine.isOpen) {
+      this.rootCtx = this.createRootContext();
+    }
   }
 
   protected override render() {

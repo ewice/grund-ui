@@ -5,15 +5,15 @@ import type { CollapsibleOpenChangeReason } from './types';
 export interface CollapsibleRootContext {
   open: boolean;
   disabled: boolean;
-  requestToggle(reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void;
-  requestOpen(reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void;
-  requestClose(reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void;
+  requestToggle(reason: CollapsibleOpenChangeReason): void;
+  requestOpen(reason: CollapsibleOpenChangeReason): void;
+  requestClose(reason: CollapsibleOpenChangeReason): void;
   attachTrigger(trigger: HTMLElement): void;
   detachTrigger(trigger: HTMLElement): void;
   attachPanel(panel: HTMLElement): void;
   detachPanel(panel: HTMLElement): void;
-  getTriggerElement(): HTMLElement | null;
-  getPanelElement(): HTMLElement | null;
+  triggerElement: HTMLElement | null;
+  panelElement: HTMLElement | null;
 }
 
 export const collapsibleRootContext = createContext<CollapsibleRootContext>('collapsible-root');
