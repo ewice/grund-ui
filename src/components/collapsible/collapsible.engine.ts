@@ -1,5 +1,10 @@
 import type { CollapsibleHostSnapshot } from './types';
 
+/**
+ * Pure state and action resolution for the collapsible.
+ * No DOM access, no Lit dependency.
+ * @internal
+ */
 export class CollapsibleEngine {
   private _isOpen = false;
   private isControlled = false;

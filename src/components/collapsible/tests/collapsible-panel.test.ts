@@ -1,5 +1,5 @@
 import { fixture, html, expect, aTimeout } from '@open-wc/testing';
-import { describe, it } from 'vitest';
+import { describe, it, vi } from 'vitest';
 import { flush } from '../../../test-utils/test-utils';
 
 import '../collapsible';
@@ -147,6 +147,62 @@ describe('GrundCollapsiblePanel', () => {
     });
   });
 
+  describe('transition states', () => {
+    it('has data-starting-style briefly when opening', async () => {
+      const el = await setup(html`
+        <grund-collapsible>
+          <grund-collapsible-trigger>Toggle</grund-collapsible-trigger>
+          <grund-collapsible-panel>Content</grund-collapsible-panel>
+        </grund-collapsible>
+      `);
+      const trigger = el.querySelector('grund-collapsible-trigger')!;
+      const button = trigger.shadowRoot!.querySelector('button')!;
+      const panel = el.querySelector('grund-collapsible-panel')!;
+
+      button.click();
+      await panel.updateComplete;
+      await panel.updateComplete;
+
+      expect(panel.hasAttribute('data-starting-style')).to.be.true;
+
+      await aTimeout(0);
+      await panel.updateComplete;
+
+      expect(panel.hasAttribute('data-starting-style')).to.be.false;
+    });
+
+    it('has data-ending-style when closing', async () => {
+      const el = await setup();
+      const trigger = el.querySelector('grund-collapsible-trigger')!;
+      const button = trigger.shadowRoot!.querySelector('button')!;
+      const panel = el.querySelector('grund-collapsible-panel')!;
+
+      button.click();
+      await panel.updateComplete;
+      await panel.updateComplete;
+
+      expect(panel.hasAttribute('data-ending-style')).to.be.true;
+
+      await aTimeout(0);
+      await panel.updateComplete;
+
+      expect(panel.hasAttribute('data-ending-style')).to.be.false;
+    });
+
+    it('keeps panel in DOM during exit transition', async () => {
+      const el = await setup();
+      const trigger = el.querySelector('grund-collapsible-trigger')!;
+      const button = trigger.shadowRoot!.querySelector('button')!;
+      const panel = el.querySelector('grund-collapsible-panel')!;
+
+      button.click();
+      await panel.updateComplete;
+      await panel.updateComplete;
+
+      expect(panel.shadowRoot?.querySelector('[part="panel"]')).to.exist;
+    });
+  });
+
   describe('CSS custom properties', () => {
     it('sets --grund-collapsible-panel-height when open', async () => {
       const el = await setup();
@@ -160,6 +216,35 @@ describe('GrundCollapsiblePanel', () => {
       const panel = el.querySelector('grund-collapsible-panel')!;
       const width = getComputedStyle(panel).getPropertyValue('--grund-collapsible-panel-width');
       expect(width).to.not.equal('');
+    });
+  });
+
+  describe('memory', () => {
+    it('cleans up beforematch listener on disconnect', async () => {
+      const addSpy = vi.spyOn(HTMLElement.prototype, 'addEventListener');
+      const removeSpy = vi.spyOn(HTMLElement.prototype, 'removeEventListener');
+
+      const el = await fixture<GrundCollapsible>(html`
+        <grund-collapsible default-open>
+          <grund-collapsible-trigger>Toggle</grund-collapsible-trigger>
+          <grund-collapsible-panel hidden-until-found>Content</grund-collapsible-panel>
+        </grund-collapsible>
+      `);
+      await flush(el);
+
+      const panel = el.querySelector('grund-collapsible-panel')!;
+      const addCount = addSpy.mock.calls.filter(([event]) => event === 'beforematch').length;
+
+      panel.remove();
+      await el.updateComplete;
+
+      const removeCount = removeSpy.mock.calls.filter(([event]) => event === 'beforematch').length;
+
+      expect(removeCount).to.equal(addCount);
+      expect(addCount).to.be.greaterThan(0);
+
+      addSpy.mockRestore();
+      removeSpy.mockRestore();
     });
   });
 });

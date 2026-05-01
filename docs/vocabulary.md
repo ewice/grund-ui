@@ -17,6 +17,8 @@ for the same semantic action.
 | Verb | Meaning | Example |
 |---|---|---|
 | `requestToggle` | Request a state toggle (may be rejected by controlled mode) | `ctx.requestToggle(itemValue, itemDisabled)` |
+| `requestOpen` | Request open (may be rejected by disabled/controlled mode) | `ctx.requestOpen('programmatic', null)` |
+| `requestClose` | Request close (may be rejected by disabled/controlled mode) | `ctx.requestClose('programmatic', null)` |
 | `toggle` | Unconditional toggle action (item-scoped) | `itemCtx.toggle()` |
 | `registerItem` / `unregisterItem` | Add/remove a child from the parent registry | `ctx.registerItem(this, value)` |
 | `attachTrigger` / `detachTrigger` | Link/unlink a trigger sub-part to its item | `itemCtx.attachTrigger(this)` |

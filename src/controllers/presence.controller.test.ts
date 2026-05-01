@@ -304,6 +304,9 @@ describe('PresenceController', () => {
       // Disconnect while exit is pending
       el.remove();
 
+      expect(el.presence.present).to.be.false;
+      expect(el.presence.status).to.equal('idle');
+
       // Should not throw or leak
       const target = el.shadowRoot!.getElementById('target')!;
       target.dispatchEvent(new TransitionEvent('transitionend', { bubbles: true }));

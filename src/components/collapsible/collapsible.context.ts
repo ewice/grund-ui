@@ -7,10 +7,11 @@ export interface CollapsibleRootContext {
   disabled: boolean;
   requestToggle(reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void;
   requestOpen(reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void;
-  registerTrigger(trigger: HTMLElement): void;
-  unregisterTrigger(trigger: HTMLElement): void;
-  registerPanel(panel: HTMLElement): void;
-  unregisterPanel(panel: HTMLElement): void;
+  requestClose(reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void;
+  attachTrigger(trigger: HTMLElement): void;
+  detachTrigger(trigger: HTMLElement): void;
+  attachPanel(panel: HTMLElement): void;
+  detachPanel(panel: HTMLElement): void;
   getTriggerElement(): HTMLElement | null;
   getPanelElement(): HTMLElement | null;
 }

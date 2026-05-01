@@ -14,6 +14,8 @@ export interface PresenceControllerOptions {
  *
  * Keeps `present` true during exit transitions so consumer CSS can animate
  * the exit before DOM is removed.
+ *
+ * @internal
  */
 export class PresenceController implements ReactiveController {
   private readonly host: ReactiveControllerHost & HTMLElement;
@@ -26,6 +28,7 @@ export class PresenceController implements ReactiveController {
   private exitCleanup: (() => void) | null = null;
   private startTimeoutId: number | null = null;
   private exitVersion = 0;
+  private pendingExitVersion: number | null = null;
 
   constructor(host: ReactiveControllerHost & HTMLElement, options: PresenceControllerOptions) {
     this.host = host;
@@ -49,6 +52,7 @@ export class PresenceController implements ReactiveController {
   public hostDisconnected(): void {
     this.isConnected = false;
     this.exitVersion++;
+    this.pendingExitVersion = null;
     this.clearStartTimeout();
     this.cleanupExit();
     this.prevIsPresent = this.options.isPresent();
@@ -56,21 +60,33 @@ export class PresenceController implements ReactiveController {
     this.setStatus('idle');
   }
 
-  public hostUpdated(): void {
+  /**
+   * Runs before render — detects isPresent changes and sets status/present
+   * so that render() can read the correct values without a double update.
+   */
+  public hostUpdate(): void {
     this.sync();
+  }
+
+  /**
+   * Runs after render — finalizes exit by reading computed styles (which
+   * require render to have applied exit CSS classes) and setting up listeners.
+   */
+  public hostUpdated(): void {
+    this.finalizeExit();
   }
 
   private sync(): void {
     const isPresent = this.options.isPresent();
 
-    if (isPresent === this.prevIsPresent) return;
+    if (isPresent === this.prevIsPresent) {return;}
 
     this.prevIsPresent = isPresent;
 
     if (isPresent) {
       this.enter();
     } else {
-      this.exit();
+      this.beginExit();
     }
   }
 
@@ -78,35 +94,45 @@ export class PresenceController implements ReactiveController {
     const version = ++this.exitVersion;
     this.clearStartTimeout();
     this.cleanupExit();
+    this.pendingExitVersion = null;
 
     this._present = true;
     this.setStatus('starting');
-    this.host.requestUpdate();
 
     // Keep the starting status observable for one render turn.
     this.startTimeoutId = window.setTimeout(() => {
       this.startTimeoutId = null;
-      if (!this.isConnected) return;
-      if (version !== this.exitVersion) return;
-      if (!this.options.isPresent()) return;
-      if (this._status !== 'starting') return;
+      if (!this.isConnected) {return;}
+      if (version !== this.exitVersion) {return;}
+      if (!this.options.isPresent()) {return;}
+      if (this._status !== 'starting') {return;}
       this.setStatus('idle');
       this.host.requestUpdate();
     }, 0);
   }
 
-  private exit(): void {
+  /**
+   * Phase 1 of exit (before render): set status so render keeps the element
+   * in the DOM and applies exit styles. Defers style measurement to
+   * {@link finalizeExit} which runs after render.
+   */
+  private beginExit(): void {
     const version = ++this.exitVersion;
     this.clearStartTimeout();
     this.setStatus('ending');
-    this.host.requestUpdate();
+    this.pendingExitVersion = version;
+  }
+
+  /**
+   * Phase 2 of exit (after render): read computed styles and set up
+   * transition/animation end listeners.
+   */
+  private finalizeExit(): void {
+    const version = this.pendingExitVersion;
+    if (version === null) {return;}
+    this.pendingExitVersion = null;
 
     const transitionEl = this.options.getTransitionElement?.() ?? this.host;
-    if (!transitionEl) {
-      this.completeExitAfterDelay(version);
-      return;
-    }
-
     const computedStyle = getComputedStyle(transitionEl);
     const exitDuration = Math.max(
       getMaxCssTime(computedStyle.transitionDuration, computedStyle.transitionDelay),
@@ -121,13 +147,13 @@ export class PresenceController implements ReactiveController {
     const pendingEvents = getPendingEndEvents(computedStyle);
 
     const handleEnd = (e: Event): void => {
-      if (e.target !== transitionEl) return;
+      if (e.target !== transitionEl) {return;}
 
       const key = getEndEventKey(e);
       if (pendingEvents.size > 0) {
-        if (!key || !pendingEvents.has(key)) return;
+        if (!key || !pendingEvents.has(key)) {return;}
         pendingEvents.delete(key);
-        if (pendingEvents.size > 0) return;
+        if (pendingEvents.size > 0) {return;}
       }
 
       this.completeExit(version);
@@ -162,10 +188,10 @@ export class PresenceController implements ReactiveController {
   }
 
   private completeExit(version: number): void {
-    if (!this.isConnected) return;
-    if (version !== this.exitVersion) return;
-    if (this.options.isPresent()) return;
-    if (this._status !== 'ending') return;
+    if (!this.isConnected) {return;}
+    if (version !== this.exitVersion) {return;}
+    if (this.options.isPresent()) {return;}
+    if (this._status !== 'ending') {return;}
 
     this.cleanupExit();
     this._present = false;
@@ -189,7 +215,7 @@ export class PresenceController implements ReactiveController {
   }
 
   private setStatus(status: PresenceStatus): void {
-    if (this._status === status) return;
+    if (this._status === status) {return;}
     this._status = status;
     this.options.onStatusChange?.(status);
   }
@@ -263,8 +289,8 @@ function parseCssTimeList(value: string): number[] {
     .map((part) => part.trim())
     .filter(Boolean)
     .map((part) => {
-      if (part.endsWith('ms')) return Number.parseFloat(part);
-      if (part.endsWith('s')) return Number.parseFloat(part) * 1000;
+      if (part.endsWith('ms')) {return Number.parseFloat(part);}
+      if (part.endsWith('s')) {return Number.parseFloat(part) * 1000;}
       return 0;
     });
 }

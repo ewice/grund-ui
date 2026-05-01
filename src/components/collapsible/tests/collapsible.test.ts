@@ -75,7 +75,8 @@ describe('GrundCollapsible', () => {
       const events: CollapsibleOpenChangeDetail[] = [];
       const el = await setup(html`
         <grund-collapsible
-          @grund-open-change=${(e: CustomEvent<CollapsibleOpenChangeDetail>) => events.push(e.detail)}
+          @grund-open-change=${(e: CustomEvent<CollapsibleOpenChangeDetail>) =>
+            events.push(e.detail)}
         >
           <test-collapsible-consumer></test-collapsible-consumer>
         </grund-collapsible>
@@ -99,7 +100,8 @@ describe('GrundCollapsible', () => {
       const el = await setup(html`
         <grund-collapsible
           .open=${false}
-          @grund-open-change=${(e: CustomEvent<CollapsibleOpenChangeDetail>) => events.push(e.detail)}
+          @grund-open-change=${(e: CustomEvent<CollapsibleOpenChangeDetail>) =>
+            events.push(e.detail)}
         >
           <test-collapsible-consumer></test-collapsible-consumer>
         </grund-collapsible>
@@ -137,7 +139,8 @@ describe('GrundCollapsible', () => {
       const el = await setup(html`
         <grund-collapsible
           disabled
-          @grund-open-change=${(e: CustomEvent<CollapsibleOpenChangeDetail>) => events.push(e.detail)}
+          @grund-open-change=${(e: CustomEvent<CollapsibleOpenChangeDetail>) =>
+            events.push(e.detail)}
         >
           <test-collapsible-consumer></test-collapsible-consumer>
         </grund-collapsible>

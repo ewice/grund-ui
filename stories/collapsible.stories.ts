@@ -2,10 +2,9 @@ import { html } from 'lit';
 import { action } from 'storybook/actions';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
+import type { GrundCollapsible } from '../src/components/collapsible';
 
 import '../src/components/collapsible';
-
-import type { GrundCollapsible } from '../src/components/collapsible';
 
 const meta: Meta<GrundCollapsible> = {
   title: 'Components/Collapsible',

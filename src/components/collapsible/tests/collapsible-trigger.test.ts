@@ -26,6 +26,10 @@ describe('GrundCollapsibleTrigger', () => {
     const button = getByPart<HTMLButtonElement>(trigger, 'trigger');
     expect(button.tagName).to.equal('BUTTON');
     expect(button.type).to.equal('button');
+    expect(trigger.hasAttribute('data-open')).to.be.false;
+    expect(trigger.hasAttribute('data-disabled')).to.be.false;
+    const slot = button.querySelector('slot')!;
+    expect(slot.assignedNodes()[0].textContent).to.equal('Toggle');
   });
 
   it('reflects data-open on trigger host when open', async () => {
@@ -64,7 +68,6 @@ describe('GrundCollapsibleTrigger', () => {
     const el = await setup(html`
       <grund-collapsible disabled>
         <grund-collapsible-trigger>Toggle</grund-collapsible-trigger>
-        <grund-collapsible-panel>Content</grund-collapsible-panel>
       </grund-collapsible>
     `);
     const trigger = el.querySelector('grund-collapsible-trigger')!;

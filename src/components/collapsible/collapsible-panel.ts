@@ -7,41 +7,63 @@ import { collapsibleRootContext } from './collapsible.context';
 
 import type { CollapsibleRootContext } from './collapsible.context';
 
+/**
+ * The collapsible content region.
+ *
+ * @element grund-collapsible-panel
+ * @slot - Panel content
+ * @csspart panel - The collapsible content region.
+ * @cssproperty --grund-collapsible-panel-height - Current animated height of the panel in pixels.
+ * @cssproperty --grund-collapsible-panel-width - Current animated width of the panel in pixels.
+ */
 export class GrundCollapsiblePanel extends LitElement {
   public static override readonly styles = css`
-    /* Headless — only display mode for layout participation */
-    :host { display: block; }
+    /* block: this element is a block-level container */
+    :host {
+      display: block;
+    }
   `;
 
   @property({ type: Boolean, attribute: 'keep-mounted' }) public keepMounted = false;
   @property({ type: Boolean, attribute: 'hidden-until-found' }) public hiddenUntilFound = false;
 
+  @property({ attribute: 'data-open', reflect: true, type: Boolean })
+  private hostOpen = false;
+
+  @property({ attribute: 'data-disabled', reflect: true, type: Boolean })
+  private hostDisabled = false;
+
+
+
   @consume({ context: collapsibleRootContext, subscribe: true })
   @state()
   private rootCtx?: CollapsibleRootContext;
 
-  private isPanelRegistered = false;
+  private isPanelAttached = false;
   private hasMeasuredOpen = false;
   private beforematchTarget: HTMLElement | null = null;
 
+  private getPanelDiv(): HTMLElement | null {
+    return this.shadowRoot?.querySelector<HTMLElement>('[part="panel"]') ?? null;
+  }
+
   private readonly presence = new PresenceController(this, {
     isPresent: () => this.rootCtx?.open ?? false,
-    getTransitionElement: () => this.shadowRoot?.querySelector<HTMLElement>('[part="panel"]') ?? null,
+    getTransitionElement: () => this.getPanelDiv(),
     onStatusChange: () => {
       this.syncPresenceAttributes();
-      this.requestUpdate();
     },
   });
 
   private handleBeforematch = (): void => {
     this.rootCtx?.requestOpen('programmatic', null);
-  }
+  };
 
   public override disconnectedCallback(): void {
     super.disconnectedCallback();
-    if (this.isPanelRegistered) {
-      this.rootCtx?.unregisterPanel(this);
-      this.isPanelRegistered = false;
+    if (this.isPanelAttached) {
+      this.rootCtx?.detachPanel(this);
+      this.isPanelAttached = false;
     }
     this.clearBeforematchListener();
   }
@@ -53,20 +75,24 @@ export class GrundCollapsiblePanel extends LitElement {
       }
     }
 
-    if (this.rootCtx && !this.isPanelRegistered) {
-      this.rootCtx.registerPanel(this);
-      this.isPanelRegistered = true;
+    if (this.rootCtx && !this.isPanelAttached) {
+      this.rootCtx.attachPanel(this);
+      this.isPanelAttached = true;
     }
 
     if (this.rootCtx) {
-      this.toggleAttribute('data-open', this.rootCtx.open);
-      this.toggleAttribute('data-disabled', this.rootCtx.disabled);
+      if (this.hostOpen !== this.rootCtx.open) {
+        this.hostOpen = this.rootCtx.open;
+      }
+      if (this.hostDisabled !== this.rootCtx.disabled) {
+        this.hostDisabled = this.rootCtx.disabled;
+      }
     }
-
-    this.syncPresenceAttributes();
   }
 
   private syncPresenceAttributes(): void {
+    // Imperative attribute toggle — avoids scheduling a Lit update during
+    // willUpdate/onStatusChange, which would trigger the "change-in-update" warning.
     this.toggleAttribute('data-starting-style', this.presence.status === 'starting');
     this.toggleAttribute('data-ending-style', this.presence.status === 'ending');
   }
@@ -79,9 +105,8 @@ export class GrundCollapsiblePanel extends LitElement {
       return;
     }
 
-    // Measure panel dimensions once per open for CSS variable animations.
     if (!this.hasMeasuredOpen) {
-      const panelEl = this.shadowRoot?.querySelector<HTMLElement>('[part="panel"]');
+      const panelEl = this.getPanelDiv();
       if (panelEl) {
         this.style.setProperty('--grund-collapsible-panel-height', `${panelEl.scrollHeight}px`);
         this.style.setProperty('--grund-collapsible-panel-width', `${panelEl.scrollWidth}px`);
@@ -91,8 +116,10 @@ export class GrundCollapsiblePanel extends LitElement {
   }
 
   private updateBeforematchListener(): void {
-    const nextTarget = this.shadowRoot?.querySelector<HTMLElement>('[part="panel"]') ?? null;
-    if (this.beforematchTarget === nextTarget) return;
+    const nextTarget = this.getPanelDiv();
+    if (this.beforematchTarget === nextTarget) {
+      return;
+    }
 
     this.clearBeforematchListener();
     this.beforematchTarget = nextTarget;
@@ -106,13 +133,16 @@ export class GrundCollapsiblePanel extends LitElement {
 
   protected override render() {
     const ctx = this.rootCtx;
-    if (!ctx) return nothing;
+    if (!ctx) {
+      return nothing;
+    }
 
     const isOpen = ctx.open;
 
-    // Determine whether to render the panel
     if (!isOpen && !this.presence.present) {
-      if (!this.keepMounted && !this.hiddenUntilFound) return nothing;
+      if (!this.keepMounted && !this.hiddenUntilFound) {
+        return nothing;
+      }
     }
 
     let hidden: string | undefined;
@@ -131,7 +161,7 @@ export class GrundCollapsiblePanel extends LitElement {
         part="panel"
         role="region"
         .ariaLabelledByElements=${triggerEl ? [triggerEl] : []}
-        hidden="${ifDefined(hidden !== undefined ? hidden : undefined)}"
+        hidden="${ifDefined(hidden)}"
       >
         <slot></slot>
       </div>
