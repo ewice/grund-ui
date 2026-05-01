@@ -11,16 +11,8 @@ import type {
   CollapsibleOpenChangeReason,
 } from './types';
 
-/**
- * An accessible accordion-like disclosure widget for toggling content visibility.
- *
- * @element grund-collapsible
- * @slot - Trigger and panel content
- * @fires {CustomEvent<CollapsibleOpenChangeDetail>} grund-open-change - Dispatched when the collapsible opens or closes.
- */
 export class GrundCollapsible extends LitElement {
   public static override readonly styles = css`
-    /* Headless — only display mode for layout participation */
     :host {
       display: block;
     }
@@ -44,25 +36,6 @@ export class GrundCollapsible extends LitElement {
   private triggerElement: HTMLElement | null = null;
   private panelElement: HTMLElement | null = null;
 
-  // Stable callback references
-  private readonly _requestToggle = (
-    reason: CollapsibleOpenChangeReason,
-    trigger: HTMLElement | null,
-  ): void => {
-    this.handleToggle(reason, trigger);
-  };
-  private readonly _requestOpen = (
-    reason: CollapsibleOpenChangeReason,
-    trigger: HTMLElement | null,
-  ): void => {
-    this.handleOpen(reason, trigger);
-  };
-  private readonly _requestClose = (
-    reason: CollapsibleOpenChangeReason,
-    trigger: HTMLElement | null,
-  ): void => {
-    this.handleClose(reason, trigger);
-  };
   private readonly _attachTrigger = (el: HTMLElement): void => {
     if (this.triggerElement === el) {
       return;
@@ -124,9 +97,9 @@ export class GrundCollapsible extends LitElement {
     return {
       open: this.engine.isOpen,
       disabled: this.disabled,
-      requestToggle: this._requestToggle,
-      requestOpen: this._requestOpen,
-      requestClose: this._requestClose,
+      requestToggle: this.handleToggle,
+      requestOpen: this.handleOpen,
+      requestClose: this.handleClose,
       attachTrigger: this._attachTrigger,
       detachTrigger: this._detachTrigger,
       attachPanel: this._attachPanel,
@@ -136,7 +109,7 @@ export class GrundCollapsible extends LitElement {
     };
   }
 
-  private handleToggle(reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void {
+  private readonly handleToggle = (reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void => {
     const result = this.engine.requestToggle();
     if (result === null) {
       return;
@@ -145,7 +118,7 @@ export class GrundCollapsible extends LitElement {
     this.emitOpenChange(result, reason, trigger);
   }
 
-  private handleOpen(reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void {
+  private readonly handleOpen = (reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void => {
     if (this.engine.isOpen) {
       return;
     }
@@ -158,7 +131,7 @@ export class GrundCollapsible extends LitElement {
     this.emitOpenChange(result, reason, trigger);
   }
 
-  private handleClose(reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void {
+  private readonly handleClose = (reason: CollapsibleOpenChangeReason, trigger: HTMLElement | null): void => {
     if (!this.engine.isOpen) {
       return;
     }
@@ -184,7 +157,6 @@ export class GrundCollapsible extends LitElement {
       }),
     );
 
-    // Re-provide context so children re-render
     this.rootCtx = this.createRootContext();
   }
 
