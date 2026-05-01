@@ -23,3 +23,20 @@ Threshold for action: 2 occurrences in the same category.
 | Listeners lost on disconnect/reconnect (firstUpdated runs once) | lit-reviewer | `lit/listener-reconnect` | 1 |
 
 Actions taken: (1) Added engine-onChange dispatch pattern to `vollgas/refs/lit-patterns.md` Rule 2. (2) Added Required Coverage section to `vollgas/refs/test-patterns.md` mandating mount/unmount tests for any component with listener/subscription cleanup.
+
+---
+
+## 2026-05-01 — add-collapsible
+
+| Finding | Reviewer | Category | Occurrences |
+|---------|----------|----------|-------------|
+| Missing `@csspart` JSDoc on trigger and panel | headless-reviewer | `headless/jsdoc` | 2 |
+| Missing `@cssproperty` JSDoc for CSS custom properties | headless-reviewer | `headless/jsdoc` | 2 |
+| Panel `:host { display }` missing prescribed comment | headless-reviewer | `headless/display-comment` | 2 |
+| Imperative `toggleAttribute` for `data-*` attributes | lit-reviewer | `lit/attribute-sync` | 1 |
+| Missing `@element` JSDoc on all element classes | api-reviewer | `api/jsdoc` | 3 |
+| Missing `@fires` JSDoc for `grund-open-change` | api-reviewer | `api/jsdoc` | 3 |
+| Missing `@slot` JSDoc on all element classes | api-reviewer | `api/jsdoc` | 3 |
+| Missing mount/unmount memory test for `beforematch` listener | test-reviewer | `test/mount-unmount-coverage` | 3 |
+
+Actions taken: Added `@cssproperty` to the required JSDoc template in `vollgas/refs/jsdoc-contract.md`. The other JSDoc tags (@element, @slot, @fires, @csspart) were already in the template but not applied during implementation — no contract change needed for those (process gap).

@@ -44,10 +44,6 @@ export class GrundAccordion extends LitElement {
 
   private readonly _isExpanded = (value: string) => this.engine.isExpanded(value);
 
-  private readonly _requestToggle = (itemValue: string, itemDisabled: boolean): void => {
-    this.handleToggle(itemValue, itemDisabled);
-  };
-
   private readonly _registerItem = (item: HTMLElement, value: string): void => {
     this.registry.registerItem(item, value);
   };
@@ -120,7 +116,7 @@ export class GrundAccordion extends LitElement {
       orientation: this.orientation,
       keepMounted: this.keepMounted,
       hiddenUntilFound: this.hiddenUntilFound,
-      requestToggle: this._requestToggle,
+      requestToggle: this.handleToggle,
       registerItem: this._registerItem,
       unregisterItem: this._unregisterItem,
       indexOf: this._indexOf,
@@ -131,7 +127,7 @@ export class GrundAccordion extends LitElement {
     };
   }
 
-  private handleToggle(itemValue: string, itemDisabled: boolean): void {
+  private readonly handleToggle = (itemValue: string, itemDisabled: boolean): void => {
     const result = this.engine.requestToggle(itemValue, itemDisabled);
 
     if (result === null) {

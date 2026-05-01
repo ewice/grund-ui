@@ -12,6 +12,7 @@ JSDoc serves IDE tooltips and the Custom Elements Manifest (CEM). Use JSDoc synt
  * @slot - Default slot description
  * @fires {CustomEvent<DetailType>} grund-{action} - When and why
  * @csspart name - What this part wraps
+ * @cssproperty --grund-{component}-{name} - What this property controls
  */
 ```
 
