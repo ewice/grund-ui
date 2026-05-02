@@ -40,6 +40,15 @@ export default [
         'error',
         { accessibility: 'explicit', overrides: { constructors: 'no-public' } },
       ],
+      '@typescript-eslint/naming-convention': [
+        'error',
+        {
+          selector: 'method',
+          modifiers: ['private'],
+          format: ['camelCase'],
+          leadingUnderscore: 'forbid',
+        },
+      ],
       'no-restricted-syntax': [
         'error',
         {

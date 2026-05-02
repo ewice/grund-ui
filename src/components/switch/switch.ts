@@ -56,38 +56,38 @@ export class GrundSwitch extends LitElement {
 
   @consume({ context: disabledContext, subscribe: true })
   @state()
-  private _ancestorDisabled = false;
+  private ancestorDisabled = false;
 
   @provide({ context: switchContext })
   @state()
-  protected _ctx: SwitchContext = { checked: false, disabled: false, readOnly: false, required: false };
+  protected ctx: SwitchContext = { checked: false, disabled: false, readOnly: false, required: false };
 
-  private readonly _internals = this.attachInternals();
-  private readonly _form = new FormController(this, this._internals);
+  private readonly internals = this.attachInternals();
+  private readonly form = new FormController(this, this.internals);
 
-  private readonly _handleHostClick = (e: MouseEvent): void => {
+  private readonly handleHostClick = (e: MouseEvent): void => {
     if (this.shadowRoot?.contains(e.composedPath()[0] as Node)) {
       return;
     }
-    this._toggle();
+    this.toggle();
   };
 
-  private get _effectiveChecked(): boolean {
+  private get effectiveChecked(): boolean {
     return this.checked ?? this._internalChecked;
   }
 
-  private get _effectiveDisabled(): boolean {
-    return this.disabled || this._ancestorDisabled;
+  private get effectiveDisabled(): boolean {
+    return this.disabled || this.ancestorDisabled;
   }
 
   public override connectedCallback(): void {
     super.connectedCallback();
-    this.addEventListener('click', this._handleHostClick);
+    this.addEventListener('click', this.handleHostClick);
   }
 
   public override disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.removeEventListener('click', this._handleHostClick);
+    this.removeEventListener('click', this.handleHostClick);
   }
 
   protected override willUpdate(changed: PropertyValues): void {
@@ -95,33 +95,33 @@ export class GrundSwitch extends LitElement {
       this._internalChecked = this.defaultChecked;
     }
 
-    this.toggleAttribute('data-checked', this._effectiveChecked);
-    this.toggleAttribute('data-unchecked', !this._effectiveChecked);
-    this.toggleAttribute('data-disabled', this._effectiveDisabled);
+    this.toggleAttribute('data-checked', this.effectiveChecked);
+    this.toggleAttribute('data-unchecked', !this.effectiveChecked);
+    this.toggleAttribute('data-disabled', this.effectiveDisabled);
     this.toggleAttribute('data-readonly', this.readOnly);
     this.toggleAttribute('data-required', this.required);
 
-    if (this._effectiveChecked) {
-      this._form.setValue(this.value);
+    if (this.effectiveChecked) {
+      this.form.setValue(this.value);
     } else {
-      this._form.setValue(null);
+      this.form.setValue(null);
     }
 
     if (
       changed.has('checked') || changed.has('_internalChecked') || changed.has('disabled') ||
-      changed.has('readOnly') || changed.has('required') || changed.has('_ancestorDisabled') ||
+      changed.has('readOnly') || changed.has('required') || changed.has('ancestorDisabled') ||
       !this.hasUpdated
     ) {
-      if (this.required && !this._effectiveChecked) {
+      if (this.required && !this.effectiveChecked) {
         const input = this.shadowRoot?.querySelector<HTMLInputElement>('[part="input"]');
-        this._form.setValidity({ valueMissing: true }, 'Please turn this on.', input ?? undefined);
+        this.form.setValidity({ valueMissing: true }, 'Please turn this on.', input ?? undefined);
       } else {
-        this._form.setValidity({}, '');
+        this.form.setValidity({}, '');
       }
 
-      this._ctx = {
-        checked: this._effectiveChecked,
-        disabled: this._effectiveDisabled,
+      this.ctx = {
+        checked: this.effectiveChecked,
+        disabled: this.effectiveDisabled,
         readOnly: this.readOnly,
         required: this.required,
       };
@@ -138,7 +138,7 @@ export class GrundSwitch extends LitElement {
       } else if (this.ariaLabelledBy) {
         input.ariaLabelledByElements = resolveReferencedElements(this.ariaLabelledBy, this);
       } else {
-        input.ariaLabelledByElements = this._getAssociatedLabels();
+        input.ariaLabelledByElements = this.getAssociatedLabels();
       }
 
       if (this.ariaDescribedBy) {
@@ -165,21 +165,21 @@ export class GrundSwitch extends LitElement {
     this.disabled = disabled;
   }
 
-  private _handleInputChange(e: Event): void {
-    if (this._effectiveDisabled || this.readOnly) {
-      (e.target as HTMLInputElement).checked = this._effectiveChecked;
+  private handleInputChange(e: Event): void {
+    if (this.effectiveDisabled || this.readOnly) {
+      (e.target as HTMLInputElement).checked = this.effectiveChecked;
       return;
     }
     const newChecked = (e.target as HTMLInputElement).checked;
-    this._setChecked(newChecked);
+    this.setChecked(newChecked);
   }
 
-  private _toggle(): void {
-    if (this._effectiveDisabled || this.readOnly) {return;}
-    this._setChecked(!this._effectiveChecked);
+  private toggle(): void {
+    if (this.effectiveDisabled || this.readOnly) {return;}
+    this.setChecked(!this.effectiveChecked);
   }
 
-  private _setChecked(newChecked: boolean): void {
+  private setChecked(newChecked: boolean): void {
     if (this.checked === undefined) {
       this._internalChecked = newChecked;
     }
@@ -192,9 +192,9 @@ export class GrundSwitch extends LitElement {
     );
   }
 
-  private _getAssociatedLabels(): HTMLLabelElement[] {
+  private getAssociatedLabels(): HTMLLabelElement[] {
     const labels = new Set<HTMLLabelElement>();
-    for (const label of Array.from(this._internals.labels ?? [])) {
+    for (const label of Array.from(this.internals.labels ?? [])) {
       if (label instanceof HTMLLabelElement) {labels.add(label);}
     }
     if (this.id) {
@@ -214,14 +214,14 @@ export class GrundSwitch extends LitElement {
         type="checkbox"
         role="switch"
         part="input"
-        .checked=${this._effectiveChecked}
-        ?disabled=${this._effectiveDisabled}
+        .checked=${this.effectiveChecked}
+        ?disabled=${this.effectiveDisabled}
         ?required=${this.required}
         .name=${this.name ?? nothing}
         .value=${this.value}
         aria-label=${this.ariaLabel ?? nothing}
         aria-readonly=${this.readOnly ? 'true' : nothing}
-        @change=${this._handleInputChange}
+        @change=${this.handleInputChange}
       />
       <slot></slot>
     `;

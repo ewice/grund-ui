@@ -146,6 +146,12 @@ See `focus-management.md`.
 - **Smallest diff:** Every change should be the minimum diff that achieves the goal. No speculative code, unused imports, or redundant abstractions.
 - **Imports:** Use extensionless relative imports in repo TypeScript source and tests. Keep explicit extensions only for package subpath imports that require them, such as `lit/decorators.js`.
 - **JSDoc / CEM:** Every custom element needs JSDoc — see `jsdoc-contract.md`.
+- **Naming — underscore prefix:**
+  - Do **not** use a leading underscore on `private` or `protected` members. TypeScript access modifiers already convey visibility.
+  - The only allowed exceptions are:
+    1. **Backing fields** for public properties or getters (e.g. `private _internalChecked` backing the public `checked` property, or `private _isOpen` backing the public getter `isOpen`).
+    2. **Unused parameters** matched by the existing `argsIgnorePattern: '^_'` ESLint rule.
+  - Arrow-function callbacks, private helpers, and internal controllers are named normally (`handleToggle`, `attachTrigger`, `form`, `internals`).
 
 ---
 

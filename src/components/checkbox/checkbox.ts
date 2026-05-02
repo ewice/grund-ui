@@ -65,11 +65,11 @@ export class GrundCheckbox extends LitElement {
   @state()
   private _internalChecked = false;
 
-  private _registeredWithGroup = false;
+  private registeredWithGroup = false;
 
   @consume({ context: disabledContext, subscribe: true })
   @state()
-  private _ancestorDisabled = false;
+  private ancestorDisabled = false;
 
   @consume({ context: checkboxGroupContext, subscribe: true })
   @state()
@@ -77,28 +77,28 @@ export class GrundCheckbox extends LitElement {
 
   @provide({ context: checkboxContext })
   @state()
-  protected _ctx: CheckboxContext = { checked: false, indeterminate: false };
+  protected ctx: CheckboxContext = { checked: false, indeterminate: false };
 
-  private readonly _internals = this.attachInternals();
-  private readonly _form = new FormController(this, this._internals);
+  private readonly internals = this.attachInternals();
+  private readonly form = new FormController(this, this.internals);
 
-  private readonly _handleHostClick = (e: MouseEvent): void => {
+  private readonly handleHostClick = (e: MouseEvent): void => {
     if (this.shadowRoot?.contains(e.composedPath()[0] as Node)) {
       return;
     }
-    this._handleClick();
+    this.handleClick();
   };
 
   public override connectedCallback(): void {
     super.connectedCallback();
-    this.addEventListener('click', this._handleHostClick);
+    this.addEventListener('click', this.handleHostClick);
   }
 
   public override disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.removeEventListener('click', this._handleHostClick);
+    this.removeEventListener('click', this.handleHostClick);
     this.groupCtx?.unregisterItem(this);
-    this._registeredWithGroup = false;
+    this.registeredWithGroup = false;
   }
 
   protected override willUpdate(changed: PropertyValues): void {
@@ -117,36 +117,36 @@ export class GrundCheckbox extends LitElement {
 
     if (this.groupCtx) {
       const needsRegistration =
-        !this._registeredWithGroup || changed.has('value') || changed.has('parent');
+        !this.registeredWithGroup || changed.has('value') || changed.has('parent');
       if (needsRegistration) {
-        this._registeredWithGroup = true;
+        this.registeredWithGroup = true;
         this.groupCtx.registerItem(this, { value: this.value, parent: this.parent });
       }
     }
 
-    const effective = this._effectiveChecked;
-    const effectiveIndeterminate = this._effectiveIndeterminate;
+    const effective = this.effectiveChecked;
+    const effectiveIndeterminate = this.effectiveIndeterminate;
 
     this.toggleAttribute('data-checked', !effectiveIndeterminate && effective);
     this.toggleAttribute('data-unchecked', !effectiveIndeterminate && !effective);
     this.toggleAttribute('data-indeterminate', effectiveIndeterminate);
-    this.toggleAttribute('data-disabled', this._effectiveDisabled);
+    this.toggleAttribute('data-disabled', this.effectiveDisabled);
     this.toggleAttribute('data-required', this.required);
     this.toggleAttribute('data-readonly', this.readOnly);
 
     if (!(this.parent && this.groupCtx)) {
       if (!effectiveIndeterminate && effective) {
-        this._form.setValue(this.value);
+        this.form.setValue(this.value);
       } else {
-        this._form.setValue(null);
+        this.form.setValue(null);
       }
     }
 
     if (this.required && !effective) {
       const btn = this.shadowRoot?.querySelector<HTMLButtonElement>('[part="button"]');
-      this._form.setValidity({ valueMissing: true }, 'Please check this box.', btn ?? undefined);
+      this.form.setValidity({ valueMissing: true }, 'Please check this box.', btn ?? undefined);
     } else {
-      this._form.setValidity({}, '');
+      this.form.setValidity({}, '');
     }
 
     if (
@@ -156,7 +156,7 @@ export class GrundCheckbox extends LitElement {
       changed.has('groupCtx') ||
       !this.hasUpdated
     ) {
-      this._ctx = { checked: effective, indeterminate: effectiveIndeterminate };
+      this.ctx = { checked: effective, indeterminate: effectiveIndeterminate };
     }
   }
 
@@ -173,7 +173,7 @@ export class GrundCheckbox extends LitElement {
       } else if (this.ariaLabelledBy) {
         btn.ariaLabelledByElements = resolveReferencedElements(this.ariaLabelledBy, this);
       } else if (!this.ariaLabel) {
-        btn.ariaLabelledByElements = this._getAssociatedLabels();
+        btn.ariaLabelledByElements = this.getAssociatedLabels();
       }
 
       if (this.ariaDescribedBy) {
@@ -204,18 +204,18 @@ export class GrundCheckbox extends LitElement {
     this.disabled = disabled;
   }
 
-  private get _effectiveDisabled(): boolean {
-    return this.disabled || this._ancestorDisabled;
+  private get effectiveDisabled(): boolean {
+    return this.disabled || this.ancestorDisabled;
   }
 
-  private get _effectiveIndeterminate(): boolean {
+  private get effectiveIndeterminate(): boolean {
     if (this.groupCtx && this.parent) {
       return this.groupCtx.getParentState() === 'indeterminate';
     }
     return this.indeterminate;
   }
 
-  private get _effectiveChecked(): boolean {
+  private get effectiveChecked(): boolean {
     if (this.groupCtx) {
       if (this.parent) {
         return this.groupCtx.getParentState() === 'checked';
@@ -226,8 +226,8 @@ export class GrundCheckbox extends LitElement {
     return this.checked ?? this._internalChecked;
   }
 
-  private _handleClick(): void {
-    if (this._effectiveDisabled || this.readOnly) {
+  private handleClick(): void {
+    if (this.effectiveDisabled || this.readOnly) {
       return;
     }
 
@@ -246,7 +246,7 @@ export class GrundCheckbox extends LitElement {
       return;
     }
 
-    const newChecked = this.indeterminate ? true : !this._effectiveChecked;
+    const newChecked = this.indeterminate ? true : !this.effectiveChecked;
 
     if (this.checked === undefined) {
       this._internalChecked = newChecked;
@@ -261,10 +261,10 @@ export class GrundCheckbox extends LitElement {
     );
   }
 
-  private _getAssociatedLabels(): HTMLLabelElement[] {
+  private getAssociatedLabels(): HTMLLabelElement[] {
     const labels = new Set<HTMLLabelElement>();
 
-    for (const label of Array.from(this._internals.labels ?? [])) {
+    for (const label of Array.from(this.internals.labels ?? [])) {
       if (label instanceof HTMLLabelElement) {
         labels.add(label);
       }
@@ -288,7 +288,7 @@ export class GrundCheckbox extends LitElement {
   }
 
   protected override render() {
-    const ariaChecked = this._effectiveIndeterminate ? 'mixed' : String(this._effectiveChecked);
+    const ariaChecked = this.effectiveIndeterminate ? 'mixed' : String(this.effectiveChecked);
 
     return html`
       <button
@@ -297,8 +297,8 @@ export class GrundCheckbox extends LitElement {
         role="checkbox"
         aria-checked=${ariaChecked}
         aria-label=${this.ariaLabel ?? nothing}
-        ?disabled=${this._effectiveDisabled}
-        @click=${this._handleClick}
+        ?disabled=${this.effectiveDisabled}
+        @click=${this.handleClick}
       >
         <slot></slot>
       </button>
