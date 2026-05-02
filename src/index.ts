@@ -5,5 +5,6 @@ export * from './components/collapsible';
 export * from './components/tabs';
 export * from './components/toggle';
 export * from './components/toggle-group';
+export * from './components/switch';
 
 export { disabledContext } from './context/disabled.context';
