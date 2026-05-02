@@ -236,7 +236,7 @@ export class GrundSwitch extends LitElement {
         ?required=${this.required}
         .name=${this.name ?? nothing}
         .value=${this.value}
-        aria-label=${this.ariaLabel || nothing}
+        aria-label=${this.ariaLabel ?? nothing}
         @change=${this._handleInputChange}
       />
       <slot></slot>
