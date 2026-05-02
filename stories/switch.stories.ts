@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { action } from 'storybook/actions';
-import { within, userEvent, expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { GrundSwitch, CheckedChangeDetail } from '../src/components/switch';
@@ -195,8 +195,8 @@ export const ExternallyLabeled: Story = {
   `,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const switchEl = canvas.getByRole('switch', { name: /enable dark mode/i });
-    expect(switchEl instanceof HTMLInputElement ? switchEl.checked : false).to.equal(false);
+    const switchEl = canvas.getByRole('switch', { name: /enable dark mode/i }) as HTMLInputElement;
+    expect(switchEl.checked).toBe(false);
   },
 };
 
