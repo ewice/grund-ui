@@ -62,22 +62,6 @@ export class GrundSwitch extends LitElement {
   @property({ attribute: 'aria-describedby' })
   public ariaDescribedBy: string | null = null;
 
-  // Host data attributes — reflected reactive private properties
-  @property({ type: Boolean, attribute: 'data-checked', reflect: true })
-  private hostChecked = false;
-
-  @property({ type: Boolean, attribute: 'data-unchecked', reflect: true })
-  private hostUnchecked = false;
-
-  @property({ type: Boolean, attribute: 'data-disabled', reflect: true })
-  private hostDisabled = false;
-
-  @property({ type: Boolean, attribute: 'data-readonly', reflect: true })
-  private hostReadOnly = false;
-
-  @property({ type: Boolean, attribute: 'data-required', reflect: true })
-  private hostRequired = false;
-
   // Internal state
   @state()
   private _internalChecked = false;
@@ -124,11 +108,11 @@ export class GrundSwitch extends LitElement {
       this._internalChecked = this.defaultChecked;
     }
 
-    this.hostChecked = this._effectiveChecked;
-    this.hostUnchecked = !this._effectiveChecked;
-    this.hostDisabled = this._effectiveDisabled;
-    this.hostReadOnly = this.readOnly;
-    this.hostRequired = this.required;
+    this.toggleAttribute('data-checked', this._effectiveChecked);
+    this.toggleAttribute('data-unchecked', !this._effectiveChecked);
+    this.toggleAttribute('data-disabled', this._effectiveDisabled);
+    this.toggleAttribute('data-readonly', this.readOnly);
+    this.toggleAttribute('data-required', this.required);
 
     if (this._effectiveChecked) {
       this._form.setValue(this.value);
