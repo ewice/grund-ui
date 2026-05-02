@@ -803,12 +803,6 @@
             },
             {
               "kind": "field",
-              "name": "_requestToggle",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
               "name": "_registerItem",
               "privacy": "private",
               "readonly": true
@@ -867,36 +861,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "handleToggle",
               "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "itemValue",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "itemDisabled",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "name": "grund-value-change",
-              "type": {
-                "text": "CustomEvent"
-              }
+              "readonly": true
             }
           ],
           "attributes": [
@@ -1058,6 +1026,523 @@
     {
       "kind": "javascript-module",
       "path": "src/components/accordion/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/checkbox-indicator.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Visual indicator for <grund-checkbox>. Place inside <grund-checkbox> to slot a\r\ncustom checkmark or dash icon. Visibility is controlled by consumers via CSS\r\non the reflected data-checked, data-unchecked, and data-indeterminate attributes.",
+          "name": "GrundCheckboxIndicator",
+          "cssParts": [
+            {
+              "description": "The wrapper span element",
+              "name": "indicator"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Custom checkmark or dash icon",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_ctx",
+              "type": {
+                "text": "CheckboxContext | undefined"
+              },
+              "privacy": "private",
+              "default": "undefined"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-checkbox-indicator",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCheckboxIndicator",
+          "declaration": {
+            "name": "GrundCheckboxIndicator",
+            "module": "src/components/checkbox/checkbox-indicator.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-checkbox-indicator",
+          "declaration": {
+            "name": "GrundCheckboxIndicator",
+            "module": "src/components/checkbox/checkbox-indicator.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/checkbox.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "checkboxContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "checkboxContext",
+          "declaration": {
+            "name": "checkboxContext",
+            "module": "src/components/checkbox/checkbox.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/checkbox.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundCheckbox",
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "privacy": "public",
+              "static": true,
+              "readonly": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "checked",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined",
+              "attribute": "checked"
+            },
+            {
+              "kind": "field",
+              "name": "defaultChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "default-checked"
+            },
+            {
+              "kind": "field",
+              "name": "indeterminate",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "indeterminate"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "''",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "'on'",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "required"
+            },
+            {
+              "kind": "field",
+              "name": "readOnly",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "read-only"
+            },
+            {
+              "kind": "field",
+              "name": "parent",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "parent"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabel",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "aria-label"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "aria-labelledby"
+            },
+            {
+              "kind": "field",
+              "name": "ariaDescribedBy",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "aria-describedby"
+            },
+            {
+              "kind": "field",
+              "name": "_internalChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_registeredWithGroup",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_ancestorDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "groupCtx",
+              "type": {
+                "text": "CheckboxGroupContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_ctx",
+              "type": {
+                "text": "CheckboxContext"
+              },
+              "privacy": "protected",
+              "default": "{ checked: false, indeterminate: false }"
+            },
+            {
+              "kind": "field",
+              "name": "_internals",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_form",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormController(this, this._internals)"
+            },
+            {
+              "kind": "field",
+              "name": "_handleHostClick",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_effectiveDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_effectiveIndeterminate",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_effectiveChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_handleClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_getAssociatedLabels",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLLabelElement[]"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-checked-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "checked",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "checked"
+            },
+            {
+              "name": "default-checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "defaultChecked"
+            },
+            {
+              "name": "indeterminate",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "indeterminate"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "'on'",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required"
+            },
+            {
+              "name": "read-only",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readOnly"
+            },
+            {
+              "name": "parent",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "parent"
+            },
+            {
+              "name": "aria-label",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "ariaLabel"
+            },
+            {
+              "name": "aria-labelledby",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "ariaLabelledBy"
+            },
+            {
+              "name": "aria-describedby",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "ariaDescribedBy"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-checkbox",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCheckbox",
+          "declaration": {
+            "name": "GrundCheckbox",
+            "module": "src/components/checkbox/checkbox.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-checkbox",
+          "declaration": {
+            "name": "GrundCheckbox",
+            "module": "src/components/checkbox/checkbox.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundCheckboxIndicator",
+          "declaration": {
+            "name": "GrundCheckboxIndicator",
+            "module": "./checkbox-indicator"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CheckedChangeDetail",
+          "declaration": {
+            "name": "CheckedChangeDetail",
+            "module": "./types"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCheckbox",
+          "declaration": {
+            "name": "GrundCheckbox",
+            "module": "./checkbox"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CheckedChangeDetail",
+          "declaration": {
+            "name": "CheckedChangeDetail",
+            "module": "./types"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/checkbox/types.ts",
       "declarations": [],
       "exports": []
     },
@@ -1708,21 +2193,52 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/checkbox/checkbox-indicator.ts",
+      "path": "src/components/switch/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundSwitch",
+          "declaration": {
+            "name": "GrundSwitch",
+            "module": "./switch"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundSwitchThumb",
+          "declaration": {
+            "name": "GrundSwitchThumb",
+            "module": "./switch-thumb"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CheckedChangeDetail",
+          "declaration": {
+            "name": "CheckedChangeDetail",
+            "module": "./types"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/switch/switch-thumb.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Visual indicator for <grund-checkbox>. Place inside <grund-checkbox> to slot a\ncustom checkmark or dash icon. Visibility is controlled by consumers via CSS\non the reflected data-checked, data-unchecked, and data-indeterminate attributes.",
-          "name": "GrundCheckboxIndicator",
+          "description": "Visual indicator for <grund-switch>. Place inside <grund-switch> to slot a\ncustom knob icon. Visibility and position are controlled by consumers via CSS\non the reflected data-checked, data-unchecked, data-disabled, data-readonly,\nand data-required attributes.",
+          "name": "GrundSwitchThumb",
           "cssParts": [
             {
               "description": "The wrapper span element",
-              "name": "indicator"
+              "name": "thumb"
             }
           ],
           "slots": [
             {
-              "description": "Custom checkmark or dash icon",
+              "description": "Custom knob icon or content",
               "name": ""
             }
           ],
@@ -1731,7 +2247,7 @@
               "kind": "field",
               "name": "_ctx",
               "type": {
-                "text": "CheckboxContext | undefined"
+                "text": "SwitchContext | undefined"
               },
               "privacy": "private",
               "default": "undefined"
@@ -1741,57 +2257,69 @@
             "name": "LitElement",
             "package": "lit"
           },
-          "tagName": "grund-checkbox-indicator",
+          "tagName": "grund-switch-thumb",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "GrundCheckboxIndicator",
+          "name": "GrundSwitchThumb",
           "declaration": {
-            "name": "GrundCheckboxIndicator",
-            "module": "src/components/checkbox/checkbox-indicator.ts"
+            "name": "GrundSwitchThumb",
+            "module": "src/components/switch/switch-thumb.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "grund-checkbox-indicator",
+          "name": "grund-switch-thumb",
           "declaration": {
-            "name": "GrundCheckboxIndicator",
-            "module": "src/components/checkbox/checkbox-indicator.ts"
+            "name": "GrundSwitchThumb",
+            "module": "src/components/switch/switch-thumb.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/checkbox/checkbox.context.ts",
+      "path": "src/components/switch/switch.context.ts",
       "declarations": [
         {
           "kind": "variable",
-          "name": "checkboxContext"
+          "name": "switchContext"
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "checkboxContext",
+          "name": "switchContext",
           "declaration": {
-            "name": "checkboxContext",
-            "module": "src/components/checkbox/checkbox.context.ts"
+            "name": "switchContext",
+            "module": "src/components/switch/switch.context.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/checkbox/checkbox.ts",
+      "path": "src/components/switch/switch.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "",
-          "name": "GrundCheckbox",
+          "description": "A form-associated switch toggle component. Renders a native checkbox input\nwith role=\"switch\" in shadow DOM. Slots a <grund-switch-thumb> for visual\nindication.",
+          "name": "GrundSwitch",
+          "cssParts": [
+            {
+              "description": "The native <input type=\"checkbox\" role=\"switch\">",
+              "name": "input"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Default slot for <grund-switch-thumb> and label content",
+              "name": ""
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -1836,13 +2364,33 @@
             },
             {
               "kind": "field",
-              "name": "indeterminate",
+              "name": "disabled",
               "type": {
                 "text": "boolean"
               },
               "privacy": "public",
               "default": "false",
-              "attribute": "indeterminate"
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "readOnly",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "read-only"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "required"
             },
             {
               "kind": "field",
@@ -1863,46 +2411,6 @@
               "privacy": "public",
               "default": "'on'",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "required"
-            },
-            {
-              "kind": "field",
-              "name": "readOnly",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "read-only"
-            },
-            {
-              "kind": "field",
-              "name": "parent",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "parent"
             },
             {
               "kind": "field",
@@ -1945,15 +2453,6 @@
             },
             {
               "kind": "field",
-              "name": "_registeredWithGroup",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
               "name": "_ancestorDisabled",
               "type": {
                 "text": "boolean"
@@ -1963,20 +2462,12 @@
             },
             {
               "kind": "field",
-              "name": "groupCtx",
-              "type": {
-                "text": "CheckboxGroupContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
               "name": "_ctx",
               "type": {
-                "text": "CheckboxContext"
+                "text": "SwitchContext"
               },
               "privacy": "protected",
-              "default": "{ checked: false, indeterminate: false }"
+              "default": "{ checked: false, disabled: false, readOnly: false, required: false }"
             },
             {
               "kind": "field",
@@ -1999,24 +2490,6 @@
             },
             {
               "kind": "field",
-              "name": "_effectiveDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_effectiveIndeterminate",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
               "name": "_effectiveChecked",
               "type": {
                 "text": "boolean"
@@ -2025,8 +2498,81 @@
               "readonly": true
             },
             {
+              "kind": "field",
+              "name": "_effectiveDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
               "kind": "method",
-              "name": "_handleClick",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string | File | FormData"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleInputChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_toggle",
               "privacy": "private",
               "return": {
                 "type": {
@@ -2049,8 +2595,9 @@
             {
               "name": "grund-checked-change",
               "type": {
-                "text": "CustomEvent"
-              }
+                "text": "CustomEvent<CheckedChangeDetail>"
+              },
+              "description": "When the switch is toggled"
             }
           ],
           "attributes": [
@@ -2071,12 +2618,28 @@
               "fieldName": "defaultChecked"
             },
             {
-              "name": "indeterminate",
+              "name": "disabled",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "fieldName": "indeterminate"
+              "fieldName": "disabled"
+            },
+            {
+              "name": "read-only",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readOnly"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required"
             },
             {
               "name": "name",
@@ -2093,38 +2656,6 @@
               },
               "default": "'on'",
               "fieldName": "value"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "required"
-            },
-            {
-              "name": "read-only",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readOnly"
-            },
-            {
-              "name": "parent",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "parent"
             },
             {
               "name": "aria-label",
@@ -2155,71 +2686,32 @@
             "name": "LitElement",
             "package": "lit"
           },
-          "tagName": "grund-checkbox",
+          "tagName": "grund-switch",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "GrundCheckbox",
+          "name": "GrundSwitch",
           "declaration": {
-            "name": "GrundCheckbox",
-            "module": "src/components/checkbox/checkbox.ts"
+            "name": "GrundSwitch",
+            "module": "src/components/switch/switch.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "grund-checkbox",
+          "name": "grund-switch",
           "declaration": {
-            "name": "GrundCheckbox",
-            "module": "src/components/checkbox/checkbox.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundCheckboxIndicator",
-          "declaration": {
-            "name": "GrundCheckboxIndicator",
-            "module": "./checkbox-indicator"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "CheckedChangeDetail",
-          "declaration": {
-            "name": "CheckedChangeDetail",
-            "module": "./types"
+            "name": "GrundSwitch",
+            "module": "src/components/switch/switch.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/checkbox/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundCheckbox",
-          "declaration": {
-            "name": "GrundCheckbox",
-            "module": "./checkbox"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "CheckedChangeDetail",
-          "declaration": {
-            "name": "CheckedChangeDetail",
-            "module": "./types"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/checkbox/types.ts",
+      "path": "src/components/switch/types.ts",
       "declarations": [],
       "exports": []
     },
@@ -2861,6 +3353,680 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/collapsible/collapsible-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The collapsible content region.",
+          "name": "GrundCollapsiblePanel",
+          "cssProperties": [
+            {
+              "description": "Current animated height of the panel in pixels.",
+              "name": "--grund-collapsible-panel-height"
+            },
+            {
+              "description": "Current animated width of the panel in pixels.",
+              "name": "--grund-collapsible-panel-width"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The collapsible content region.",
+              "name": "panel"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Panel content",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "keepMounted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "keep-mounted"
+            },
+            {
+              "kind": "field",
+              "name": "hiddenUntilFound",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "hidden-until-found"
+            },
+            {
+              "kind": "field",
+              "name": "hostOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "attribute": "data-open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hostDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "attribute": "data-disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "rootCtx",
+              "type": {
+                "text": "CollapsibleRootContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isPanelAttached",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "hasMeasuredOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "beforematchTarget",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "getPanelDiv",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "presence",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new PresenceController(this, { isPresent: () => this.rootCtx?.open ?? false, getTransitionElement: () => this.getPanelDiv(), onStatusChange: () => { this.syncPresenceAttributes(); }, })"
+            },
+            {
+              "kind": "field",
+              "name": "handleBeforematch",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "syncPresenceAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updateBeforematchListener",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "clearBeforematchListener",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "keep-mounted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "keepMounted"
+            },
+            {
+              "name": "hidden-until-found",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hiddenUntilFound"
+            },
+            {
+              "name": "data-open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hostOpen"
+            },
+            {
+              "name": "data-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hostDisabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-collapsible-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCollapsiblePanel",
+          "declaration": {
+            "name": "GrundCollapsiblePanel",
+            "module": "src/components/collapsible/collapsible-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-collapsible-panel",
+          "declaration": {
+            "name": "GrundCollapsiblePanel",
+            "module": "src/components/collapsible/collapsible-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/collapsible/collapsible-trigger.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The interactive button element that toggles the collapsible.",
+          "name": "GrundCollapsibleTrigger",
+          "cssParts": [
+            {
+              "description": "The interactive button element that toggles the collapsible.",
+              "name": "trigger"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Trigger label or content",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "rootCtx",
+              "type": {
+                "text": "CollapsibleRootContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "hostOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "attribute": "data-open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hostDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "attribute": "data-disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "isTriggerAttached",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "handleClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "data-open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hostOpen"
+            },
+            {
+              "name": "data-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hostDisabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-collapsible-trigger",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCollapsibleTrigger",
+          "declaration": {
+            "name": "GrundCollapsibleTrigger",
+            "module": "src/components/collapsible/collapsible-trigger.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-collapsible-trigger",
+          "declaration": {
+            "name": "GrundCollapsibleTrigger",
+            "module": "src/components/collapsible/collapsible-trigger.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/collapsible/collapsible.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "collapsibleRootContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "collapsibleRootContext",
+          "declaration": {
+            "name": "collapsibleRootContext",
+            "module": "src/components/collapsible/collapsible.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/collapsible/collapsible.engine.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/collapsible/collapsible.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GrundCollapsible",
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "privacy": "public",
+              "default": "undefined",
+              "attribute": "open"
+            },
+            {
+              "kind": "field",
+              "name": "defaultOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "default-open"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "hostOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "attribute": "data-open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hostDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "attribute": "data-disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "rootCtx",
+              "type": {
+                "text": "CollapsibleRootContext"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "disabledCtx",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "engine",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new CollapsibleEngine()"
+            },
+            {
+              "kind": "field",
+              "name": "triggerElement",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "panelElement",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_attachTrigger",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_detachTrigger",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_attachPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_detachPanel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "createRootContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "CollapsibleRootContext"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "handleToggle",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "handleOpen",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "handleClose",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "emitOpenChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "open",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "reason",
+                  "type": {
+                    "text": "CollapsibleOpenChangeReason"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "grund-open-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "open"
+            },
+            {
+              "name": "default-open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "defaultOpen"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "data-open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hostOpen"
+            },
+            {
+              "name": "data-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hostDisabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "grund-collapsible",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCollapsible",
+          "declaration": {
+            "name": "GrundCollapsible",
+            "module": "src/components/collapsible/collapsible.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "grund-collapsible",
+          "declaration": {
+            "name": "GrundCollapsible",
+            "module": "src/components/collapsible/collapsible.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/collapsible/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GrundCollapsible",
+          "declaration": {
+            "name": "GrundCollapsible",
+            "module": "./collapsible"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundCollapsibleTrigger",
+          "declaration": {
+            "name": "GrundCollapsibleTrigger",
+            "module": "./collapsible-trigger"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GrundCollapsiblePanel",
+          "declaration": {
+            "name": "GrundCollapsiblePanel",
+            "module": "./collapsible-panel"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CollapsibleOpenChangeDetail",
+          "declaration": {
+            "name": "CollapsibleOpenChangeDetail",
+            "module": "./types"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CollapsibleOpenChangeReason",
+          "declaration": {
+            "name": "CollapsibleOpenChangeReason",
+            "module": "./types"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/collapsible/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/tabs/index.ts",
       "declarations": [],
       "exports": [
@@ -3041,7 +4207,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Visual indicator that tracks the active tab's position via CSS custom properties.\nPosition inside `<grund-tabs-list>`. Consumer uses the exposed custom properties\nto animate or style the indicator relative to the active tab.",
+          "description": "Visual indicator that tracks the active tab's position via CSS custom properties.\r\nPosition inside `<grund-tabs-list>`. Consumer uses the exposed custom properties\r\nto animate or style the indicator relative to the active tab.",
           "name": "GrundTabsIndicator",
           "cssProperties": [
             {
@@ -3938,581 +5104,6 @@
     {
       "kind": "javascript-module",
       "path": "src/components/tabs/types.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/collapsible/collapsible-panel.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Panel component for the collapsible widget.\n\nManages presence transitions, accessibility attributes, and CSS custom properties\nfor height/width measurement when used inside `<grund-collapsible>`.",
-          "name": "GrundCollapsiblePanel",
-          "members": [
-            {
-              "kind": "field",
-              "name": "keepMounted",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "keep-mounted"
-            },
-            {
-              "kind": "field",
-              "name": "hiddenUntilFound",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "hidden-until-found"
-            },
-            {
-              "kind": "field",
-              "name": "rootCtx",
-              "type": {
-                "text": "CollapsibleRootContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "isPanelRegistered",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "hasMeasuredOpen",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "beforematchTarget",
-              "type": {
-                "text": "HTMLElement | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "getPanelDiv",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement | null"
-                }
-              }
-            },
-            {
-              "kind": "field",
-              "name": "presence",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new PresenceController(this, { isPresent: () => this.rootCtx?.open ?? false, getTransitionElement: () => this.getPanelDiv(), onStatusChange: () => { this.syncPresenceAttributes(); this.requestUpdate(); }, })"
-            },
-            {
-              "kind": "field",
-              "name": "handleBeforematch",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "syncPresenceAttributes",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "updateBeforematchListener",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "clearBeforematchListener",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            }
-          ],
-          "attributes": [
-            {
-              "name": "keep-mounted",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "keepMounted"
-            },
-            {
-              "name": "hidden-until-found",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hiddenUntilFound"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-collapsible-panel",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundCollapsiblePanel",
-          "declaration": {
-            "name": "GrundCollapsiblePanel",
-            "module": "src/components/collapsible/collapsible-panel.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-collapsible-panel",
-          "declaration": {
-            "name": "GrundCollapsiblePanel",
-            "module": "src/components/collapsible/collapsible-panel.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/collapsible/collapsible-trigger.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "GrundCollapsibleTrigger",
-          "members": [
-            {
-              "kind": "field",
-              "name": "rootCtx",
-              "type": {
-                "text": "CollapsibleRootContext | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "isTriggerRegistered",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "method",
-              "name": "handleClick",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-collapsible-trigger",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundCollapsibleTrigger",
-          "declaration": {
-            "name": "GrundCollapsibleTrigger",
-            "module": "src/components/collapsible/collapsible-trigger.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-collapsible-trigger",
-          "declaration": {
-            "name": "GrundCollapsibleTrigger",
-            "module": "src/components/collapsible/collapsible-trigger.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/collapsible/collapsible.context.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "collapsibleRootContext"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "collapsibleRootContext",
-          "declaration": {
-            "name": "collapsibleRootContext",
-            "module": "src/components/collapsible/collapsible.context.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/collapsible/collapsible.engine.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/collapsible/collapsible.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "GrundCollapsible",
-          "members": [
-            {
-              "kind": "field",
-              "name": "open",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "privacy": "public",
-              "default": "undefined",
-              "attribute": "open"
-            },
-            {
-              "kind": "field",
-              "name": "defaultOpen",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "default-open"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "rootCtx",
-              "type": {
-                "text": "CollapsibleRootContext"
-              },
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "engine",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new CollapsibleEngine()"
-            },
-            {
-              "kind": "field",
-              "name": "triggerElement",
-              "type": {
-                "text": "HTMLElement | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "panelElement",
-              "type": {
-                "text": "HTMLElement | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_requestToggle",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_requestOpen",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_registerTrigger",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_unregisterTrigger",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_registerPanel",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_unregisterPanel",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_getTriggerElement",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_getPanelElement",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "createRootContext",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "CollapsibleRootContext"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "handleToggle",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "reason",
-                  "type": {
-                    "text": "CollapsibleOpenChangeReason"
-                  }
-                },
-                {
-                  "name": "trigger",
-                  "type": {
-                    "text": "HTMLElement | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleOpen",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "reason",
-                  "type": {
-                    "text": "CollapsibleOpenChangeReason"
-                  }
-                },
-                {
-                  "name": "trigger",
-                  "type": {
-                    "text": "HTMLElement | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "emitOpenChange",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "open",
-                  "type": {
-                    "text": "boolean"
-                  }
-                },
-                {
-                  "name": "reason",
-                  "type": {
-                    "text": "CollapsibleOpenChangeReason"
-                  }
-                },
-                {
-                  "name": "trigger",
-                  "type": {
-                    "text": "HTMLElement | null"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "name": "grund-open-change",
-              "type": {
-                "text": "CustomEvent"
-              }
-            }
-          ],
-          "attributes": [
-            {
-              "name": "open",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "default": "undefined",
-              "fieldName": "open"
-            },
-            {
-              "name": "default-open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "defaultOpen"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "grund-collapsible",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundCollapsible",
-          "declaration": {
-            "name": "GrundCollapsible",
-            "module": "src/components/collapsible/collapsible.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "grund-collapsible",
-          "declaration": {
-            "name": "GrundCollapsible",
-            "module": "src/components/collapsible/collapsible.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/collapsible/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GrundCollapsible",
-          "declaration": {
-            "name": "GrundCollapsible",
-            "module": "./collapsible"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundCollapsibleTrigger",
-          "declaration": {
-            "name": "GrundCollapsibleTrigger",
-            "module": "./collapsible-trigger"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GrundCollapsiblePanel",
-          "declaration": {
-            "name": "GrundCollapsiblePanel",
-            "module": "./collapsible-panel"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "CollapsibleOpenChangeDetail",
-          "declaration": {
-            "name": "CollapsibleOpenChangeDetail",
-            "module": "./types"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "CollapsibleOpenChangeReason",
-          "declaration": {
-            "name": "CollapsibleOpenChangeReason",
-            "module": "./types"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/collapsible/types.ts",
       "declarations": [],
       "exports": []
     },
