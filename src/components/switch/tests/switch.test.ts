@@ -498,4 +498,57 @@ describe('GrundSwitchThumb', () => {
     await flush(el);
     expect(thumb.hasAttribute('data-required')).to.be.true;
   });
+
+  it('dynamically appended thumb receives context attributes', async () => {
+    const el = await fixture<GrundSwitch>(html`
+      <grund-switch checked></grund-switch>
+    `);
+    await flush(el);
+
+    const thumb = document.createElement('grund-switch-thumb') as GrundSwitchThumb;
+    el.appendChild(thumb);
+    await flush(el);
+
+    expect(thumb.hasAttribute('data-checked')).to.be.true;
+  });
+
+  it('switch still works after thumb is removed', async () => {
+    const { el, thumb } = await setupWithThumb();
+    el.removeChild(thumb);
+    await flush(el);
+
+    let firedChecked: boolean | undefined;
+    el.addEventListener('grund-checked-change', ((e: CustomEvent<CheckedChangeDetail>) => {
+      firedChecked = e.detail.checked;
+    }) as EventListener);
+
+    el.click();
+    await flush(el);
+
+    expect(firedChecked).to.equal(true);
+    expect(el.hasAttribute('data-checked')).to.be.true;
+  });
+
+  it('switch and thumb work after reparenting', async () => {
+    const container1 = await fixture<HTMLDivElement>(html`
+      <div>
+        <grund-switch>
+          <grund-switch-thumb></grund-switch-thumb>
+        </grund-switch>
+      </div>
+    `);
+    const el = container1.querySelector<GrundSwitch>('grund-switch')!;
+    const thumb = el.querySelector<GrundSwitchThumb>('grund-switch-thumb')!;
+    await flush(el);
+
+    const container2 = await fixture<HTMLDivElement>(html`<div></div>`);
+    container2.appendChild(el);
+    await flush(el);
+
+    el.click();
+    await flush(el);
+
+    expect(el.hasAttribute('data-checked')).to.be.true;
+    expect(thumb.hasAttribute('data-checked')).to.be.true;
+  });
 });

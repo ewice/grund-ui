@@ -181,22 +181,20 @@ export class GrundSwitch extends LitElement {
   }
 
   private _handleInputChange(e: Event): void {
-    const newChecked = (e.target as HTMLInputElement).checked;
-    if (this.checked === undefined) {
-      this._internalChecked = newChecked;
+    if (this._effectiveDisabled || this.readOnly) {
+      (e.target as HTMLInputElement).checked = this._effectiveChecked;
+      return;
     }
-    this.dispatchEvent(
-      new CustomEvent<CheckedChangeDetail>('grund-checked-change', {
-        detail: { checked: newChecked },
-        bubbles: true,
-        composed: false,
-      }),
-    );
+    const newChecked = (e.target as HTMLInputElement).checked;
+    this._setChecked(newChecked);
   }
 
   private _toggle(): void {
     if (this._effectiveDisabled || this.readOnly) {return;}
-    const newChecked = !this._effectiveChecked;
+    this._setChecked(!this._effectiveChecked);
+  }
+
+  private _setChecked(newChecked: boolean): void {
     if (this.checked === undefined) {
       this._internalChecked = newChecked;
     }
@@ -237,6 +235,7 @@ export class GrundSwitch extends LitElement {
         .name=${this.name ?? nothing}
         .value=${this.value}
         aria-label=${this.ariaLabel ?? nothing}
+        aria-readonly=${this.readOnly ? 'true' : nothing}
         @change=${this._handleInputChange}
       />
       <slot></slot>

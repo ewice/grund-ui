@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { action } from 'storybook/actions';
-import { within, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { GrundSwitch, CheckedChangeDetail } from '../src/components/switch';
@@ -34,6 +34,18 @@ export const Default: Story = {
       <grund-switch-thumb></grund-switch-thumb>
     </grund-switch>
   `,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const switchEl = canvas.getByRole('switch');
+    expect(switchEl).toHaveAttribute('aria-checked', 'false');
+
+    await userEvent.tab();
+    await userEvent.keyboard(' ');
+    expect(switchEl).toHaveAttribute('aria-checked', 'true');
+
+    await userEvent.keyboard(' ');
+    expect(switchEl).toHaveAttribute('aria-checked', 'false');
+  },
 };
 
 export const WithThumb: Story = {
