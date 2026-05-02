@@ -41,7 +41,7 @@ export class GrundTabs extends LitElement {
   private registry = new TabsRegistry();
   private activationDirection: 'start' | 'end' | 'none' = 'none';
 
-  private readonly _registerTab = (value: string, tab: HTMLElement): void => {
+  private readonly registerTab = (value: string, tab: HTMLElement): void => {
     this.registry.registerTab(value, tab);
 
     if (this.controller.activeValue === null && this.value === undefined) {
@@ -56,32 +56,32 @@ export class GrundTabs extends LitElement {
     }
   };
 
-  private readonly _unregisterTab = (value: string): void => {
+  private readonly unregisterTab = (value: string): void => {
     this.registry.unregisterTab(value);
     this.rootCtx = this.createRootContext();
   };
 
-  private readonly _registerPanel = (value: string, panel: HTMLElement): void => {
+  private readonly registerPanel = (value: string, panel: HTMLElement): void => {
     this.registry.registerPanel(value, panel);
     this.rootCtx = this.createRootContext();
   };
 
-  private readonly _unregisterPanel = (value: string): void => {
+  private readonly unregisterPanel = (value: string): void => {
     this.registry.unregisterPanel(value);
     this.rootCtx = this.createRootContext();
   };
 
-  private readonly _setDisabled = (value: string, isDisabled: boolean): void => {
+  private readonly setDisabled = (value: string, isDisabled: boolean): void => {
     this.registry.setDisabled(value, isDisabled);
   };
 
-  private readonly _requestActivation = (value: string): void => {
+  private readonly requestActivation = (value: string): void => {
     this.handleActivation(value);
   };
 
-  private readonly _getTabElement = (value: string) => this.registry.getTabElement(value);
-  private readonly _getPanelElement = (value: string) => this.registry.getPanelElement(value);
-  private readonly _indexOf = (value: string) => this.registry.indexOf(value);
+  private readonly getTabElement = (value: string) => this.registry.getTabElement(value);
+  private readonly getPanelElement = (value: string) => this.registry.getPanelElement(value);
+  private readonly indexOf = (value: string) => this.registry.indexOf(value);
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
     const snapshot: TabsHostSnapshot = {
@@ -138,15 +138,15 @@ export class GrundTabs extends LitElement {
       activeValue: this.controller.activeValue,
       activationDirection: this.activationDirection,
       orientation: this.orientation,
-      registerTab: this._registerTab,
-      unregisterTab: this._unregisterTab,
-      registerPanel: this._registerPanel,
-      unregisterPanel: this._unregisterPanel,
-      setDisabled: this._setDisabled,
-      requestActivation: this._requestActivation,
-      getTabElement: this._getTabElement,
-      getPanelElement: this._getPanelElement,
-      indexOf: this._indexOf,
+      registerTab: this.registerTab,
+      unregisterTab: this.unregisterTab,
+      registerPanel: this.registerPanel,
+      unregisterPanel: this.unregisterPanel,
+      setDisabled: this.setDisabled,
+      requestActivation: this.requestActivation,
+      getTabElement: this.getTabElement,
+      getPanelElement: this.getPanelElement,
+      indexOf: this.indexOf,
     };
   }
 

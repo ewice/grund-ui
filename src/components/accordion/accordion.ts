@@ -42,31 +42,31 @@ export class GrundAccordion extends LitElement {
   private readonly engine = new AccordionEngine();
   private readonly registry = new AccordionRegistry();
 
-  private readonly _isExpanded = (value: string) => this.engine.isExpanded(value);
+  private readonly isExpanded = (value: string) => this.engine.isExpanded(value);
 
-  private readonly _registerItem = (item: HTMLElement, value: string): void => {
+  private readonly registerItem = (item: HTMLElement, value: string): void => {
     this.registry.registerItem(item, value);
   };
 
-  private readonly _unregisterItem = (item: HTMLElement): void => {
+  private readonly unregisterItem = (item: HTMLElement): void => {
     this.registry.unregisterItem(item);
   };
 
-  private readonly _indexOf = (item: HTMLElement) => this.registry.indexOf(item);
+  private readonly indexOf = (item: HTMLElement) => this.registry.indexOf(item);
 
-  private readonly _attachTrigger = (item: HTMLElement, trigger: HTMLElement): void => {
+  private readonly attachTrigger = (item: HTMLElement, trigger: HTMLElement): void => {
     this.registry.attachTrigger(item, trigger);
   };
 
-  private readonly _detachTrigger = (item: HTMLElement): void => {
+  private readonly detachTrigger = (item: HTMLElement): void => {
     this.registry.detachTrigger(item);
   };
 
-  private readonly _attachPanel = (item: HTMLElement, panel: HTMLElement): void => {
+  private readonly attachPanel = (item: HTMLElement, panel: HTMLElement): void => {
     this.registry.attachPanel(item, panel);
   };
 
-  private readonly _detachPanel = (item: HTMLElement): void => {
+  private readonly detachPanel = (item: HTMLElement): void => {
     this.registry.detachPanel(item);
   };
 
@@ -112,18 +112,18 @@ export class GrundAccordion extends LitElement {
 
   private createRootContext(): AccordionRootContext {
     return {
-      isExpanded: this._isExpanded,
+      isExpanded: this.isExpanded,
       orientation: this.orientation,
       keepMounted: this.keepMounted,
       hiddenUntilFound: this.hiddenUntilFound,
       requestToggle: this.handleToggle,
-      registerItem: this._registerItem,
-      unregisterItem: this._unregisterItem,
-      indexOf: this._indexOf,
-      attachTrigger: this._attachTrigger,
-      detachTrigger: this._detachTrigger,
-      attachPanel: this._attachPanel,
-      detachPanel: this._detachPanel,
+      registerItem: this.registerItem,
+      unregisterItem: this.unregisterItem,
+      indexOf: this.indexOf,
+      attachTrigger: this.attachTrigger,
+      detachTrigger: this.detachTrigger,
+      attachPanel: this.attachPanel,
+      detachPanel: this.detachPanel,
     };
   }
 

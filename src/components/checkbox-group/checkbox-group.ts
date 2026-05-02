@@ -58,51 +58,51 @@ export class GrundCheckboxGroup extends LitElement {
   private readonly contextApi: CheckboxGroupContext = {
     isChecked: (value) => this.engine.isChecked(value),
     getParentState: () => this.engine.getParentState(),
-    requestToggle: (value, parent) => this._handleToggle(value, parent),
-    registerItem: (element, record) => this._registerItem(element, record),
-    unregisterItem: (element) => this._unregisterItem(element),
+    requestToggle: (value, parent) => this.handleToggle(value, parent),
+    registerItem: (element, record) => this.registerItem(element, record),
+    unregisterItem: (element) => this.unregisterItem(element),
   };
 
-  private _registryDirty = false;
+  private registryDirty = false;
 
-  private _registerItem(element: HTMLElement, record: CheckboxGroupRegistration): void {
+  private registerItem(element: HTMLElement, record: CheckboxGroupRegistration): void {
     this.registry.register(element, record);
-    this._markRegistryDirty();
+    this.markRegistryDirty();
   }
 
-  private _unregisterItem(element: HTMLElement): void {
+  private unregisterItem(element: HTMLElement): void {
     if (!this.registry.get(element)) {
       return;
     }
 
     this.registry.unregister(element);
-    this._markRegistryDirty();
+    this.markRegistryDirty();
   }
 
-  private _markRegistryDirty(): void {
-    this._registryDirty = true;
+  private markRegistryDirty(): void {
+    this.registryDirty = true;
     this.requestUpdate();
   }
 
   protected override willUpdate(changed: Map<PropertyKey, unknown>): void {
-    this._syncEngine();
+    this.syncEngine();
 
     this.toggleAttribute('data-disabled', this.disabled);
     this.disabledCtx = this.disabled;
 
     if (
       !this.hasUpdated ||
-      this._registryDirty ||
+      this.registryDirty ||
       changed.has('value') ||
       changed.has('defaultValue') ||
       changed.has('disabled')
     ) {
-      this._registryDirty = false;
-      this._updateGroupContext();
+      this.registryDirty = false;
+      this.updateGroupContext();
     }
   }
 
-  private _syncEngine(): void {
+  private syncEngine(): void {
     this.engine.syncFromHost({
       value: this.value !== undefined ? normalizeCheckboxGroupValues(this.value) : undefined,
       defaultValue: normalizeCheckboxGroupValues(this.defaultValue),
@@ -111,11 +111,11 @@ export class GrundCheckboxGroup extends LitElement {
     });
   }
 
-  private _updateGroupContext(): void {
+  private updateGroupContext(): void {
     this.groupCtx = { ...this.contextApi };
   }
 
-  private _handleToggle(itemValue: string, parent: boolean): void {
+  private handleToggle(itemValue: string, parent: boolean): void {
     const result = parent ? this.engine.requestToggleAll() : this.engine.requestToggle(itemValue);
 
     if (result === null) {
@@ -131,7 +131,7 @@ export class GrundCheckboxGroup extends LitElement {
     );
 
     if (this.value === undefined) {
-      this._updateGroupContext();
+      this.updateGroupContext();
     }
   }
 

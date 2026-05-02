@@ -41,28 +41,28 @@ export class GrundCollapsible extends LitElement {
   private triggerElement: HTMLElement | null = null;
   private panelElement: HTMLElement | null = null;
 
-  private readonly _attachTrigger = (el: HTMLElement): void => {
+  private readonly attachTrigger = (el: HTMLElement): void => {
     if (this.triggerElement === el) {
       return;
     }
     this.triggerElement = el;
     this.rootCtx = this.createRootContext();
   };
-  private readonly _detachTrigger = (el: HTMLElement): void => {
+  private readonly detachTrigger = (el: HTMLElement): void => {
     if (this.triggerElement !== el) {
       return;
     }
     this.triggerElement = null;
     this.rootCtx = this.createRootContext();
   };
-  private readonly _attachPanel = (el: HTMLElement): void => {
+  private readonly attachPanel = (el: HTMLElement): void => {
     if (this.panelElement === el) {
       return;
     }
     this.panelElement = el;
     this.rootCtx = this.createRootContext();
   };
-  private readonly _detachPanel = (el: HTMLElement): void => {
+  private readonly detachPanel = (el: HTMLElement): void => {
     if (this.panelElement !== el) {
       return;
     }
@@ -104,10 +104,10 @@ export class GrundCollapsible extends LitElement {
       requestToggle: this.handleToggle,
       requestOpen: this.handleOpen,
       requestClose: this.handleClose,
-      attachTrigger: this._attachTrigger,
-      detachTrigger: this._detachTrigger,
-      attachPanel: this._attachPanel,
-      detachPanel: this._detachPanel,
+      attachTrigger: this.attachTrigger,
+      detachTrigger: this.detachTrigger,
+      attachPanel: this.attachPanel,
+      detachPanel: this.detachPanel,
       triggerElement: this.triggerElement,
       panelElement: this.panelElement,
     };

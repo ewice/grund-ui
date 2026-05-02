@@ -63,6 +63,7 @@ CSS `::part()` names. All lowercase, hyphenated nouns.
 | `label` | A text label element | Switch |
 | `input` | The underlying native or custom input | Switch, Input |
 | `button` | The inner button element | Toggle, Checkbox |
+| `thumb` | The movable knob/indicator inside a switch | Switch |
 | `group` | The inner container wrapping slotted toggle children | ToggleGroup |
 | `close-button` | Button that closes an overlay | Dialog, Sheet, Toast |
 | `overlay` | The backdrop/scrim behind a modal | Dialog, Sheet |
@@ -123,6 +124,7 @@ Context symbols follow the pattern `{ComponentName}Context` for the root context
 | `checkboxContext` | Checkbox state for indicator |
 | `avatarContext` | Avatar status + setStatus for image/fallback |
 | `collapsibleRootContext` | Root-level context for collapsible |
+| `switchContext` | Switch state for thumb indicator |
 
 ---
 
@@ -152,6 +154,8 @@ All custom elements: `grund-{component-name}[-{sub-element}]`
 | Collapsible root | `grund-collapsible` |
 | Collapsible trigger | `grund-collapsible-trigger` |
 | Collapsible panel | `grund-collapsible-panel` |
+| Switch root | `grund-switch` |
+| Switch thumb | `grund-switch-thumb` |
 
 ---
 

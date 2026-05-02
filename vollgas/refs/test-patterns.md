@@ -66,6 +66,10 @@ cleanup is absent.
 
 Example using the Mount/Unmount Memory Test recipe below.
 
+Every component that exposes state via a context provider (`@provide`) must have:
+- A **dynamic child registration test** — verify children appended after render receive context
+- A **child removal test** — verify the component doesn't break when children are removed
+
 ---
 
 ## Recipes
@@ -196,6 +200,47 @@ it('resubscribes to context after reparenting', async () => {
   await flush(parent2);
 
   // item should now be registered with parent2's context
+});
+```
+
+### Dynamic Child Registration Test
+
+For components that communicate via context (`@provide`/`@consume`), verify
+that children appended after the parent has rendered receive the context:
+
+```ts
+it('child appended after render receives context attributes', async () => {
+  const parent = await fixture(html`<grund-foo checked></grund-foo>`);
+  await flush(parent);
+
+  const child = document.createElement('grund-foo-child');
+  parent.appendChild(child);
+  await flush(parent);
+
+  expect(child.hasAttribute('data-checked')).to.be.true;
+});
+```
+
+### Child Removal Test
+
+Verify the parent continues to function after a slotted child is removed:
+
+```ts
+it('parent still works after child is removed', async () => {
+  const parent = await fixture(html`
+    <grund-foo>
+      <grund-foo-child></grund-foo-child>
+    </grund-foo>
+  `);
+  const child = parent.querySelector('grund-foo-child')!;
+  await flush(parent);
+
+  parent.removeChild(child);
+  await flush(parent);
+
+  parent.click();
+  await flush(parent);
+  expect(parent.hasAttribute('data-checked')).to.be.true;
 });
 ```
 
