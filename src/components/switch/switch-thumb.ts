@@ -15,7 +15,7 @@ import type { SwitchContext } from './switch.context';
  * @csspart thumb - The wrapper span element
  */
 export class GrundSwitchThumb extends LitElement {
-  static override readonly styles = css`
+  public static override readonly styles = css`
     :host {
       display: inline;
     }

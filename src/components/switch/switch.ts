@@ -146,7 +146,7 @@ export class GrundSwitch extends LitElement {
   protected override updated(changed: PropertyValues): void {
     if (!this.hasUpdated || changed.has('ariaLabel') || changed.has('ariaLabelledBy') || changed.has('ariaDescribedBy')) {
       const input = this.shadowRoot?.querySelector<HTMLInputElement>('[part="input"]');
-      if (!input) return;
+      if (!input) {return;}
 
       if (this.ariaLabel) {
         input.ariaLabelledByElements = [];
@@ -195,7 +195,7 @@ export class GrundSwitch extends LitElement {
   }
 
   private _toggle(): void {
-    if (this._effectiveDisabled || this.readOnly) return;
+    if (this._effectiveDisabled || this.readOnly) {return;}
     const newChecked = !this._effectiveChecked;
     if (this.checked === undefined) {
       this._internalChecked = newChecked;
@@ -212,16 +212,16 @@ export class GrundSwitch extends LitElement {
   private _getAssociatedLabels(): HTMLLabelElement[] {
     const labels = new Set<HTMLLabelElement>();
     for (const label of Array.from(this._internals.labels ?? [])) {
-      if (label instanceof HTMLLabelElement) labels.add(label);
+      if (label instanceof HTMLLabelElement) {labels.add(label);}
     }
     if (this.id) {
       const selector = `label[for="${CSS.escape(this.id)}"]`;
       for (const label of Array.from(this.ownerDocument?.querySelectorAll(selector) ?? [])) {
-        if (label instanceof HTMLLabelElement) labels.add(label);
+        if (label instanceof HTMLLabelElement) {labels.add(label);}
       }
     }
     const wrappingLabel = this.closest('label');
-    if (wrappingLabel instanceof HTMLLabelElement) labels.add(wrappingLabel);
+    if (wrappingLabel instanceof HTMLLabelElement) {labels.add(wrappingLabel);}
     return Array.from(labels);
   }
 
@@ -234,7 +234,7 @@ export class GrundSwitch extends LitElement {
         .checked=${this._effectiveChecked}
         ?disabled=${this._effectiveDisabled}
         ?required=${this.required}
-        .name=${this.name || nothing}
+        .name=${this.name ?? nothing}
         .value=${this.value}
         aria-label=${this.ariaLabel || nothing}
         @change=${this._handleInputChange}
