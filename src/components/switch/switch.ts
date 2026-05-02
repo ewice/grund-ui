@@ -136,11 +136,13 @@ export class GrundSwitch extends LitElement {
       this._form.setValue(null);
     }
 
-    if (this.required && !this._effectiveChecked) {
-      const input = this.shadowRoot?.querySelector<HTMLInputElement>('[part="input"]');
-      this._form.setValidity({ valueMissing: true }, 'Please turn this on.', input ?? undefined);
-    } else {
-      this._form.setValidity({}, '');
+    if (changed.has('required') || changed.has('checked') || changed.has('_internalChecked') || changed.has('_ancestorDisabled') || changed.has('disabled') || !this.hasUpdated) {
+      if (this.required && !this._effectiveChecked) {
+        const input = this.shadowRoot?.querySelector<HTMLInputElement>('[part="input"]');
+        this._form.setValidity({ valueMissing: true }, 'Please turn this on.', input ?? undefined);
+      } else {
+        this._form.setValidity({}, '');
+      }
     }
 
     if (
@@ -166,7 +168,7 @@ export class GrundSwitch extends LitElement {
         input.ariaLabelledByElements = [];
       } else if (this.ariaLabelledBy) {
         input.ariaLabelledByElements = resolveReferencedElements(this.ariaLabelledBy, this);
-      } else if (!this.ariaLabel) {
+      } else {
         input.ariaLabelledByElements = this._getAssociatedLabels();
       }
 
