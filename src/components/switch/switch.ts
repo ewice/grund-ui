@@ -9,16 +9,6 @@ import type { CheckedChangeDetail } from './types';
 import { disabledContext } from '../../context/disabled.context';
 import { resolveReferencedElements } from '../../utils/resolve-referenced-elements';
 
-/**
- * A form-associated switch toggle component. Renders a native checkbox input
- * with role="switch" in shadow DOM. Slots a <grund-switch-thumb> for visual
- * indication.
- *
- * @element grund-switch
- * @slot - Default slot for <grund-switch-thumb> and label content
- * @fires {CustomEvent<CheckedChangeDetail>} grund-checked-change - When the switch is toggled
- * @csspart input - The native <input type="checkbox" role="switch">
- */
 export class GrundSwitch extends LitElement {
   public static formAssociated = true;
   public static override readonly shadowRootOptions: ShadowRootInit = {
@@ -31,7 +21,6 @@ export class GrundSwitch extends LitElement {
     }
   `;
 
-  // Public reactive properties
   @property({ type: Boolean })
   public checked: boolean | undefined = undefined;
 
@@ -62,7 +51,6 @@ export class GrundSwitch extends LitElement {
   @property({ attribute: 'aria-describedby' })
   public ariaDescribedBy: string | null = null;
 
-  // Internal state
   @state()
   private _internalChecked = false;
 
@@ -84,7 +72,6 @@ export class GrundSwitch extends LitElement {
     this._toggle();
   };
 
-  // Computed values
   private get _effectiveChecked(): boolean {
     return this.checked ?? this._internalChecked;
   }
@@ -120,20 +107,18 @@ export class GrundSwitch extends LitElement {
       this._form.setValue(null);
     }
 
-    if (changed.has('required') || changed.has('checked') || changed.has('_internalChecked') || changed.has('_ancestorDisabled') || changed.has('disabled') || !this.hasUpdated) {
+    if (
+      changed.has('checked') || changed.has('_internalChecked') || changed.has('disabled') ||
+      changed.has('readOnly') || changed.has('required') || changed.has('_ancestorDisabled') ||
+      !this.hasUpdated
+    ) {
       if (this.required && !this._effectiveChecked) {
         const input = this.shadowRoot?.querySelector<HTMLInputElement>('[part="input"]');
         this._form.setValidity({ valueMissing: true }, 'Please turn this on.', input ?? undefined);
       } else {
         this._form.setValidity({}, '');
       }
-    }
 
-    if (
-      changed.has('checked') || changed.has('_internalChecked') || changed.has('disabled') ||
-      changed.has('readOnly') || changed.has('required') || changed.has('_ancestorDisabled') ||
-      !this.hasUpdated
-    ) {
       this._ctx = {
         checked: this._effectiveChecked,
         disabled: this._effectiveDisabled,

@@ -40,3 +40,19 @@ Actions taken: (1) Added engine-onChange dispatch pattern to `vollgas/refs/lit-p
 | Missing mount/unmount memory test for `beforematch` listener | test-reviewer | `test/mount-unmount-coverage` | 3 |
 
 Actions taken: Added `@cssproperty` to the required JSDoc template in `vollgas/refs/jsdoc-contract.md`. The other JSDoc tags (@element, @slot, @fires, @csspart) were already in the template but not applied during implementation — no contract change needed for those (process gap).
+
+---
+
+## 2026-05-02 — feat-switch
+
+| Finding | Reviewer | Category | Occurrences |
+|---------|----------|----------|-------------|
+| Missing `aria-readonly` on native input | accessibility-reviewer | `accessibility/missing-aria` | 1 |
+| `_handleInputChange` doesn't guard readOnly | code-quality-reviewer | `code-quality/event-handler-guards` | 1 |
+| Duplicate toggle+dispatch logic | code-quality-reviewer | `code-quality/duplicate-logic` | 1 |
+| No dynamic child registration test | test-reviewer | `test/dynamic-dom-tests` | 1 |
+| No child-removed test | test-reviewer | `test/dynamic-dom-tests` | 2 |
+| No reparenting test | test-reviewer | `test/dynamic-dom-tests` | 3 |
+| No keyboard play function in stories | test-reviewer | `test/story-play-function` | 1 |
+
+Actions taken: Added Dynamic Child Registration Test and Child Removal Test recipes to `vollgas/refs/test-patterns.md`. Added Required Coverage rule requiring context providers to have both tests. Note: reparenting recipe already existed but wasn't written — process gap, no contract change needed.
